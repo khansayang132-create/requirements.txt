@@ -32,6 +32,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "Commands:\n"
         "/caption - Create a TikTok caption\n"
         "/idea - Get a content idea\n"
+        "/ping - Check the AI connection\n"
         "/help - Show commands"
     )
 
@@ -65,6 +66,26 @@ async def idea(update: Update, context: ContextTypes.DEFAULT_TYPE):
     task = "Buat satu ide video TikTok jastip LSKhan yang mudah direkam sendirian, lengkap dengan hook, adegan, dan CTA. Brief: " + " ".join(context.args)
     await generate(update, context, task)
 
+async def ping(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if ADMIN_ID and str(update.effective_user.id) != ADMIN_ID:
+        await update.message.reply_text("This assistant is private.")
+        return
+    if not client:
+        await update.message.reply_text("AI is not configured yet. Set OMNIROUTE_API_KEY or OPENAI_API_KEY.")
+        return
+    target = OMNIROUTE_BASE_URL if OMNIROUTE_KEY else "OpenAI"
+    try:
+        response = await client.chat.completions.create(
+            model=MODEL,
+            messages=[{"role": "user", "content": "Reply with: OK"}],
+            max_tokens=5
+        )
+        reply = (response.choices[0].message.content or "").strip()
+        await update.message.reply_text(f"✅ Connected to {target} (model: {response.model or MODEL}). Reply: {reply}")
+    except Exception as e:
+        logging.exception("AI ping failed")
+        await update.message.reply_text(f"❌ Could not reach {target}: {type(e).__name__}")
+
 def main():
     if not TOKEN:
         raise SystemExit("Missing TELEGRAM_BOT_TOKEN in .env")
@@ -73,6 +94,7 @@ def main():
     app.add_handler(CommandHandler("help", help_command))
     app.add_handler(CommandHandler("caption", caption))
     app.add_handler(CommandHandler("idea", idea))
+    app.add_handler(CommandHandler("ping", ping))
     app.run_polling()
 
 if __name__ == "__main__":
