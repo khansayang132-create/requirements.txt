@@ -12,7 +12,19 @@ TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "")
 OPENAI_KEY = os.getenv("OPENAI_API_KEY", "")
 ADMIN_ID = os.getenv("TELEGRAM_ADMIN_ID", "")
 
-client = AsyncOpenAI(api_key=OPENAI_KEY) if OPENAI_KEY else None
+# OmniRoute is an OpenAI-compatible gateway; when its key is set, route through it.
+OMNIROUTE_KEY = os.getenv("OMNIROUTE_API_KEY", "")
+OMNIROUTE_BASE_URL = os.getenv("OMNIROUTE_BASE_URL", "http://localhost:20128/v1")
+
+if OMNIROUTE_KEY:
+    client = AsyncOpenAI(api_key=OMNIROUTE_KEY, base_url=OMNIROUTE_BASE_URL)
+    MODEL = os.getenv("OMNIROUTE_MODEL", "auto")
+elif OPENAI_KEY:
+    client = AsyncOpenAI(api_key=OPENAI_KEY)
+    MODEL = os.getenv("OPENAI_MODEL", "gpt-4.1-mini")
+else:
+    client = None
+    MODEL = ""
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
@@ -31,18 +43,18 @@ async def generate(update: Update, context: ContextTypes.DEFAULT_TYPE, task: str
         await update.message.reply_text("This assistant is private.")
         return
     if not client:
-        await update.message.reply_text("OpenAI is not configured yet.")
+        await update.message.reply_text("AI is not configured yet. Set OMNIROUTE_API_KEY or OPENAI_API_KEY.")
         return
     prompt = "You are LSKhan Jastip's honest Indonesian content assistant. Never invent prices, stock, receipts, reviews, or delivery promises. Use warm natural Bahasa Indonesia. Task: " + task
     await update.message.reply_text("Sebentar ya 🌷 Aku sedang menyiapkan ide...")
     try:
-        response = await client.responses.create(
-            model="gpt-4.1-mini",
-            input=prompt
+        response = await client.chat.completions.create(
+            model=MODEL,
+            messages=[{"role": "user", "content": prompt}]
         )
-        await update.message.reply_text(response.output_text[:4000])
+        await update.message.reply_text((response.choices[0].message.content or "")[:4000])
     except Exception:
-        logging.exception("OpenAI request failed")
+        logging.exception("AI request failed")
         await update.message.reply_text("Maaf, ada kendala. Coba lagi sebentar ya.")
 
 async def caption(update: Update, context: ContextTypes.DEFAULT_TYPE):
