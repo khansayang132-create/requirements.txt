@@ -34,6 +34,8 @@ or directly to OpenAI if no OmniRoute key is set.
 
 - `/caption <brief>` — TikTok caption with hashtags
 - `/idea <brief>` — TikTok video idea with hook, scenes and CTA
+- `/hook <topic>` — 5 TikTok hooks (mystery, emotional, debate, funny, educational) for Cinta Beda Negara
+- `/script <story>` — full TikTok script: hook → story → twist → payoff → question, with on-screen text, B-roll, music, caption and hashtags
 - `/ping` — checks that the AI connection (OmniRoute or OpenAI) works
 - `/help` — list commands
 

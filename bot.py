@@ -32,6 +32,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "Commands:\n"
         "/caption - Create a TikTok caption\n"
         "/idea - Get a content idea\n"
+        "/hook - 5 TikTok hooks for Cinta Beda Negara\n"
+        "/script - Full TikTok script for Cinta Beda Negara\n"
         "/ping - Check the AI connection\n"
         "/help - Show commands"
     )
@@ -39,21 +41,40 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await start(update, context)
 
-async def generate(update: Update, context: ContextTypes.DEFAULT_TYPE, task: str):
+JASTIP_PERSONA = "You are LSKhan Jastip's honest Indonesian content assistant. Never invent prices, stock, receipts, reviews, or delivery promises. Use warm natural Bahasa Indonesia."
+
+# Persona for LSKhan 🌏💞 Cinta Beda Negara (Indonesia × Pakistan mixed-marriage) TikTok content.
+CINTA_PERSONA = (
+    "You are the TikTok content writer for LSKhan 🌏💞 Cinta Beda Negara, a real Indonesian wife and "
+    "Pakistani husband sharing their cross-border Islamic marriage: culture differences, family, "
+    "long distance, funny moments and unexpected realities. Write in warm, natural Bahasa Indonesia. "
+    "Goal: watch time, completion, comments, shares and follows. "
+    "Rules: the first 1-2 seconds must create curiosity with a statement, question, surprise or mystery, "
+    "never a slow greeting like 'Hello guys hari ini aku mau cerita'. "
+    "Curiosity without lying, emotion without overacting, no fake drama, never invent serious events. "
+    "Never make the husband look stupid or the Indonesian wife look cruel. "
+    "Keep Islamic and family topics respectful, not cheap clickbait. "
+    "Any ending question must connect naturally to the story."
+)
+
+async def generate(update: Update, context: ContextTypes.DEFAULT_TYPE, task: str, persona: str = JASTIP_PERSONA):
     if ADMIN_ID and str(update.effective_user.id) != ADMIN_ID:
         await update.message.reply_text("This assistant is private.")
         return
     if not client:
         await update.message.reply_text("AI is not configured yet. Set OMNIROUTE_API_KEY or OPENAI_API_KEY.")
         return
-    prompt = "You are LSKhan Jastip's honest Indonesian content assistant. Never invent prices, stock, receipts, reviews, or delivery promises. Use warm natural Bahasa Indonesia. Task: " + task
+    prompt = persona + " Task: " + task
     await update.message.reply_text("Sebentar ya 🌷 Aku sedang menyiapkan ide...")
     try:
         response = await client.chat.completions.create(
             model=MODEL,
             messages=[{"role": "user", "content": prompt}]
         )
-        await update.message.reply_text((response.choices[0].message.content or "")[:4000])
+        text = response.choices[0].message.content or ""
+        # Telegram caps messages at 4096 chars; send long scripts in parts.
+        for i in range(0, len(text), 4000):
+            await update.message.reply_text(text[i:i + 4000])
     except Exception:
         logging.exception("AI request failed")
         await update.message.reply_text("Maaf, ada kendala. Coba lagi sebentar ya.")
@@ -65,6 +86,32 @@ async def caption(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def idea(update: Update, context: ContextTypes.DEFAULT_TYPE):
     task = "Buat satu ide video TikTok jastip LSKhan yang mudah direkam sendirian, lengkap dengan hook, adegan, dan CTA. Brief: " + " ".join(context.args)
     await generate(update, context, task)
+
+def brief_or_default(context: ContextTypes.DEFAULT_TYPE) -> str:
+    brief = " ".join(context.args).strip()
+    return brief or "Pilih sendiri satu topik segar (emosional, lucu, budaya, keluarga, edukasi, debat, atau Islami) tentang nikah beda negara Indonesia × Pakistan."
+
+async def hook(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    task = (
+        "Buat 5 hook TikTok (kalimat pembuka 1-2 detik pertama) yang berbeda gaya: misteri, emosional, "
+        "kontroversial/debat, lucu, dan edukasi. Untuk tiap hook beri: kalimat yang diucapkan, teks di layar "
+        "(singkat, kata kunci huruf kapital seperti NIKAH BEDA NEGARA / ORANG PAKISTAN / TERNYATA...), "
+        "dan satu baris kenapa hook ini membuat orang berhenti scroll. Topik: " + brief_or_default(context)
+    )
+    await generate(update, context, task, CINTA_PERSONA)
+
+async def script(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    task = (
+        "Buat naskah video TikTok 15-35 detik (boleh sampai 60 detik hanya jika ceritanya memang butuh). "
+        "Struktur: HOOK → CERITA → KETEGANGAN/TWIST → PAYOFF → PERTANYAAN. Untuk tiap bagian tulis: "
+        "perkiraan detik, kalimat yang diucapkan, teks di layar (singkat), dan visual/B-roll yang relevan "
+        "(bandara, keluarga, makanan, pakaian tradisional, dokumen nikah, dll., jangan stok acak). "
+        "Lalu beri: saran musik/suara sesuai emosi, pertanyaan penutup alami untuk komentar, "
+        "caption singkat yang bikin penasaran, dan 4-7 hashtag relevan (misal #NikahBedaNegara "
+        "#IndonesiaPakistan #MixedMarriage). Jika cerita cocok dijadikan series, sarankan Part 2. "
+        "Topik/cerita: " + brief_or_default(context)
+    )
+    await generate(update, context, task, CINTA_PERSONA)
 
 async def ping(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if ADMIN_ID and str(update.effective_user.id) != ADMIN_ID:
@@ -94,6 +141,8 @@ def main():
     app.add_handler(CommandHandler("help", help_command))
     app.add_handler(CommandHandler("caption", caption))
     app.add_handler(CommandHandler("idea", idea))
+    app.add_handler(CommandHandler("hook", hook))
+    app.add_handler(CommandHandler("script", script))
     app.add_handler(CommandHandler("ping", ping))
     app.run_polling()
 
