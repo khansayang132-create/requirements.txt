@@ -2,7 +2,7 @@ import os
 import logging
 from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes
-from openai import AsyncOpenAI
+from openai import APIConnectionError, AsyncOpenAI
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -16,15 +16,35 @@ ADMIN_ID = os.getenv("TELEGRAM_ADMIN_ID", "")
 OMNIROUTE_KEY = os.getenv("OMNIROUTE_API_KEY", "")
 OMNIROUTE_BASE_URL = os.getenv("OMNIROUTE_BASE_URL", "http://localhost:20128/v1")
 
+# Headroom (optional) is a context-compression proxy in front of the same gateway. When
+# HEADROOM_BASE_URL is set, requests go through it first and fall back to the direct route
+# only if Headroom itself can't be reached, so a stopped proxy never takes the bot down.
+HEADROOM_BASE_URL = os.getenv("HEADROOM_BASE_URL", "")
+
+routes = []  # (label, client), tried in order
 if OMNIROUTE_KEY:
-    client = AsyncOpenAI(api_key=OMNIROUTE_KEY, base_url=OMNIROUTE_BASE_URL)
+    if HEADROOM_BASE_URL:
+        routes.append((f"Headroom {HEADROOM_BASE_URL}", AsyncOpenAI(api_key=OMNIROUTE_KEY, base_url=HEADROOM_BASE_URL, max_retries=0)))
+    routes.append((OMNIROUTE_BASE_URL, AsyncOpenAI(api_key=OMNIROUTE_KEY, base_url=OMNIROUTE_BASE_URL)))
     MODEL = os.getenv("OMNIROUTE_MODEL", "auto")
 elif OPENAI_KEY:
-    client = AsyncOpenAI(api_key=OPENAI_KEY)
+    if HEADROOM_BASE_URL:
+        routes.append((f"Headroom {HEADROOM_BASE_URL}", AsyncOpenAI(api_key=OPENAI_KEY, base_url=HEADROOM_BASE_URL, max_retries=0)))
+    routes.append(("OpenAI", AsyncOpenAI(api_key=OPENAI_KEY)))
     MODEL = os.getenv("OPENAI_MODEL", "gpt-4.1-mini")
 else:
-    client = None
     MODEL = ""
+client = routes[0][1] if routes else None
+
+async def chat(**kwargs):
+    """Send a chat completion along the first reachable route. Returns (route label, response)."""
+    for i, (label, c) in enumerate(routes):
+        try:
+            return label, await c.chat.completions.create(**kwargs)
+        except APIConnectionError:
+            if i == len(routes) - 1:
+                raise
+            logging.warning("%s unreachable, falling back to %s", label, routes[i + 1][0])
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
@@ -67,10 +87,7 @@ async def generate(update: Update, context: ContextTypes.DEFAULT_TYPE, task: str
     prompt = persona + " Task: " + task
     await update.message.reply_text("Sebentar ya 🌷 Aku sedang menyiapkan ide...")
     try:
-        response = await client.chat.completions.create(
-            model=MODEL,
-            messages=[{"role": "user", "content": prompt}]
-        )
+        _, response = await chat(model=MODEL, messages=[{"role": "user", "content": prompt}])
         text = response.choices[0].message.content or ""
         # Telegram caps messages at 4096 chars; send long scripts in parts.
         for i in range(0, len(text), 4000):
@@ -120,13 +137,12 @@ async def ping(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not client:
         await update.message.reply_text("AI is not configured yet. Set OMNIROUTE_API_KEY or OPENAI_API_KEY.")
         return
-    target = OMNIROUTE_BASE_URL if OMNIROUTE_KEY else "OpenAI"
+    target = " → ".join(label for label, _ in routes)
     try:
-        response = await client.chat.completions.create(
-            model=MODEL,
-            messages=[{"role": "user", "content": "Reply with: OK"}],
-            max_tokens=5
-        )
+        target, response = await chat(model=MODEL, messages=[{"role": "user", "content": "Reply with: OK"}],
+                                      max_tokens=5)
+        if target != routes[0][0]:
+            target += f" (fallback: {routes[0][0]} unreachable)"
         reply = (response.choices[0].message.content or "").strip()
         await update.message.reply_text(f"✅ Connected to {target} (model: {response.model or MODEL}). Reply: {reply}")
     except Exception as e:
