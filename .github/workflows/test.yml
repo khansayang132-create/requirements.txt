@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - run: python3 -m py_compile bot.py
-      - run: shellcheck -S warning service/install.sh service/test-service.sh
+      - run: shellcheck -S warning service/install.sh service/test-service.sh termux/install.sh termux/test-termux.sh
 
   service:
     strategy:
@@ -22,3 +22,9 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - run: bash service/test-service.sh
+
+  termux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - run: docker run --rm --privileged -v "$PWD":/mnt/repo:ro termux/termux-docker:x86_64 bash /mnt/repo/termux/test-termux.sh
