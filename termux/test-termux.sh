@@ -45,6 +45,10 @@ bash termux/install.sh logs 5
 # Simulate a phone restart without Termux:Boot: kill everything, then "open Termux" (a login shell).
 sv down lskhan-bot lskhan-omniroute || true
 pkill -f runsvdir || true
+# A reboot also kills the per-service supervisors. Left alive, they keep rewriting supervise/
+# while it is deleted below ("Directory not empty", seen in CI), so stop them and wait.
+pkill -x runsv || true
+for _ in $(seq 1 40); do pgrep -x runsv >/dev/null || break; sleep 0.25; done
 rm -f "$PREFIX/var/run/service-daemon.pid"
 for f in "$PREFIX"/var/service/*/supervise "$PREFIX"/var/service/*/log/supervise; do rm -rf "$f"; done
 sleep 2
