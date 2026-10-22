@@ -101,3 +101,45 @@ jobs:
             .claude/skills/taikatranslator-engineering/starter/target/failsafe-reports/
             .claude/skills/taikatranslator-engineering/starter/target/e2e-evidence/
           if-no-files-found: warn
+
+  # Visual gate for the starter kit (TSK-5.2.7): renders the end-to-end DOCX produced by
+  # taika-starter with LibreOffice and compares it to the committed, reviewed baseline.
+  # Separate job on purpose: structure tests passing never implies this passes.
+  taika-visual:
+    needs: taika-starter
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: .claude/skills/taikatranslator-engineering/starter
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/download-artifact@v4
+        with:
+          name: taika-starter-evidence
+          path: .claude/skills/taikatranslator-engineering/starter/evidence
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - run: |
+          printf 'http://archive.ubuntu.com/ubuntu/\tpriority:1\nhttp://azure.archive.ubuntu.com/ubuntu/\tpriority:2\n' \
+            | sudo tee /etc/apt/apt-mirrors.txt
+          for i in 1 2 3; do
+            sudo timeout 150 apt-get -o Acquire::Retries=3 update && \
+              sudo timeout 600 apt-get -o Acquire::Retries=3 install -y --no-install-recommends \
+                libreoffice-writer-nogui poppler-utils fonts-crosextra-carlito && break
+            [ "$i" = 3 ] && exit 1
+            echo "apt attempt $i failed; retrying"; sleep 10
+          done
+        timeout-minutes: 15
+      - run: pip install pillow==11.1.0
+      - run: soffice --version && pdftoppm -v 2>&1 | head -1 && fc-match Calibri
+      - run: |
+          python scripts/visual_diff.py compare evidence/e2e-evidence/service-agreement.ES.docx \
+            --baseline src/test/resources/baselines/service-agreement.ES --out visual-out
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: taika-visual-diff
+          path: .claude/skills/taikatranslator-engineering/starter/visual-out/
+          if-no-files-found: warn

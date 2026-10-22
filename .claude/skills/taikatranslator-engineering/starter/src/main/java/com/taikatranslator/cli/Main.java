@@ -139,7 +139,10 @@ public final class Main {
                 return a.analyzeResult();
             };
 
-            AwtTextMeasurer measurer = new AwtTextMeasurer(Font.SANS_SERIF, Font.PLAIN);
+            // The DOCX declares Calibri; Carlito has identical metrics and is freely installable on servers.
+            AwtTextMeasurer measurer = new AwtTextMeasurer("Carlito", Font.PLAIN);
+            if (!measurer.resolvedFamily().equalsIgnoreCase("Carlito"))
+                log.warn("assembly", "measurer_font_substituted", Map.of("resolved", measurer.resolvedFamily()));
             ReferencePipeline pipeline = new ReferencePipeline(extractor, cache, measurer, clock, log, new InputLimits(config.limits()));
             ProcessingReport r = pipeline.run(opts.input(), docx, opts.targetLang(), opts.overwrite());
             r.environment("measurerFont", measurer.resolvedFamily());

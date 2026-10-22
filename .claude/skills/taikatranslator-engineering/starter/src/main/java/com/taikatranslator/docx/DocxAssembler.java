@@ -55,10 +55,23 @@ public final class DocxAssembler {
     private static final double POINTS_PER_INCH = 72.0;
     private static final int TWIPS_PER_INCH = 1440;
 
+    /** Declared in the DOCX. Measure with a metric-compatible font (Carlito for Calibri) where Calibri isn't installed. */
+    public static final String DEFAULT_FONT = "Calibri";
+
     private final TextMeasurer measurer;
+    private final String fontFamily;
 
     public DocxAssembler(TextMeasurer measurer) {
+        this(measurer, DEFAULT_FONT);
+    }
+
+    /**
+     * @param fontFamily declared on every run, so Word and LibreOffice render with the font the
+     *                   fitter measured instead of each falling back to its own default
+     */
+    public DocxAssembler(TextMeasurer measurer, String fontFamily) {
         this.measurer = measurer;
+        this.fontFamily = fontFamily;
     }
 
     public List<String> write(CanonicalDocument doc, Path out) throws IOException {
@@ -108,7 +121,7 @@ public final class DocxAssembler {
         XWPFParagraph para = d.createParagraph();
         if (p.role() == Role.TITLE) para.setStyle("Title");
         else if (p.role() == Role.HEADING) para.setStyle("Heading1");
-        XWPFRun run = para.createRun();
+        XWPFRun run = run(para);
         run.setFontSize(fit.fontSizePt());
         if (p.role() == Role.TITLE || p.role() == Role.HEADING) run.setBold(true);
         setTextWithBreaks(run, p.text());
@@ -130,7 +143,7 @@ public final class DocxAssembler {
             for (int c = 0; c < t.columns(); c++) {
                 if (t.covered(r, c)) continue;
                 String text = t.cells().get(r).get(c);
-                XWPFRun run = table.getRow(r).getCell(c).getParagraphs().get(0).createRun();
+                XWPFRun run = run(table.getRow(r).getCell(c).getParagraphs().get(0));
                 run.setFontSize(fitter.fit(text, cellWidthPt * spanAt(t, r, c).colSpan(), Double.MAX_VALUE / 4).fontSizePt());
                 setTextWithBreaks(run, text);
             }
@@ -175,7 +188,7 @@ public final class DocxAssembler {
             for (String text : headers) {
                 XWPFParagraph p = h.createParagraph();
                 p.setAlignment(ParagraphAlignment.CENTER);
-                p.createRun().setText(text);
+                run(p).setText(text);
             }
         }
         if (!footers.isEmpty() || pageNumber) {
@@ -183,7 +196,7 @@ public final class DocxAssembler {
             for (String text : footers) {
                 XWPFParagraph p = f.createParagraph();
                 p.setAlignment(ParagraphAlignment.CENTER);
-                p.createRun().setText(text);
+                run(p).setText(text);
             }
             if (pageNumber) {
                 XWPFParagraph p = f.createParagraph();
@@ -193,6 +206,12 @@ public final class DocxAssembler {
                 field.addNewR().addNewT().setStringValue("1"); // cached result; Word/LibreOffice recompute it per page
             }
         }
+    }
+
+    private XWPFRun run(XWPFParagraph p) {
+        XWPFRun r = p.createRun();
+        r.setFontFamily(fontFamily);
+        return r;
     }
 
     private static void setTextWithBreaks(XWPFRun run, String text) {

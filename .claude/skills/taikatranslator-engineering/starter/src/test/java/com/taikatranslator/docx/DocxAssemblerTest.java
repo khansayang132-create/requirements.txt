@@ -76,6 +76,23 @@ class DocxAssemblerTest {
     }
 
     @Test
+    void everyRunDeclaresTheFontSoRenderersDoNotPickTheirOwn() throws Exception {
+        Path out = dir.resolve("font.docx");
+        new DocxAssembler(new FixedAdvanceMeasurer(0.5)).write(new CanonicalDocument(PAGES, List.of(
+                new Paragraph("t", Role.TITLE, "Título", 1, BOX),
+                new Paragraph("h", Role.HEADER, "CONFIDENCIAL", 1, BOX),
+                new CanonicalDocument.Table("t1", 1, 2, List.of(List.of("a", "b")), List.of(), 1, BOX))), out);
+        try (var in = java.nio.file.Files.newInputStream(out); var doc = new org.apache.poi.xwpf.usermodel.XWPFDocument(in)) {
+            List<org.apache.poi.xwpf.usermodel.XWPFRun> runs = new java.util.ArrayList<>();
+            doc.getParagraphs().forEach(p -> runs.addAll(p.getRuns()));
+            doc.getTables().get(0).getRows().forEach(r -> r.getTableCells().forEach(c -> c.getParagraphs().forEach(p -> runs.addAll(p.getRuns()))));
+            doc.getHeaderList().forEach(h -> h.getParagraphs().forEach(p -> runs.addAll(p.getRuns())));
+            assertEquals(4, runs.size());
+            for (var r : runs) assertEquals(DocxAssembler.DEFAULT_FONT, r.getFontFamily());
+        }
+    }
+
+    @Test
     void tableWithoutMergesIsUnchanged() throws Exception {
         String[][] cells = {{"a", "b"}, {"c", "d"}};
         var snap = build(List.of(new CanonicalDocument.Table("t1", 2, 2, grid(cells), List.of(), 1, BOX)));
