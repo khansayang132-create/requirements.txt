@@ -47,7 +47,7 @@ Also tracked:
 - **Dependencies** (`requirements.txt`): python-telegram-bot>=21, openai>=1.40, python-dotenv.
 - **Environment** (`bot.py:11-34`, `.env.example`):
   - `TELEGRAM_BOT_TOKEN`, `TELEGRAM_ADMIN_ID`
-  - `OMNIROUTE_API_KEY`, `OMNIROUTE_BASE_URL` (default `http://localhost:20128/v1`, see known issues), `OMNIROUTE_MODEL` (default `auto`)
+  - `OMNIROUTE_API_KEY`, `OMNIROUTE_BASE_URL` (default `http://127.0.0.1:20128/v1`), `OMNIROUTE_MODEL` (default `auto`)
   - Fallbacks `OPENAI_API_KEY` / `OPENAI_MODEL` (default `gpt-4.1-mini`)
   - Optional `HEADROOM_BASE_URL`
 - **Routes:** a list of `(label, AsyncOpenAI)` pairs.
@@ -55,14 +55,14 @@ Also tracked:
   - `chat()` (`bot.py:39-47`) moves to the next route only on `APIConnectionError`.
   - It uses `chat.completions.create` only. The Responses API is banned because gateways don't all support it.
 - **Commands:** registered in `main()` (`bot.py:152-162`): `/start`, `/help`, `/caption` and `/idea` (jastip persona), `/hook` and `/script` (`CINTA_PERSONA`), `/ping`.
-- **`generate(update, context, task, persona)`** (`bot.py:80`) handles all AI commands:
-  - admin check (`bot.py:81`)
+- **`generate(update, context, task, persona)`** handles all AI commands:
+  - owner gate `allowed(update)`
   - "AI not configured" message
   - progress message in Indonesian
   - reply split into 4000-character chunks (Telegram's limit is 4096)
   - all exceptions logged, with an Indonesian apology sent to the user
-- **`/ping`** (`bot.py:133`) does the same admin check and reports which route answered and whether it fell back.
-- **Admin gate:** `if ADMIN_ID and user_id != ADMIN_ID` fails open. With `TELEGRAM_ADMIN_ID` unset, anyone can use the bot.
+- **`/ping`** uses the same gate and reports which route answered and whether it fell back.
+- **Owner gate:** `is_admin` / `allowed` fail closed. With `TELEGRAM_ADMIN_ID` unset nobody passes, and the bot replies with the sender's ID to put in `.env`. Tested in `tests/test_bot.py`.
 - **Content rules:** live in `CINTA_PERSONA` (`bot.py`) and `RULES` in the external LSKhan Studio artifact. Change both or neither.
 
 ## Part 2: 24/7 runners
@@ -133,7 +133,7 @@ Also tracked:
 
 ## CI (`.github/workflows/test.yml`, on push / PR / dispatch)
 
-- `check`: `py_compile bot.py` + shellcheck on the four runner scripts.
+- `check`: `py_compile bot.py`, `pytest tests` (bot tests, Python 3.12) and shellcheck on the four runner scripts.
 - `service`: `service/test-service.sh` on ubuntu-22.04 and ubuntu-24.04.
 - `termux`: `termux/test-termux.sh` in `termux/termux-docker:x86_64` (privileged).
 - `apex`: ubuntu-24.04 with Python 3.13, cached and retried apt (ffmpeg, espeak-ng, fonts) and `pytest -q`, with a 32-minute timeout.
