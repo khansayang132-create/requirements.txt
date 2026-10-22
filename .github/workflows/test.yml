@@ -31,7 +31,7 @@ jobs:
 
   apex:
     runs-on: ubuntu-24.04
-    timeout-minutes: 25
+    timeout-minutes: 32
     defaults:
       run:
         working-directory: apex
@@ -40,15 +40,27 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: "3.13"
+      # Downloaded .deb files are cached between runs: the runner's default mirror has been slow
+      # enough (~80 KB/s) to time the job out.
+      - uses: actions/cache@v4
+        with:
+          path: ~/apt-cache
+          key: apt-${{ runner.os }}-noble-ffmpeg-espeak-ng-dejavu-v1
       - run: |
-          # A mirror can hang past apt's own timeouts, so cap each attempt and retry.
-          apt_opts="-o Acquire::Retries=3 -o Acquire::http::Timeout=30"
+          # Main archive first, the runner's Azure mirror as fallback.
+          printf 'http://archive.ubuntu.com/ubuntu/\tpriority:1\nhttp://azure.archive.ubuntu.com/ubuntu/\tpriority:2\n' \
+            | sudo tee /etc/apt/apt-mirrors.txt
+          mkdir -p ~/apt-cache/partial
+          apt_opts="-o Acquire::Retries=3 -o Acquire::http::Timeout=30 -o Dir::Cache::Archives=$HOME/apt-cache"
+          # Cap each attempt so a hung mirror can't eat the job; partial downloads resume on retry.
           for i in 1 2 3; do
             sudo timeout 150 apt-get $apt_opts update && \
-              sudo timeout 240 apt-get $apt_opts install -y --no-install-recommends ffmpeg espeak-ng fonts-dejavu-core && break
+              sudo timeout 480 apt-get $apt_opts install -y --no-install-recommends ffmpeg espeak-ng fonts-dejavu-core && break
             [ "$i" = 3 ] && exit 1
             echo "apt attempt $i failed or hung; retrying"; sleep 10
           done
-        timeout-minutes: 14
+          sudo rm -rf ~/apt-cache/partial ~/apt-cache/lock
+          sudo chown -R "$USER" ~/apt-cache
+        timeout-minutes: 22
       - run: pip install -r requirements.txt
       - run: python -m pytest -q
