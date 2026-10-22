@@ -4,23 +4,33 @@
 #
 #   bash termux/install.sh                   bot + OmniRoute
 #   bash termux/install.sh --bot-only        bot only (you start OmniRoute yourself)
+#   bash termux/install.sh --with-headroom   also build and run Headroom (EXPERIMENTAL, see below)
 #   bash termux/install.sh status            are they running?
 #   bash termux/install.sh logs              last lines of the bot's log
+#   bash termux/install.sh logs headroom     last lines of Headroom's log
 #   bash termux/install.sh uninstall         stop and remove the background services
 #
 # For start-after-reboot, also install the "Termux:Boot" app (same place you got Termux,
 # e.g. F-Droid) and open it once.
+#
+# Headroom (--with-headroom) is experimental. It has no Android builds, so pip compiles about ten
+# Rust/C packages on the phone: 1-3 hours, ~4 GB free space while building. If anything fails, the
+# bot is still installed without it, and the bot skips Headroom whenever it isn't running.
 
 set -euo pipefail
 
-die() { echo "❌ $*" >&2; exit 1; }
-ok()  { echo "✅ $*"; }
+die()  { echo "❌ $*" >&2; exit 1; }
+ok()   { echo "✅ $*"; }
+warn() { echo "⚠️  $*" >&2; }
 
 [[ -n ${PREFIX:-} && -d $PREFIX/bin && -n ${HOME:-} ]] || die "Run this inside the Termux app."
 BOT_DIR=$(cd "$(dirname "$0")/.." && pwd)
 SV=$PREFIX/var/service
 BOOT=$HOME/.termux/boot/lskhan-start
 WAKELOCK=$PREFIX/etc/profile.d/lskhan-wakelock.sh
+HR_VENV=$HOME/.lskhan-headroom
+HR_VERSION=0.41.0
+HR_PORT=8765
 
 start_service_daemon() {
     # Same as termux-services does when a new Termux session opens.
@@ -51,8 +61,77 @@ enable_service() {
     die "Could not start $name. Close Termux completely, open it again, and re-run this script."
 }
 
+# env_value KEY: KEY's value from .env, without quotes (empty if unset).
+env_value() {
+    [[ -f $BOT_DIR/.env ]] || return 0
+    sed -n "s/^$1=//p" "$BOT_DIR/.env" | tail -n 1 | tr -d "\"'"
+}
+
+# Build Headroom into its own venv. Returns non-zero (never exits) so a failed build can't stop
+# the bot from being installed. A finished build leaves $HR_VENV/.installed; anything less is redone.
+install_headroom() {
+    [[ -f $HR_VENV/.installed && -x $HR_VENV/bin/headroom ]] && return 0
+
+    local free_kb
+    free_kb=$(df -Pk "$HOME" | awk 'NR==2 {print $4}')
+    if (( free_kb < 4 * 1024 * 1024 )); then
+        warn "Headroom needs about 4 GB free to build; only $(( free_kb / 1024 )) MB free."
+        return 1
+    fi
+
+    echo "🧪 Building Headroom $HR_VERSION (experimental). This takes 1-3 hours."
+    echo "   Keep Termux open and the phone charging. If it stops, re-run the same command: it continues."
+    command -v termux-wake-lock >/dev/null && timeout 10 termux-wake-lock || true
+
+    # Termux ships onnxruntime, numpy and cryptography prebuilt; the venv sees them through
+    # --system-site-packages. Everything else is compiled by pip with Rust and clang.
+    pkg install -y rust clang make cmake binutils onnxruntime python-numpy python-cryptography >/dev/null \
+        || { warn "Could not install Headroom's build tools (pkg install failed)."; return 1; }
+    [[ -x $HR_VENV/bin/pip ]] || python -m venv --system-site-packages "$HR_VENV" \
+        || { warn "Could not create $HR_VENV."; return 1; }
+
+    local log=$HR_VENV/build.log start=$SECONDS pid rc
+    # maturin (used by most of the Rust packages) can't detect the Android API level by itself.
+    ANDROID_API_LEVEL=$(getprop ro.build.version.sdk 2>/dev/null || echo 24) \
+        "$HR_VENV/bin/pip" install --disable-pip-version-check "headroom-ai[proxy]==$HR_VERSION" >"$log" 2>&1 &
+    pid=$!
+    while kill -0 "$pid" 2>/dev/null; do
+        sleep 60
+        kill -0 "$pid" 2>/dev/null && echo "   ...still building ($(( (SECONDS - start) / 60 )) min): $(tail -n 1 "$log" | cut -c1-70)"
+    done
+    wait "$pid" && rc=0 || rc=$?
+    if (( rc != 0 )) || [[ ! -x $HR_VENV/bin/headroom ]]; then
+        warn "Headroom failed to build. Last lines of $log:"
+        tail -n 15 "$log" >&2
+        return 1
+    fi
+    touch "$HR_VENV/.installed"
+    ok "Headroom built in $(( (SECONDS - start) / 60 )) min."
+}
+
+# Point the bot at Headroom unless .env already sets HEADROOM_BASE_URL to something.
+use_headroom_in_env() {
+    local env=$BOT_DIR/.env url=http://127.0.0.1:$HR_PORT/v1
+    [[ -f $env ]] || return 0
+    [[ -n $(env_value HEADROOM_BASE_URL) ]] && return 0
+    if grep -q '^HEADROOM_BASE_URL=' "$env"; then
+        sed -i "s|^HEADROOM_BASE_URL=.*|HEADROOM_BASE_URL=$url|" "$env"
+    else
+        echo "HEADROOM_BASE_URL=$url" >> "$env"
+    fi
+    echo "   Set HEADROOM_BASE_URL=$url in .env"
+}
+
+wait_headroom_healthy() {
+    for _ in $(seq 1 90); do
+        curl -s -m 2 "http://127.0.0.1:$HR_PORT/health" >/dev/null 2>&1 && return 0
+        sleep 1
+    done
+    return 1
+}
+
 install_all() {
-    local with_omni=$1
+    local with_omni=$1 with_hr=$2
     [[ -f $BOT_DIR/bot.py ]] || die "bot.py not found in $BOT_DIR. Run this from the bot folder."
     [[ -f $BOT_DIR/.env ]] || echo "⚠️  No .env yet: copy .env.example to .env and fill it in, then: bash termux/install.sh"
 
@@ -73,13 +152,49 @@ install_all() {
         # Stop a copy started by hand so the service can use port 20128.
         pkill -f "$omni" 2>/dev/null || true
     fi
+
+    # Once installed, Headroom stays on when the script is re-run without the flag.
+    [[ -d $SV/lskhan-headroom ]] && with_hr=1
+    local hr=0
+    if [[ $with_hr == 1 ]]; then
+        if install_headroom; then
+            hr=1
+        else
+            warn "Continuing without Headroom. The bot works the same, just without compression."
+        fi
+    fi
+    if [[ $hr == 0 && -d $SV/lskhan-headroom ]]; then
+        # e.g. its build was deleted: don't leave a service that can only crash-loop.
+        sv down lskhan-headroom 2>/dev/null || true
+        rm -rf "${SV:?}/lskhan-headroom"
+    fi
+
     pkill -f "python.*bot.py" 2>/dev/null || true
 
     [[ -n $omni ]] && make_service lskhan-omniroute "\"$omni\""
+    if [[ $hr == 1 ]]; then
+        # Same gateway the bot uses: OmniRoute when it has a key, otherwise OpenAI (Headroom's default).
+        local upstream="" base
+        if [[ -n $(env_value OMNIROUTE_API_KEY) ]]; then
+            base=$(env_value OMNIROUTE_BASE_URL)
+            upstream="--openai-api-url ${base:-http://127.0.0.1:20128/v1}"
+        fi
+        make_service lskhan-headroom env HEADROOM_BEACON=off DO_NOT_TRACK=1 \
+            "\"$HR_VENV/bin/headroom\"" proxy --host 127.0.0.1 --port "$HR_PORT" "$upstream"
+        use_headroom_in_env
+    fi
     make_service lskhan-bot python -u bot.py
 
     start_service_daemon
     [[ -n $omni ]] && enable_service lskhan-omniroute
+    if [[ $hr == 1 ]]; then
+        enable_service lskhan-headroom
+        if wait_headroom_healthy; then
+            ok "Headroom running on 127.0.0.1:$HR_PORT."
+        else
+            warn "Headroom started but isn't answering yet. Check: bash termux/install.sh logs headroom"
+        fi
+    fi
     enable_service lskhan-bot
 
     # Keep Android from pausing Termux while the phone sleeps.
@@ -98,7 +213,10 @@ install_all() {
     } > "$BOOT"
     chmod +x "$BOOT"
 
-    ok "Running in the background now${omni:+ (bot + OmniRoute)}."
+    local what=bot
+    [[ -n $omni ]] && what+=" + OmniRoute"
+    [[ $hr == 1 ]] && what+=" + Headroom"
+    ok "Running in the background now ($what)."
     echo "   It restarts automatically if it crashes."
     echo "   Check:  bash termux/install.sh status"
     echo "   Logs:   bash termux/install.sh logs"
@@ -113,35 +231,52 @@ install_all() {
 status() {
     start_service_daemon >/dev/null 2>&1 || true
     local name
-    for name in lskhan-omniroute lskhan-bot; do
+    for name in lskhan-omniroute lskhan-headroom lskhan-bot; do
         [[ -d $SV/$name ]] || continue
         sv status "$name" || true
     done
+    if [[ -d $SV/lskhan-headroom ]]; then
+        curl -s -m 2 "http://127.0.0.1:$HR_PORT/health" >/dev/null 2>&1 \
+            && echo "Headroom answers on 127.0.0.1:$HR_PORT" || echo "Headroom is not answering on 127.0.0.1:$HR_PORT"
+    fi
 }
 
+# logs [headroom] [LINES]
 logs() {
-    local log=$PREFIX/var/log/sv/lskhan-bot/current
-    [[ -f $log ]] || die "No bot log yet."
+    local name=bot
+    [[ ${1:-} == headroom ]] && { name=headroom; shift; }
+    local log=$PREFIX/var/log/sv/lskhan-$name/current
+    [[ -f $log ]] || die "No $name log yet."
     tail -n "${1:-40}" "$log"
 }
 
 uninstall() {
     start_service_daemon >/dev/null 2>&1 || true
     local name
-    for name in lskhan-bot lskhan-omniroute; do
+    for name in lskhan-bot lskhan-headroom lskhan-omniroute; do
         [[ -d $SV/$name ]] || continue
         sv down "$name" 2>/dev/null || true
         rm -rf "${SV:?}/$name"
     done
     rm -f "$BOOT" "$WAKELOCK"
     ok "Background services removed. (The bot's files and .env are untouched.)"
+    # The build took hours, so keep it; the bot skips Headroom when it isn't running.
+    [[ -d $HR_VENV ]] && echo "   Headroom's build is kept in $HR_VENV. To free the space: rm -rf $HR_VENV"
 }
 
+usage="Use: bash termux/install.sh [--bot-only] [--with-headroom] | status | logs [headroom] [LINES] | uninstall"
 case ${1:-} in
-    "")          install_all 1 ;;
-    --bot-only)  install_all 0 ;;
     status)      status ;;
-    logs)        logs "${2:-40}" ;;
+    logs)        shift; logs "$@" ;;
     uninstall)   uninstall ;;
-    *)           die "Use: bash termux/install.sh [--bot-only | status | logs | uninstall]" ;;
+    *)
+        with_omni=1 with_hr=0
+        for arg in "$@"; do
+            case $arg in
+                --bot-only)      with_omni=0 ;;
+                --with-headroom) with_hr=1 ;;
+                *)               die "$usage" ;;
+            esac
+        done
+        install_all "$with_omni" "$with_hr" ;;
 esac

@@ -70,6 +70,26 @@ as your Termux, and some phones can't install it. It's not required.)
 - After editing `.env`: run `bash termux/install.sh` again
 - Stop for good: `bash termux/install.sh uninstall`
 
+### Experimental: Headroom on the phone
+
+```
+bash termux/install.sh --with-headroom
+```
+Builds Headroom on the phone and runs it as a third background service on `127.0.0.1:8765`, in
+front of OmniRoute, and sets `HEADROOM_BASE_URL` in `.env` (unless you already set it).
+Headroom has no Android builds, so this compiles about ten packages: expect **1-3 hours** and
+**about 4 GB free space** while building. Keep Termux open and the phone charging; if it stops,
+run the same command again and it continues.
+
+If the build fails, the bot is still installed without Headroom, and the last lines of the build
+log are shown (full log: `~/.lskhan-headroom/build.log`). Once built, later re-runs keep it on.
+
+- Check: `bash termux/install.sh status` (also says whether Headroom answers)
+- Logs: `bash termux/install.sh logs headroom`
+- `uninstall` stops it but keeps the build. To free the space: `rm -rf ~/.lskhan-headroom`
+
+This only helps the bot. It does not connect Headroom to Claude Code sessions, which run their own.
+
 ## Run 24/7 (Linux)
 
 Make the bot start at boot, restart itself if it crashes, and keep running after you log out:

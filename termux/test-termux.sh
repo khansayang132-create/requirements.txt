@@ -67,4 +67,59 @@ test ! -d "$PREFIX/var/service/lskhan-omniroute"
 test ! -e "$HOME/.termux/boot/lskhan-start"
 test ! -e "$PREFIX/etc/profile.d/lskhan-wakelock.sh"
 
+# --- Headroom (experimental) ---
+# A failed build must not stop the bot. A stand-in pkg refuses Headroom's build tools.
+mkdir -p "$HOME/fakebin"
+printf '#!%s/bin/sh\necho "fake pkg refuses: $*" >&2\nexit 1\n' "$PREFIX" > "$HOME/fakebin/pkg"
+chmod +x "$HOME/fakebin/pkg"
+out=$(PATH=$HOME/fakebin:$PATH bash termux/install.sh --with-headroom 2>&1)
+echo "$out"
+grep -q 'Continuing without Headroom' <<<"$out"
+sv status lskhan-bot | grep -q '^run:'
+test ! -d "$PREFIX/var/service/lskhan-headroom"
+test -z "$(grep '^HEADROOM_BASE_URL=.' .env || true)"
+
+# A finished build (a stand-in that answers /health) becomes a service and the bot is pointed at it.
+hr=$HOME/.lskhan-headroom
+mkdir -p "$hr/bin"
+cat > "$hr/bin/headroom" <<EOF
+#!$PREFIX/bin/python
+import sys, http.server
+print("FAKE HEADROOM", sys.argv[1:], flush=True)
+port = int(sys.argv[sys.argv.index("--port") + 1])
+class H(http.server.BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200); self.end_headers(); self.wfile.write(b"ok")
+http.server.HTTPServer(("127.0.0.1", port), H).serve_forever()
+EOF
+chmod +x "$hr/bin/headroom"
+touch "$hr/.installed"
+printf 'OMNIROUTE_API_KEY=fake\nHEADROOM_BASE_URL=\n' >> .env
+bash termux/install.sh --with-headroom
+sv status lskhan-headroom | grep -q '^run:'
+[[ $(curl -s -m 5 http://127.0.0.1:8765/health) == ok ]]
+grep -qx 'HEADROOM_BASE_URL=http://127.0.0.1:8765/v1' .env
+run=$PREFIX/var/service/lskhan-headroom/run
+grep -q 'HEADROOM_BEACON=off' "$run"
+grep -q -- '--host 127.0.0.1 --port 8765 --openai-api-url http://127.0.0.1:20128/v1' "$run"
+
+# Re-running without the flag keeps Headroom and doesn't touch .env again.
+bash termux/install.sh
+sv status lskhan-headroom | grep -q '^run:'
+[[ $(grep -c '^HEADROOM_BASE_URL=' .env) == 1 ]]
+out=$(bash termux/install.sh status); grep -q 'Headroom answers' <<<"$out"
+out=$(bash termux/install.sh logs headroom 5); grep -q 'FAKE HEADROOM' <<<"$out"
+
+# If the build disappears, a re-run drops the service instead of leaving it crash-looping.
+rm "$hr/.installed"
+PATH=$HOME/fakebin:$PATH bash termux/install.sh
+test ! -d "$PREFIX/var/service/lskhan-headroom"
+sv status lskhan-bot | grep -q '^run:'
+
+touch "$hr/.installed"
+bash termux/install.sh --with-headroom
+bash termux/install.sh uninstall
+test ! -d "$PREFIX/var/service/lskhan-headroom"
+test -d "$hr"   # the hours-long build is kept
+
 echo "ALL TERMUX TESTS PASSED"
