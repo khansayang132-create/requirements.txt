@@ -65,6 +65,11 @@
 | **LSKhan Studio** (phone app for hooks/scripts/captions/series) | Claude artifact `https://claude.ai/artifact/9Xfe4TpY8SdBy2epfKRi6p`. Uses the `sample` capability, so it runs on the viewer's own Claude plan. |
 | **Private VPN + ad blocking** | Separate repo `khansayang132-create/lskhan-vpn`. Its own README, STATUS and tests. |
 
+### Other tools
+| Topic | Source of Truth |
+|---|---|
+| **Spotify artist profiles** (not LSKhan) | [`.claude/skills/artist-profile/`](./.claude/skills/artist-profile/SKILL.md): `SKILL.md` (steps) + `template.md`. Profiles go in `profiles/<artist-slug>.md`; unknown fields stay `TBD`. |
+
 ---
 
 ## 2. Hard Constraints
