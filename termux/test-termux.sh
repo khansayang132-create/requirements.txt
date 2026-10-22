@@ -2,8 +2,13 @@
 # CI test for termux/install.sh, run inside the termux/termux-docker image (a real Termux userland).
 set -euxo pipefail
 
-pkg update -y >/dev/null 2>&1 || true
-pkg install -y python termux-services >/dev/null
+# Use Termux's main package server directly: pkg picks a random mirror, which may be mid-sync.
+echo "deb https://packages-cf.termux.dev/apt/termux-main stable main" > "$PREFIX/etc/apt/sources.list"
+for attempt in 1 2 3; do
+    apt-get update -q >/dev/null && apt-get install -y -q python termux-services >/dev/null && break
+    [[ $attempt == 3 ]] && exit 1
+    sleep 10
+done
 
 rm -rf "$HOME/bot"; cp -r /mnt/repo "$HOME/bot"; cd "$HOME/bot"
 printf 'TELEGRAM_BOT_TOKEN=123456:fake\n' > .env
