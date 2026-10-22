@@ -1,0 +1,18 @@
+name: termux-headroom
+
+# The real (slow) Headroom build in Termux. Separate from `test` so normal pushes stay fast.
+on:
+  push:
+    paths:
+      - termux/install.sh
+      - termux/test-headroom-build.sh
+      - .github/workflows/termux-headroom.yml
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v5
+      - run: docker run --rm --privileged -v "$PWD":/mnt/repo:ro termux/termux-docker:x86_64 bash /mnt/repo/termux/test-headroom-build.sh

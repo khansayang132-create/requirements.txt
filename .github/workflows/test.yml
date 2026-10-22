@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - run: python3 -m py_compile bot.py
-      - run: shellcheck -S warning service/install.sh service/test-service.sh termux/install.sh termux/test-termux.sh
+      - run: shellcheck -S warning service/install.sh service/test-service.sh termux/install.sh termux/test-termux.sh termux/test-headroom-build.sh
 
   service:
     strategy:
