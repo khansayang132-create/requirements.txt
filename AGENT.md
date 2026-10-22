@@ -52,6 +52,8 @@
 | **Edit, captions, loudness** | [`apex/apex/assemble.py`](./apex/apex/assemble.py), [`apex/apex/subtitles.py`](./apex/apex/subtitles.py). |
 | **QA** | [`apex/apex/qa.py`](./apex/apex/qa.py): technical checks plus sampled frames; creative review stays separate. |
 | **Queue & worker** | [`apex/apex/jobs.py`](./apex/apex/jobs.py) (header explains leases, retries, dead letters), [`apex/apex/cli.py`](./apex/apex/cli.py). |
+| **Autopilot & planner** | [`apex/apex/autopilot.py`](./apex/apex/autopilot.py): policy in `autopilot.json` next to the DB (emergency stop, daily cap, topic rules, approval gate); `run_plan` decides every plan entry. |
+| **Control center** | [`apex/apex/dashboard.py`](./apex/apex/dashboard.py): read-only web page (`apex.cli dashboard`), binds 127.0.0.1. |
 | **Publishing** | [`apex/apex/publishing.py`](./apex/apex/publishing.py): post state machine; dry-run adapter only. |
 | **Acceptance sample** | [`apex/samples/money-mistake/`](./apex/samples/money-mistake/): spec, script, and the committed output with manifest and QA report. |
 
@@ -79,6 +81,8 @@ Violating any of these is a bug, not a preference.
 | **APEX honesty** | Never ship a fake output: no placeholder video, no invented metric, no post URL. A provider that isn't configured raises `ProviderUnavailable` / `TTSUnavailable`; it does not fall back to fake text. |
 | **Publishing** | A post becomes `PUBLISHED` only from a provider response with `confirmed` and a `post_id`. Otherwise `PUBLICATION_STATUS_UNKNOWN`. |
 | **QA** | Technical score and creative review are separate fields. Never fold "looks good" into the technical score. |
+| **Autopilot** | New jobs from automation go through `run_plan` (approval, topics, daily cap). A worker never claims while the policy is paused. Don't add a path that enqueues around the policy. |
+| **Dashboard** | Stays read-only and bound to 127.0.0.1 by default. Media is served only from a completed job's recorded `final` path, never from a URL path. |
 | **Job states** | Change state only through `JobQueue` methods (they call `_move`, which enforces `ALLOWED_TRANSITIONS` and writes the audit log). Never `UPDATE jobs SET state=` directly. |
 | **Facts in scripts** | No invented statistics, quotes or sources. Illustrative arithmetic is fine. `review_script` rejects unsourced percentages. |
 | **Merging** | CI green on the branch head first: `check`, `service` ×2, `termux`, `apex`. |
@@ -131,7 +135,7 @@ Edit `CINTA_PERSONA` in `bot.py` **and** `RULES` in the LSKhan Studio artifact. 
 ```
 cd apex
 python3.13 -m venv .venv && .venv/bin/pip install -r requirements.txt
-.venv/bin/python -m pytest -q                                   # 53 tests, ~10 s
+.venv/bin/python -m pytest -q                                   # 64 tests, ~12 s
 .venv/bin/python -m apex.cli run --spec samples/money-mistake/spec.json \
     --script samples/money-mistake/script.json --project out/draft --fps 6 --samples 2   # ~6 min draft
 ```
