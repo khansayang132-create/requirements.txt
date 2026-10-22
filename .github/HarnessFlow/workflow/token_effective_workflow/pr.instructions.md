@@ -1,0 +1,117 @@
+---
+name: 'Fast PR Creation'
+description: 'Unified token-effective (fast) PR-stack workflow for Claude Code, Codex, and VS Code Copilot: main-agent diff analysis with file-completeness verification, one parallel challenge + research subagent step, and direct stack execution using the breakdown-pr skill'
+---
+# Create Pull Requests from a Feature Branch
+
+**Safety: follow `_lib/safety_rules.md`.**
+
+**DO NOT COMMIT TO GITHUB WITHOUT USER APPROVAL | DO NOT WRITE SPAM FILES | DO NOT USE SUDO**
+
+> **Preamble — canonical in [`_lib/workflow_contract.md`](../../_lib/workflow_contract.md).** Platform adaptation (this file serves Claude Code, Codex, and VS Code Copilot), Pack Path Resolution, subagent invocation, repo-context handoff (**[repo context digest]** / **[full repo context]**), and the two spawn dials (`subagent_model` + `subagent_effort` / `online_researcher_effort`) with the returned-result check are governed by its §Pack Path Resolution · §Subagent Invocation · §Context Passing for Subagents · §Subagent Launch Contract — this file deliberately does not restate them.
+
+<!-- Required Context Files (CLI-resolvable paths):
+  - philosophy/philosophy.instructions.md
+  - _lib/safety_rules.md
+  - _lib/workflow_contract.md
+  - _lib/subagent_contract.md
+  - _lib/approval_gate.md
+  - _lib/review_skills.md
+  - _lib/subagent_effectiveness.md
+  - _lib/harness_wiki.md
+  - repo_info/codebase_overview.md
+  - repo_info/scripts_overview.md
+  - repo_info/update_logs.md
+  - repo_info/known_issues.md
+  - skills/index.md
+  - skills/breakdown-pr/SKILL.md
+  - agents/devils-advocate.agent.md
+  - agents/online-researcher.agent.md
+  - agents/diversifier.agent.md
+-->
+
+[inputs]:
+- input 1: target branch (optional, defaults to current branch)
+- input 2: base branch (optional, defaults to repo default branch)
+- input 3: mode — `plan` or `execute` (optional, defaults to `execute`)
+- input 4: max lines per PR (optional, defaults to 1000)
+- input 5: stack tool preference (optional, auto-detect)
+
+[key md files]: codebase_overview.md, scripts_overview.md, update_logs.md, known_issues.md (under `repo_info/`, resolved via Pack Path Resolution). In multi-layer repos, also read the `codebase_overview.md` + `scripts_overview.md` of each discovered layer per `_lib/workflow_contract.md` §Key Context Files → Multi-Layer / Nested Repos.
+
+Also read the breakdown-pr skill at [`skills/breakdown-pr/SKILL.md`](../../skills/breakdown-pr/SKILL.md) and keep it as [breakdown-pr skill].
+
+**Read this file fully and follow each step.**
+Before doing any workflow-specific work, the main agent must read and follow [`_lib/workflow_contract.md`](../../_lib/workflow_contract.md) and [`philosophy/philosophy.instructions.md`](../../philosophy/philosophy.instructions.md) before proceeding.
+Every subagent created by this workflow must instead read and follow [`_lib/subagent_contract.md`](../../_lib/subagent_contract.md) and [`philosophy/philosophy.instructions.md`](../../philosophy/philosophy.instructions.md) before reading [key md files] or performing task-specific work.
+The main agent reads [key md files] in Step 1, keeps them as [full repo context], and condenses them (plus any target files) into a [repo context digest]; per [`_lib/workflow_contract.md`](../../_lib/workflow_contract.md) §Context Passing for Subagents, the digest is passed inline to subagents together with the excerpts of [full repo context] each subagent's task needs. The neutral phrase "the repo context (per §Context Passing)" resolves accordingly.
+
+---
+
+## CREATE ONE TODO PER STEP
+
+### Step 1 — Context Gathering
+Read [key md files] and [breakdown-pr skill], and condense [key md files] (plus any target files) into a [repo context digest] for handoff per §Context Passing. Everything read in this step — [key md files] plus any additional files read — is **[full repo context]**; keep it in your own context for the rest of the run. Inspect the target branch and its diff against the base branch. Additionally:
+- Run `git diff --name-only <base>...<branch>` to produce a complete [diff file manifest] — the exhaustive list of every file touched in the diff. This manifest is the single source of truth for file inclusion.
+- Read the repository's `.gitignore` file(s) (root and any nested `.gitignore` files) and record the ignored path patterns as [gitignore patterns].
+- Identify auto-generated files in the diff by checking for: files matching [gitignore patterns], files in common generated directories (e.g., `node_modules/`, `dist/`, `build/`, `__pycache__/`, `.next/`, `vendor/`, `coverage/`), lockfiles (e.g., `package-lock.json`, `yarn.lock`, `pnpm-lock.yaml`, `Pipfile.lock`, `poetry.lock`, `Cargo.lock`, `go.sum`), compiled outputs, and files with auto-generation headers. Record these as [auto-generated files].
+- Produce [filtered diff manifest] = [diff file manifest] minus [auto-generated files]. Log excluded auto-generated files explicitly so the user can override if needed.
+
+**Local Skill Discovery (before any plan drafting):** [breakdown-pr skill] is already loaded as the primary skill. Additionally perform Local Skill Discovery per `_lib/local_skill_discovery.md` for any *other* local skill relevant to this task (skip breakdown-pr during matching); fold the result [local skills] into the repo context (per §Context Passing) so the Step 2 Diversifier and the Step 3 subagents receive it, and integrate it when the main agent drafts [final plan]. If nothing else matches, record [local skills]: none relevant.
+
+### Step 2 — PR Planning
+**Diversifier — spawn first, from the goal (gate `diversifier: on` · default `on`):** before drafting, write [invariants] and spawn the **Diversifier** (`agents/diversifier.agent.md`) per [`_lib/workflow_contract.md`](../../_lib/workflow_contract.md) §Diversifier Contract on [breakdown-pr skill] + [filtered diff manifest] + [inputs] + the repo context (per §Context Passing) + [invariants] — never on [plan] or [dependency graph], which does not exist yet and is never sent to it later. Task: propose 3–5 alternative breakdown plans that each ship the same change set (different split boundaries, stacking order, or dependency shape) — searching the **risky**, **aggressive**, and **rare** archetypes and reporting any archetype with no viable candidate rather than filling it — each structurally different from the expected default and from each other, each declaring `preserves:` and carrying a calibrated `P(better)` and a `graftable:` component, plus an `if you relax <n>` tail of at most two. Return [diverse plans]. Do not wait for it: draft [plan] while it runs and collect the result at Step 4.
+
+Based on the Step 1 manifests + [breakdown-pr skill] + [inputs], the main agent analyzes the diff, identifies change types and logical groupings, and proposes a [plan] + [dependency graph] following the [breakdown-pr skill] output format. Use [filtered diff manifest] as the authoritative file list; **every file in [filtered diff manifest] must be assigned to exactly one PR**, and each PR must be buildable.
+
+File completeness verification: after drafting [plan], rerun `git diff --name-only <base>...<branch>` and cross-reference the output against [plan]. Add missing files to the most appropriate PR; remove files matching [gitignore patterns] or [auto-generated files] unless the user explicitly requested their inclusion. Log discrepancies found and resolved.
+
+### Step 3 — Plan Challenge and Research
+**[PARALLEL EXECUTION — launch all listed subagents in parallel; see [`_lib/workflow_contract.md`](../../_lib/workflow_contract.md) §Parallel Execution & Fallback]**
+
+| Subagent | Agent | When to spawn | Task |
+|----------|-------|---------------|------|
+| Challenge | **Devils Advocate** (`agents/devils-advocate.agent.md`) | `devils_advocate: on` · default `off` | Receive [breakdown-pr skill] + [plan] + [dependency graph] + [inputs] + the repo context (per §Context Passing); read additional files if needed. Assume every step in the [plan] is wrong, flawed, and over-engineered; identify PRs that would break the build, incorrect dependency ordering, mixed concerns, missing changes, stacking risks, over-engineering, and regressions. Then explain why the items are wrong, flawed, and over-engineered. Distinguish genuine defects from out-of-scope or speculative additions, and report only evidence-backed criticisms (do not manufacture problems). Return [challenge report]. |
+| Research | **Online Researcher** (`agents/online-researcher.agent.md`) | `online_research: on` · default `on` | Receive [breakdown-pr skill] + [plan] + [inputs] + the repo context (per §Context Passing). Search the live internet for reliable stacking strategies, tool references, and conventions (the subagent MUST call its platform's live web search/fetch tool(s) and return source URLs as proof — see `agents/online-researcher.agent.md`). Return [online resource]. |
+
+### Step 4 — Refine and Approval Gate
+The main agent incorporates [challenge report] and [online resource] (when produced) into a [final plan]; when [diverse plans] was produced, it dispositions every alternative against its own draft per [`_lib/workflow_contract.md`](../../_lib/workflow_contract.md) §Diversifier Contract → Pick — `adopt` · `adopt-part <what>` · `same-as-draft` · `park` · `reject <reason>`, one line each — restating the plan on an adopted alternative, merging adopt-part components, and writing parked ones to `known_issues.md` §Untaken options, then reruns the file completeness verification. Print [final plan] using the [breakdown-pr skill] output format.
+
+**Approval gate (opt-in):** see `_lib/approval_gate.md` — proceed directly to Step 5 unless the user asked for no code/file changes or a plan-only review.
+
+### Step 5 — PR Stack Execution
+The main agent executes the PR stack creation directly, following [breakdown-pr skill] step 6 (Execute Only After Approval). **Nested-skill note:** the skill's "Execute Only After Approval" / "ask before execution" wording maps to the single two-mode gate at Step 4 (`_lib/approval_gate.md` §Nested-skill approval language), not a second stop — in autonomous mode, create local branches/commits without re-asking and resolve ambiguous base/branch/stack-tool/uncommitted-change choices yourself as recorded assumptions; only the submit/push still needs explicit user approval.
+- Confirm the working tree policy for uncommitted changes.
+- Record the original source branch and intended final stack top.
+- Create each branch from the base or previous stack branch.
+- Move changes using the safest granularity (whole-file, patch mode, or cherry-pick as appropriate).
+- Commit each PR with the approved title and a concise body.
+- Submit using the stack tool only if the user approved submission; otherwise stop after local branches are prepared.
+
+Record [execution report] containing branches created, commits made, PRs submitted, and failures, with no explanations.
+
+### Step 6 — Stack Review and Verification
+
+**[PARALLEL EXECUTION — launch the review-skill subagents and the **Devils Advocate** in one batch; see [`_lib/workflow_contract.md`](../../_lib/workflow_contract.md) §Parallel Execution & Fallback]** Issue every enabled subagent invocation below before waiting on any result, and perform the main agent's own direct review while they run. **Speed-for-accuracy trade:** simplify writes the working tree while the other reviewers read it, so reconcile their findings per [`_lib/review_skills.md`](../../_lib/review_skills.md) §Parallel-review caveats before the remediation pass. Degrade to sequential (simplify first) only if parallel launch is unavailable.
+1. **Review skills (opt-in; both headers default to `false`):** PR re-organization authors no new logic, so these run **only when source files were actually edited** (e.g., conflict resolution). Resolve the request's `simplify` and `code_review` headers per [`_lib/review_skills.md`](../../_lib/review_skills.md) — `false` skips, `true` runs Claude Code's native `/simplify` / `/code-review medium`, `local` runs the pack's local `code-simplification` / `code-review-and-quality` skills (portable to every platform). Spawn one subagent per enabled skill **in parallel — issue both invocations before waiting on either** (per [`_lib/workflow_contract.md`](../../_lib/workflow_contract.md) §Parallel Execution & Fallback; degrade to sequential, simplify first, only if parallel launch is unavailable), following the Subagent Launch Contract in [`_lib/workflow_contract.md`](../../_lib/workflow_contract.md) (subagents use the `subagent_model` header; keep an activity log and record fallbacks). Pass each the edited source files (the current diff) + [final plan] + [execution report] plus the relevant repo context. Record [simplify] and/or [code-review] for whichever ran; leave a skipped skill's label unproduced.
+2. **In the same parallel batch as sub-step 1 — do not wait for the review skills to return** — the main agent spawns a **Devils Advocate** (`agents/devils-advocate.agent.md`) that reads [breakdown-pr skill] + [final plan] + [execution report] and reviews the stack assuming the PR stack breakdown is wrong — broken builds, incorrect dependency ordering, mixed concerns, missing or misplaced files, stacking risks — explains why each part is wrong, and returns the report as [devils-advocate review].
+3. While the **Devils Advocate** is working, the main agent verifies the stack directly against [final plan] and [execution report]: branch/commit structure, dependency order, no unrelated or auto-generated files included, all necessary files present, and the final stack top matches the original branch diff. Run [breakdown-pr skill] step 7 verification, including `git diff --exit-code` and `git range-diff` where appropriate. Save the conclusion as [direct review].
+
+Based on whichever of [simplify] + [code-review] + [devils-advocate review] + [direct review] were produced, the main agent analyzes and validates them all — reconciling [simplify] against [code-review] per [`_lib/review_skills.md`](../../_lib/review_skills.md) §Parallel-review caveats when both ran — and generates a [final report]. Then the main agent applies the clearly-correct, low-risk findings (do not auto-apply uncertain or behavior-changing ones), then records any remaining gaps for Step 7.
+
+### Step 7 — Documentation and Summary
+1. Write to update_logs.md (one entry per PR in the stack) per `_lib/doc_logging.md` (timestamps, IDs, two-file rule):
+```md
+{=============================PR Creation Update===============================}
+{PR Title, Timestamp (current time, YYYY-MM-DD HH:MM), and PR number in stack (e.g., PR 1/5)}
+{Request (what was requested)}
+{PR description (one or two sentences of what the PR contains)}
+{Branch name}
+{Files changed}
+{Dependencies (which PRs must land before this one)}
+{Status (created / submitted / failed — and reason if failed)}
+```
+2. Summarize the PR stack and [final report] in bullet points to chat, and a yes/no answer indicating whether the stack was created with no issues. If there are gaps, describe them.
+
+### Step 8 — Run Record and Wiki Maintainer
+Append the [run record] to `repo_info/subagent_effectiveness.md` per [`_lib/subagent_effectiveness.md`](../../_lib/subagent_effectiveness.md), written only from what you already hold — never re-read an artifact or the file: one short line per spawned advisory role (dials `[model · effort]`, `adopted n/m`, novelty/importance, verdict — effect, never activity; executing roles only on fallback or rework), then `context:` (which `repo_info/` files were load-bearing, unused, stale, or missing, from the notes kept since Step 1), `plan:` (the thoughts-artifact tally — steps as-written / adapted / dropped / added, re-plans — and the computed verdict `load-bearing` · `partly` · `not needed`), and `workflow:` (friction as `step — problem → fix`, or `none`, plus remediation / fallback / gate-pause counters). Then the **Wiki Maintainer** pass per [`_lib/harness_wiki.md`](../../_lib/harness_wiki.md) §Cadence: on every fifth entry consolidate the newest five into `repo_info/harness_wiki.md`; otherwise nothing more. Shape the chat summary per [`_lib/adhd_output.md`](../../_lib/adhd_output.md) — outcome first, ≤ 5 visible items per group, one `Next:` action — and end it with the one-line wiki status.

@@ -68,6 +68,7 @@
 ### Other tools
 | Topic | Source of Truth |
 |---|---|
+| **HarnessFlow** (AI workflow pack, third-party) | [`.github/HarnessFlow/`](./.github/HarnessFlow/readme.md), vendored from `HangYu8123/HarnessFlow` @ `aa9f74c`. Opt-in: runs only on a filled-in template from `request_template/`. Generated files (`AGENTS.md`, `.github/copilot-instructions.md`, `.claude/agents/`, `.claude/rules/`, `.codex/agents/`) come from `bash .github/HarnessFlow/cli_setup.sh`; don't hand-edit them. Repo memory lives in `.github/HarnessFlow/repo_info/` and is committed here. Its "don't commit" safety rule applies inside a HarnessFlow run only. |
 | **Spotify artist profiles** (not LSKhan) | [`.claude/skills/artist-profile/`](./.claude/skills/artist-profile/SKILL.md): `SKILL.md` (steps) + `template.md`. Profiles go in `profiles/<artist-slug>.md`; unknown fields stay `TBD`. |
 
 ---

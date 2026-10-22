@@ -1,0 +1,95 @@
+---
+name: 'Correctness Check'
+description: 'Instructions for examining, testing, and running an existing repo for verified correctness and full consistency'
+---
+# Exam the Existing Repo for Verified Correctness and Full Consistency
+
+<!-- Required Context Files (CLI-resolvable paths):
+  - philosophy/philosophy.instructions.md
+  - _lib/safety_rules.md
+  - _lib/workflow_contract.md
+  - _lib/subagent_contract.md
+  - _lib/subagent_effectiveness.md
+  - _lib/harness_wiki.md
+  - repo_info/codebase_overview.md
+  - repo_info/scripts_overview.md
+  - repo_info/update_logs.md
+  - repo_info/known_issues.md
+  - repo_info/past_Correctness_Check.md
+-->
+
+**Safety: follow `_lib/safety_rules.md`.**
+
+> **Preamble — canonical in [`_lib/workflow_contract.md`](../../_lib/workflow_contract.md).** Platform adaptation (this file serves Claude Code, Codex, and VS Code Copilot), Pack Path Resolution, subagent invocation, repo-context handoff (**[repo context digest]** / **[full repo context]**), and the two spawn dials (`subagent_model` + `subagent_effort` / `online_researcher_effort`) with the returned-result check are governed by its §Pack Path Resolution · §Subagent Invocation · §Context Passing for Subagents · §Subagent Launch Contract — this file deliberately does not restate them.
+
+[inputs]:
+- input 1: target repo
+- input 2: target functionalities (optional)
+- input 3: important files (optional)
+
+If target functionalities are specified, focus more on target functionalities, but still go through the entire repo.
+
+[key md files]: codebase_overview.md, scripts_overview.md, update_logs.md, known_issues.md, past_Correctness_Check.md (under `repo_info/`, resolved by the Pack Path Resolution rule). In multi-layer repos, also read the `codebase_overview.md` + `scripts_overview.md` of each discovered layer per `_lib/workflow_contract.md` §Key Context Files → Multi-Layer / Nested Repos.
+
+**Read this file fully and follow each step.**
+Before doing any workflow-specific work, the main agent must read and follow [`_lib/workflow_contract.md`](../../_lib/workflow_contract.md) and [`philosophy/philosophy.instructions.md`](../../philosophy/philosophy.instructions.md) before proceeding.
+Every subagent created by this workflow must instead read and follow [`_lib/subagent_contract.md`](../../_lib/subagent_contract.md) and [`philosophy/philosophy.instructions.md`](../../philosophy/philosophy.instructions.md) before reading [key md files] or performing task-specific work.
+
+---
+
+## CREATE ONE TODO PER STEP
+
+### Step 1 - Context Gathering
+Read [key md files]. Understand them. Everything read in this step — [key md files] plus any additional files read — is **[full repo context]**; keep it in your own context for the rest of the run. Then, per [`_lib/workflow_contract.md`](../../_lib/workflow_contract.md) §Context Passing for Subagents, create a condensed **[repo context digest]** — a concise bullet-point summary covering codebase structure/pipeline, key scripts and their roles, recent changes, and past correctness-check findings — and pass it, plus the excerpts of [full repo context] each subagent's task needs, inline to every subagent.
+Use `past_Correctness_Check.md` as the canonical correctness-check history file; do not create alternate correctness history filenames.
+
+If important files are specified in [inputs], the main agent must read through the important files, then combine the understood knowledge with [key md files]. If target functionalities are specified in [inputs], according to [key md files], the main agent must read through the related scripts, then combine the understood knowledge with [key md files].
+
+### Step 2 - Identify Important Information
+The main agent decides what are the most relevant codes, scripts, files, and functionalities to the correctness objectives from [inputs], and creates a list of **BRIEF** [important information]. If the goal is to check the correctness of the entire repo, [important information] must include the pipeline diagram of the repo. If the goal is to check target functionalities, [important information] must at least contain the pipeline upstream and downstream of the target functionalities. UPDATE [important information].
+
+### Step 3 - Correctness Examination Panel
+**[PARALLEL EXECUTION — launch all listed subagents in parallel; see [`_lib/workflow_contract.md`](../../_lib/workflow_contract.md) §Parallel Execution & Fallback]** Before launching, write [invariants] per [`_lib/workflow_contract.md`](../../_lib/workflow_contract.md) §Diversifier Contract (for a correctness check: no code changes, checks only within the chosen scope, script runs only where the user requested them). Pass [important information] and the repo context (per §Context Passing) to the subagents (the Free Analyst also receives the correctness objectives; the Diversifier also receives [inputs] and [invariants]).
+
+| Subagent | Agent | When to spawn | Task |
+|----------|-------|---------------|------|
+| Focus exam | **Focus Analyst** (`agents/focus-analyst.agent.md`) | Always | List out all important files and functionalities in the repo as [all important file list]. Based on [important information] and the repo structure from the repo context (per §Context Passing), add or remove files in [all important file list] based on importance of functionalities and re-order it from upstream of the workflow to downstream. Read through all files in [all important file list] in order and understand the files and code while carefully examining correctness to ensure verified correctness. Report any incorrectness accordingly. Return the final assessment as [answers 1]. |
+| Broad exam | **Broad Analyst** (`agents/broad-analyst.agent.md`) | Always | List out all files in the repo as [all file list]. Based on [important information] and the repo structure from the repo context (per §Context Passing), re-order all files in [all file list] based on workflow (from upstream of the pipeline to downstream). Read through all files in [all file list] in order and understand the files and code while carefully examining correctness to ensure verified correctness. Report any incorrectness accordingly. Return the final assessment as [answers 2]. |
+| Free exam | **Free Analyst** (`agents/free-analyst.agent.md`) | Always | Based on the correctness objectives and repo information from the repo context (per §Context Passing), decide what files and scripts to read and in what order, and thus check the entire repo to ensure every functionality is verified correct. Report any incorrectness accordingly. Return the final assessment as [answers 3]. |
+| Script run | **QA Engineer** (`agents/qa-engineer.agent.md`, exam mode) | Always | List out all runnable Python/C/C++/Java scripts in the repo as [all script file list]. Based on [important information] and the repo structure from the repo context (per §Context Passing), re-order all script files in [all script file list] based on workflow (from upstream of the pipeline diagram to downstream) to make sure the entire pipeline runs correctly. **Run** through all script files in [all script file list] in order. If any errors are encountered, or any unexpected outputs are received from the scripts, record them. If any errors prevent the current script from running, record the errors, then run the next script in [all script file list] in order. Report any incorrectness accordingly. Return the final assessment as [answers 4]. |
+| Diversify | **Diversifier** (`agents/diversifier.agent.md`) | `diversifier: on` · default `on` | Generate from the goal, not from any draft ([`_lib/workflow_contract.md`](../../_lib/workflow_contract.md) §Diversifier Contract): use [inputs], [important information], [invariants], and the repo context (per §Context Passing), and read the relevant scripts; the request every alternative must fulfill is *surface any remaining correctness defect in scope*, and the `expected default:` is fixed — "a linear pipeline-order read of the in-scope files" — write it verbatim. Find **new angles to check correctness — ways the code could be wrong or unsafe**: each of the 3–5 alternatives is a different **checking route** (quality floor per the agent definition — report an archetype with no viable route rather than filling it) whose steps are checks to run, never code changes, and the routes must differ structurally (execution path · input and data type · state/transition assumption · concurrency and ordering · resource limit or starvation · interruption and partial failure · trust boundary · error path). Read the three mandatory archetypes as checking depth — **risky** = pays off only if a named assumption is wrong; **aggressive** = the broadest, most expensive check (full-pipeline instrumentation, exhaustive input sweep), still no code change; **rare** = an unconventional checking technique. `P(better)` is the calibrated probability that the route exposes a real defect a linear read misses; an unchecked area of the repo is the gap that licenses a high number. Emit every angle as an **unverified hypothesis for the main agent to check**, never as an asserted defect. Read `graftable:` as the single cheapest check from the route worth keeping even if the route as a whole is not taken; `preserves:` confirms the route stays within [invariants]. Return [diverse angles]; the main agent dispositions it at Step 7 against the checks its own draft report already covers. |
+
+### Step 4 - Failure Diagnosis (platform-conditional)
+If no scripts failed, skip this step and continue to Step 5.
+
+- **If the main agent is Claude Code:** create a **Diagnosis subagent** (`agents/focus-analyst.agent.md`, diagnosis mode): pass the failed scripts and their error outputs to this subagent. The subagent inspects each failure's stdout/stderr/traceback and reads the relevant code — re-running with verbose flags where helpful — to diagnose why each script failed, identifying root causes such as missing dependencies, incorrect paths, data issues, or logic errors. (Do not rely on a `/debug` skill — it is not a standard Claude Code skill.) Report back a [debug diagnosis report] to the main agent.
+- **Otherwise (Codex or VS Code Copilot):** the main agent reviews the relevant error output, stack traces, and any existing logs manually to reach the same diagnosis, and documents the root causes as [debug diagnosis report].
+
+### Step 5 - Synthesize the Correctness Report
+The main agent reads through all four answers ([answers 1], [answers 2], [answers 3], and [answers 4]) and, when Step 4 produced one, [debug diagnosis report]; understands each of them, examines all the pointed-out correctness issues, combines the insights of each report, rejects the redundant or incorrect parts of each report, and drafts a precise and verified correct report of any incorrectness of the repo in bullet points.
+
+### Step 6 - Report Challenge and Research
+**[PARALLEL EXECUTION — launch all listed subagents in parallel; see [`_lib/workflow_contract.md`](../../_lib/workflow_contract.md) §Parallel Execution & Fallback]** Pass the draft correctness report, [important information], and the repo context (per §Context Passing) to each subagent.
+
+| Subagent | Agent | When to spawn | Task |
+|----------|-------|---------------|------|
+| Challenge | **Devils Advocate** (`agents/devils-advocate.agent.md`) | `devils_advocate: on` · default `off` | Use the repo context (per §Context Passing) for codebase context and read all relevant scripts, then critically challenge the draft correctness report — looking for false positives, overlooked issues, misattributed causes, or incorrect assumptions about the codebase. Return flaws as [valid criticisms]. |
+| Research | **Online Researcher** (`agents/online-researcher.agent.md`) | `online_research: on` · default `on` | Use the repo context (per §Context Passing) for codebase context and review the draft correctness report, then identify any issues that require external documentation, known bugs in dependencies, or best-practice references to validate. MUST actually call the platform's live web search/fetch tool(s) to search the live internet (never answer from prior knowledge) and MUST return the source URLs fetched as proof — see `agents/online-researcher.agent.md`. Return [online resource]. |
+
+### Step 7 - Finalize the Report
+The main agent incorporates [valid criticisms] and [online resource], and updates the draft correctness report accordingly. When [diverse angles] was produced, it dispositions every angle against the checks its own draft already covers per [`_lib/workflow_contract.md`](../../_lib/workflow_contract.md) §Diversifier Contract → Pick — `adopt` (run the route, re-running scripts where a check needs it, as Step 3's QA Engineer did, and fold its result into the report) · `adopt-part <check>` · `same-as-draft` · `park` (to `known_issues.md` §Untaken options) · `reject <reason>` — one line each, working the adopted ones down by `P(better)`.
+
+### Step 8 - Record the Correctness Check
+The main agent summarizes the correctness check report in the following format, for each incorrectness:
+```md
+{=============================Correctness Check: (fill the current time here, YYYY-MM-DD HH:MM) — (fill a CC ID here, simply use last CC ID + 1)===============================}
+Incorrect: (fill a one sentence summary of the Incorrect here.)
+Potential Cause: (fill a brief but precise summary of the Potential Cause in bullet points here.)
+```
+Then the main agent must append it to past_Correctness_Check.md, using the existing contents to determine the last CC ID. If the file does not exist, create it.
+
+### Step 9 - Cross-Check known_issues.md
+Based on the correctness check results, the main agent checks known_issues.md and checks whether the found problems are marked as fixed in known_issues.md. If yes, add an additional line and say "the attempted fix actually failed."
+
+### Step 10 - Run Record and Wiki Maintainer
+Append the [run record] to `repo_info/subagent_effectiveness.md` per [`_lib/subagent_effectiveness.md`](../../_lib/subagent_effectiveness.md), written only from what you already hold — never re-read an artifact or the file: one short line per spawned advisory role (dials `[model · effort]`, `adopted n/m`, novelty/importance, verdict — effect, never activity; executing roles only on fallback or rework), then `context:` (which `repo_info/` files were load-bearing, unused, stale, or missing, from the notes kept since Step 1), `plan:` (`n/a` — this workflow has no plan artifact), and `workflow:` (friction as `step — problem → fix`, or `none`, plus remediation / fallback / gate-pause counters). Then the **Wiki Maintainer** pass per [`_lib/harness_wiki.md`](../../_lib/harness_wiki.md) §Cadence: on every fifth entry consolidate the newest five into `repo_info/harness_wiki.md`; otherwise nothing more. Shape the chat summary per [`_lib/adhd_output.md`](../../_lib/adhd_output.md) — outcome first, ≤ 5 visible items per group, one `Next:` action — and end it with the one-line wiki status.
