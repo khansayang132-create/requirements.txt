@@ -1,0 +1,204 @@
+{
+  "apex_version": "0.1.0",
+  "spec": {
+    "topic": "Kesalahan uang sehari-hari: kebiasaan kecil (kopi harian) yang diam-diam menguras gaji",
+    "audience": "pekerja muda di Indonesia",
+    "objective": "educate",
+    "emotion": "kaget, lalu termotivasi",
+    "platform": "tiktok",
+    "language": "id",
+    "target_seconds": 30.0,
+    "tolerance_seconds": 3.0,
+    "aspect_ratio": "9:16",
+    "visual_mode": "premium_stylized_3d",
+    "call_to_action": "pertanyaan penutup untuk komentar"
+  },
+  "script": {
+    "version": "7b644ef360ca",
+    "provenance": "written by Claude (AI) in the development session; reviewed by the pipeline's deterministic checks. The pipeline's live LLM provider was not used because no API key is configured.",
+    "review_log": [
+      {
+        "attempt": 1,
+        "version": "7b644ef360ca",
+        "problems": []
+      }
+    ],
+    "lock": {
+      "version": "7b644ef360ca",
+      "path": "out/money-mistake/scripts/script_7b644ef360ca.json",
+      "previous": "7b644ef360ca",
+      "scenes_needing_regeneration": []
+    }
+  },
+  "content_type": "real 3D rendered content (procedural scenes, Blender Cycles path tracing)",
+  "render": {
+    "settings": {
+      "fps": 24,
+      "samples": 8,
+      "blender_python": "<local>",
+      "scene_timeout_seconds": 10800
+    },
+    "scenes": [
+      {
+        "scene_id": "s01",
+        "template": "coffee_cup",
+        "frames": 103,
+        "fps": 24,
+        "width": 432,
+        "height": 768,
+        "samples": 8,
+        "engine": "CYCLES (CPU)",
+        "blender": "5.2.3 LTS",
+        "render_seconds": 290.4,
+        "reused_cached_render": true
+      },
+      {
+        "scene_id": "s02",
+        "template": "coffee_cup",
+        "frames": 127,
+        "fps": 24,
+        "width": 432,
+        "height": 768,
+        "samples": 8,
+        "engine": "CYCLES (CPU)",
+        "blender": "5.2.3 LTS",
+        "render_seconds": 364.5,
+        "reused_cached_render": true
+      },
+      {
+        "scene_id": "s03",
+        "template": "coin_stack",
+        "frames": 116,
+        "fps": 24,
+        "width": 432,
+        "height": 768,
+        "samples": 8,
+        "engine": "CYCLES (CPU)",
+        "blender": "5.2.3 LTS",
+        "render_seconds": 328.2,
+        "reused_cached_render": true
+      },
+      {
+        "scene_id": "s04",
+        "template": "bar_chart",
+        "frames": 133,
+        "fps": 24,
+        "width": 432,
+        "height": 768,
+        "samples": 8,
+        "engine": "CYCLES (CPU)",
+        "blender": "5.2.3 LTS",
+        "render_seconds": 362.4,
+        "reused_cached_render": true
+      },
+      {
+        "scene_id": "s05",
+        "template": "piggy_bank",
+        "frames": 133,
+        "fps": 24,
+        "width": 432,
+        "height": 768,
+        "samples": 8,
+        "engine": "CYCLES (CPU)",
+        "blender": "5.2.3 LTS",
+        "render_seconds": 444.1,
+        "reused_cached_render": true
+      },
+      {
+        "scene_id": "s06",
+        "template": "hero_coin",
+        "frames": 128,
+        "fps": 24,
+        "width": 432,
+        "height": 768,
+        "samples": 8,
+        "engine": "CYCLES (CPU)",
+        "blender": "5.2.3 LTS",
+        "render_seconds": 388.0,
+        "reused_cached_render": true
+      }
+    ]
+  },
+  "audio": {
+    "tts_provider": "espeak-ng",
+    "tts_quality": "offline formant synthesis (robotic); replace with a neural TTS provider for publishing",
+    "music": "procedurally generated sine pad (original, no license required)",
+    "loudness_target_lufs": -14
+  },
+  "storyboard": "out/money-mistake/storyboard.json",
+  "outputs": {
+    "final_video": {
+      "path": "out/money-mistake/exports/final.mp4",
+      "sha256": "59506ae816ee8c0e0169ddea37b01935660e57d0bda3603b5b922cc220f3d832",
+      "bytes": 1977386
+    },
+    "subtitles": {
+      "path": "out/money-mistake/exports/subtitles.srt",
+      "sha256": "f8738b637101dc4ceb9cb3620956812979532cb7a1bdaaa22236faa92bf60e10",
+      "bytes": 732
+    },
+    "metadata": {
+      "path": "out/money-mistake/exports/metadata.json",
+      "sha256": "5c379c0c3bf86a83f9ab1b01bac9e20203c5c29386e54ba61162d3beeb2609a4",
+      "bytes": 425
+    }
+  },
+  "qa": {
+    "passed": true,
+    "technical_score": 1.0,
+    "creative_review": {
+      "status": "NOT RUN",
+      "detail": "sampled frames saved for human or vision-model review; technical checks do not measure creative quality"
+    },
+    "report": "out/money-mistake/qa/qa_report.json"
+  },
+  "repairs": [],
+  "stages": [
+    {
+      "stage": "script",
+      "status": "LOCKED",
+      "detail": "version 7b644ef360ca (written by Claude (AI) in the development session; reviewed by the pipeline's deterministic checks. The pipeline's live LLM provider was not used because no API key is configured.)",
+      "at": 0.0
+    },
+    {
+      "stage": "narration",
+      "status": "DONE",
+      "detail": "6 clips, 28.1s spoken (espeak-ng)",
+      "at": 0.4
+    },
+    {
+      "stage": "storyboard",
+      "status": "VALID",
+      "detail": "6 scenes, 30.83s",
+      "at": 0.4
+    },
+    {
+      "stage": "render",
+      "status": "DONE",
+      "detail": "0 rendered, 6 reused",
+      "at": 0.4
+    },
+    {
+      "stage": "assemble",
+      "status": "DONE",
+      "detail": "30.83s",
+      "at": 14.2
+    },
+    {
+      "stage": "qa",
+      "status": "PASS",
+      "detail": "technical score 1.0",
+      "at": 16.4
+    }
+  ],
+  "wall_clock_seconds": 16.4,
+  "creative_review_notes": {
+    "reviewer": "Claude (AI), by inspecting one sampled frame per scene; not a vision-model pass inside the pipeline",
+    "notes": [
+      "headlines and captions readable and clear of the 9:16 platform UI",
+      "s04: caption slightly overlaps the top of the bar chart",
+      "s03/s04: floor-to-background edge is visible behind the objects",
+      "narration is espeak-ng: intelligible but robotic; not suitable for publishing"
+    ]
+  }
+}

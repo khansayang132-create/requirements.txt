@@ -1,0 +1,155 @@
+{
+  "script_version": "7b644ef360ca",
+  "fps": 24,
+  "width": 432,
+  "height": 768,
+  "scenes": [
+    {
+      "scene_id": "s01",
+      "scene_order": 0,
+      "start_time": 0.0,
+      "end_time": 4.292,
+      "duration": 4.292,
+      "narrative_purpose": "Hook: curiosity gap",
+      "narration_text": "Ada satu kebiasaan kecil yang diam-diam menguras gajimu.",
+      "subtitle_text": "Ada satu kebiasaan kecil yang diam-diam menguras gajimu.",
+      "on_screen_text": "KEBIASAAN KECIL",
+      "template": "coffee_cup",
+      "camera_move": "dolly_in",
+      "params": {
+        "coins": 0
+      },
+      "animation_method": "procedural_3d_blender",
+      "transition_in": "fade",
+      "transition_out": "cut",
+      "music_cue": "low pad enters",
+      "generation_status": "pending",
+      "output_asset_ids": []
+    },
+    {
+      "scene_id": "s02",
+      "scene_order": 1,
+      "start_time": 4.292,
+      "end_time": 9.584,
+      "duration": 5.292,
+      "narrative_purpose": "Problem: the habit",
+      "narration_text": "Contohnya, beli kopi kekinian Rp25.000 setiap hari.",
+      "subtitle_text": "Contohnya, beli kopi kekinian Rp25.000 setiap hari.",
+      "on_screen_text": "Rp25.000 / HARI",
+      "template": "coffee_cup",
+      "camera_move": "orbit_left",
+      "params": {
+        "coins": 6
+      },
+      "animation_method": "procedural_3d_blender",
+      "transition_in": "cut",
+      "transition_out": "cut",
+      "music_cue": "",
+      "generation_status": "pending",
+      "output_asset_ids": []
+    },
+    {
+      "scene_id": "s03",
+      "scene_order": 2,
+      "start_time": 9.584,
+      "end_time": 14.417,
+      "duration": 4.833,
+      "narrative_purpose": "Escalation: one month",
+      "narration_text": "Dalam sebulan, totalnya sudah Rp750.000.",
+      "subtitle_text": "Dalam sebulan, totalnya sudah Rp750.000.",
+      "on_screen_text": "Rp750.000 / BULAN",
+      "template": "coin_stack",
+      "camera_move": "crane_up",
+      "params": {
+        "stacks": [
+          3,
+          6,
+          9
+        ]
+      },
+      "animation_method": "procedural_3d_blender",
+      "transition_in": "cut",
+      "transition_out": "cut",
+      "music_cue": "",
+      "generation_status": "pending",
+      "output_asset_ids": []
+    },
+    {
+      "scene_id": "s04",
+      "scene_order": 3,
+      "start_time": 14.417,
+      "end_time": 19.959,
+      "duration": 5.542,
+      "narrative_purpose": "Twist: one year",
+      "narration_text": "Dalam setahun? Sembilan juta rupiah hilang begitu saja, tanpa terasa.",
+      "subtitle_text": "Dalam setahun? Sembilan juta rupiah hilang begitu saja, tanpa terasa.",
+      "on_screen_text": "Rp9 JUTA / TAHUN",
+      "template": "bar_chart",
+      "camera_move": "dolly_out",
+      "params": {
+        "values": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12
+        ]
+      },
+      "animation_method": "procedural_3d_blender",
+      "transition_in": "cut",
+      "transition_out": "cut",
+      "music_cue": "pad swells",
+      "generation_status": "pending",
+      "output_asset_ids": []
+    },
+    {
+      "scene_id": "s05",
+      "scene_order": 4,
+      "start_time": 19.959,
+      "end_time": 25.501,
+      "duration": 5.542,
+      "narrative_purpose": "Payoff: realistic fix",
+      "narration_text": "Kuncinya bukan berhenti total, tapi sisihkan uang kopi ke tabungan otomatis.",
+      "subtitle_text": "Kuncinya bukan berhenti total, tapi sisihkan uang kopi ke tabungan otomatis.",
+      "on_screen_text": "TABUNG OTOMATIS",
+      "template": "piggy_bank",
+      "camera_move": "orbit_right",
+      "params": {
+        "coins": 8
+      },
+      "animation_method": "procedural_3d_blender",
+      "transition_in": "cut",
+      "transition_out": "cut",
+      "music_cue": "",
+      "generation_status": "pending",
+      "output_asset_ids": []
+    },
+    {
+      "scene_id": "s06",
+      "scene_order": 5,
+      "start_time": 25.501,
+      "end_time": 30.834,
+      "duration": 5.333,
+      "narrative_purpose": "Question for comments",
+      "narration_text": "Kebiasaan kecil apa yang paling susah kamu kurangi? Tulis di komentar.",
+      "subtitle_text": "Kebiasaan kecil apa yang paling susah kamu kurangi? Tulis di komentar.",
+      "on_screen_text": "KAMU YANG MANA?",
+      "template": "hero_coin",
+      "camera_move": "dolly_in",
+      "params": {},
+      "animation_method": "procedural_3d_blender",
+      "transition_in": "cut",
+      "transition_out": "fade",
+      "music_cue": "pad fades out",
+      "generation_status": "pending",
+      "output_asset_ids": []
+    }
+  ]
+}

@@ -39,7 +39,20 @@ Categories follow the spec's completion gate. Nothing here is described as produ
 
 ## VERIFIED (actually run in the development session)
 
-See the "Verification log" section at the end of this file.
+| Test | Result | Evidence |
+|---|---|---|
+| Unit + integration suite (48 tests) | PASS locally and in GitHub Actions (`apex` job) | schemas, timing, Indonesian numbers, review, revision limit, locking, mock-server provider call, queue state machine, backoff, dead letter, crash recovery, graceful release, restart, subtitles, publishing states, real ffmpeg edit + QA, QA failure detection, espeak, cache reuse, real Blender render |
+| Acceptance sample, end to end (30 s, 9:16, Indonesian, money mistake) | PASS | `samples/money-mistake/output/final.mp4` — 30.83 s, 432×768, 24 fps, H.264 + AAC, SHA-256 `59506ae8…f3d832` |
+| Real 3D rendering | PASS | 740 frames, Blender 5.2.3 Cycles CPU, 8 samples + denoise, 36.3 min total (2.94 s/frame on 4 cores) |
+| Technical QA on the final file | 16/16 PASS | `output/qa_report.json`: -15.9 LUFS, true peak -1.2 dBFS, no black or silent gaps, valid SRT |
+| Run through the persistent queue | PASS | enqueued twice with the same key → one job; worker claimed it, COMPLETED on attempt 1 |
+| Graceful worker shutdown | PASS | SIGTERM → "worker stopped", exit in 3 s |
+| Selective regeneration | PASS | re-run reused all 6 scene renders (16 s instead of 36 min); a renderer change invalidated the cache as designed |
+| Bugs found by these runs and fixed | — | spoken-length estimate ignored expanded prices; subtitle sizes used pixels instead of libass units; headline alignment used ASS numbering instead of SSA; render cache ignored renderer changes; QA crashed on videos without audio; QA let a fully black video pass |
+| Creative review | PARTIAL | Claude inspected one frame per scene (notes in `output/manifest.json` → `creative_review_notes`); no vision model runs inside the pipeline yet |
+| Docker image build | NOT VERIFIED | The sandbox's network policy denies `deb.debian.org`, so `apt-get` in the image cannot run here. Build it on any normal machine or CI runner. |
+| LLM-written script, live | NOT RUN | No API key in this environment (see BLOCKED) |
+| Publishing | NOT RUN (by design) | Only the dry-run adapter exists; no production account was touched |
 
 ## BLOCKED (needs credentials, accounts or services this session does not have)
 
@@ -65,6 +78,6 @@ See the "Verification log" section at the end of this file.
 
 ## Known limits
 
-- Render speed on 4 CPU cores is about 3–5 s per 432×768 frame at 8 samples, so a 30 s video at 24 fps
-  takes roughly 40–60 minutes. Output resolution is 432×768; the pipeline does not upscale and claim detail.
+- Render speed on 4 CPU cores was 2.94 s per 432×768 frame at 8 samples: 36 minutes for a 30 s video at
+  24 fps. Output resolution is 432×768; the pipeline does not upscale and claim detail.
 - espeak-ng narration is intelligible but robotic: fine for drafts and pipeline tests, not for publishing.
