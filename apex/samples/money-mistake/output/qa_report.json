@@ -1,0 +1,103 @@
+{
+  "checks": [
+    {
+      "check": "file_exists_nonzero",
+      "status": "PASS",
+      "detail": "1977386 bytes"
+    },
+    {
+      "check": "ffprobe_readable",
+      "status": "PASS",
+      "detail": "mov,mp4,m4a,3gp,3g2,mj2"
+    },
+    {
+      "check": "has_video_stream",
+      "status": "PASS",
+      "detail": "h264"
+    },
+    {
+      "check": "has_audio_stream",
+      "status": "PASS",
+      "detail": "aac"
+    },
+    {
+      "check": "resolution",
+      "status": "PASS",
+      "detail": "432x768 (expected 432x768)"
+    },
+    {
+      "check": "frame_rate",
+      "status": "PASS",
+      "detail": "24.000 fps"
+    },
+    {
+      "check": "pixel_format_compatible",
+      "status": "PASS",
+      "detail": "yuv420p"
+    },
+    {
+      "check": "codec_h264",
+      "status": "PASS",
+      "detail": "h264"
+    },
+    {
+      "check": "duration_matches_storyboard",
+      "status": "PASS",
+      "detail": "30.83s vs storyboard 30.83s"
+    },
+    {
+      "check": "duration_within_target",
+      "status": "PASS",
+      "detail": "30.83s vs target 30±3s"
+    },
+    {
+      "check": "no_unexpected_black",
+      "status": "PASS",
+      "detail": "0 interval(s) ≥0.5s outside fades: []"
+    },
+    {
+      "check": "no_long_silence",
+      "status": "PASS",
+      "detail": "silences ≥2s: []"
+    },
+    {
+      "check": "loudness_target",
+      "status": "PASS",
+      "detail": "-15.9 LUFS (target -14±2)"
+    },
+    {
+      "check": "no_clipping",
+      "status": "PASS",
+      "detail": "true peak -1.2 dBFS (must be ≤ -0.5)"
+    },
+    {
+      "check": "subtitle_syntax",
+      "status": "PASS",
+      "detail": "valid SRT"
+    },
+    {
+      "check": "all_scenes_assembled",
+      "status": "PASS",
+      "detail": "6 clips for 6 scenes"
+    }
+  ],
+  "technical_score": 1.0,
+  "passed": true,
+  "duration": 30.833333,
+  "loudness": {
+    "integrated_lufs": -15.9,
+    "true_peak_dbfs": -1.2
+  },
+  "sampled_frames": [
+    "out/money-mistake/qa/frames/s01_mid.png",
+    "out/money-mistake/qa/frames/s02_mid.png",
+    "out/money-mistake/qa/frames/s03_mid.png",
+    "out/money-mistake/qa/frames/s04_mid.png",
+    "out/money-mistake/qa/frames/s05_mid.png",
+    "out/money-mistake/qa/frames/s06_mid.png"
+  ],
+  "creative_review": {
+    "status": "NOT RUN",
+    "detail": "sampled frames saved for human or vision-model review; technical checks do not measure creative quality"
+  }
+}

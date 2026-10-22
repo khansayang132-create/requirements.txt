@@ -1,0 +1,4 @@
+pydantic>=2.7
+pytest>=8
+# Blender as a Python module (Cycles renderer). Needs Python 3.13 for the 5.x wheels.
+bpy==5.2.3
