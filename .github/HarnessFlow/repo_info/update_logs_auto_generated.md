@@ -1,0 +1,48 @@
+# Update Logs (auto-generated from git history)
+
+Copied from `git log` on 2026-10-22, newest first, without interpretation. Format: short hash · author date · author · subject.
+
+- 838715d · 2026-10-22 21:17 · Claude · Install HarnessFlow workflow pack for Claude Code, Codex and Copilot
+- 85f6e52 · 2026-10-23 01:36 · khansayang132-create · Merge pull request #17 from khansayang132-create/ccr-5763df01-szo3dk
+- 94712df · 2026-10-22 20:31 · Claude · Add artist-profile skill with the Spotify artist profile template
+- 24fc559 · 2026-10-22 22:47 · khansayang132-create · Merge pull request #16 from khansayang132-create/ccr-a688325f-dfa2rv
+- 453e07d · 2026-10-22 17:41 · Claude · Give the Headroom MCP server 5 minutes to start on a fresh container
+- 638d2dc · 2026-10-22 22:37 · khansayang132-create · Merge pull request #15 from khansayang132-create/claude/omniroute-connection-hk9783
+- cab5e83 · 2026-10-22 17:36 · Claude · STATUS: 16:9 and 1:1 exports verified with real renders
+- c6cd4e1 · 2026-10-22 22:24 · khansayang132-create · Merge pull request #14 from khansayang132-create/claude/omniroute-connection-hk9783
+- 80f372e · 2026-10-22 17:23 · Claude · CI: prefer the main Ubuntu archive and cache apt downloads
+- 99be8f7 · 2026-10-22 17:09 · Claude · APEX: caption and headline safe zones per frame shape
+- b04416b · 2026-10-22 17:06 · Claude · APEX: idea generation, vision creative review, backups, Headroom routing
+- 6928df1 · 2026-10-22 22:00 · khansayang132-create · Merge pull request #13 from khansayang132-create/claude/omniroute-connection-hk9783
+- 9d18537 · 2026-10-22 16:58 · Claude · Load Headroom into Claude Code sessions on this repo
+- 9d42cb9 · 2026-10-22 21:53 · khansayang132-create · Merge pull request #12 from khansayang132-create/claude/omniroute-connection-hk9783
+- cbe67dc · 2026-10-22 16:47 · Claude · Add scripts/headroom.sh: Headroom proxy and MCP server for Claude Code sessions
+- c57516f · 2026-10-22 21:41 · khansayang132-create · Merge pull request #11 from khansayang132-create/claude/omniroute-connection-hk9783
+- 183e6e2 · 2026-10-22 16:30 · Claude · CI: cap each apt attempt and retry up to three times
+- c785bf0 · 2026-10-22 16:20 · Claude · Bot: route through Headroom when HEADROOM_BASE_URL is set, fall back to OmniRoute
+- cf62286 · 2026-10-22 21:14 · khansayang132-create · Merge pull request #10 from khansayang132-create/claude/omniroute-connection-hk9783
+- 65d8308 · 2026-10-22 16:11 · Claude · CI: retry apt downloads and time-limit the apex job
+- 872c831 · 2026-10-22 15:40 · Claude · APEX: autopilot governance, content planner, read-only control center
+- 83b0b60 · 2026-10-22 18:53 · khansayang132-create · Merge pull request #9 from khansayang132-create/claude/omniroute-connection-hk9783
+- d7fef47 · 2026-10-22 13:51 · Claude · APEX: ElevenLabs narration provider
+- fa722c5 · 2026-10-22 18:46 · khansayang132-create · Merge pull request #8 from khansayang132-create/claude/omniroute-connection-hk9783
+- 3b6c744 · 2026-10-22 13:44 · Claude · Add AGENT.md agent index and CLAUDE.md pointer
+- b294390 · 2026-10-22 17:45 · khansayang132-create · Merge pull request #7 from khansayang132-create/claude/omniroute-connection-hk9783
+- 522849f · 2026-10-22 12:44 · Claude · APEX: acceptance sample output and verification log
+- 96c3cbc · 2026-10-22 12:11 · Claude · Add APEX stage 1: autonomous short-video production pipeline
+- aa2ce98 · 2026-10-22 12:19 · khansayang132-create · Merge pull request #6 from khansayang132-create/claude/omniroute-connection-hk9783
+- cb2e4dd · 2026-10-22 07:18 · Claude · Termux test: install from the main package server with retries
+- a51bf61 · 2026-10-22 07:17 · Claude · Termux: make Termux:Boot optional
+- 365ce08 · 2026-10-22 12:04 · khansayang132-create · Merge pull request #5 from khansayang132-create/claude/omniroute-connection-hk9783
+- 3e0e8b9 · 2026-10-22 07:03 · Claude · README: Termux 24/7 instructions
+- d7c99cf · 2026-10-22 07:01 · Claude · Run the bot 24/7 on Android with Termux
+- 3cb0702 · 2026-10-22 10:50 · khansayang132-create · Merge pull request #4 from khansayang132-create/claude/omniroute-connection-hk9783
+- a72c141 · 2026-10-22 05:49 · Claude · Run the bot 24/7 on Linux with systemd
+- 52a88d9 · 2026-10-22 03:58 · khansayang132-create · Merge pull request #3 from khansayang132-create/claude/omniroute-connection-hk9783
+- 7512bd3 · 2026-10-21 22:57 · Claude · Add /hook and /script commands for Cinta Beda Negara content
+- 1c7f52b · 2026-10-22 03:12 · khansayang132-create · Merge pull request #2 from khansayang132-create/claude/omniroute-connection-hk9783
+- 58264b7 · 2026-10-21 20:42 · Claude · Add /ping connection check and setup README
+- 6e42e1d · 2026-10-22 01:42 · khansayang132-create · Merge pull request #1 from khansayang132-create/claude/omniroute-connection-hk9783
+- 281e3f0 · 2026-10-21 19:38 · Claude · Connect bot to OmniRoute gateway
+- a782fc4 · 2026-10-09 21:02 · khansayang132-create · Add files via upload
+- b9fc93c · 2026-10-09 21:01 · khansayang132-create · Initial commit
