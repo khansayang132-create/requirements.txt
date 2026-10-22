@@ -77,7 +77,8 @@ bash termux/install.sh --with-headroom
 ```
 Builds Headroom on the phone and runs it as a third background service on `127.0.0.1:8765`, in
 front of OmniRoute, and sets `HEADROOM_BASE_URL` in `.env` (unless you already set it).
-Headroom has no Android builds, so this compiles about ten packages: expect **1-3 hours** and
+Headroom has no Android builds, so this compiles about ten packages (about 50 minutes on a
+GitHub CI machine; a phone is slower): expect **1-3 hours** and
 **about 4 GB free space** while building. Keep Termux open and the phone charging; if it stops,
 run the same command again and it continues.
 

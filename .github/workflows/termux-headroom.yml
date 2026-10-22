@@ -22,11 +22,11 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: hr-cache
-          key: termux-headroom-0.41.0-nosqlitevec-v1
+          key: termux-headroom-0.41.0-libpython-v2
       - run: mkdir -p hr-cache && chmod 777 hr-cache
       - run: docker run --rm --privileged -v "$PWD":/mnt/repo:ro -v "$PWD/hr-cache":/mnt/cache termux/termux-docker:x86_64 bash /mnt/repo/termux/test-headroom-build.sh
       - if: always() && steps.restore.outputs.cache-hit != 'true' && hashFiles('hr-cache/headroom.tar') != ''
         uses: actions/cache/save@v4
         with:
           path: hr-cache
-          key: termux-headroom-0.41.0-nosqlitevec-v1
+          key: termux-headroom-0.41.0-libpython-v2
