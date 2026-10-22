@@ -10,8 +10,8 @@ Categories follow the spec's completion gate. Nothing here is described as produ
   with hook, structure and no-fabrication rules; deterministic review (length from spoken form, greeting
   openers, hook length, per-shot length, on-screen text length, unsourced percentages, hashtag count);
   revision loop with a hard limit; script lock with version hashes and changed-scene detection.
-- **Narration** (`tts.py`): provider interface; espeak-ng provider; Indonesian number and price
-  pronunciation (`Rp25.000` → "dua puluh lima ribu rupiah").
+- **Narration** (`tts.py`): provider interface; ElevenLabs provider (used when `ELEVENLABS_API_KEY` is set) and
+  espeak-ng fallback; Indonesian number and price pronunciation (`Rp25.000` → "dua puluh lima ribu rupiah").
 - **Storyboard** (`storyboard.py`, `timing.py`): scene timing from measured narration, snapped to whole frames,
   with a gate that fails the job if the timeline misses target ± tolerance.
 - **3D rendering** (`render3d.py`): five procedural Blender scenes, six camera moves, studio lighting, depth of
@@ -41,7 +41,7 @@ Categories follow the spec's completion gate. Nothing here is described as produ
 
 | Test | Result | Evidence |
 |---|---|---|
-| Unit + integration suite (48 tests) | PASS locally and in GitHub Actions (`apex` job) | schemas, timing, Indonesian numbers, review, revision limit, locking, mock-server provider call, queue state machine, backoff, dead letter, crash recovery, graceful release, restart, subtitles, publishing states, real ffmpeg edit + QA, QA failure detection, espeak, cache reuse, real Blender render |
+| Unit + integration suite (53 tests) | PASS locally and in GitHub Actions (`apex` job) | schemas, timing, Indonesian numbers, review, revision limit, locking, mock-server provider call, queue state machine, backoff, dead letter, crash recovery, graceful release, restart, subtitles, publishing states, real ffmpeg edit + QA, QA failure detection, espeak, cache reuse, real Blender render |
 | Acceptance sample, end to end (30 s, 9:16, Indonesian, money mistake) | PASS | `samples/money-mistake/output/final.mp4` — 30.83 s, 432×768, 24 fps, H.264 + AAC, SHA-256 `59506ae8…f3d832` |
 | Real 3D rendering | PASS | 740 frames, Blender 5.2.3 Cycles CPU, 8 samples + denoise, 36.3 min total (2.94 s/frame on 4 cores) |
 | Technical QA on the final file | 16/16 PASS | `output/qa_report.json`: -15.9 LUFS, true peak -1.2 dBFS, no black or silent gaps, valid SRT |
@@ -59,7 +59,7 @@ Categories follow the spec's completion gate. Nothing here is described as produ
 | Capability | Blocker | Next action |
 |---|---|---|
 | LLM-written scripts in the live pipeline | No `ANTHROPIC_API_KEY` / `OMNIROUTE_API_KEY` / `OPENAI_API_KEY` in this environment. The provider code is tested against a local mock server. | Set one key and run without `--script`. OmniRoute already works on the owner's phone. |
-| Natural-sounding narration | Only espeak-ng (robotic) is available offline here; neural voice downloads (Hugging Face) are blocked by this sandbox's network policy. | Add an ElevenLabs or other neural TTS provider class behind the `TTSProvider` interface and set its API key. |
+| Natural-sounding narration | `ElevenLabsProvider` is implemented and tested against a local stub (key header, voice path, spoken-form text, 402 → not retried, unreachable → retried). Live use is blocked three ways: the owner's ElevenLabs subscription has an unpaid invoice (all 6 test clips were refused on 2026-10-22), no `ELEVENLABS_API_KEY` is set on a machine running APEX, and this sandbox's network policy denies `api.elevenlabs.io`. | Pay the ElevenLabs invoice, set `ELEVENLABS_API_KEY` where APEX runs (voice defaults to Nilasari), re-run the sample. |
 | Publishing to TikTok, YouTube, Instagram, Facebook | Each needs an approved developer app plus OAuth credentials for the owner's accounts. | Register a TikTok Content Posting API app and implement its adapter; keep DryRun for tests. |
 | Real analytics | Depends on the publishing integrations above. | After publishing works, add metric retrieval per platform. |
 | 24/7 hosting | No server is rented. The worker and Docker image exist; a phone can't host Blender rendering. | Rent a VPS with 4+ vCPUs, run the Docker image with a mounted `/data` volume. |

@@ -47,7 +47,7 @@
 | **What is real vs blocked** | [`apex/STATUS.md`](./apex/STATUS.md): the completion-gate report. **Update it whenever you change what is verified.** |
 | **Schemas & job states** | [`apex/apex/models.py`](./apex/apex/models.py): `ProductionSpec`, `Script`, `SceneSpec`, `Storyboard`, `SCENE_TEMPLATES`, `CAMERA_MOVES`, `ALLOWED_TRANSITIONS`. |
 | **Scriptwriting** | [`apex/apex/script_engine.py`](./apex/apex/script_engine.py): providers, `review_script`, `write_script` (bounded revisions), `lock_script`. |
-| **Voice** | [`apex/apex/tts.py`](./apex/apex/tts.py): `TTSProvider` interface, `EspeakProvider`, `normalize_for_speech` (Indonesian numbers and prices). |
+| **Voice** | [`apex/apex/tts.py`](./apex/apex/tts.py): `TTSProvider` interface, `ElevenLabsProvider` (when `ELEVENLABS_API_KEY` is set; voice Nilasari `NPDHDOOQCSyifTJZOe6J`), `EspeakProvider` fallback, `tts_from_env`, `normalize_for_speech` (Indonesian numbers and prices). |
 | **3D scenes** | [`apex/apex/render3d.py`](./apex/apex/render3d.py): five templates, six camera moves, Cycles. Runs only in a Python that has `bpy`. |
 | **Edit, captions, loudness** | [`apex/apex/assemble.py`](./apex/apex/assemble.py), [`apex/apex/subtitles.py`](./apex/apex/subtitles.py). |
 | **QA** | [`apex/apex/qa.py`](./apex/apex/qa.py): technical checks plus sampled frames; creative review stays separate. |
@@ -131,7 +131,7 @@ Edit `CINTA_PERSONA` in `bot.py` **and** `RULES` in the LSKhan Studio artifact. 
 ```
 cd apex
 python3.13 -m venv .venv && .venv/bin/pip install -r requirements.txt
-.venv/bin/python -m pytest -q                                   # 48 tests, ~10 s
+.venv/bin/python -m pytest -q                                   # 53 tests, ~10 s
 .venv/bin/python -m apex.cli run --spec samples/money-mistake/spec.json \
     --script samples/money-mistake/script.json --project out/draft --fps 6 --samples 2   # ~6 min draft
 ```
@@ -165,4 +165,5 @@ Real failures from this repo, roughly in order of how much time they cost:
 5. **Stale render cache.** The scene cache key must include the renderer's source hash (`RENDERER_SOURCE` in `pipeline.py`), or renderer changes reuse old frames.
 6. **Spoken length ≠ written length.** `Rp25.000` is read as five words. Estimate from `normalize_for_speech(...)`, never raw text.
 7. **QA that passes broken video.** A fully black video once passed the black-frame check, and a video without audio crashed QA. `tests/test_media.py` guards both. Don't loosen them.
-8. **Docker build in the dev sandbox.** Its network policy denies `deb.debian.org`, so the APEX image can't build there. That's the sandbox, not the Dockerfile; record it as NOT VERIFIED instead of "fixing" the Dockerfile.
+8. **External services from the dev sandbox.** Its network policy denies `deb.debian.org` and `api.elevenlabs.io`. Test providers against local stub servers (see `tests/`), and record live checks as NOT VERIFIED instead of "fixing" working code. The Docker build fails here for the same reason.
+9. **Docker build in the dev sandbox.** Its network policy denies `deb.debian.org`, so the APEX image can't build there. That's the sandbox, not the Dockerfile; record it as NOT VERIFIED instead of "fixing" the Dockerfile.

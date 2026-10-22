@@ -129,3 +129,76 @@ def test_blender_renders_real_frames(tmp_path):
     assert len(frames) == 2
     info = json.loads((tmp_path / "out" / "render_info.json").read_text())
     assert info["engine"] == "CYCLES (CPU)" and info["frames"] == 2
+
+
+def _elevenlabs_stub(status: int, body: bytes, seen: dict):
+    import threading
+    from http.server import BaseHTTPRequestHandler, HTTPServer
+
+    class H(BaseHTTPRequestHandler):
+        def do_POST(self):
+            seen["path"] = self.path
+            seen["key"] = self.headers.get("xi-api-key")
+            seen["body"] = json.loads(self.rfile.read(int(self.headers["content-length"])))
+            self.send_response(status)
+            self.send_header("content-length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+
+        def log_message(self, *a):
+            pass
+
+    srv = HTTPServer(("127.0.0.1", 0), H)
+    threading.Thread(target=srv.serve_forever, daemon=True).start()
+    return srv
+
+
+@needs_ffmpeg
+def test_elevenlabs_provider_against_local_server(tmp_path):
+    from apex.tts import ElevenLabsProvider
+    mp3 = tmp_path / "tone.mp3"
+    run_ffmpeg(["-f", "lavfi", "-i", "sine=f=300:d=1.2", "-c:a", "libmp3lame", str(mp3)])
+    seen = {}
+    srv = _elevenlabs_stub(200, mp3.read_bytes(), seen)
+    try:
+        p = ElevenLabsProvider("k-test", "voice123", base_url=f"http://127.0.0.1:{srv.server_port}")
+        wav = p.synthesize("Kopi Rp25.000", "id", tmp_path / "out.wav")
+    finally:
+        srv.shutdown()
+    assert seen["path"].startswith("/v1/text-to-speech/voice123")
+    assert seen["key"] == "k-test"
+    assert seen["body"]["text"] == "Kopi dua puluh lima ribu rupiah"
+    assert 1.0 < probe_duration(wav) < 1.5
+
+
+def test_elevenlabs_unpaid_invoice_is_not_retryable(tmp_path):
+    from apex.tts import ElevenLabsProvider, TTSUnavailable
+    srv = _elevenlabs_stub(402, b'{"detail":"payment required"}', {})
+    try:
+        p = ElevenLabsProvider("k", "v", base_url=f"http://127.0.0.1:{srv.server_port}")
+        with pytest.raises(TTSUnavailable, match="402"):
+            p.synthesize("halo", "id", tmp_path / "x.wav")
+    finally:
+        srv.shutdown()
+
+
+def test_tts_from_env_prefers_elevenlabs(monkeypatch):
+    from apex.tts import ElevenLabsProvider, tts_from_env
+    monkeypatch.setenv("ELEVENLABS_API_KEY", "k")
+    monkeypatch.setenv("APEX_VOICE_ID", "vX")
+    p = tts_from_env()
+    assert isinstance(p, ElevenLabsProvider) and p.voice_id == "vX"
+
+
+@needs_espeak
+def test_tts_from_env_falls_back_to_espeak(monkeypatch):
+    from apex.tts import EspeakProvider, tts_from_env
+    monkeypatch.delenv("ELEVENLABS_API_KEY", raising=False)
+    assert isinstance(tts_from_env(), EspeakProvider)
+
+
+def test_elevenlabs_unreachable_is_a_connection_error(tmp_path):
+    from apex.tts import ElevenLabsProvider
+    p = ElevenLabsProvider("k", "v", base_url="http://127.0.0.1:9")  # nothing listens on port 9
+    with pytest.raises(ConnectionError, match="unreachable"):
+        p.synthesize("halo", "id", tmp_path / "x.wav")
