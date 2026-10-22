@@ -20,6 +20,7 @@ ok()  { echo "✅ $*"; }
 BOT_DIR=$(cd "$(dirname "$0")/.." && pwd)
 SV=$PREFIX/var/service
 BOOT=$HOME/.termux/boot/lskhan-start
+WAKELOCK=$PREFIX/etc/profile.d/lskhan-wakelock.sh
 
 start_service_daemon() {
     # Same as termux-services does when a new Termux session opens.
@@ -84,7 +85,11 @@ install_all() {
     # Keep Android from pausing Termux while the phone sleeps.
     command -v termux-wake-lock >/dev/null && timeout 10 termux-wake-lock || true
 
-    # Start everything again after a reboot (needs the Termux:Boot app).
+    # Every time Termux opens: take the wake lock again. (The services themselves are started by
+    # termux-services' own profile.d script.) So after a reboot, opening Termux once is enough.
+    echo "(termux-wake-lock >/dev/null 2>&1 &)" > "$WAKELOCK"
+
+    # Optional: start everything after a reboot without opening Termux (needs the Termux:Boot app).
     mkdir -p "$(dirname "$BOOT")"
     {
         echo "#!$PREFIX/bin/sh"
@@ -99,9 +104,10 @@ install_all() {
     echo "   Logs:   bash termux/install.sh logs"
     echo
     echo "For it to keep running 24/7 on your phone:"
-    echo "  1. Install the Termux:Boot app (same place you got Termux) and open it once."
-    echo "  2. Android Settings → Apps → Termux → Battery → Unrestricted (no battery optimization)."
-    echo "  3. Leave the Termux notification there (don't swipe it away or press Exit)."
+    echo "  1. Android Settings → Apps → Termux → Battery → Unrestricted (no battery optimization)."
+    echo "  2. Leave the Termux notification there (don't swipe it away or press Exit)."
+    echo "  3. After the phone restarts, open Termux once: the bot starts again by itself."
+    echo "     (Optional: the Termux:Boot app does this step for you, if your phone can install it.)"
 }
 
 status() {
@@ -127,7 +133,7 @@ uninstall() {
         sv down "$name" 2>/dev/null || true
         rm -rf "${SV:?}/$name"
     done
-    rm -f "$BOOT"
+    rm -f "$BOOT" "$WAKELOCK"
     ok "Background services removed. (The bot's files and .env are untouched.)"
 }
 
