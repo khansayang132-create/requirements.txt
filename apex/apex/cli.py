@@ -9,6 +9,11 @@
   python -m apex.cli resume   --db jobs.db
   python -m apex.cli policy   --db jobs.db [--max-per-day N] [--require-approval yes|no]
   python -m apex.cli dashboard --db jobs.db [--port 8787]      # read-only control center
+  python -m apex.cli ideas    --plan plan.json [--db jobs.db] [--count 5]   # LLM ideas, added unapproved
+  python -m apex.cli approve  --plan plan.json --id ID [--id ID ...]
+  python -m apex.cli backup   --db jobs.db [--out backups/] [--plan plan.json] [--keep 14]
+  python -m apex.cli verify-backup --dir backups/apex-backup-...
+  python -m apex.cli review   --project out/my-video          # vision-model creative review (advisory)
 
 The autopilot policy lives in autopilot.json next to the database unless --policy is given.
 """
@@ -138,6 +143,53 @@ def cmd_policy(a) -> None:
     print(policy.model_dump_json(indent=2))
 
 
+def cmd_ideas(a) -> None:
+    from .ideas import generate_ideas
+    from .script_engine import provider_from_env
+    policy = load_policy(_policy_path(a) if a.db or a.policy else Path(a.plan).with_name("autopilot.json"))
+    out = generate_ideas(provider_from_env(), Path(a.plan), policy, a.count, JobQueue(Path(a.db)) if a.db else None)
+    print(json.dumps({"added": [{"id": e["id"], "angle": e["angle"], "topic": e["spec"]["topic"], "hook": e["hook"]}
+                                for e in out["added"]], "rejected": out["rejected"], "plan": out["plan"]},
+                     indent=2, ensure_ascii=False))
+
+
+def cmd_approve(a) -> None:
+    plan_file = Path(a.plan)
+    plan = json.loads(plan_file.read_text(encoding="utf-8"))
+    ids = set(a.id)
+    found = [e["id"] for e in plan if e.get("id") in ids]
+    for e in plan:
+        if e.get("id") in ids:
+            e["approved"] = True
+    tmp = plan_file.with_suffix(".tmp")
+    tmp.write_text(json.dumps(plan, indent=2, ensure_ascii=False), encoding="utf-8")
+    tmp.replace(plan_file)
+    print(json.dumps({"approved": found, "not_found": sorted(ids - set(found))}))
+    if ids - set(found):
+        raise SystemExit(1)
+
+
+def cmd_backup(a) -> None:
+    from .backup import backup
+    out = Path(a.out) if a.out else Path(a.db).with_name("backups")
+    dest = backup(Path(a.db), out, [_policy_path(a)] + [Path(p) for p in a.plan or []], a.keep)
+    print(json.dumps({"backup": str(dest)}))
+
+
+def cmd_verify_backup(a) -> None:
+    from .backup import verify
+    problems = verify(Path(a.dir))
+    print(json.dumps({"ok": not problems, "problems": problems}))
+    if problems:
+        raise SystemExit(1)
+
+
+def cmd_review(a) -> None:
+    from .vision import review_project
+    review = review_project(Path(a.project))
+    print(json.dumps(review, indent=2, ensure_ascii=False))
+
+
 def cmd_dashboard(a) -> None:
     from .dashboard import serve
     srv = serve(Path(a.db), _policy_path(a), a.host, a.port)
@@ -188,10 +240,30 @@ def main() -> None:
     d.add_argument("--policy")
     d.add_argument("--host", default="127.0.0.1")
     d.add_argument("--port", type=int, default=8787)
+    i = sub.add_parser("ideas")
+    i.add_argument("--plan", required=True)
+    i.add_argument("--db")
+    i.add_argument("--policy")
+    i.add_argument("--count", type=int, default=5)
+    ap_ = sub.add_parser("approve")
+    ap_.add_argument("--plan", required=True)
+    ap_.add_argument("--id", action="append", required=True)
+    b = sub.add_parser("backup")
+    b.add_argument("--db", required=True)
+    b.add_argument("--policy")
+    b.add_argument("--out")
+    b.add_argument("--plan", action="append")
+    b.add_argument("--keep", type=int, default=14)
+    vb = sub.add_parser("verify-backup")
+    vb.add_argument("--dir", required=True)
+    rv = sub.add_parser("review")
+    rv.add_argument("--project", required=True)
     a = ap.parse_args()
     {"run": cmd_run, "enqueue": cmd_enqueue, "worker": cmd_worker, "status": cmd_status, "plan": cmd_plan,
      "stop": lambda a: _set_paused(a, True), "resume": lambda a: _set_paused(a, False), "policy": cmd_policy,
-     "dashboard": cmd_dashboard}[a.cmd](a)
+     "dashboard": cmd_dashboard, "ideas": cmd_ideas, "approve": cmd_approve,
+     "backup": cmd_backup, "verify-backup": cmd_verify_backup,
+     "review": cmd_review}[a.cmd](a)
 
 
 if __name__ == "__main__":

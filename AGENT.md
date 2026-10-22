@@ -54,6 +54,7 @@
 | **QA** | [`apex/apex/qa.py`](./apex/apex/qa.py): technical checks plus sampled frames; creative review stays separate. |
 | **Queue & worker** | [`apex/apex/jobs.py`](./apex/apex/jobs.py) (header explains leases, retries, dead letters), [`apex/apex/cli.py`](./apex/apex/cli.py). |
 | **Autopilot & planner** | [`apex/apex/autopilot.py`](./apex/apex/autopilot.py): policy in `autopilot.json` next to the DB (emergency stop, daily cap, topic rules, approval gate); `run_plan` decides every plan entry. |
+| **Ideas, review, backups** | [`ideas.py`](./apex/apex/ideas.py) (`apex.cli ideas` / `approve`; ideas always land unapproved), [`vision.py`](./apex/apex/vision.py) (`apex.cli review`; verdict computed locally from scores), [`backup.py`](./apex/apex/backup.py) (`apex.cli backup` / `verify-backup`). |
 | **Control center** | [`apex/apex/dashboard.py`](./apex/apex/dashboard.py): read-only web page (`apex.cli dashboard`), binds 127.0.0.1. |
 | **Publishing** | [`apex/apex/publishing.py`](./apex/apex/publishing.py): post state machine; dry-run adapter only. |
 | **Acceptance sample** | [`apex/samples/money-mistake/`](./apex/samples/money-mistake/): spec, script, and the committed output with manifest and QA report. |
@@ -137,7 +138,7 @@ Edit `CINTA_PERSONA` in `bot.py` **and** `RULES` in the LSKhan Studio artifact. 
 ```
 cd apex
 python3.13 -m venv .venv && .venv/bin/pip install -r requirements.txt
-.venv/bin/python -m pytest -q                                   # 64 tests, ~12 s
+.venv/bin/python -m pytest -q                                   # 81 tests, ~16 s
 .venv/bin/python -m apex.cli run --spec samples/money-mistake/spec.json \
     --script samples/money-mistake/script.json --project out/draft --fps 6 --samples 2   # ~6 min draft
 ```

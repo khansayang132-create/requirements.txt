@@ -37,6 +37,17 @@ sudo apt-get install -y ffmpeg espeak-ng fonts-dejavu-core
 .venv/bin/python -m apex.cli plan --plan plan.json --db out/jobs.db
 .venv/bin/python -m apex.cli stop --db out/jobs.db       # emergency stop; `resume` to continue
 .venv/bin/python -m apex.cli dashboard --db out/jobs.db  # http://127.0.0.1:8787 (read-only)
+
+# Ideas: an LLM proposes, fixed rules filter, survivors are added to the plan unapproved.
+.venv/bin/python -m apex.cli ideas --plan plan.json --db out/jobs.db --count 5
+.venv/bin/python -m apex.cli approve --plan plan.json --id 20261022-hal-kecil-di-keluarga-pakistan
+
+# After a video is produced: vision-model review of one frame per scene (advisory).
+.venv/bin/python -m apex.cli review --project out/my-video
+
+# Backups of the queue, policy and plan (kept: newest 14).
+.venv/bin/python -m apex.cli backup --db out/jobs.db --plan plan.json
+.venv/bin/python -m apex.cli verify-backup --dir out/backups/apex-backup-...
 ```
 
 A plan file is a JSON list:
@@ -46,13 +57,17 @@ A plan file is a JSON list:
 Leave out `--script` to have an LLM write the script. That needs `ANTHROPIC_API_KEY`, or
 `OMNIROUTE_API_KEY` (your OmniRoute gateway), or `OPENAI_API_KEY` (see `.env.example`).
 
+Set `HEADROOM_BASE_URL` (e.g. `http://127.0.0.1:8765/v1`) to send script, idea and review calls through the
+Headroom proxy first; if it isn't running, calls go straight to the gateway. `APEX_VISION_MODEL` picks the model
+for `review` (defaults to `OMNIROUTE_MODEL`).
+
 Narration uses ElevenLabs when `ELEVENLABS_API_KEY` is set (default voice: Nilasari, Indonesian), and the
 offline espeak-ng voice otherwise.
 
 Docker: `docker build -t apex-worker . && docker run -v $PWD/data:/data apex-worker`
 (the worker reads and writes `/data/jobs.db`).
 
-Tests: `.venv/bin/python -m pytest -q` (64 tests)
+Tests: `.venv/bin/python -m pytest -q` (81 tests)
 
 ## Modules
 
@@ -70,7 +85,10 @@ Tests: `.venv/bin/python -m pytest -q` (64 tests)
 | `publishing.py` | Post state machine; dry-run adapter only (never marks PUBLISHED without provider confirmation) |
 | `autopilot.py` | Policy (emergency stop, daily cap, allowed/prohibited topics, approval gate) and the content planner |
 | `dashboard.py` | Read-only control center: queue, job history, QA, video playback, `/health` |
-| `cli.py` | `run`, `enqueue`, `worker`, `status`, `plan`, `stop`, `resume`, `policy`, `dashboard` |
+| `ideas.py` | LLM idea generation with fixed review rules; adds ideas to the plan unapproved |
+| `vision.py` | Vision-model creative review of sampled frames; verdict computed locally |
+| `backup.py` | Consistent queue snapshots with SHA-256 manifest, verification and rotation |
+| `cli.py` | `run`, `enqueue`, `worker`, `status`, `plan`, `stop`, `resume`, `policy`, `dashboard`, `ideas`, `approve`, `review`, `backup`, `verify-backup` |
 
 ## Status (stage 1)
 

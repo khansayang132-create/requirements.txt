@@ -73,17 +73,31 @@ def _srt_filter(path: Path, style: str) -> str:
     return f"subtitles='{arg}':force_style='{style}'"
 
 
+# Text safe zones per frame shape, as fractions of frame height (libass units are height-relative).
+# 9:16 keeps captions above the platform UI (bottom ~25%: buttons, caption, music bar) and headlines
+# below the top tabs; square and landscape players only overlay a thin control bar.
+SAFE_ZONES = {
+    "portrait": {"caption_size": 0.042, "caption_margin": 0.27, "headline_size": 0.062, "headline_margin": 0.13},
+    "square": {"caption_size": 0.046, "caption_margin": 0.12, "headline_size": 0.064, "headline_margin": 0.08},
+    "landscape": {"caption_size": 0.055, "caption_margin": 0.08, "headline_size": 0.075, "headline_margin": 0.06},
+}
+
+
+def frame_shape(width: int, height: int) -> str:
+    return "portrait" if height > width * 1.1 else "landscape" if width > height * 1.1 else "square"
+
+
 def burn_and_mux(video: Path, audio: Path, srt: Path, out: Path, width: int, height: int,
                  titles: Path | None = None) -> Path:
     u = ASS_PLAY_RES_Y
-    # Captions sit above the platform UI (bottom ~25% of a 9:16 frame); headlines below the top tabs.
+    z = SAFE_ZONES[frame_shape(width, height)]
     # force_style on SRT uses legacy SSA alignment numbers: 2 = bottom centre, 6 = top centre.
-    caption = (f"FontName={FONT},FontSize={round(u * 0.042)},Bold=1,PrimaryColour=&H00FFFFFF,"
+    caption = (f"FontName={FONT},FontSize={round(u * z['caption_size'])},Bold=1,PrimaryColour=&H00FFFFFF,"
                f"OutlineColour=&H00000000,BorderStyle=1,Outline=1.2,Shadow=0,Alignment=2,"
-               f"MarginV={round(u * 0.27)},MarginL=16,MarginR=16")
-    headline = (f"FontName={FONT},FontSize={round(u * 0.062)},Bold=1,PrimaryColour=&H0000D7FF,"
+               f"MarginV={round(u * z['caption_margin'])},MarginL=16,MarginR=16")
+    headline = (f"FontName={FONT},FontSize={round(u * z['headline_size'])},Bold=1,PrimaryColour=&H0000D7FF,"
                 f"OutlineColour=&H00000000,BorderStyle=1,Outline=1.6,Shadow=0,Alignment=6,"
-                f"MarginV={round(u * 0.13)},MarginL=14,MarginR=14")
+                f"MarginV={round(u * z['headline_margin'])},MarginL=14,MarginR=14")
     filters = ([_srt_filter(titles, headline)] if titles else []) + [_srt_filter(srt, caption)]
     run_ffmpeg(["-i", str(video), "-i", str(audio),
                 "-vf", ",".join(filters),

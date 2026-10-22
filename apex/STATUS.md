@@ -44,22 +44,36 @@ Categories follow the spec's completion gate. Nothing here is described as produ
 - **Control center** (`dashboard.py`, `apex.cli dashboard`): read-only web page with autopilot state, queue counts,
   recent jobs, per-job history, QA result and the finished video (with byte-range streaming), plus `/health`.
   Binds to 127.0.0.1; serves only video paths a completed job recorded.
+- **Idea generation** (`ideas.py`, `apex.cli ideas`): an LLM proposes ideas for the channel's niche; fixed
+  checks reject slow-greeting hooks, prohibited topics, near-duplicates of the plan or queue, unknown angles,
+  more than two ideas per angle per batch, and lengths outside 15-90 s. Survivors are appended to the plan
+  with `"approved": false`; `apex.cli approve --id ...` approves them. Nothing is approved automatically.
+- **Vision creative review** (`vision.py`, `apex.cli review`): sends the sampled frames, with each scene's
+  narration and on-screen text, to a vision model. The model returns scores and notes. PASS / NEEDS_WORK is
+  computed locally (overall >= 7, no frame < 5, every frame matches its scene, every frame reviewed). The
+  result is advisory and is written into `qa/qa_report.json` and `manifest.json`.
+- **Backups** (`backup.py`, `apex.cli backup` / `verify-backup`): consistent SQLite online-backup snapshot of
+  the queue plus policy and plan files, SHA-256 manifest, integrity check on verify, rotation (default 14).
+- **Headroom routing**: with `HEADROOM_BASE_URL` set, script, idea and vision calls go through the Headroom
+  proxy first and fall back to the direct gateway only when Headroom can't be reached.
 - **Deployment files**: `Dockerfile`, `.env.example`, CI job running the full test suite.
 
 ## VERIFIED (actually run in the development session)
 
 | Test | Result | Evidence |
 |---|---|---|
-| Unit + integration suite (64 tests) | PASS locally and in GitHub Actions (`apex` job) | schemas, timing, Indonesian numbers, review, revision limit, locking, mock-server provider call, queue state machine, backoff, dead letter, crash recovery, graceful release, restart, subtitles, publishing states, real ffmpeg edit + QA, QA failure detection, espeak, cache reuse, real Blender render |
+| Unit + integration suite (81 tests) | PASS locally and in GitHub Actions (`apex` job) | schemas, timing, Indonesian numbers, review, revision limit, locking, mock-server provider call, queue state machine, backoff, dead letter, crash recovery, graceful release, restart, subtitles, publishing states, real ffmpeg edit + QA, QA failure detection, espeak, cache reuse, real Blender render |
 | Acceptance sample, end to end (30 s, 9:16, Indonesian, money mistake) | PASS | `samples/money-mistake/output/final.mp4` — 30.83 s, 432×768, 24 fps, H.264 + AAC, SHA-256 `59506ae8…f3d832` |
 | Real 3D rendering | PASS | 740 frames, Blender 5.2.3 Cycles CPU, 8 samples + denoise, 36.3 min total (2.94 s/frame on 4 cores) |
 | Technical QA on the final file | 16/16 PASS | `output/qa_report.json`: -15.9 LUFS, true peak -1.2 dBFS, no black or silent gaps, valid SRT |
 | Run through the persistent queue | PASS | enqueued twice with the same key → one job; worker claimed it, COMPLETED on attempt 1 |
 | Autopilot + planner + dashboard | PASS | approval gate, prohibited topic, daily cap, idempotent re-plan, paused plan; a real worker process left a queued job alone while paused; dashboard pages, `/health`, byte ranges (206/416) and path-traversal attempts (404) tested; dashboard run against the real queue from the 36-min render shows its full CREATED → COMPLETED history |
+| Ideas, approval, vision review, backups, Headroom fallback | PASS (against local stub servers) | review rules on a mixed batch (greeting, banned topic, near-duplicate, invalid length); generated ideas stay WAITING_FOR_APPROVAL until `approve`; CLI `ideas` → `approve` → `plan` enqueues only the approved one; vision request carries every frame as a data URI plus scene text; a reply without scores is refused and leaves review NOT RUN; backups taken while another thread writes pass `integrity_check`; tampered files are caught; Headroom down → direct route, direct down → Headroom |
 | Graceful worker shutdown | PASS | SIGTERM → "worker stopped", exit in 3 s |
 | Selective regeneration | PASS | re-run reused all 6 scene renders (16 s instead of 36 min); a renderer change invalidated the cache as designed |
 | Bugs found by these runs and fixed | — | spoken-length estimate ignored expanded prices; subtitle sizes used pixels instead of libass units; headline alignment used ASS numbering instead of SSA; render cache ignored renderer changes; QA crashed on videos without audio; QA let a fully black video pass |
-| Creative review | PARTIAL | Claude inspected one frame per scene (notes in `output/manifest.json` → `creative_review_notes`); no vision model runs inside the pipeline yet |
+| Creative review | PARTIAL | `apex.cli review` exists and is tested against a stub; not yet run against a live vision model (no key here). Claude inspected one frame per scene of the sample by hand (notes in `output/manifest.json` → `creative_review_notes`) |
+| Ideas from a live LLM | NOT RUN | No API key in this environment; tested against a stub |
 | Docker image build | NOT VERIFIED | The sandbox's network policy denies `deb.debian.org`, so `apt-get` in the image cannot run here. Build it on any normal machine or CI runner. |
 | LLM-written script, live | NOT RUN | No API key in this environment (see BLOCKED) |
 | Publishing | NOT RUN (by design) | Only the dry-run adapter exists; no production account was touched |
@@ -81,11 +95,10 @@ Categories follow the spec's completion gate. Nothing here is described as produ
   Studio, Asset Library). Changes go through the CLI.
 - AI text-to-video or image-to-video providers (scenes are procedural 3D only), visual consistency bible for
   characters, and characters in general (templates are objects: coins, cup, piggy bank, chart).
-- Vision-model creative review of sampled frames (frames are saved for it).
-- Spending budgets in money (the daily job cap limits volume, not cost) and automatic idea generation for the
-  planner (plans are written by the owner or an LLM outside the queue).
-- Authentication and roles (the only web surface is read-only and bound to localhost), backups, multi-language
-  beyond `id`/`en`.
+- Spending budgets in money (the daily job cap limits volume, not cost).
+- Scheduled idea generation (run `apex.cli ideas` yourself or from cron; it never approves).
+- Authentication and roles (the only web surface is read-only and bound to localhost), off-machine backup
+  copies (backups are local directories), multi-language beyond `id`/`en`.
 - Additional export profiles (1:1 and 16:9 resolutions exist in the storyboard; only 9:16 was produced).
 
 ## Known limits
