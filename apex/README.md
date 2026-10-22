@@ -36,10 +36,13 @@ sudo apt-get install -y ffmpeg espeak-ng fonts-dejavu-core
 Leave out `--script` to have an LLM write the script. That needs `ANTHROPIC_API_KEY`, or
 `OMNIROUTE_API_KEY` (your OmniRoute gateway), or `OPENAI_API_KEY` (see `.env.example`).
 
+Narration uses ElevenLabs when `ELEVENLABS_API_KEY` is set (default voice: Nilasari, Indonesian), and the
+offline espeak-ng voice otherwise.
+
 Docker: `docker build -t apex-worker . && docker run -v $PWD/data:/data apex-worker`
 (the worker reads and writes `/data/jobs.db`).
 
-Tests: `.venv/bin/python -m pytest -q`
+Tests: `.venv/bin/python -m pytest -q` (53 tests)
 
 ## Modules
 
@@ -47,7 +50,7 @@ Tests: `.venv/bin/python -m pytest -q`
 |---|---|
 | `models.py` | Validated schemas: production spec, script, scene specs, storyboard, job states and allowed transitions |
 | `script_engine.py` | Anthropic / OpenAI-compatible (OmniRoute) providers, deterministic script review, bounded revision loop, script locking with changed-scene detection |
-| `tts.py` | TTS provider interface, espeak-ng provider, Indonesian number/price pronunciation |
+| `tts.py` | TTS provider interface, ElevenLabs and espeak-ng providers (`tts_from_env`), Indonesian number/price pronunciation |
 | `timing.py`, `storyboard.py` | Scene timing from measured narration, snapped to frames; target-length gate |
 | `render3d.py` | Procedural Blender scenes (`hero_coin`, `coffee_cup`, `coin_stack`, `bar_chart`, `piggy_bank`), 6 camera moves, Cycles path tracing |
 | `assemble.py` | ffmpeg edit: clips, fades, narration placement, generated music bed, sidechain ducking, -14 LUFS, captions + headlines in the 9:16 safe zone |

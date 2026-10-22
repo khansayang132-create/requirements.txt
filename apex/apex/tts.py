@@ -86,3 +86,64 @@ class EspeakProvider:
         if not out_wav.exists() or out_wav.stat().st_size < 1000 or probe_duration(out_wav) <= 0:
             raise RuntimeError(f"espeak-ng produced no usable audio for: {text[:40]!r}")
         return out_wav
+
+
+class ElevenLabsProvider:
+    """Natural neural voices through the ElevenLabs text-to-speech API."""
+
+    quality_note = "neural TTS (natural); suitable for publishing"
+
+    def __init__(self, api_key: str, voice_id: str, model_id: str = "eleven_multilingual_v2",
+                 base_url: str = "https://api.elevenlabs.io"):
+        if not api_key:
+            raise TTSUnavailable("ELEVENLABS_API_KEY is not set")
+        self.api_key, self.voice_id, self.model_id = api_key, voice_id, model_id
+        self.base_url = base_url.rstrip("/")
+        self.name = f"elevenlabs:{voice_id}:{model_id}"
+
+    def synthesize(self, text: str, language: str, out_wav: Path) -> Path:
+        import json
+        import urllib.error
+        import urllib.request
+
+        out_wav.parent.mkdir(parents=True, exist_ok=True)
+        req = urllib.request.Request(
+            f"{self.base_url}/v1/text-to-speech/{self.voice_id}?output_format=mp3_44100_128",
+            data=json.dumps({"text": normalize_for_speech(text, language), "model_id": self.model_id,
+                             "language_code": language}).encode(),
+            method="POST", headers={"xi-api-key": self.api_key, "content-type": "application/json",
+                                    "accept": "audio/mpeg"})
+        try:
+            with urllib.request.urlopen(req, timeout=120) as r:
+                audio = r.read()
+        except urllib.error.HTTPError as e:
+            detail = e.read().decode(errors="replace")[:300]
+            if e.code in (401, 402, 403):
+                # Bad key, unpaid invoice or quota: setup problems, not worth retrying.
+                raise TTSUnavailable(f"ElevenLabs refused the request ({e.code}): {detail}") from e
+            raise RuntimeError(f"ElevenLabs error {e.code}: {detail}") from e
+        except urllib.error.URLError as e:
+            raise ConnectionError(f"ElevenLabs unreachable: {e.reason}") from e
+        mp3 = out_wav.with_suffix(".mp3")
+        mp3.write_bytes(audio)
+        subprocess.run(["ffmpeg", "-hide_banner", "-nostdin", "-y", "-i", str(mp3), "-ar", "44100", "-ac", "1",
+                        str(out_wav)], check=True, capture_output=True)
+        mp3.unlink()
+        if probe_duration(out_wav) <= 0:
+            raise RuntimeError(f"ElevenLabs returned no usable audio for: {text[:40]!r}")
+        return out_wav
+
+
+# Nilasari: clear, natural Indonesian voice made for education and TikTok narration.
+DEFAULT_ELEVENLABS_VOICE = "NPDHDOOQCSyifTJZOe6J"
+
+
+def tts_from_env() -> TTSProvider:
+    """ElevenLabs when ELEVENLABS_API_KEY is set, otherwise offline espeak-ng."""
+    import os
+
+    if os.getenv("ELEVENLABS_API_KEY"):
+        return ElevenLabsProvider(os.environ["ELEVENLABS_API_KEY"],
+                                  os.getenv("APEX_VOICE_ID", DEFAULT_ELEVENLABS_VOICE),
+                                  os.getenv("APEX_TTS_MODEL", "eleven_multilingual_v2"))
+    return EspeakProvider()

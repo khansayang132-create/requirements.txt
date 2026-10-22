@@ -19,7 +19,7 @@ from .script_engine import lock_script, provider_from_env, review_script, write_
 from .storyboard import build_storyboard
 from .subtitles import build_srt, build_title_srt, validate_srt
 from .timing import fits_target
-from .tts import EspeakProvider
+from .tts import TTSUnavailable, tts_from_env
 
 
 class PipelineError(RuntimeError):
@@ -104,12 +104,20 @@ def run_production(spec: ProductionSpec, project: Path, script_file: Path | None
     stage("script", "LOCKED", f"version {lock['version']} ({script.provenance})")
 
     # 2. Narration audio, one clip per scene, cached by text + voice.
-    tts = EspeakProvider()
+    try:
+        tts = tts_from_env()
+    except TTSUnavailable as e:
+        raise PipelineError(f"no TTS provider: {e}", retryable=False) from e
     wavs, spoken = [], []
     for sc in script.scenes:
         wav = project / "audio" / f"{sc.scene_id}_{_sha(sc.narration, tts.name, spec.language)}.wav"
         if not wav.exists():
-            tts.synthesize(sc.narration, spec.language, wav)
+            try:
+                tts.synthesize(sc.narration, spec.language, wav)
+            except TTSUnavailable as e:
+                raise PipelineError(str(e), retryable=False) from e
+            except (ConnectionError, RuntimeError, OSError) as e:
+                raise PipelineError(f"narration failed for {sc.scene_id}: {e}", retryable=True) from e
         wavs.append(wav)
         spoken.append(probe_duration(wav))
     stage("narration", "DONE", f"{len(wavs)} clips, {sum(spoken):.1f}s spoken ({tts.name})")
