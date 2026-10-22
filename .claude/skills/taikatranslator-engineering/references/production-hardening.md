@@ -45,25 +45,29 @@ Stage → write → validate → publish:
 4. `publish(staged, target, overwrite)`: without overwrite it hard-links (atomic create-if-absent; a rename would silently replace a file created in the meantime), with overwrite it does an atomic rename. Reports `NON_ATOMIC_FALLBACK` when the filesystem can't do better.
 5. On failure: `discard(staged, keepForDiagnostics=true)` renames to `.failed` and the report says where.
 
-## TSK-6.5 Configuration and secrets
+## TSK-6.5 Configuration and secrets (kit: `config/ConfigLoader`, `config/Secret`, `config/AppConfig`)
 - Sources in order: CLI flags > environment variables > config file > defaults. Print the effective config (redacted) at debug level.
 - Secrets only from environment or a secret store; refuse a config file that contains a key field (fail with the field name, not the value).
 - Validate at startup: endpoint is `https://` (allow `http://127.0.0.1` only in test profile), key non-blank, numbers in range, durations positive, language codes valid.
 - A missing key for a stage that will run is a startup failure (exit 4), not a crash on page 37.
 - `.env` gitignored; `.env.example` lists names with empty values.
+- Catch provider mismatches at startup: a DeepL Free key (`:fx`) against the Pro host is a config error, not a 403 on page 1.
+- Give secrets a type (`Secret`) whose `toString()` is `[REDACTED]`, so a record or exception that includes config can't leak them.
+- Unknown keys in the config file are errors: a typo must not silently fall back to a default.
 
-## TSK-6.6 Temporary files
+## TSK-6.6 Temporary files (kit: `core/RunWorkspace`)
 - One run directory: `Files.createTempDirectory("taika-" + runId)`, owner-only permissions on POSIX (`PosixFilePermissions.fromString("rwx------")`).
 - Delete in `finally` unless `--keep-temp` or the run failed and diagnostics are kept; the report records which.
 - Never `new File("/tmp/out.docx")`: predictable names are a race and a leak.
 - Staged outputs go next to the destination (above), not in the temp dir.
 - Test: after a successful run, the temp dir is gone; after a failed run with diagnostics, it is listed in the report.
 
-## TSK-6.7 Limits
+## TSK-6.7 Limits (kit: `core/InputLimits`, exit code 9)
 Enforce before upload: file size, page count, image pixel dimensions, total characters to translate (compare with DeepL `/v2/usage`), number of blocks, per-document deadline. Each limit is configurable, defaulted, and produces a specific error message and exit code. Decompression bombs: cap rendered image size before rasterising PDFs.
 
-## TSK-6.8 Checkpoints
+## TSK-6.8 Checkpoints (kit: `core/CheckpointStore`, `core/TranslationCache`)
 Persist after each stage: `{runId, inputSha256, configHash, stage, outputPath, outputSha256}`. On resume, a checkpoint is valid only if the input hash **and** config hash match and the stage output still exists with the same hash. Translation checkpoints at block granularity save the most money. Never resume across a changed target language or glossary.
+The kit keys the translation cache by SHA-256 of (config fingerprint, target, source, protected text), so the cache file holds translations but no source text, and a torn last line after a crash is skipped on load. `CliMainIT` proves a resumed run makes zero provider calls.
 
 ## TSK-6.9 Metrics and benchmarks
 Per run: duration per stage, pages/min, blocks, characters translated, retries, peak heap (`MemoryMXBean`), overflow count. Benchmark with JMH or a repeated fixture run; establish a baseline first (TSK-7.2), then set thresholds. Report medians and p95, not one run.

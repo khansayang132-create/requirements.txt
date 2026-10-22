@@ -117,3 +117,25 @@ def test_cleaned_page_has_no_coloured_residue(tmp_path):
     _, _, out = run(tmp_path, page(tmp_path, stamp=True, signature=True))
     hsv = np.asarray(Image.open(out / "cleaned.png").convert("HSV"))
     assert int(((hsv[..., 1] >= 35) & (hsv[..., 2] < 245)).sum()) == 0
+
+
+def test_only_allowed_formats_are_decoded(tmp_path):
+    # Valid images in formats outside the allow-list are refused before any decoder runs.
+    for fmt, ext in (("GIF", "gif"), ("BMP", "bmp"), ("TGA", "tga")):
+        p = tmp_path / f"page.{ext}"
+        Image.new("RGB", (64, 64), "white").save(p, format=fmt)
+        assert seg.main(["--input", str(p), "--out-dir", str(tmp_path / ext)]) == seg.EXIT_INPUT, fmt
+    for fmt, ext in (("JPEG", "jpg"), ("TIFF", "tif")):
+        p = tmp_path / f"page.{ext}"
+        Image.new("RGB", (64, 64), "white").save(p, format=fmt)
+        assert seg.main(["--input", str(p), "--out-dir", str(tmp_path / ext)]) == seg.EXIT_OK, fmt
+
+
+def test_decompression_bomb_is_refused(tmp_path, monkeypatch):
+    monkeypatch.setattr(seg, "MAX_PIXELS", 1000)  # small limit so the test image stays small
+    p = tmp_path / "big.png"
+    Image.new("L", (200, 200), 255).save(p)  # 40,000 px > 2 x 1000 -> Pillow raises
+    assert seg.main(["--input", str(p), "--out-dir", str(tmp_path / "o")]) == seg.EXIT_INPUT
+    q = tmp_path / "between.png"
+    Image.new("L", (40, 40), 255).save(q)  # 1,600 px: between 1x and 2x, where Pillow only warns
+    assert seg.main(["--input", str(q), "--out-dir", str(tmp_path / "o2")]) == seg.EXIT_INPUT

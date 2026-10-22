@@ -28,6 +28,11 @@ from collections import deque
 EXIT_OK, EXIT_USAGE, EXIT_INPUT, EXIT_INTERNAL = 0, 2, 3, 4
 SCHEMA_VERSION = 1
 MAX_SIDE = 800  # analysis resolution; masks are scaled back to full size
+# Untrusted input: only the decoders a scanned page needs. EPS (Ghostscript), PSD, GIF, TGA,
+# PCF/BDF fonts and friends are where image-library CVEs cluster; they are never opened.
+ALLOWED_FORMATS = ("PNG", "JPEG", "TIFF")
+# A 600 dpi A3 page is ~ 7016 x 9921 = 70 Mpx. Anything far beyond that is a decompression bomb.
+MAX_PIXELS = 120_000_000
 
 
 def coloured_ink(rgb, min_saturation=90):
@@ -174,12 +179,20 @@ def main(argv=None):
     except ImportError as e:
         print(f"missing dependency: {e.name}", file=sys.stderr)
         return EXIT_INTERNAL
+    import warnings
+    # Pillow raises above 2x MAX_IMAGE_PIXELS but only *warns* between 1x and 2x; make the limit exact.
+    Image.MAX_IMAGE_PIXELS = MAX_PIXELS
     try:
-        with Image.open(args.input) as im:
-            im.load()
-            img = im.copy()
+        with warnings.catch_warnings():
+            warnings.simplefilter("error", Image.DecompressionBombWarning)
+            with Image.open(args.input, formats=ALLOWED_FORMATS) as im:
+                im.load()
+                img = im.copy()
+    except (Image.DecompressionBombError, Image.DecompressionBombWarning):
+        print("image exceeds the pixel limit", file=sys.stderr)
+        return EXIT_INPUT
     except (FileNotFoundError, UnidentifiedImageError, OSError) as e:
-        print(f"cannot read image: {type(e).__name__}", file=sys.stderr)
+        print(f"cannot read image (allowed: {', '.join(ALLOWED_FORMATS)}): {type(e).__name__}", file=sys.stderr)
         return EXIT_INPUT
     if img.width < 8 or img.height < 8:
         print("image too small", file=sys.stderr)

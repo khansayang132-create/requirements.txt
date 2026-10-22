@@ -79,6 +79,20 @@ Spanish, French, German and Portuguese commonly run 15–35% longer than English
 3. For fixed-position layouts (text boxes, absolutely positioned frames), widen into free space on the right if the neighbouring region is empty.
 4. Otherwise: overflow warning in the report, visual check flags it.
 
+## Fonts
+
+Declare the font on every run. Without a declaration each renderer picks its own default, so the size the fitter chose was measured for a different font than the one drawn, and visual baselines differ between machines. The kit declares **Calibri** (what Word users have) and measures with **Carlito**, an open font with identical metrics that installs on Linux servers (`fonts-crosextra-carlito`). Same pairing for Cambria ↔ Caladea; Arial ↔ Liberation Sans; Times New Roman ↔ Liberation Serif. Record the measuring font that actually resolved in the report (`measurerFont`).
+
+## Tables
+
+- Horizontal merges: `w:gridSpan` on the anchor, covered cells removed from the row. Vertical merges: `w:vMerge restart` then `continue` in the cells below. A block merge uses both.
+- Give rows an at-least height from the source geometry. A row made only of merge continuations has no content of its own, and LibreOffice collapsed it to zero height in the kit's render while every structure test passed.
+- Merged-away cells hold "" in the canonical grid and are never sent for translation.
+
+## Headers, footers, page numbers
+
+Provider roles `pageHeader`/`pageFooter` go into the DOCX header/footer parts once (they repeat on every page of the source), not into the body. `pageNumber` becomes a `PAGE` field; copying page 1's "1" prints "1" on every page.
+
 ## Flow versus fixed layout in DOCX
 
 - **Flow** (paragraphs and tables in reading order): robust, editable, reflows with expansion. Positions are approximate. The starter kit uses this.

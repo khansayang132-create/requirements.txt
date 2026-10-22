@@ -40,9 +40,17 @@ jobs:
           distribution: temurin
           java-version: ${{ env.JAVA_VERSION }}
           cache: maven
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      # The Java/Python contract tests call vision/segmenter.py for real.
+      - run: python -m pip install -r vision/requirements.txt
       # verify = compile + unit tests (Surefire) + package + integration tests (Failsafe).
       # Live cloud tests are tagged "live" and excluded; no secrets are needed here.
+      # VISION_REQUIRED turns a missing Python runtime into a failure instead of a skip.
       - run: mvn -B -ntp clean verify
+        env:
+          VISION_REQUIRED: "1"
       - if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -74,8 +82,9 @@ jobs:
           python-version: ${{ env.PYTHON_VERSION }}
       - run: |
           sudo apt-get update
-          sudo apt-get install -y --no-install-recommends libreoffice-writer poppler-utils fonts-dejavu-core
-          python -m pip install pillow==11.1.0
+          # Carlito = Calibri metrics; the DOCX declares Calibri. Same fonts as the baseline machine.
+          sudo apt-get install -y --no-install-recommends libreoffice-writer-nogui poppler-utils fonts-crosextra-carlito
+          python -m pip install pillow==13.0.0
       - run: |
           python scripts/visual_diff.py compare reports/e2e-evidence/service-agreement.ES.docx \
             --baseline src/test/resources/baselines/service-agreement.ES --out visual-out

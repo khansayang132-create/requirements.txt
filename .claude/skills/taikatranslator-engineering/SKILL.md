@@ -5,7 +5,7 @@ description: Professional engineering playbook and verified starter kit for Taik
 
 # TaikaTranslator engineering
 
-A method plus working code. TaikaTranslator's own source is **not in this repo**; it lives in the owner's project. This skill gives you the rules, the reference material and a **starter kit whose 94 Java tests and 9 Python tests have actually been run** (`starter/STATUS.md`). Port its patterns into the real code; never present kit evidence as evidence about TaikaTranslator. Nothing here touches `bot.py` or `apex/`.
+A method plus working code. TaikaTranslator's own source is **not in this repo**; it lives in the owner's project. This skill gives you the rules, the reference material and a **starter kit whose 134 Java tests and 19 Python tests have actually been run**, locally and in CI on JDK 17 (`starter/STATUS.md`). Port its patterns into the real code; never present kit evidence as evidence about TaikaTranslator. Nothing here touches `bot.py` or `apex/`.
 
 ## 0. First moves, every time
 
@@ -26,7 +26,9 @@ A method plus working code. TaikaTranslator's own source is **not in this repo**
 | Font size / text expansion / overflow | `references/layout-and-geometry.md` § Text fitting, `starter/.../layout/` |
 | Retries, timeouts, 429/456/5xx, polling | `references/providers.md`, `starter/.../retry/`, `starter/.../provider/` |
 | Azure or DeepL request/response details | `references/providers.md` |
-| CLI, logging, config, secrets, temp files, limits, checkpoints, audit | `references/production-hardening.md` |
+| CLI, logging, config, secrets, temp files, limits, checkpoints, audit | `references/production-hardening.md`, `starter/.../cli/Main`, `config/`, `core/` |
+| Stamps, signatures, cleaning pages for OCR, calling Python from Java | `starter/vision/segmenter.py`, `starter/.../vision/VisionRunner` |
+| Merged cells, headers/footers, page numbers, fonts in DOCX | `starter/.../docx/DocxAssembler`, `references/layout-and-geometry.md` |
 | Output validation, safe publishing | `starter/.../validation/` |
 | DOCX structure checks | `starter/.../docx/DocxInspector`, `StructureDiff` |
 | Visual regression | `starter/scripts/visual_diff.py`, testing playbook § Visual |
@@ -91,6 +93,7 @@ Same commands on Linux and Windows PowerShell (`templates/verify.ps1` wraps them
 
 ```
 cd .claude/skills/taikatranslator-engineering/starter
-mvn -B clean verify && python -m pytest -q scripts/tests
+mvn -B clean verify && python -m pytest -q scripts/tests vision/tests
+java -jar target/taikatranslator.jar --help
 ```
-Map of packages to tickets: `starter/README.md`. What was really run, defects found, and what's still unverified: `starter/STATUS.md`. CI runs it on every push (`taika-starter` job in this repo's `.github/workflows/test.yml`). If you change the kit, rerun both commands and update `STATUS.md`.
+Map of packages to tickets: `starter/README.md`. What was really run, defects found, and what's still unverified: `starter/STATUS.md`. CI runs it on every push (`taika-starter` and the separate visual gate `taika-visual` in this repo's `.github/workflows/test.yml`). If you change the kit, rerun both commands and update `STATUS.md`.

@@ -7,6 +7,8 @@
 | Unit | `mvn test` (Surefire) | `*Test` | nothing: no network, keys, renderer | Logic: geometry, fitting, retry policy, validators, CLI parsing |
 | Stub integration | `mvn verify` (Failsafe) | `*IT` | a local `127.0.0.1` HTTP stub | Real HTTP behaviour: status codes, headers, Retry-After, batching, polling |
 | End-to-end fixture | `mvn verify` (Failsafe) | `*IT` | fixture files + stubs | Every stage and every gate on a known document |
+| Process level | `mvn verify` (Failsafe, after `package`) | `*IT` | the built JAR + stubs | Exit codes, stdout/stderr contract, resume, nothing leaks, as a user runs it (`CliMainIT`) |
+| Cross-language | `mvn verify` | `*IT` | python3 + deps | Java/Python contract: timeout, exit codes, output validation (`VisionRunnerIT`); `VISION_REQUIRED=1` makes a missing runtime fail instead of skip in CI |
 | Visual | separate job/script | `visual_diff.py` | LibreOffice, poppler, fonts | Rendered pages match a baseline |
 | Live | opt-in, `-Dgroups=live` | `@Tag("live")` | real keys | The provider still behaves as the mocks say (on that date) |
 
@@ -25,6 +27,8 @@ A higher layer never replaces a lower one, and their results are reported separa
 | Floating point | Compare geometry with a tolerance; exact `equals` on doubles failed in the kit's first run |
 | ZIP/XML ordering in DOCX | Compare structure (`DocxInspector` + `StructureDiff`), never bytes |
 | Interrupt flag leaking between tests | `@AfterEach` clears it (`Thread.interrupted()`) |
+
+A skipped test is not a passed test. Wherever a test skips for a missing tool (Python, LibreOffice, keys), CI sets a flag that turns the skip into a failure, so a broken CI image can't go green silently.
 
 Run the suite twice in a row before calling it reproducible: `mvn -q verify && mvn -q verify`.
 

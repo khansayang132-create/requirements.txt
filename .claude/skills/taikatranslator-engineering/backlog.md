@@ -82,15 +82,15 @@
 - **Evidence:** `target/e2e-evidence/{report.json,run.log.jsonl,*.docx}`
 
 ### TSK-5.2.6 — DOCX structural regression
-- **Priority:** P0 · **Depends on:** 5.2.5 · **Kit:** `docx/DocxInspector`, `docx/StructureDiff`
+- **Priority:** P0 · **Depends on:** 5.2.5 · **Kit:** `docx/DocxInspector`, `docx/StructureDiff`, `DocxAssemblerTest` (6 tests: merges, headers/footers, PAGE field, fonts, row heights)
 - **Acceptance:**
-  - [ ] Checks paragraph order, styles, alignment, font sizes, table shape and cell text, image count/relationship/extent (EMU), section page size/orientation (twips).
+  - [ ] Checks paragraph order, styles, alignment, font sizes, table shape, merged cells and cell text, image count/relationship/extent (EMU), header/footer text, page-number fields, section page size/orientation (twips).
   - [ ] Compares structure, never bytes.
   - [ ] DOCX opens in Apache POI; a truncated or non-DOCX ZIP is rejected (`ArtifactValidatorTest`).
 - **Verify:** `mvn -B verify`
 
 ### TSK-5.2.7 — Visual regression
-- **Priority:** P1 · **Depends on:** 5.2.5 · **Kit:** `scripts/visual_diff.py`, `scripts/tests/` (9 tests)
+- **Priority:** P1 · **Depends on:** 5.2.5 · **Kit:** `scripts/visual_diff.py`, `scripts/tests/` (9 tests), baseline in `src/test/resources/baselines/`, CI job `taika-visual`
 - **Acceptance:**
   - [ ] Renderer, versions and DPI recorded in the baseline manifest; baselines committed.
   - [ ] Compares page count, per-page pixel change (configurable threshold and tolerance), blank pages, content at page edges.
@@ -107,16 +107,20 @@ Details and defaults: `references/production-hardening.md`.
 
 | Ticket | Objective | P | Kit |
 |---|---|---|---|
-| TSK-6.1 | Validate CLI arguments and input files | P0 | `cli/*` (10 tests) |
-| TSK-6.2 | Structured, correlation-aware logging | P0 | `reporting/RunLog`, `Redactor` (4 tests + E2E log checks) |
-| TSK-6.3 | External API timeouts and retries | P0 | `retry/*`, `provider/*` (12 stub tests) |
-| TSK-6.4 | Validate intermediate and final artifacts | P0 | `validation/*` (10 tests) |
-| TSK-6.5 | Configuration and secret validation | P0 | guidance only |
-| TSK-6.6 | Safe temporary-file handling | P0 | `AtomicPublisher.stage`; run-dir guidance |
-| TSK-6.7 | Resource and document-size limits | P1 | guidance only |
-| TSK-6.8 | Resumable processing checkpoints | P1 | guidance only |
-| TSK-6.9 | Processing metrics and benchmarks | P1 | report counts/durations |
-| TSK-6.10 | Security and dependency audit | P1 | guidance only |
+| TSK-6.1 | Validate CLI arguments and input files | P0 | `cli/CliOptions`, `cli/Main`, runnable JAR (10 unit + 5 process-level tests) |
+| TSK-6.2 | Structured, correlation-aware logging | P0 | `reporting/RunLog`, `Redactor` (4 tests + log checks in E2E and CLI tests) |
+| TSK-6.3 | External API timeouts and retries | P0 | `retry/*`, `provider/*` (17 + 12 stub tests) |
+| TSK-6.4 | Validate intermediate and final artifacts | P0 | `validation/*` (10 tests), vision output validation |
+| TSK-6.5 | Configuration and secret validation | P0 | `config/*` (12 tests) |
+| TSK-6.6 | Safe temporary-file handling | P0 | `core/RunWorkspace`, `AtomicPublisher.stage` |
+| TSK-6.7 | Resource and document-size limits | P1 | `core/InputLimits` (file before upload; pages/blocks/characters before translation) |
+| TSK-6.8 | Resumable processing checkpoints | P1 | `core/CheckpointStore`, `core/TranslationCache` (resume proven to make zero provider calls) |
+| TSK-6.9 | Processing metrics and benchmarks | P1 | report counts/durations; benchmark harness not built |
+| TSK-6.10 | Security and dependency audit | P1 | guidance only (`references/production-hardening.md`) |
+
+### Vision stage (supports the mission's "detect document artifacts")
+- **Kit:** `vision/segmenter.py` (10 pytest tests), `vision/VisionRunner` + `VisionRunnerIT` (6 tests).
+- **Acceptance (real project):** measured precision/recall on 20–50 labelled real pages per document class; black-ink signatures handled or explicitly out of scope; runner timeout, exit-code mapping and output validation in place; CI fails rather than skips when the vision runtime is missing.
 
 ## Phase 7 — CI and quality
 

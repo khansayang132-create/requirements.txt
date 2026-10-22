@@ -19,7 +19,10 @@ Write down: Java release in the pom, JUnit version (4 or 5?), Surefire/Failsafe 
 | `geometry.*` | 5.2.2 | layout normalizer? | Adapter if the real system isn't normalized; port tests |
 | `layout.TextFitter` + measurers | 5.2.3 | text-expansion code | Port; use the real DOCX font in `AwtTextMeasurer` |
 | `validation.ArtifactValidator`, `AtomicPublisher` | 6.4 / 6.6 | none, probably | Add |
-| `cli.CliOptions`, `ExitCode` | 6.1 | `Main`/CLI parser (picocli?) | Port the checks into the existing parser; keep its flag names |
+| `cli.CliOptions`, `ExitCode`, `Main` | 6.1 | `Main`/CLI parser (picocli?) | Port the checks and the check order into the existing entry point; keep its flag names; port `CliMainIT` (launches the real JAR) |
+| `config.*` | 6.5 | config loading | Port precedence, secret typing, unknown-key rejection and startup provider checks |
+| `core.*` | 6.6–6.8 | temp handling, resume | Add workspace, limits, checkpoints, translation cache |
+| `vision.VisionRunner`, `vision/segmenter.py` | vision | existing `vision/segmenter.py`? | Keep the real segmenter; adopt the runner contract (paths only, timeout, exit codes, validated JSON + PNG outputs) and its tests |
 | `reporting.*` | 6.2 / report | logging config | MDC + JSON encoder if SLF4J exists; report writer as is |
 | `translation.*` | 5.2.5 / TranslationValidator | DeepL wrapper | Add protection + validation around the existing call |
 | `provider.DeepLTranslator`, `AzureLayoutClient` | 6.3 | SDK clients? | If an SDK is used, keep it; apply the same retry/idempotency rules and port the stub tests |

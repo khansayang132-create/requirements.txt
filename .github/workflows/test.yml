@@ -132,7 +132,7 @@ jobs:
             echo "apt attempt $i failed; retrying"; sleep 10
           done
         timeout-minutes: 15
-      - run: pip install pillow==11.1.0
+      - run: pip install pillow==13.0.0
       - run: soffice --version && pdftoppm -v 2>&1 | head -1 && fc-match Calibri
       - run: |
           python scripts/visual_diff.py compare evidence/e2e-evidence/service-agreement.ES.docx \
@@ -143,3 +143,24 @@ jobs:
           name: taika-visual-diff
           path: .claude/skills/taikatranslator-engineering/starter/visual-out/
           if-no-files-found: warn
+
+  # Dependency audit for the starter kit (TSK-6.10): known vulnerabilities in the Maven
+  # dependency tree (resolved transitively) and the Python requirements, from OSV.
+  # The scanner binary is pinned by version and SHA-256. A finding fails this job.
+  taika-audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: .claude/skills/taikatranslator-engineering/starter
+    steps:
+      - uses: actions/checkout@v5
+      - run: |
+          curl -sSfL -o "$RUNNER_TEMP/osv-scanner" \
+            https://github.com/google/osv-scanner/releases/download/v2.0.2/osv-scanner_linux_amd64
+          echo "3abcfd7126c453a00421487e721b296e0cb68085bd431d6cef60872774170fc8  $RUNNER_TEMP/osv-scanner" | sha256sum -c -
+          chmod +x "$RUNNER_TEMP/osv-scanner"
+      - run: |
+          "$RUNNER_TEMP/osv-scanner" scan source \
+            --lockfile pom.xml \
+            --lockfile requirements.txt:vision/requirements.txt
