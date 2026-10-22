@@ -10,7 +10,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - run: python3 -m py_compile bot.py
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - run: python -m py_compile bot.py
+      - name: HarnessFlow generated files match the pack
+        run: |
+          (cd .github/HarnessFlow && python sync_agent_definitions.py)
+          bash .github/HarnessFlow/cli_setup.sh > /dev/null
+          test -z "$(git status --porcelain)" || { git status --short; echo "Run the two commands above and commit the result."; exit 1; }
+      - run: pip install -r requirements.txt pytest
+      - run: python -m pytest -q tests
       - run: shellcheck -S warning service/install.sh service/test-service.sh termux/install.sh termux/test-termux.sh
 
   service:

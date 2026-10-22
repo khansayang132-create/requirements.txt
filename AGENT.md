@@ -68,6 +68,7 @@
 ### Other tools
 | Topic | Source of Truth |
 |---|---|
+| **HarnessFlow** (AI workflow pack, third-party) | [`.github/HarnessFlow/`](./.github/HarnessFlow/readme.md), vendored from `HangYu8123/HarnessFlow` @ `aa9f74c`. Opt-in: runs only on a filled-in template from `request_template/`. Generated files (`AGENTS.md`, `.github/copilot-instructions.md`, `.claude/agents/`, `.claude/rules/`, `.codex/agents/`) come from `bash .github/HarnessFlow/cli_setup.sh`; don't hand-edit them. CI (`check`) regenerates them and fails if anything changes: after editing `agents/*.agent.md`, run `python3 sync_agent_definitions.py` in the pack, then `bash .github/HarnessFlow/cli_setup.sh`, and commit. Repo memory lives in `.github/HarnessFlow/repo_info/` and is committed here. Its "don't commit" safety rule applies inside a HarnessFlow run only. |
 | **Spotify artist profiles** (not LSKhan) | [`.claude/skills/artist-profile/`](./.claude/skills/artist-profile/SKILL.md): `SKILL.md` (steps) + `template.md`. Profiles go in `profiles/<artist-slug>.md`; unknown fields stay `TBD`. |
 
 ---
@@ -81,7 +82,7 @@ Violating any of these is a bug, not a preference.
 | **Secrets** | Only in `.env` (gitignored). Never in code, tests, commits, PR text, logs or manifests. Never print a key. Rotate any key that appears in a chat. |
 | **Bot AI calls** | `client.chat.completions.create` only. Gateways (OmniRoute) don't all support the Responses API, which is why it was removed. |
 | **Bot reachability** | Every new bot command is registered in `main()` **and** listed in `/start` **and** in the README's Commands section. |
-| **Bot access** | Every command that spends AI calls checks `TELEGRAM_ADMIN_ID` first, like `generate()` and `ping()`. |
+| **Bot access** | Every command that spends AI calls starts with `if not await allowed(update): return`, like `generate()` and `ping()`. The gate fails **closed**: with `TELEGRAM_ADMIN_ID` unset nobody passes, and the bot replies with the sender's ID to copy into `.env`. Never write `if ADMIN_ID and …`. |
 | **Install scripts** | Must be idempotent (safe to re-run) and must have a matching CI test (`service` and `termux` jobs). Changing one without its test is a bug. |
 | **Termux** | No systemd, no `sudo`, no `/etc`. Use `$PREFIX` and `$HOME`. Default to `127.0.0.1`, not `localhost`. |
 | **APEX Python** | 3.13 (the `bpy` 5.x wheels need it). Blender code stays in `render3d.py` and runs as a subprocess; nothing else imports `bpy`. |
@@ -102,6 +103,7 @@ Violating any of these is a bug, not a preference.
 |---|---|
 | Bot | `bot.py` |
 | Bot dependencies | `requirements.txt` (repo root) |
+| Bot tests | `tests/test_bot.py`: admin gate, default gateway URL, reply splitting, route fallback |
 | Env template (bot) | `.env.example` |
 | Termux runner / test | `termux/install.sh`, `termux/test-termux.sh` |
 | systemd runner / test | `service/install.sh`, `service/test-service.sh` |
@@ -129,7 +131,7 @@ libass SRT canvas:      288 lines tall
 ### Adding a bot command
 1. Write the handler in `bot.py`. AI work goes through `generate(update, context, task, persona)`.
 2. Register it in `main()`, add it to the `/start` text, add it to README → Commands.
-3. `python -m py_compile bot.py`. CI runs the same check.
+3. `python -m py_compile bot.py` and `python -m pytest -q tests` (needs `pip install -r requirements.txt pytest`). CI runs both. Add a test in `tests/test_bot.py` for any new gate or routing rule.
 
 ### Changing the LSKhan content rules
 Edit `CINTA_PERSONA` in `bot.py` **and** `RULES` in the LSKhan Studio artifact. Keep the meaning identical.
@@ -180,3 +182,4 @@ Real failures from this repo, roughly in order of how much time they cost:
 8. **External services from the dev sandbox.** Its network policy denies `deb.debian.org` and `api.elevenlabs.io`. Test providers against local stub servers (see `tests/`), and record live checks as NOT VERIFIED instead of "fixing" working code. The Docker build fails here for the same reason.
 9. **Docker build in the dev sandbox.** Its network policy denies `deb.debian.org`, so the APEX image can't build there. That's the sandbox, not the Dockerfile; record it as NOT VERIFIED instead of "fixing" the Dockerfile.
 10. **Headroom phones home by default.** `headroom proxy` uploads session summaries to Headroom Labs unless `HEADROOM_BEACON=off` (or `DO_NOT_TRACK=1`). Always start it with the beacon off.
+11. **An admin check that fails open.** `if ADMIN_ID and user != ADMIN_ID` let anyone spend the owner's AI quota whenever `TELEGRAM_ADMIN_ID` was empty, and the old defaults also said `localhost` despite trap 1. Both shipped unnoticed because the bot had no tests. `tests/test_bot.py` now fails on either.

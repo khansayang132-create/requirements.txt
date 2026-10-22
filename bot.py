@@ -10,11 +10,11 @@ logging.basicConfig(level=logging.INFO)
 
 TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "")
 OPENAI_KEY = os.getenv("OPENAI_API_KEY", "")
-ADMIN_ID = os.getenv("TELEGRAM_ADMIN_ID", "")
+ADMIN_ID = os.getenv("TELEGRAM_ADMIN_ID", "").strip()
 
 # OmniRoute is an OpenAI-compatible gateway; when its key is set, route through it.
 OMNIROUTE_KEY = os.getenv("OMNIROUTE_API_KEY", "")
-OMNIROUTE_BASE_URL = os.getenv("OMNIROUTE_BASE_URL", "http://localhost:20128/v1")
+OMNIROUTE_BASE_URL = os.getenv("OMNIROUTE_BASE_URL", "http://127.0.0.1:20128/v1")
 
 # Headroom (optional) is a context-compression proxy in front of the same gateway. When
 # HEADROOM_BASE_URL is set, requests go through it first and fall back to the direct route
@@ -77,9 +77,27 @@ CINTA_PERSONA = (
     "Any ending question must connect naturally to the story."
 )
 
-async def generate(update: Update, context: ContextTypes.DEFAULT_TYPE, task: str, persona: str = JASTIP_PERSONA):
-    if ADMIN_ID and str(update.effective_user.id) != ADMIN_ID:
+def is_admin(user_id) -> bool:
+    """Only the owner may spend AI calls. With TELEGRAM_ADMIN_ID unset nobody passes, so a fresh
+    install never serves strangers on the owner's quota."""
+    return bool(ADMIN_ID) and str(user_id) == ADMIN_ID
+
+async def allowed(update: Update) -> bool:
+    """Gate for every command that spends AI calls. Replies with the reason when it refuses."""
+    user_id = update.effective_user.id
+    if is_admin(user_id):
+        return True
+    if not ADMIN_ID:
+        await update.message.reply_text(
+            f"This bot is locked until TELEGRAM_ADMIN_ID is set. Your Telegram ID is {user_id}: "
+            f"put TELEGRAM_ADMIN_ID={user_id} in .env and restart the bot."
+        )
+    else:
         await update.message.reply_text("This assistant is private.")
+    return False
+
+async def generate(update: Update, context: ContextTypes.DEFAULT_TYPE, task: str, persona: str = JASTIP_PERSONA):
+    if not await allowed(update):
         return
     if not client:
         await update.message.reply_text("AI is not configured yet. Set OMNIROUTE_API_KEY or OPENAI_API_KEY.")
@@ -131,8 +149,7 @@ async def script(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await generate(update, context, task, CINTA_PERSONA)
 
 async def ping(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if ADMIN_ID and str(update.effective_user.id) != ADMIN_ID:
-        await update.message.reply_text("This assistant is private.")
+    if not await allowed(update):
         return
     if not client:
         await update.message.reply_text("AI is not configured yet. Set OMNIROUTE_API_KEY or OPENAI_API_KEY.")
