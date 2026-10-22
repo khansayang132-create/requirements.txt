@@ -38,10 +38,13 @@ git pull
 bash termux/install.sh            # bot + OmniRoute in the background
 ```
 It stops any copies you started by hand, runs both in the background, restarts them if they
-crash, and starts them again after the phone reboots. Then, once:
-1. Install the **Termux:Boot** app (same place you got Termux, e.g. F-Droid) and open it once.
-2. Android **Settings → Apps → Termux → Battery → Unrestricted**.
-3. Keep the Termux notification (don't swipe it away or tap Exit).
+crash. Then, once:
+1. Android **Settings → Apps → Termux → Battery → Unrestricted**.
+2. Keep the Termux notification (don't swipe it away or tap Exit).
+
+After the phone restarts, **open Termux once** and the bot and OmniRoute start again by themselves.
+(Optional: the **Termux:Boot** app does that step for you, but it must come from the same place
+as your Termux, and some phones can't install it. It's not required.)
 
 - Check: `bash termux/install.sh status`
 - Logs: `bash termux/install.sh logs`
