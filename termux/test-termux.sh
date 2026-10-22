@@ -93,6 +93,8 @@ class H(http.server.BaseHTTPRequestHandler):
 http.server.HTTPServer(("127.0.0.1", port), H).serve_forever()
 EOF
 chmod +x "$hr/bin/headroom"
+printf '#!%s/bin/sh\nexit 0\n' "$PREFIX" > "$hr/bin/python"   # passes the "core loads" check
+chmod +x "$hr/bin/python"
 touch "$hr/.installed"
 printf 'OMNIROUTE_API_KEY=fake\nHEADROOM_BASE_URL=\n' >> .env
 bash termux/install.sh --with-headroom

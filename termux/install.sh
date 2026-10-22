@@ -67,10 +67,33 @@ env_value() {
     sed -n "s/^$1=//p" "$BOT_DIR/.env" | tail -n 1 | tr -d "\"'"
 }
 
+# Can the venv load Headroom's Rust core? The proxy refuses to start without it.
+headroom_core_ok() { "$HR_VENV/bin/python" -c 'import headroom._core' >/dev/null 2>&1; }
+
+# hr_pip ARGS...: pip install into Headroom's venv, logged, with a progress line every minute.
+hr_pip() {
+    local log=$HR_VENV/build.log start=$SECONDS pid pyver
+    pyver=$(python -c 'import sys; print("%d.%d" % sys.version_info[:2])')
+    # maturin (used by the Rust packages) can't detect the Android API level by itself. Android
+    # also only loads an extension that links libpython itself; abi3 builds (headroom's own
+    # _core) don't by default, which fails at import with "cannot locate symbol PyModuleDef_Init".
+    ANDROID_API_LEVEL=$(getprop ro.build.version.sdk 2>/dev/null || echo 24) \
+    RUSTFLAGS="${RUSTFLAGS:+$RUSTFLAGS }-C link-arg=-lpython$pyver" \
+        "$HR_VENV/bin/pip" install --disable-pip-version-check "$@" >>"$log" 2>&1 &
+    pid=$!
+    while kill -0 "$pid" 2>/dev/null; do
+        sleep 60
+        kill -0 "$pid" 2>/dev/null && echo "   ...still building ($(( (SECONDS - start) / 60 )) min): $(tail -n 1 "$log" | cut -c1-70)"
+    done
+    wait "$pid"
+}
+
 # Build Headroom into its own venv. Returns non-zero (never exits) so a failed build can't stop
-# the bot from being installed. A finished build leaves $HR_VENV/.installed; anything less is redone.
+# the bot from being installed. A finished build leaves $HR_VENV/.installed and a loadable core;
+# anything less is redone (pip skips what is already built).
 install_headroom() {
-    [[ -f $HR_VENV/.installed && -x $HR_VENV/bin/headroom ]] && return 0
+    [[ -f $HR_VENV/.installed && -x $HR_VENV/bin/headroom ]] && headroom_core_ok && return 0
+    rm -f "$HR_VENV/.installed"
 
     local free_kb
     free_kb=$(df -Pk "$HOME" | awk 'NR==2 {print $4}')
@@ -91,7 +114,7 @@ install_headroom() {
     [[ -x $HR_VENV/bin/pip ]] || python -m venv --system-site-packages "$HR_VENV" \
         || { warn "Could not create $HR_VENV."; return 1; }
 
-    local log=$HR_VENV/build.log start=$SECONDS pid rc
+    local log=$HR_VENV/build.log start=$SECONDS
     # headroom-ai[proxy] minus sqlite-vec: it has no Android build or source on PyPI, and only
     # Headroom's memory feature (off by default) uses it. Keep in step with HR_VERSION's extras.
     local deps=(
@@ -99,18 +122,19 @@ install_headroom() {
         "openai>=2.14" "mcp>=1.28.1,<2" "magika>=0.6" "zstandard>=0.20" "websockets>=13"
         "onnxruntime>=1.24" "transformers>=5.5,<6" "watchdog>=4"
     )
-    # maturin (used by most of the Rust packages) can't detect the Android API level by itself.
-    ANDROID_API_LEVEL=$(getprop ro.build.version.sdk 2>/dev/null || echo 24) \
-        "$HR_VENV/bin/pip" install --disable-pip-version-check "${deps[@]}" >"$log" 2>&1 &
-    pid=$!
-    while kill -0 "$pid" 2>/dev/null; do
-        sleep 60
-        kill -0 "$pid" 2>/dev/null && echo "   ...still building ($(( (SECONDS - start) / 60 )) min): $(tail -n 1 "$log" | cut -c1-70)"
-    done
-    wait "$pid" && rc=0 || rc=$?
-    if (( rc != 0 )) || [[ ! -x $HR_VENV/bin/headroom ]]; then
+    if ! hr_pip "${deps[@]}" || [[ ! -x $HR_VENV/bin/headroom ]]; then
         warn "Headroom failed to build. Last lines of $log:"
         tail -n 15 "$log" >&2
+        return 1
+    fi
+    if ! headroom_core_ok; then
+        # A core built earlier without the libpython link: rebuild just that package (~10 min).
+        echo "   Rebuilding headroom-ai's core so Android can load it..."
+        hr_pip --force-reinstall --no-deps --no-cache-dir "headroom-ai==$HR_VERSION"
+    fi
+    if ! headroom_core_ok; then
+        warn "Headroom built, but its Rust core won't load on this phone:"
+        "$HR_VENV/bin/python" -c 'import headroom._core' 2>&1 | tail -n 3 >&2
         return 1
     fi
     touch "$HR_VENV/.installed"
