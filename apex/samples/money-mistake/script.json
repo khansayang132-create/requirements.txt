@@ -1,0 +1,104 @@
+{
+  "title": "Kebiasaan Kecil yang Menguras Gaji",
+  "concept": "Satu kebiasaan harian yang terlihat sepele dihitung pelan-pelan sampai angkanya mengejutkan, lalu diberi solusi realistis.",
+  "hook": "Ada satu kebiasaan kecil yang diam-diam menguras gajimu.",
+  "scenes": [
+    {
+      "scene_id": "s01",
+      "purpose": "Hook: curiosity gap",
+      "narration": "Ada satu kebiasaan kecil yang diam-diam menguras gajimu.",
+      "on_screen_text": "KEBIASAAN KECIL",
+      "template": "coffee_cup",
+      "camera_move": "dolly_in",
+      "params": {
+        "coins": 0
+      },
+      "music_cue": "low pad enters"
+    },
+    {
+      "scene_id": "s02",
+      "purpose": "Problem: the habit",
+      "narration": "Contohnya, beli kopi kekinian Rp25.000 setiap hari.",
+      "on_screen_text": "Rp25.000 / HARI",
+      "template": "coffee_cup",
+      "camera_move": "orbit_left",
+      "params": {
+        "coins": 6
+      },
+      "music_cue": ""
+    },
+    {
+      "scene_id": "s03",
+      "purpose": "Escalation: one month",
+      "narration": "Dalam sebulan, totalnya sudah Rp750.000.",
+      "on_screen_text": "Rp750.000 / BULAN",
+      "template": "coin_stack",
+      "camera_move": "crane_up",
+      "params": {
+        "stacks": [
+          3,
+          6,
+          9
+        ]
+      },
+      "music_cue": ""
+    },
+    {
+      "scene_id": "s04",
+      "purpose": "Twist: one year",
+      "narration": "Dalam setahun? Sembilan juta rupiah hilang begitu saja, tanpa terasa.",
+      "on_screen_text": "Rp9 JUTA / TAHUN",
+      "template": "bar_chart",
+      "camera_move": "dolly_out",
+      "params": {
+        "values": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12
+        ]
+      },
+      "music_cue": "pad swells"
+    },
+    {
+      "scene_id": "s05",
+      "purpose": "Payoff: realistic fix",
+      "narration": "Kuncinya bukan berhenti total, tapi sisihkan uang kopi ke tabungan otomatis.",
+      "on_screen_text": "TABUNG OTOMATIS",
+      "template": "piggy_bank",
+      "camera_move": "orbit_right",
+      "params": {
+        "coins": 8
+      },
+      "music_cue": ""
+    },
+    {
+      "scene_id": "s06",
+      "purpose": "Question for comments",
+      "narration": "Kebiasaan kecil apa yang paling susah kamu kurangi? Tulis di komentar.",
+      "on_screen_text": "KAMU YANG MANA?",
+      "template": "hero_coin",
+      "camera_move": "dolly_in",
+      "params": {},
+      "music_cue": "pad fades out"
+    }
+  ],
+  "caption": "Kebiasaan kecil, dampaknya besar ☕💸 Kamu yang mana?",
+  "hashtags": [
+    "#KeuanganPribadi",
+    "#TipsHemat",
+    "#Nabung",
+    "#LiterasiKeuangan",
+    "#FYP"
+  ],
+  "thumbnail_concept": "Gold coins rising out of a white coffee cup on a dark studio floor, text: Rp9 JUTA / TAHUN",
+  "provenance": "written by Claude (AI) in the development session; reviewed by the pipeline's deterministic checks. The pipeline's live LLM provider was not used because no API key is configured."
+}

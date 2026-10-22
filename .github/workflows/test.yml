@@ -28,3 +28,17 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - run: docker run --rm --privileged -v "$PWD":/mnt/repo:ro termux/termux-docker:x86_64 bash /mnt/repo/termux/test-termux.sh
+
+  apex:
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: apex
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: sudo apt-get update && sudo apt-get install -y ffmpeg espeak-ng fonts-dejavu-core
+      - run: pip install -r requirements.txt
+      - run: python -m pytest -q
