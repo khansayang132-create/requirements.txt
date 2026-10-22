@@ -37,6 +37,15 @@ printf 'import time\nprint("FAKE BOT STARTED", flush=True)\ntime.sleep(100000)\n
 : > requirements.txt
 printf 'TELEGRAM_BOT_TOKEN=123456:fake\nOMNIROUTE_API_KEY=test-key\nOMNIROUTE_BASE_URL=http://127.0.0.1:20128/v1\nHEADROOM_BASE_URL=\n' > .env
 
+# A finished build cached by the workflow (in /mnt/cache) skips the ~50 min compile. The installer
+# skips pkg once a build exists, so install Termux's prebuilt parts here.
+hr=$HOME/.lskhan-headroom
+if [[ -f /mnt/cache/headroom.tar ]]; then
+    pkg install -y python-onnxruntime python-numpy python-cryptography >/dev/null
+    tar -xf /mnt/cache/headroom.tar -C "$HOME"
+    echo "RESTORED CACHED HEADROOM BUILD"
+fi
+
 start=$SECONDS
 bash termux/install.sh --with-headroom
 echo "INSTALL TOOK $(( (SECONDS - start) / 60 )) min"
@@ -55,10 +64,32 @@ if [[ ! -f $HOME/.lskhan-headroom/.installed ]]; then
     exit 1
 fi
 
+# Save the build for the next run, before anything below can fail.
+if [[ -d /mnt/cache && ! -f /mnt/cache/headroom.tar ]]; then
+    tar -cf /mnt/cache/headroom.tar -C "$HOME" .lskhan-headroom
+fi
+
 export SVDIR=$PREFIX/var/service
 sv status lskhan-headroom | grep -q '^run:'
 grep -qx 'HEADROOM_BASE_URL=http://127.0.0.1:8765/v1' .env
-[[ $(curl -s -m 10 http://127.0.0.1:8765/health | python -c 'import json,sys; print(json.load(sys.stdin)["status"])') == healthy ]]
+health=""
+for _ in $(seq 1 300); do
+    health=$(curl -s -m 5 http://127.0.0.1:8765/health || true)
+    [[ -n $health ]] && break
+    sleep 1
+done
+if [[ -z $health ]]; then
+    set +e
+    echo "=== HEADROOM NOT ANSWERING ==="
+    sv status lskhan-headroom
+    cat "$PREFIX/var/service/lskhan-headroom/run"
+    tail -n 150 "$PREFIX/var/log/sv/lskhan-headroom/current"
+    echo "=== FOREGROUND RUN ==="
+    HEADROOM_BEACON=off timeout 120 "$hr/bin/headroom" proxy --host 127.0.0.1 --port 8766 2>&1 | tail -n 80
+    exit 1
+fi
+echo "HEADROOM ANSWERED AFTER $(( SECONDS - start ))s TOTAL"
+[[ $(python -c 'import json,sys; print(json.loads(sys.argv[1])["status"])' "$health") == healthy ]]
 
 # The bot's request path: POST /v1/chat/completions to Headroom, forwarded to "OmniRoute".
 reply=$(curl -s -m 60 http://127.0.0.1:8765/v1/chat/completions \

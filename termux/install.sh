@@ -131,7 +131,7 @@ use_headroom_in_env() {
 }
 
 wait_headroom_healthy() {
-    for _ in $(seq 1 90); do
+    for _ in $(seq 1 180); do   # first start on a phone loads large Python packages
         curl -s -m 2 "http://127.0.0.1:$HR_PORT/health" >/dev/null 2>&1 && return 0
         sleep 1
     done

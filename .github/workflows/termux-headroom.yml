@@ -15,4 +15,18 @@ jobs:
     timeout-minutes: 300
     steps:
       - uses: actions/checkout@v5
-      - run: docker run --rm --privileged -v "$PWD":/mnt/repo:ro termux/termux-docker:x86_64 bash /mnt/repo/termux/test-headroom-build.sh
+      # The finished build, so a re-run doesn't recompile for ~50 min. Bump the key when the
+      # Headroom version or its dependency list in termux/install.sh changes.
+      # Saved even when the test fails, since the build itself is the slow part.
+      - id: restore
+        uses: actions/cache/restore@v4
+        with:
+          path: hr-cache
+          key: termux-headroom-0.41.0-nosqlitevec-v1
+      - run: mkdir -p hr-cache && chmod 777 hr-cache
+      - run: docker run --rm --privileged -v "$PWD":/mnt/repo:ro -v "$PWD/hr-cache":/mnt/cache termux/termux-docker:x86_64 bash /mnt/repo/termux/test-headroom-build.sh
+      - if: always() && steps.restore.outputs.cache-hit != 'true' && hashFiles('hr-cache/headroom.tar') != ''
+        uses: actions/cache/save@v4
+        with:
+          path: hr-cache
+          key: termux-headroom-0.41.0-nosqlitevec-v1
