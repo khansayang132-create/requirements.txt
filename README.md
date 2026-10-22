@@ -30,6 +30,25 @@ or directly to OpenAI if no OmniRoute key is set.
    python bot.py
    ```
 
+## Optional: Headroom (context compression)
+
+[Headroom](https://pypi.org/project/headroom-ai/) is an OpenAI-compatible proxy that compresses
+prompts before they reach the gateway. The bot uses it when `HEADROOM_BASE_URL` is set, and falls
+back to OmniRoute directly if Headroom isn't running, so stopping it never breaks the bot.
+
+Start Headroom on port 8765, forwarding to OmniRoute:
+```
+HEADROOM_BEACON=off OPENAI_TARGET_API_URL=http://127.0.0.1:20128/v1 headroom proxy --port 8765
+```
+`HEADROOM_BEACON=off` stops Headroom's default upload of session summaries to Headroom Labs.
+
+Then in `.env`:
+```
+HEADROOM_BASE_URL=http://127.0.0.1:8765/v1
+```
+`/ping` shows which route answered, for example `Headroom http://127.0.0.1:8765/v1`, or
+`http://127.0.0.1:20128/v1 (fallback: Headroom … unreachable)`.
+
 ## Run 24/7 on an Android phone (Termux)
 
 In Termux, inside the bot folder:

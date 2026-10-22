@@ -31,7 +31,7 @@
 | Topic | Source of Truth |
 |---|---|
 | **Commands & personas** | [`bot.py`](./bot.py): `/caption` `/idea` (jastip persona), `/hook` `/script` (`CINTA_PERSONA`), `/ping` (connection check), `/start` `/help`. Long replies are split at 4000 chars. |
-| **AI connection** | [`bot.py`](./bot.py) top block + [`.env.example`](./.env.example). OmniRoute first (`OMNIROUTE_API_KEY`, `OMNIROUTE_BASE_URL`, `OMNIROUTE_MODEL`), then direct OpenAI. On the owner's phone: base URL `http://127.0.0.1:20128/v1`, model `cc/claude-opus-5-5`. |
+| **AI connection** | [`bot.py`](./bot.py) top block + [`.env.example`](./.env.example). OmniRoute first (`OMNIROUTE_API_KEY`, `OMNIROUTE_BASE_URL`, `OMNIROUTE_MODEL`), then direct OpenAI. On the owner's phone: base URL `http://127.0.0.1:20128/v1`, model `cc/claude-opus-5-5`. Optional `HEADROOM_BASE_URL` (Headroom proxy, `http://127.0.0.1:8765/v1`) is tried first; `chat()` falls back to the direct route on connection errors only. |
 | **Setup for humans** | [`README.md`](./README.md): install, Termux 24/7, Linux 24/7, commands. |
 
 ### Running 24/7
@@ -107,6 +107,7 @@ Violating any of these is a bug, not a preference.
 **Constants worth knowing**
 ```
 OmniRoute default port: 20128           (/v1 suffix required)
+Headroom on the phone:  8765 → upstream via OPENAI_TARGET_API_URL=http://127.0.0.1:20128/v1
 Telegram message cap:   4096 (bot splits at 4000)
 APEX 9:16 render:       432×768, 24 fps, 8 Cycles samples
 APEX loudness target:   -14 LUFS, true peak ≤ -0.5 dBFS
@@ -171,3 +172,4 @@ Real failures from this repo, roughly in order of how much time they cost:
 7. **QA that passes broken video.** A fully black video once passed the black-frame check, and a video without audio crashed QA. `tests/test_media.py` guards both. Don't loosen them.
 8. **External services from the dev sandbox.** Its network policy denies `deb.debian.org` and `api.elevenlabs.io`. Test providers against local stub servers (see `tests/`), and record live checks as NOT VERIFIED instead of "fixing" working code. The Docker build fails here for the same reason.
 9. **Docker build in the dev sandbox.** Its network policy denies `deb.debian.org`, so the APEX image can't build there. That's the sandbox, not the Dockerfile; record it as NOT VERIFIED instead of "fixing" the Dockerfile.
+10. **Headroom phones home by default.** `headroom proxy` uploads session summaries to Headroom Labs unless `HEADROOM_BEACON=off` (or `DO_NOT_TRACK=1`). Always start it with the beacon off.
