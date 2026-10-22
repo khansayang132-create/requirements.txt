@@ -92,9 +92,16 @@ install_headroom() {
         || { warn "Could not create $HR_VENV."; return 1; }
 
     local log=$HR_VENV/build.log start=$SECONDS pid rc
+    # headroom-ai[proxy] minus sqlite-vec: it has no Android build or source on PyPI, and only
+    # Headroom's memory feature (off by default) uses it. Keep in step with HR_VERSION's extras.
+    local deps=(
+        "headroom-ai==$HR_VERSION" fastapi "uvicorn>=0.23,<1" "orjson>=3.9.14" "httpx[http2]>=0.24"
+        "openai>=2.14" "mcp>=1.28.1,<2" "magika>=0.6" "zstandard>=0.20" "websockets>=13"
+        "onnxruntime>=1.24" "transformers>=5.5,<6" "watchdog>=4"
+    )
     # maturin (used by most of the Rust packages) can't detect the Android API level by itself.
     ANDROID_API_LEVEL=$(getprop ro.build.version.sdk 2>/dev/null || echo 24) \
-        "$HR_VENV/bin/pip" install --disable-pip-version-check "headroom-ai[proxy]==$HR_VERSION" >"$log" 2>&1 &
+        "$HR_VENV/bin/pip" install --disable-pip-version-check "${deps[@]}" >"$log" 2>&1 &
     pid=$!
     while kill -0 "$pid" 2>/dev/null; do
         sleep 60
