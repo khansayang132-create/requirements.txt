@@ -69,7 +69,7 @@
 | Topic | Source of Truth |
 |---|---|
 | **Spotify artist profiles** (not LSKhan) | [`.claude/skills/artist-profile/`](./.claude/skills/artist-profile/SKILL.md): `SKILL.md` (steps) + `template.md`. Profiles go in `profiles/<artist-slug>.md`; unknown fields stay `TBD`. |
-| **TaikaTranslator engineering** (not LSKhan; its code lives outside this repo) | [`.claude/skills/taikatranslator-engineering/`](./.claude/skills/taikatranslator-engineering/SKILL.md): `SKILL.md` (router, six acceptance gates, rules, Definition of Done), `backlog.md` (Phases 5–7), `references/` (providers, layout, testing, hardening, traps, review, adoption), `templates/` (ticket, status report, report schema, CI, verify scripts), `starter/` (Java 17 + Python reference kit; `mvn -B clean verify` + `pytest scripts/tests`; record in `starter/STATUS.md`). CI job: `taika-starter`. |
+| **TaikaTranslator engineering** (not LSKhan; its code lives outside this repo) | [`.claude/skills/taikatranslator-engineering/`](./.claude/skills/taikatranslator-engineering/SKILL.md): `SKILL.md` (router, six acceptance gates, rules, Definition of Done), `backlog.md` (Phases 5–7), `references/` (providers, layout, testing, hardening, traps, review, adoption), `templates/` (ticket, status report, report schema, CI, verify scripts), `starter/` (Java 17 + Python reference kit with a runnable CLI JAR and a vision stage; `mvn -B clean verify` + `pytest scripts/tests vision/tests`; record in `starter/STATUS.md`). CI jobs: `taika-starter`, `taika-visual` (render vs baseline), `taika-audit` (OSV dependency audit). |
 
 ---
 

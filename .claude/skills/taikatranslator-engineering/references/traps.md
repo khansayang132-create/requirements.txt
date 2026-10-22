@@ -16,34 +16,37 @@ Failure modes for this kind of pipeline, the starred ones hit while building and
 9. ★ **Page numbers copied as text.** Page 1's literal "1" in the footer prints "1" on every page. Emit a `PAGE` field.
 10. ★ **Sending blank cells to the translator.** Merged-away and empty cells cost a request each and some engines reject empty text. Keep blanks, send only non-blank blocks.
 
+11. ★ **"Pinned" is not "safe".** Every dependency in the kit was pinned on purpose, and the first audit still found 70 known vulnerabilities: Jackson (17), POI's indirect commons-lang3 and log4j-api, and Pillow (50, including TIFF decoder memory bugs on exactly the untrusted scans the vision stage reads). Pin, then audit on every push (`taika-audit`), and pin transitive versions through `dependencyManagement`.
+12. ★ **Library safety limits that only warn.** Pillow raises a decompression-bomb error above 2x `MAX_IMAGE_PIXELS` but only warns between 1x and 2x. Promote the warning to an error, and decode only the formats you need.
+
 ## Providers
-11. Treating Azure `pages[].unit` as pixels for PDFs (it's inches) → every box in the top-left corner.
-12. Rotating by Azure `angle` (text skew) as if it were PDF `/Rotate`.
-13. Emitting table text twice: Azure lists cell paragraphs in `paragraphs` too.
-14. Retrying the Azure **submit** after a timeout or 5xx → duplicate billable analyses. Only the poll is idempotent.
-15. Retrying DeepL **456** (quota) in a loop. It won't recover until the quota resets.
-16. Sending bare `EN`/`PT` as a DeepL target, or a variant (`EN-US`) as a source.
-17. `tag_handling=xml` without escaping `&`/`<` → "A & B" becomes an XML error or vanishes.
-18. Restoring placeholders from the engine's output instead of the original token list. The engine may "translate" `{name}`.
-19. Trusting `Retry-After` without a cap. One bad header parks the job for hours.
-20. Free keys (`:fx`) against the Pro host, or the reverse: 403, looks like an auth bug.
+13. Treating Azure `pages[].unit` as pixels for PDFs (it's inches) → every box in the top-left corner.
+14. Rotating by Azure `angle` (text skew) as if it were PDF `/Rotate`.
+15. Emitting table text twice: Azure lists cell paragraphs in `paragraphs` too.
+16. Retrying the Azure **submit** after a timeout or 5xx → duplicate billable analyses. Only the poll is idempotent.
+17. Retrying DeepL **456** (quota) in a loop. It won't recover until the quota resets.
+18. Sending bare `EN`/`PT` as a DeepL target, or a variant (`EN-US`) as a source.
+19. `tag_handling=xml` without escaping `&`/`<` → "A & B" becomes an XML error or vanishes.
+20. Restoring placeholders from the engine's output instead of the original token list. The engine may "translate" `{name}`.
+21. Trusting `Retry-After` without a cap. One bad header parks the job for hours.
+22. Free keys (`:fx`) against the Pro host, or the reverse: 403, looks like an auth bug.
 
 ## Layout and DOCX
-21. Font size from character count alone for proportional fonts: wrong in both directions.
-22. Font substitution: the measuring font isn't installed in the container, so Java substitutes one and every fit is off. Record the resolved family.
-23. Shrinking below a readable floor to silence an overflow warning.
-24. Twips vs half-points vs EMU vs points confusion (see the units table in `layout-and-geometry.md`).
-25. Comparing DOCX files byte-for-byte. ZIP timestamps differ every run.
-26. Assuming `new XWPFDocument()` has styles: `setStyle("Title")` writes the id even if the style isn't defined; Word falls back to Normal. Add a styles part (or a template DOCX) when appearance matters.
-27. Writing `sectPr` before body content. It must be the last child of the body.
-28. Losing line breaks: `\n` in a run's text is not a break in Word. Use `addBreak()`.
+23. Font size from character count alone for proportional fonts: wrong in both directions.
+24. Font substitution: the measuring font isn't installed in the container, so Java substitutes one and every fit is off. Record the resolved family.
+25. Shrinking below a readable floor to silence an overflow warning.
+26. Twips vs half-points vs EMU vs points confusion (see the units table in `layout-and-geometry.md`).
+27. Comparing DOCX files byte-for-byte. ZIP timestamps differ every run.
+28. Assuming `new XWPFDocument()` has styles: `setStyle("Title")` writes the id even if the style isn't defined; Word falls back to Normal. Add a styles part (or a template DOCX) when appearance matters.
+29. Writing `sectPr` before body content. It must be the last child of the body.
+30. Losing line breaks: `\n` in a run's text is not a break in Word. Use `addBreak()`.
 
 ## Process and evidence
-29. "The process exited 0" reported as "the translation is correct". Six gates, six results.
-30. A PASS recorded from a previous commit's run.
-31. Mocks that were never compared with a real response, presented as provider behaviour. Mark synthetic mocks as synthetic.
-32. Live tests that silently pass when the key is missing. They must skip with a reason.
-33. Baselines regenerated on a different machine/LibreOffice version, then "visual regression" fails on every glyph. Same CI image for both.
-34. Customer documents in test fixtures or in logs.
-35. Moving packages around "to match the target structure" before the existing code is understood and covered by tests.
-36. Different Java versions in `maven.compiler.release`, CI and production. Pin and check all three (the kit's enforcer rule catches the build side).
+31. "The process exited 0" reported as "the translation is correct". Six gates, six results.
+32. A PASS recorded from a previous commit's run.
+33. Mocks that were never compared with a real response, presented as provider behaviour. Mark synthetic mocks as synthetic.
+34. Live tests that silently pass when the key is missing. They must skip with a reason.
+35. Baselines regenerated on a different machine/LibreOffice version, then "visual regression" fails on every glyph. Same CI image for both.
+36. Customer documents in test fixtures or in logs.
+37. Moving packages around "to match the target structure" before the existing code is understood and covered by tests.
+38. Different Java versions in `maven.compiler.release`, CI and production. Pin and check all three (the kit's enforcer rule catches the build side).

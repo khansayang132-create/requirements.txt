@@ -5,7 +5,7 @@ Verified reference implementations for the Phase 5 / Phase 6 tickets, with the t
 ## Run it
 
 ```
-mvn -B clean verify                                   # 106 unit (Surefire) + 28 integration (Failsafe), builds target/taikatranslator.jar
+mvn -B clean verify                                   # 106 unit (Surefire) + 29 integration (Failsafe), builds target/taikatranslator.jar
 python -m pip install -r vision/requirements.txt pytest
 python -m pytest -q scripts/tests vision/tests        # visual_diff.py + vision segmenter
 VISUAL_DOCX=target/e2e-evidence/service-agreement.ES.docx python -m pytest -q scripts/tests   # adds a real LibreOffice render
