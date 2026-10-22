@@ -202,3 +202,11 @@ def test_elevenlabs_unreachable_is_a_connection_error(tmp_path):
     p = ElevenLabsProvider("k", "v", base_url="http://127.0.0.1:9")  # nothing listens on port 9
     with pytest.raises(ConnectionError, match="unreachable"):
         p.synthesize("halo", "id", tmp_path / "x.wav")
+
+
+def test_safe_zones_per_frame_shape():
+    from apex.assemble import ASS_PLAY_RES_Y, SAFE_ZONES, frame_shape
+    assert [frame_shape(*r) for r in [(432, 768), (720, 720), (768, 432)]] == ["portrait", "square", "landscape"]
+    portrait = SAFE_ZONES["portrait"]  # the published 9:16 look must not drift
+    assert round(ASS_PLAY_RES_Y * portrait["caption_size"]) == 12 and round(ASS_PLAY_RES_Y * portrait["caption_margin"]) == 78
+    assert SAFE_ZONES["landscape"]["caption_margin"] < SAFE_ZONES["square"]["caption_margin"] < portrait["caption_margin"]
