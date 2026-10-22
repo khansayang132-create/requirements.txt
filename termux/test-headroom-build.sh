@@ -41,8 +41,21 @@ start=$SECONDS
 bash termux/install.sh --with-headroom
 echo "INSTALL TOOK $(( (SECONDS - start) / 60 )) min"
 
+if [[ ! -f $HOME/.lskhan-headroom/.installed ]]; then
+    set +e
+    echo "=== DIAGNOSTICS ==="
+    python --version
+    dpkg -s onnxruntime | grep -E '^(Status|Version)'
+    dpkg -L onnxruntime | grep -iE 'site-packages/[^/]+$|dist-info' | head
+    python -c 'import onnxruntime, sys; print("system import ok", onnxruntime.__version__, onnxruntime.__file__)'
+    "$HOME/.lskhan-headroom/bin/python" -c 'import onnxruntime; print("venv import ok", onnxruntime.__version__)'
+    "$HOME/.lskhan-headroom/bin/python" -c 'import sys; print(sys.path)'
+    "$HOME/.lskhan-headroom/bin/pip" list 2>/dev/null | grep -iE 'onnx|numpy|crypto'
+    cat "$HOME/.lskhan-headroom/pyvenv.cfg"
+    exit 1
+fi
+
 export SVDIR=$PREFIX/var/service
-test -f "$HOME/.lskhan-headroom/.installed"
 sv status lskhan-headroom | grep -q '^run:'
 grep -qx 'HEADROOM_BASE_URL=http://127.0.0.1:8765/v1' .env
 [[ $(curl -s -m 10 http://127.0.0.1:8765/health | python -c 'import json,sys; print(json.load(sys.stdin)["status"])') == healthy ]]
