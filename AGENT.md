@@ -69,6 +69,7 @@
 | Topic | Source of Truth |
 |---|---|
 | **Spotify artist profiles** (not LSKhan) | [`.claude/skills/artist-profile/`](./.claude/skills/artist-profile/SKILL.md): `SKILL.md` (steps) + `template.md`. Profiles go in `profiles/<artist-slug>.md`; unknown fields stay `TBD`. |
+| **TaikaTranslator engineering** (not LSKhan; its code lives outside this repo) | [`.claude/skills/taikatranslator-engineering/`](./.claude/skills/taikatranslator-engineering/SKILL.md): `SKILL.md` (method, six acceptance gates, Definition of Done) + `backlog.md` (Phases 5–7, execution order) + `ticket-template.md` (SpecKit format). |
 
 ---
 
