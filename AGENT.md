@@ -32,6 +32,7 @@
 |---|---|
 | **Commands & personas** | [`bot.py`](./bot.py): `/caption` `/idea` (jastip persona), `/hook` `/script` (`CINTA_PERSONA`), `/ping` (connection check), `/start` `/help`. Long replies are split at 4000 chars. |
 | **AI connection** | [`bot.py`](./bot.py) top block + [`.env.example`](./.env.example). OmniRoute first (`OMNIROUTE_API_KEY`, `OMNIROUTE_BASE_URL`, `OMNIROUTE_MODEL`), then direct OpenAI. On the owner's phone: base URL `http://127.0.0.1:20128/v1`, model `cc/claude-opus-5-5`. Optional `HEADROOM_BASE_URL` (Headroom proxy, `http://127.0.0.1:8765/v1`) is tried first; `chat()` falls back to the direct route on connection errors only. |
+| **Headroom for Claude Code** | [`scripts/headroom.sh`](./scripts/headroom.sh) `setup` / `mcp` / `status`. Installs `headroom-ai[proxy]==0.41.0` into `~/.cache/lskhan-headroom` (~60 s, 780 MB), runs the proxy on 127.0.0.1:8765 with the beacon off, and `mcp` serves `headroom_compress` / `headroom_retrieve` / `headroom_stats` over stdio. |
 | **Setup for humans** | [`README.md`](./README.md): install, Termux 24/7, Linux 24/7, commands. |
 
 ### Running 24/7
