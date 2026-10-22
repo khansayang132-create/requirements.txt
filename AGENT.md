@@ -1,0 +1,168 @@
+# AGENT.md: AI Context for LSKhan
+
+> **You are working on LSKhan** — the tools behind the TikTok account *LSKhan 🌏💞 Cinta Beda Negara* (an Indonesian wife and her Pakistani husband). This file is the index. Find the row that matches your task, then open the file it names. Do not guess; the files are short and load-bearing.
+
+---
+
+## 0. The 60-Second Orientation
+
+**What this is.** One repo, three things:
+
+1. **The Telegram bot** (`bot.py`): writes TikTok hooks, scripts, captions and ideas. It calls an AI through **OmniRoute**, an OpenAI-compatible gateway running **on the owner's Android phone in Termux**.
+2. **The 24/7 runners**: `termux/install.sh` (the owner's real setup: phone, runit) and `service/install.sh` (Linux with systemd).
+3. **APEX** (`apex/`): a video production pipeline. Spec → script → narration → real Blender 3D renders → ffmpeg edit → technical QA → manifest.
+
+**Who uses it.** The owner works from a phone. They have no Linux computer. Anything they must do by hand has to work as one paste into Termux, with Termux's real paths and folder names.
+
+**What that means for you.**
+- Viewer-facing text is **Bahasa Indonesia**, warm and natural. Code, comments and docs are English.
+- Content follows the LSKhan rules: curiosity without lying, no fake drama, no invented serious events, the husband never looks stupid and the wife never cruel, respectful Islamic and family topics. These rules live in `CINTA_PERSONA` in `bot.py` and `RULES` in the LSKhan Studio app. Change them in both or neither.
+- **Nothing is "done" without evidence.** A claim of success needs a test run, a CI run, or an output file you inspected. `apex/STATUS.md` is the model: IMPLEMENTED / VERIFIED / BLOCKED / NOT IMPLEMENTED.
+
+**The one rule.** If a task touches an existing system, the file that owns it is the source of truth. This index only points. If a rule below conflicts with that file, the file wins.
+
+---
+
+## 1. Documentation Map
+
+> An index, not a summary. Read the row, open the file.
+
+### The bot
+| Topic | Source of Truth |
+|---|---|
+| **Commands & personas** | [`bot.py`](./bot.py): `/caption` `/idea` (jastip persona), `/hook` `/script` (`CINTA_PERSONA`), `/ping` (connection check), `/start` `/help`. Long replies are split at 4000 chars. |
+| **AI connection** | [`bot.py`](./bot.py) top block + [`.env.example`](./.env.example). OmniRoute first (`OMNIROUTE_API_KEY`, `OMNIROUTE_BASE_URL`, `OMNIROUTE_MODEL`), then direct OpenAI. On the owner's phone: base URL `http://127.0.0.1:20128/v1`, model `cc/claude-opus-5-5`. |
+| **Setup for humans** | [`README.md`](./README.md): install, Termux 24/7, Linux 24/7, commands. |
+
+### Running 24/7
+| Topic | Source of Truth |
+|---|---|
+| **Android / Termux** (the real deployment) | [`termux/install.sh`](./termux/install.sh): termux-services (runit) services `lskhan-bot` and `lskhan-omniroute`, logs in `$PREFIX/var/log/sv/`, wake lock re-taken on every Termux open via `$PREFIX/etc/profile.d/lskhan-wakelock.sh`. Termux:Boot is **optional**. Many phones can't install it, and opening Termux once after a reboot is enough. Test: [`termux/test-termux.sh`](./termux/test-termux.sh). |
+| **Linux / systemd** | [`service/install.sh`](./service/install.sh): venv in `.venv/`, units `lskhan-bot` and optional `lskhan-omniroute`, run as the sudo user. Test: [`service/test-service.sh`](./service/test-service.sh). |
+
+### APEX (video pipeline)
+| Topic | Source of Truth |
+|---|---|
+| **Overview & usage** | [`apex/README.md`](./apex/README.md): stage diagram, CLI (`run`, `enqueue`, `worker`, `status`), module table. |
+| **What is real vs blocked** | [`apex/STATUS.md`](./apex/STATUS.md): the completion-gate report. **Update it whenever you change what is verified.** |
+| **Schemas & job states** | [`apex/apex/models.py`](./apex/apex/models.py): `ProductionSpec`, `Script`, `SceneSpec`, `Storyboard`, `SCENE_TEMPLATES`, `CAMERA_MOVES`, `ALLOWED_TRANSITIONS`. |
+| **Scriptwriting** | [`apex/apex/script_engine.py`](./apex/apex/script_engine.py): providers, `review_script`, `write_script` (bounded revisions), `lock_script`. |
+| **Voice** | [`apex/apex/tts.py`](./apex/apex/tts.py): `TTSProvider` interface, `EspeakProvider`, `normalize_for_speech` (Indonesian numbers and prices). |
+| **3D scenes** | [`apex/apex/render3d.py`](./apex/apex/render3d.py): five templates, six camera moves, Cycles. Runs only in a Python that has `bpy`. |
+| **Edit, captions, loudness** | [`apex/apex/assemble.py`](./apex/apex/assemble.py), [`apex/apex/subtitles.py`](./apex/apex/subtitles.py). |
+| **QA** | [`apex/apex/qa.py`](./apex/apex/qa.py): technical checks plus sampled frames; creative review stays separate. |
+| **Queue & worker** | [`apex/apex/jobs.py`](./apex/apex/jobs.py) (header explains leases, retries, dead letters), [`apex/apex/cli.py`](./apex/apex/cli.py). |
+| **Publishing** | [`apex/apex/publishing.py`](./apex/apex/publishing.py): post state machine; dry-run adapter only. |
+| **Acceptance sample** | [`apex/samples/money-mistake/`](./apex/samples/money-mistake/): spec, script, and the committed output with manifest and QA report. |
+
+### Outside this repo
+| Topic | Where |
+|---|---|
+| **LSKhan Studio** (phone app for hooks/scripts/captions/series) | Claude artifact `https://claude.ai/artifact/9Xfe4TpY8SdBy2epfKRi6p`. Uses the `sample` capability, so it runs on the viewer's own Claude plan. |
+| **Private VPN + ad blocking** | Separate repo `khansayang132-create/lskhan-vpn`. Its own README, STATUS and tests. |
+
+---
+
+## 2. Hard Constraints
+
+Violating any of these is a bug, not a preference.
+
+| Area | Rule |
+|---|---|
+| **Secrets** | Only in `.env` (gitignored). Never in code, tests, commits, PR text, logs or manifests. Never print a key. Rotate any key that appears in a chat. |
+| **Bot AI calls** | `client.chat.completions.create` only. Gateways (OmniRoute) don't all support the Responses API, which is why it was removed. |
+| **Bot reachability** | Every new bot command is registered in `main()` **and** listed in `/start` **and** in the README's Commands section. |
+| **Bot access** | Every command that spends AI calls checks `TELEGRAM_ADMIN_ID` first, like `generate()` and `ping()`. |
+| **Install scripts** | Must be idempotent (safe to re-run) and must have a matching CI test (`service` and `termux` jobs). Changing one without its test is a bug. |
+| **Termux** | No systemd, no `sudo`, no `/etc`. Use `$PREFIX` and `$HOME`. Default to `127.0.0.1`, not `localhost`. |
+| **APEX Python** | 3.13 (the `bpy` 5.x wheels need it). Blender code stays in `render3d.py` and runs as a subprocess; nothing else imports `bpy`. |
+| **APEX honesty** | Never ship a fake output: no placeholder video, no invented metric, no post URL. A provider that isn't configured raises `ProviderUnavailable` / `TTSUnavailable`; it does not fall back to fake text. |
+| **Publishing** | A post becomes `PUBLISHED` only from a provider response with `confirmed` and a `post_id`. Otherwise `PUBLICATION_STATUS_UNKNOWN`. |
+| **QA** | Technical score and creative review are separate fields. Never fold "looks good" into the technical score. |
+| **Job states** | Change state only through `JobQueue` methods (they call `_move`, which enforces `ALLOWED_TRANSITIONS` and writes the audit log). Never `UPDATE jobs SET state=` directly. |
+| **Facts in scripts** | No invented statistics, quotes or sources. Illustrative arithmetic is fine. `review_script` rejects unsourced percentages. |
+| **Merging** | CI green on the branch head first: `check`, `service` ×2, `termux`, `apex`. |
+
+---
+
+## 3. Key File Locations
+
+| Feature | Location |
+|---|---|
+| Bot | `bot.py` |
+| Bot dependencies | `requirements.txt` (repo root) |
+| Env template (bot) | `.env.example` |
+| Termux runner / test | `termux/install.sh`, `termux/test-termux.sh` |
+| systemd runner / test | `service/install.sh`, `service/test-service.sh` |
+| CI | `.github/workflows/test.yml` |
+| APEX package | `apex/apex/` |
+| APEX tests | `apex/tests/` (`test_core.py`, `test_jobs.py`, `test_media.py`) |
+| APEX dependencies / image / env | `apex/requirements.txt`, `apex/Dockerfile`, `apex/.env.example` |
+| APEX sample | `apex/samples/money-mistake/` |
+
+**Constants worth knowing**
+```
+OmniRoute default port: 20128           (/v1 suffix required)
+Telegram message cap:   4096 (bot splits at 4000)
+APEX 9:16 render:       432×768, 24 fps, 8 Cycles samples
+APEX loudness target:   -14 LUFS, true peak ≤ -0.5 dBFS
+APEX scene pad / min:   0.45 s / 2.0 s
+libass SRT canvas:      288 lines tall
+```
+
+---
+
+## 4. Common Tasks
+
+### Adding a bot command
+1. Write the handler in `bot.py`. AI work goes through `generate(update, context, task, persona)`.
+2. Register it in `main()`, add it to the `/start` text, add it to README → Commands.
+3. `python -m py_compile bot.py`. CI runs the same check.
+
+### Changing the LSKhan content rules
+Edit `CINTA_PERSONA` in `bot.py` **and** `RULES` in the LSKhan Studio artifact. Keep the meaning identical.
+
+### Changing a 24/7 runner
+1. Edit `termux/install.sh` or `service/install.sh`.
+2. Update its test (`termux/test-termux.sh` or `service/test-service.sh`) to cover the change.
+3. Push and wait for the `termux` / `service` jobs. Termux is tested in `termux/termux-docker`, which has no Android, so `am: app_process not found` in that log is expected.
+
+### Working on APEX
+```
+cd apex
+python3.13 -m venv .venv && .venv/bin/pip install -r requirements.txt
+.venv/bin/python -m pytest -q                                   # 48 tests, ~10 s
+.venv/bin/python -m apex.cli run --spec samples/money-mistake/spec.json \
+    --script samples/money-mistake/script.json --project out/draft --fps 6 --samples 2   # ~6 min draft
+```
+- **Draft first.** Full quality (24 fps, 8 samples) is ~36 min for 30 s on 4 cores. Iterate at `--fps 6 --samples 2`.
+- **Look at the frames.** Open `out/<project>/qa/frames/*.png` after every visual change. Technical QA can't see bad framing, giant subtitles or missing headlines; all three happened.
+- **New scene template:** add it to `TEMPLATES` in `render3d.py` and `SCENE_TEMPLATES` in `models.py`, describe its params in `script_prompt`, and render it once at tiny size.
+- **New TTS / LLM / publish provider:** implement the Protocol, raise `*Unavailable` without credentials, add a test with a fake or a local mock server (see `test_openai_compatible_provider_against_local_server`), then move the row in `STATUS.md`.
+- **After a full run:** copy deliverables into `samples/<name>/output/` with local paths rewritten, and check that the video's SHA-256 matches the manifest.
+
+---
+
+## 5. Before You Code — Checklist
+
+1. **Locate the system** in the map above. Open its file and read the header comment.
+2. **Check `apex/STATUS.md`** before claiming a capability exists or works.
+3. **Phone first.** If the owner must run something, it is one paste for Termux on Android with real paths (`~/lskhan-bot`, `$PREFIX`). Don't assume a computer, `sudo` or systemd.
+4. **No secrets** in anything you write or print.
+5. **Run the tests** that cover what you touched: `py_compile` for the bot, `pytest` for APEX, and CI for the runners.
+6. **Report like STATUS.md:** what you ran, what passed, what's blocked and why, and the next action.
+
+---
+
+## 6. The Traps
+
+Real failures from this repo, roughly in order of how much time they cost:
+
+1. **`localhost` vs `127.0.0.1` on the phone.** The bot couldn't reach OmniRoute at `localhost:20128` until it used `127.0.0.1`. Use `127.0.0.1` in defaults and instructions.
+2. **Assuming the owner has Linux.** The 24/7 setup was first built for systemd; the bot actually runs in Termux on Android. The phone's bot folder (`~/lskhan-bot`) was copied by hand, not cloned, so `git pull` fails there. The fix is `gh auth login`, then a fresh `gh repo clone` with `.env` copied across.
+3. **Termux:Boot as a requirement.** It often won't install. Opening Termux once after a reboot must be enough, and it is.
+4. **libass units.** Subtitle `FontSize`/`MarginV` in `force_style` are on a 288-line canvas, not pixels, and SRT alignment uses **legacy SSA numbers** (2 = bottom centre, 6 = top centre; *not* 8). Both shipped wrong at first.
+5. **Stale render cache.** The scene cache key must include the renderer's source hash (`RENDERER_SOURCE` in `pipeline.py`), or renderer changes reuse old frames.
+6. **Spoken length ≠ written length.** `Rp25.000` is read as five words. Estimate from `normalize_for_speech(...)`, never raw text.
+7. **QA that passes broken video.** A fully black video once passed the black-frame check, and a video without audio crashed QA. `tests/test_media.py` guards both. Don't loosen them.
+8. **Docker build in the dev sandbox.** Its network policy denies `deb.debian.org`, so the APEX image can't build there. That's the sandbox, not the Dockerfile; record it as NOT VERIFIED instead of "fixing" the Dockerfile.
