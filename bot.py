@@ -14,7 +14,7 @@ ADMIN_ID = os.getenv("TELEGRAM_ADMIN_ID", "")
 
 # OmniRoute is an OpenAI-compatible gateway; when its key is set, route through it.
 OMNIROUTE_KEY = os.getenv("OMNIROUTE_API_KEY", "")
-OMNIROUTE_BASE_URL = os.getenv("OMNIROUTE_BASE_URL", "http://localhost:20128/v1")
+OMNIROUTE_BASE_URL = os.getenv("OMNIROUTE_BASE_URL", "http://127.0.0.1:20128/v1")
 
 # Headroom (optional) is a context-compression proxy in front of the same gateway. When
 # HEADROOM_BASE_URL is set, requests go through it first and fall back to the direct route

@@ -10,7 +10,7 @@ or directly to OpenAI if no OmniRoute key is set.
    ```
    omniroute
    ```
-   Dashboard and API run on `http://localhost:20128`. Create an API key in the dashboard
+   Dashboard and API run on `http://127.0.0.1:20128`. Create an API key in the dashboard
    and connect at least one provider.
 2. Install the bot's dependencies:
    ```
@@ -23,7 +23,7 @@ or directly to OpenAI if no OmniRoute key is set.
    - `TELEGRAM_BOT_TOKEN` — from @BotFather
    - `TELEGRAM_ADMIN_ID` — your Telegram user ID (optional; makes the bot private)
    - `OMNIROUTE_API_KEY` — your OmniRoute key
-   - `OMNIROUTE_BASE_URL` — leave as `http://localhost:20128/v1` unless OmniRoute runs elsewhere
+   - `OMNIROUTE_BASE_URL` — leave as `http://127.0.0.1:20128/v1` unless OmniRoute runs elsewhere
    - `OMNIROUTE_MODEL` — `auto` lets OmniRoute pick; or set a specific model
 4. Run the bot:
    ```
