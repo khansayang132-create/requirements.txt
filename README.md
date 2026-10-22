@@ -30,6 +30,24 @@ or directly to OpenAI if no OmniRoute key is set.
    python bot.py
    ```
 
+## Run 24/7 on an Android phone (Termux)
+
+In Termux, inside the bot folder:
+```
+git pull
+bash termux/install.sh            # bot + OmniRoute in the background
+```
+It stops any copies you started by hand, runs both in the background, restarts them if they
+crash, and starts them again after the phone reboots. Then, once:
+1. Install the **Termux:Boot** app (same place you got Termux, e.g. F-Droid) and open it once.
+2. Android **Settings → Apps → Termux → Battery → Unrestricted**.
+3. Keep the Termux notification (don't swipe it away or tap Exit).
+
+- Check: `bash termux/install.sh status`
+- Logs: `bash termux/install.sh logs`
+- After editing `.env`: run `bash termux/install.sh` again
+- Stop for good: `bash termux/install.sh uninstall`
+
 ## Run 24/7 (Linux)
 
 Make the bot start at boot, restart itself if it crashes, and keep running after you log out:
