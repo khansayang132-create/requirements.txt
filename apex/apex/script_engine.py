@@ -5,6 +5,7 @@ import hashlib
 import json
 import os
 import re
+import urllib.error
 import urllib.request
 from pathlib import Path
 from typing import Protocol
@@ -62,16 +63,46 @@ class AnthropicProvider:
         return "".join(b.get("text", "") for b in data.get("content", []) if b.get("type") == "text")
 
 
+class FallbackProvider:
+    """Try providers in order; move on only when one can't be reached (e.g. a stopped Headroom proxy)."""
+
+    def __init__(self, providers: list):
+        self.providers = providers
+        self.name = " -> ".join(p.name for p in providers)
+
+    def complete(self, prompt: str) -> str:
+        for i, p in enumerate(self.providers):
+            try:
+                return p.complete(prompt)
+            except urllib.error.HTTPError:
+                raise  # the endpoint answered; a 4xx/5xx is a real error, not a reason to switch
+            except (urllib.error.URLError, ConnectionError, TimeoutError):
+                if i == len(self.providers) - 1:
+                    raise
+        raise ProviderUnavailable("no providers")
+
+
+def _openai_compatible(base_url: str, api_key: str, model: str) -> LLMProvider:
+    """Route through Headroom first when HEADROOM_BASE_URL is set, falling back to the direct URL."""
+    direct = OpenAICompatibleProvider(base_url, api_key, model)
+    headroom = os.getenv("HEADROOM_BASE_URL", "")
+    if not headroom:
+        return direct
+    via = OpenAICompatibleProvider(headroom, api_key, model)
+    via.name = f"headroom:{model}@{via.base_url}"
+    return FallbackProvider([via, direct])
+
+
 def provider_from_env() -> LLMProvider:
     """Pick a provider from environment variables; raise ProviderUnavailable if none is configured."""
     if os.getenv("ANTHROPIC_API_KEY"):
         return AnthropicProvider(os.environ["ANTHROPIC_API_KEY"], os.getenv("APEX_ANTHROPIC_MODEL", "claude-sonnet-5-5"))
     if os.getenv("OMNIROUTE_API_KEY"):
-        return OpenAICompatibleProvider(os.getenv("OMNIROUTE_BASE_URL", "http://127.0.0.1:20128/v1"),
-                                        os.environ["OMNIROUTE_API_KEY"], os.getenv("OMNIROUTE_MODEL", "auto"))
+        return _openai_compatible(os.getenv("OMNIROUTE_BASE_URL", "http://127.0.0.1:20128/v1"),
+                                  os.environ["OMNIROUTE_API_KEY"], os.getenv("OMNIROUTE_MODEL", "auto"))
     if os.getenv("OPENAI_API_KEY"):
-        return OpenAICompatibleProvider("https://api.openai.com/v1", os.environ["OPENAI_API_KEY"],
-                                        os.getenv("OPENAI_MODEL", "gpt-4.1-mini"))
+        return _openai_compatible("https://api.openai.com/v1", os.environ["OPENAI_API_KEY"],
+                                  os.getenv("OPENAI_MODEL", "gpt-4.1-mini"))
     raise ProviderUnavailable("no LLM provider configured (set ANTHROPIC_API_KEY, OMNIROUTE_API_KEY or OPENAI_API_KEY)")
 
 
