@@ -1,0 +1,19 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ \"$CLAUDE_CODE_REMOTE\" = true ] || exit 0; bash \"$CLAUDE_PROJECT_DIR\"/scripts/headroom.sh setup",
+            "timeout": 300
+          }
+        ]
+      }
+    ]
+  },
+  "enabledMcpjsonServers": ["headroom"],
+  "env": {
+    "MCP_TIMEOUT": "180000"
+  }
+}
