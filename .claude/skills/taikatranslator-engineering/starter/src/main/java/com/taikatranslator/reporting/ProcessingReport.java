@@ -80,6 +80,16 @@ public final class ProcessingReport {
         return warn ? Status.SUCCESS_WITH_WARNINGS : Status.SUCCESS;
     }
 
+    /** errorCategory of the first FAILED stage, if any. */
+    public java.util.Optional<String> failureCategory() {
+        for (Stage s : stages) if (s.status() == Status.FAILED) return java.util.Optional.ofNullable(s.errorCategory());
+        return java.util.Optional.empty();
+    }
+
+    public boolean anyGateFailed() {
+        return gates.stream().anyMatch(g -> !g.passed());
+    }
+
     public Map<String, Object> toMap() {
         Map<String, Object> m = new LinkedHashMap<>();
         m.put("schemaVersion", 1);

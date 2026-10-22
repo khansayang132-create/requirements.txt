@@ -1,6 +1,7 @@
 package com.taikatranslator.pipeline;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.taikatranslator.core.InputLimits;
 import com.taikatranslator.docx.DocxAssembler;
 import com.taikatranslator.docx.DocxInspector;
 import com.taikatranslator.geometry.CoordinateNormalizer;
@@ -50,13 +51,21 @@ public final class ReferencePipeline {
     private final TextMeasurer measurer;
     private final Clock clock;
     private final RunLog log;
+    private final InputLimits limits;
 
     public ReferencePipeline(Extractor extractor, Translator translator, TextMeasurer measurer, Clock clock, RunLog log) {
+        this(extractor, translator, measurer, clock, log, null);
+    }
+
+    /** @param limits checked after extraction, before any text is sent for translation; null = unchecked */
+    public ReferencePipeline(Extractor extractor, Translator translator, TextMeasurer measurer, Clock clock, RunLog log,
+                             InputLimits limits) {
         this.extractor = extractor;
         this.translator = translator;
         this.measurer = measurer;
         this.clock = clock;
         this.log = log;
+        this.limits = limits;
     }
 
     public ProcessingReport run(Path input, Path finalDocx, String targetLang, boolean overwrite) throws InterruptedException {
@@ -81,6 +90,18 @@ public final class ReferencePipeline {
             report.gate("content.extracted", structural.isEmpty() && !source.blocks().isEmpty(),
                     structural.isEmpty() ? source.blocks().size() + " blocks extracted" : String.join("; ", structural));
             if (!structural.isEmpty()) return report;
+
+            // 2b. Limits, before spending money on translation
+            if (limits != null) {
+                try {
+                    long chars = limits.checkDocument(source);
+                    report.input("charactersToTranslate", chars);
+                } catch (InputLimits.LimitExceeded e) {
+                    report.stage("limits", Status.FAILED, Duration.ZERO, 0, Map.of(), List.of(e.getMessage()), "LIMIT_EXCEEDED");
+                    log.error("limits", "limit_exceeded", Map.of("limit", e.limit, "actual", e.actual, "allowed", e.allowed));
+                    return report;
+                }
+            }
 
             // 3. Translation with protected placeholders
             t0 = clock.instant();
@@ -151,6 +172,9 @@ public final class ReferencePipeline {
         } catch (ProviderException e) {
             report.stage("provider", Status.FAILED, Duration.ZERO, 0, Map.of(), List.of(e.getMessage()), e.category().name());
             log.error("pipeline", "provider_failed", Map.of("category", e.category().name(), "httpStatus", e.httpStatus()));
+        } catch (java.nio.file.FileAlreadyExistsException e) {
+            report.stage("publish", Status.FAILED, Duration.ZERO, 0, Map.of(), List.of("result already exists; not overwritten"), "OUTPUT_EXISTS");
+            log.error("publish", "output_exists", Map.of());
         } catch (IOException | RuntimeException e) {
             report.stage("pipeline", Status.FAILED, Duration.ZERO, 0, Map.of(), List.of(e.getClass().getSimpleName() + ": " + e.getMessage()), null);
             log.error("pipeline", "failed", Map.of("error", e.getClass().getSimpleName()));

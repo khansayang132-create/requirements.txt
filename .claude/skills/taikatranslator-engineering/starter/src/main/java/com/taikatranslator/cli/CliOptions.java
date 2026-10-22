@@ -20,15 +20,22 @@ import java.util.regex.Pattern;
  *      [--source-lang EN] [--overwrite]
  * </pre>
  */
-public record CliOptions(Path input, Path outputDir, Optional<String> sourceLang, String targetLang, boolean overwrite) {
+public record CliOptions(Path input, Path outputDir, Optional<String> sourceLang, String targetLang, boolean overwrite,
+                         Optional<Path> configFile, boolean keepTemp) {
 
     public static final String USAGE = String.join("\n",
-            "Usage: taikatranslator --input <file> --output-dir <dir> --target-lang <CODE> [--source-lang <CODE>] [--overwrite]",
+            "Usage: taikatranslator --input <file> --output-dir <dir> --target-lang <CODE> [--source-lang <CODE>]",
+            "                       [--overwrite] [--config <file.properties>] [--keep-temp]",
             "  --input        PDF, PNG, JPEG or TIFF to translate (paths with spaces must be quoted)",
             "  --output-dir   directory for the DOCX and the processing report (created if missing)",
             "  --target-lang  DeepL target code, e.g. ES, DE, FR, EN-US, EN-GB, PT-BR, PT-PT",
             "  --source-lang  optional DeepL source code, e.g. EN; detected when omitted",
-            "  --overwrite    replace an existing result instead of refusing");
+            "  --overwrite    replace an existing result instead of refusing",
+            "  --config       settings file (no secrets: keys come from AZURE_DI_KEY and DEEPL_AUTH_KEY)",
+            "  --keep-temp    keep the run's temp folder for inspection",
+            "Exit codes: 0 ok, 1 ok with warnings, 2 usage, 3 input, 4 config, 5 provider, 6 processing,",
+            "            7 validation failed, 8 output exists, 9 limit exceeded, 130 interrupted",
+            "stdout: JSON log lines. stderr: messages for people.");
 
     public static final class CliException extends Exception {
         public final ExitCode exitCode;
@@ -47,12 +54,15 @@ public record CliOptions(Path input, Path outputDir, Optional<String> sourceLang
     public static CliOptions parse(String[] args) throws CliException {
         Path input = null, outputDir = null;
         String source = null, target = null;
-        boolean overwrite = false;
+        boolean overwrite = false, keepTemp = false;
+        Path config = null;
         List<String> rest = new ArrayList<>(Arrays.asList(args));
         while (!rest.isEmpty()) {
             String flag = rest.remove(0);
             switch (flag) {
                 case "--overwrite" -> overwrite = true;
+                case "--keep-temp" -> keepTemp = true;
+                case "--config" -> config = Path.of(value(flag, rest));
                 case "--input" -> input = Path.of(value(flag, rest));
                 case "--output-dir" -> outputDir = Path.of(value(flag, rest));
                 case "--source-lang" -> source = value(flag, rest).toUpperCase(Locale.ROOT);
@@ -70,7 +80,9 @@ public record CliOptions(Path input, Path outputDir, Optional<String> sourceLang
             throw new CliException(ExitCode.USAGE, "--target-lang " + target + " is ambiguous; use " + target + "-" + (target.equals("EN") ? "US or EN-GB" : "BR or PT-PT"));
         if (source != null && !Pattern.matches("[A-Z]{2}", source))
             throw new CliException(ExitCode.USAGE, "invalid --source-lang '" + source + "' (source codes have no variant)");
-        return new CliOptions(input, outputDir, Optional.ofNullable(source), target, overwrite);
+        if (config != null && !Files.isRegularFile(config))
+            throw new CliException(ExitCode.CONFIG_ERROR, "config file not found: " + config);
+        return new CliOptions(input, outputDir, Optional.ofNullable(source), target, overwrite, Optional.ofNullable(config), keepTemp);
     }
 
     private static String value(String flag, List<String> rest) throws CliException {

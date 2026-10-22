@@ -33,7 +33,7 @@
           "retries": { "type": "integer", "minimum": 0 },
           "counts": { "type": "object", "additionalProperties": { "type": "number" } },
           "warnings": { "type": "array", "items": { "type": "string" } },
-          "errorCategory": { "type": ["string", "null"], "enum": [null, "TRANSPORT", "TIMEOUT", "RATE_LIMITED", "SERVER", "QUOTA_EXCEEDED", "AUTHENTICATION", "CLIENT", "INVALID_RESPONSE"] }
+          "errorCategory": { "type": ["string", "null"], "enum": [null, "TRANSPORT", "TIMEOUT", "RATE_LIMITED", "SERVER", "QUOTA_EXCEEDED", "AUTHENTICATION", "CLIENT", "INVALID_RESPONSE", "LIMIT_EXCEEDED", "OUTPUT_EXISTS"] }
         }
       }
     },

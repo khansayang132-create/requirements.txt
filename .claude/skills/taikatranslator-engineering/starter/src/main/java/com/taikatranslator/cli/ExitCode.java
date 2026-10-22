@@ -15,6 +15,7 @@ public enum ExitCode {
     PROCESSING_ERROR(6),
     VALIDATION_FAILED(7),
     OUTPUT_EXISTS(8),
+    LIMIT_EXCEEDED(9),
     INTERRUPTED(130);
 
     public final int code;
