@@ -45,8 +45,8 @@ if [[ ! -f $HOME/.lskhan-headroom/.installed ]]; then
     set +e
     echo "=== DIAGNOSTICS ==="
     python --version
-    dpkg -s onnxruntime | grep -E '^(Status|Version)'
-    dpkg -L onnxruntime | grep -iE 'site-packages/[^/]+$|dist-info' | head
+    dpkg -s python-onnxruntime | grep -E '^(Status|Version)'
+    dpkg -L python-onnxruntime | grep -iE 'site-packages/[^/]+$|dist-info' | head
     python -c 'import onnxruntime, sys; print("system import ok", onnxruntime.__version__, onnxruntime.__file__)'
     "$HOME/.lskhan-headroom/bin/python" -c 'import onnxruntime; print("venv import ok", onnxruntime.__version__)'
     "$HOME/.lskhan-headroom/bin/python" -c 'import sys; print(sys.path)'

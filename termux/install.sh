@@ -83,9 +83,10 @@ install_headroom() {
     echo "   Keep Termux open and the phone charging. If it stops, re-run the same command: it continues."
     command -v termux-wake-lock >/dev/null && timeout 10 termux-wake-lock || true
 
-    # Termux ships onnxruntime, numpy and cryptography prebuilt; the venv sees them through
-    # --system-site-packages. Everything else is compiled by pip with Rust and clang.
-    pkg install -y rust clang make cmake binutils onnxruntime python-numpy python-cryptography >/dev/null \
+    # Termux ships onnxruntime (its Python part is python-onnxruntime), numpy and cryptography
+    # prebuilt; the venv sees them through --system-site-packages. pip compiles the rest with Rust
+    # and clang.
+    pkg install -y rust clang make cmake binutils python-onnxruntime python-numpy python-cryptography >/dev/null \
         || { warn "Could not install Headroom's build tools (pkg install failed)."; return 1; }
     [[ -x $HR_VENV/bin/pip ]] || python -m venv --system-site-packages "$HR_VENV" \
         || { warn "Could not create $HR_VENV."; return 1; }
