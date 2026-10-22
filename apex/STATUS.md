@@ -69,6 +69,7 @@ Categories follow the spec's completion gate. Nothing here is described as produ
 | Run through the persistent queue | PASS | enqueued twice with the same key → one job; worker claimed it, COMPLETED on attempt 1 |
 | Autopilot + planner + dashboard | PASS | approval gate, prohibited topic, daily cap, idempotent re-plan, paused plan; a real worker process left a queued job alone while paused; dashboard pages, `/health`, byte ranges (206/416) and path-traversal attempts (404) tested; dashboard run against the real queue from the 36-min render shows its full CREATED → COMPLETED history |
 | Ideas, approval, vision review, backups, Headroom fallback | PASS (against local stub servers) | review rules on a mixed batch (greeting, banned topic, near-duplicate, invalid length); generated ideas stay WAITING_FOR_APPROVAL until `approve`; CLI `ideas` → `approve` → `plan` enqueues only the approved one; vision request carries every frame as a data URI plus scene text; a reply without scores is refused and leaves review NOT RUN; backups taken while another thread writes pass `integrity_check`; tampered files are caught; Headroom down → direct route, direct down → Headroom |
+| 16:9 and 1:1 exports | PASS (draft quality: 12 fps, 2 samples) | the sample script rendered end to end in both shapes: 768×432 in 11.5 min and 720×720 in 16.6 min, each 30.75 s H.264 + AAC with 16/16 technical QA; frames checked by eye: headline at the top, captions above the player's control bar, subjects framed in both shapes |
 | Graceful worker shutdown | PASS | SIGTERM → "worker stopped", exit in 3 s |
 | Selective regeneration | PASS | re-run reused all 6 scene renders (16 s instead of 36 min); a renderer change invalidated the cache as designed |
 | Bugs found by these runs and fixed | — | spoken-length estimate ignored expanded prices; subtitle sizes used pixels instead of libass units; headline alignment used ASS numbering instead of SSA; render cache ignored renderer changes; QA crashed on videos without audio; QA let a fully black video pass |
@@ -99,7 +100,6 @@ Categories follow the spec's completion gate. Nothing here is described as produ
 - Scheduled idea generation (run `apex.cli ideas` yourself or from cron; it never approves).
 - Authentication and roles (the only web surface is read-only and bound to localhost), off-machine backup
   copies (backups are local directories), multi-language beyond `id`/`en`.
-- Additional export profiles (1:1 and 16:9 resolutions exist in the storyboard; only 9:16 was produced).
 
 ## Known limits
 
