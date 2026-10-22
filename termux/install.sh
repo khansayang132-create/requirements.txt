@@ -261,7 +261,9 @@ uninstall() {
     rm -f "$BOOT" "$WAKELOCK"
     ok "Background services removed. (The bot's files and .env are untouched.)"
     # The build took hours, so keep it; the bot skips Headroom when it isn't running.
-    [[ -d $HR_VENV ]] && echo "   Headroom's build is kept in $HR_VENV. To free the space: rm -rf $HR_VENV"
+    if [[ -d $HR_VENV ]]; then
+        echo "   Headroom's build is kept in $HR_VENV. To free the space: rm -rf $HR_VENV"
+    fi
 }
 
 usage="Use: bash termux/install.sh [--bot-only] [--with-headroom] | status | logs [headroom] [LINES] | uninstall"
