@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  TaikaTranslator starter kit: verified reference implementations for the P0
+  tickets (retry, geometry, text fitting, artifact validation, CLI, reporting,
+  translation validation, DOCX structure, provider clients against stubs).
+
+  Copy classes into the real project; don't replace its pom wholesale. Match
+  maven.compiler.release to the project's compiler, CI JDK and runtime.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.taikatranslator</groupId>
+  <artifactId>taikatranslator-starter</artifactId>
+  <version>0.1.0-SNAPSHOT</version>
+  <packaging>jar</packaging>
+
+  <properties>
+    <maven.compiler.release>17</maven.compiler.release>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <junit.version>5.11.4</junit.version>
+    <poi.version>5.3.0</poi.version>
+    <jackson.version>2.18.2</jackson.version>
+    <surefire.version>3.5.2</surefire.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.poi</groupId>
+      <artifactId>poi-ooxml</artifactId>
+      <version>${poi.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>${jackson.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <!-- Fail fast when the JDK doesn't match what the project declares. -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>3.5.0</version>
+        <executions>
+          <execution>
+            <id>enforce-java</id>
+            <goals><goal>enforce</goal></goals>
+            <configuration>
+              <rules>
+                <requireJavaVersion><version>[17,)</version></requireJavaVersion>
+                <requireMavenVersion><version>[3.8,)</version></requireMavenVersion>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <!-- Unit tests: *Test, no network, no credentials. -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>${surefire.version}</version>
+        <configuration>
+          <excludedGroups>live</excludedGroups>
+          <systemPropertyVariables>
+            <java.awt.headless>true</java.awt.headless>
+            <!-- POI logs through log4j-api; route it to the built-in simple logger quietly. -->
+            <log4j2.loggerContextFactory>org.apache.logging.log4j.simple.SimpleLoggerContextFactory</log4j2.loggerContextFactory>
+          </systemPropertyVariables>
+        </configuration>
+      </plugin>
+      <!-- Integration tests: *IT, run by `mvn verify`. Live cloud tests are
+           tagged "live" and only run with -Dgroups=live. -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>${surefire.version}</version>
+        <configuration>
+          <excludedGroups>live</excludedGroups>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

@@ -1,0 +1,87 @@
+# TSK-7.1 template: copy to .github/workflows/ci.yml in the TaikaTranslator repo.
+# Adjust JAVA_VERSION to match maven.compiler.release and the production runtime,
+# and the main branch name. Everything else should work as is.
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+env:
+  JAVA_VERSION: "17"
+  PYTHON_VERSION: "3.12"
+
+jobs:
+  python:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: vision/requirements.txt
+      - run: python --version && python -m pip --version
+      - run: python -m pip install -r vision/requirements.txt pytest
+      # Syntax only. Model-backed vision needs its own integration test.
+      - run: python -m compileall -q vision
+      - run: python -m pytest -q vision/tests
+
+  java:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+          cache: maven
+      # verify = compile + unit tests (Surefire) + package + integration tests (Failsafe).
+      # Live cloud tests are tagged "live" and excluded; no secrets are needed here.
+      - run: mvn -B -ntp clean verify
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: |
+            target/surefire-reports/
+            target/failsafe-reports/
+            target/e2e-evidence/
+          if-no-files-found: warn
+      - uses: actions/upload-artifact@v4
+        with:
+          name: taikatranslator-jar
+          path: target/*.jar
+
+  visual:
+    # Separate gate: rendering needs LibreOffice and fonts, and its result must not
+    # be folded into the structure tests.
+    needs: java
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/download-artifact@v4
+        with:
+          name: test-reports
+          path: reports
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libreoffice-writer poppler-utils fonts-dejavu-core
+          python -m pip install pillow==11.1.0
+      - run: |
+          python scripts/visual_diff.py compare reports/e2e-evidence/service-agreement.ES.docx \
+            --baseline src/test/resources/baselines/service-agreement.ES --out visual-out
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-diff
+          path: visual-out/
+          if-no-files-found: warn

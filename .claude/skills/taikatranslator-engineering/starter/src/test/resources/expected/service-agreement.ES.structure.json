@@ -1,0 +1,59 @@
+{
+  "targetLang": "ES",
+  "body": [
+    {
+      "type": "paragraph",
+      "style": "Title",
+      "text": "Contrato de servicios",
+      "fontSize": 20.0
+    },
+    {
+      "type": "paragraph",
+      "style": "Heading1",
+      "text": "1. Condiciones de pago",
+      "fontSize": 14.0
+    },
+    {
+      "type": "paragraph",
+      "style": null,
+      "text": "El cliente paga {amount} en un plazo de 30 días desde la fecha de la factura.",
+      "fontSize": 11.0
+    },
+    {
+      "type": "paragraph",
+      "style": null,
+      "text": "Las consultas van a billing@example.com o https://example.com/help.",
+      "fontSize": 11.0
+    },
+    {
+      "type": "table",
+      "rows": 3,
+      "columns": 2,
+      "cells": [
+        [
+          "Concepto",
+          "Precio"
+        ],
+        [
+          "Traducción",
+          "120 EUR"
+        ],
+        [
+          "Revisión",
+          "45 EUR"
+        ]
+      ]
+    },
+    {
+      "type": "paragraph",
+      "style": null,
+      "text": "Importe total adeudado pendiente de pago",
+      "fontSize": 7.5
+    }
+  ],
+  "section": {
+    "pageWidthTwips": 12240,
+    "pageHeightTwips": 15840,
+    "orientation": "portrait"
+  }
+}

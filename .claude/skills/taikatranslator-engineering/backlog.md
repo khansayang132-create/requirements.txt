@@ -1,83 +1,127 @@
 # TaikaTranslator Enterprise — backlog
 
-Mission: high-fidelity document extraction, translation and reconstruction. Scanned and digital PDFs in; editable DOCX out with layout preserved, text expansion handled, failures recovered from, and a measurable processing report.
+**Mission:** high-fidelity document extraction, translation and reconstruction. Scanned and digital PDFs in; an editable DOCX out with layout preserved, text expansion handled, failures recovered from, and a measurable processing report.
 
-Every status below is `NOT_STARTED` until verified against the real codebase. Write each ticket out in full with [`ticket-template.md`](./ticket-template.md) when work starts.
+**Status of every ticket below: `NOT_STARTED` in the real project.** The "Kit" line says where a verified reference implementation and its tests live in `starter/`. That evidence belongs to the kit, not to TaikaTranslator; a ticket becomes PASS only with evidence from the real repo's current commit.
 
 ## Execution order
 
-| Order | Work | Why first |
+| # | Work | Why first |
 |---|---|---|
-| 1 | Inspect the repo and Maven config | Real baseline |
+| 1 | Inspect the repo and Maven config (`references/adoption-guide.md` §0) | Real baseline |
 | 2 | TSK-5.2.1 | Reproducible tests |
 | 3 | TSK-5.2.2 – 5.2.4 | Geometry, text scaling, retry |
 | 4 | TSK-5.2.5 – 5.2.6 | Whole pipeline verified |
 | 5 | TSK-5.2.7 | Visual regression |
 | 6 | TSK-6.1 – 6.6 | Runtime and artifact hardening |
-| 7 | TSK-7.1 | CI |
+| 7 | TSK-7.1 (can land right after 5.2.1) | CI |
 | 8 | TSK-7.2 | Baselines, then targets |
 | 9 | Docs | Document verified behaviour only |
 
+---
+
 ## Phase 5 — Automated testing and quality gates
 
-### TSK-5.2.1 — Deterministic test environment (P0)
-- JUnit 5 + Surefire for unit tests; Failsafe for `*IT` integration tests.
-- Unit tests need no Azure/DeepL credentials and no network; clients injected through interfaces.
-- `@TempDir` for artifacts; tests clean up.
-- **Accept:** `mvn clean test` passes; Surefire XML produced; failures give a nonzero exit; repeated runs agree.
-- **Evidence:** Maven summary, `target/surefire-reports/*.xml`, test sources.
+### TSK-5.2.1 — Deterministic test environment
+- **Priority:** P0 · **Depends on:** repo inspection · **Kit:** `starter/pom.xml`
+- **Scope:** JUnit 5; Surefire for `*Test`; Failsafe for `*IT`; `live` tag excluded from both; enforcer for Java/Maven versions; external clients behind interfaces; `@TempDir` everywhere.
+- **Out of scope:** new features; moving packages.
+- **Acceptance:**
+  - [ ] `mvn clean test` passes with network disabled and no `AZURE_*`/`DEEPL_*` variables set.
+  - [ ] `target/surefire-reports/*.xml` produced; `mvn verify` also produces `target/failsafe-reports/*.xml`.
+  - [ ] A deliberately failing test makes `mvn test` exit nonzero (try once, revert).
+  - [ ] Two consecutive runs give the same counts and results.
+  - [ ] No test writes outside its temp dir or `target/`.
+- **Verify:** `env -u DEEPL_AUTH_KEY -u AZURE_DI_KEY mvn -B clean verify && mvn -B verify; echo $?`
+- **Evidence:** Maven summary lines, report XML paths, the test sources touched.
 
-### TSK-5.2.2 — Layout normalization (P0)
-- Cases: zero width/height, negative or out-of-page, missing coords, normalized vs pixel input, portrait/landscape, mixed page sizes, rotated pages, missing or inconsistent page metadata.
-- Document the canonical coordinate system (normalized `[0,1]`, origin, rotation). Adapter for any existing interface that uses another system.
-- **Accept:** every valid element is consistent with the documented system; invalid geometry → explicit error or documented recovery, never a silent position.
+### TSK-5.2.2 — Layout normalization
+- **Priority:** P0 · **Depends on:** 5.2.1 · **Kit:** `geometry/*`, `CoordinateNormalizerTest` (15 tests), `references/layout-and-geometry.md`
+- **Scope:** provider coordinates → documented canonical system; adapter if the existing interface differs.
+- **Acceptance:**
+  - [ ] Canonical system documented in `docs/architecture.md` (range, origin, rotation, conversion points).
+  - [ ] Tests for: zero width, zero height, negative, out-of-page, missing, malformed, NaN/∞, normalized vs pixel vs inch input, portrait, landscape, two page sizes in one document, rotation 90/180/270, missing/inconsistent page metadata, mislabelled units.
+  - [ ] Every valid element lands inside [0,1] consistently with the documentation.
+  - [ ] Every invalid case yields a named error or a documented recovery that appears in the report.
+  - [ ] Geometry comparisons use a tolerance.
+- **Verify:** `mvn -B test -Dtest='*Normaliz*,*Geometry*'`
 
-### TSK-5.2.3 — Text-expansion calculations (P0)
-- Cases: shorter, longer, empty, very long, Unicode/accents, mixed script, line breaks, narrow table cells, minimum readable size.
-- Font metrics first; character ratio as fallback.
-- **Accept:** size never 0/negative/NaN/∞; min/max respected; no silent truncation; layout warning when a block can't fit; deterministic.
+### TSK-5.2.3 — Text-expansion calculations
+- **Priority:** P0 · **Depends on:** 5.2.1 · **Kit:** `layout/*`, `TextFitterTest` (12 tests)
+- **Scope:** font-size fitting from font metrics; character ratio only as fallback.
+- **Acceptance:**
+  - [ ] Tests for shorter, longer, empty, blank, very long, accented, mixed script (incl. CJK, Arabic, emoji), explicit line breaks, narrow table cell, min-size enforcement, degenerate box.
+  - [ ] Size is never 0, negative, NaN or ∞, and always within configured [min, max].
+  - [ ] No character is dropped (assert the joined lines equal the input minus wrap spaces).
+  - [ ] A block that can't fit at min size produces a layout warning in the report.
+  - [ ] Identical input → identical output.
+  - [ ] Production measurer uses the DOCX's font; the resolved font family is recorded.
+- **Verify:** `mvn -B test -Dtest='*Fit*'`
 
-### TSK-5.2.4 — RetryExecutor resilience (P0)
-- Cases: first-try success, recoverable HTTP, 429, 5xx, connection failure, timeout, exhaustion, interruption, `Retry-After`, backoff + jitter.
-- **Accept:** bounded; non-retryable fails at once; interruption propagates; backoff tested via injectable clock/delay; no real sleeping. Non-idempotent calls retried only when safe.
+### TSK-5.2.4 — RetryExecutor resilience
+- **Priority:** P0 · **Depends on:** 5.2.1 · **Kit:** `retry/*`, `RetryExecutorTest` (17 tests)
+- **Acceptance:**
+  - [ ] Cases: first-try success, recoverable error then success, 429 with Retry-After, Retry-After above the cap, 5xx, connection failure, timeout, exhaustion, interruption in the call, interruption during backoff, already-interrupted thread, non-retryable 400/401/403/404/456.
+  - [ ] Attempts bounded by `maxAttempts` and by a time budget.
+  - [ ] Non-idempotent calls are not retried after timeout or 5xx.
+  - [ ] Backoff (exponential, capped, full jitter) asserted through an injected sleeper and random source; no real sleeping (suite stays fast).
+  - [ ] Interrupt flag restored and exception propagated.
+- **Verify:** `mvn -B test -Dtest='*Retry*'`
 
-### TSK-5.2.5 — End-to-end fixture (P0)
-- Synthetic document: heading, several paragraphs, simple table, scanned page or image, signature/stamp where relevant, text that expands.
-- Mocked Azure and DeepL responses for CI; real-cloud tests kept separate.
-- **Accept:** documented expected extraction; expected translation stored apart from code; output DOCX reopened and checked for paragraph/table counts, required text and translations, artifact presence and page bounds; readable failure report.
+### TSK-5.2.5 — End-to-end document fixture
+- **Priority:** P0 · **Depends on:** 5.2.2–5.2.4 · **Kit:** `src/test/resources/{fixtures,mocks,expected}`, `make_fixtures.py`, `EndToEndFixtureIT` (5 tests)
+- **Scope:** synthetic document with heading, paragraphs, table, image/scanned page, stamp/signature where relevant, text that expands; mocked Azure and DeepL.
+- **Acceptance:**
+  - [ ] Fixture is synthetic or licensed, and regenerable by a script.
+  - [ ] Expected extraction and expected translation stored as files, separate from code.
+  - [ ] Output DOCX reopened and checked: paragraph and table counts, required source-derived text, translated text, artifact presence, page size.
+  - [ ] Failure output names the element and the difference (no bare "expected true").
+  - [ ] Failure paths: missing translation → no file published, report FAILED; existing output → untouched.
+  - [ ] Repeated runs produce the same structure.
+- **Verify:** `mvn -B verify -Dit.test='EndToEnd*'`
+- **Evidence:** `target/e2e-evidence/{report.json,run.log.jsonl,*.docx}`
 
-### TSK-5.2.6 — DOCX structural regression (P0)
-- Check paragraph order, table rows/columns, cell text, font sizes and basic styling, alignment, image relationships, image size/placement, page/section properties.
-- **Accept:** DOCX opens in Apache POI with all required elements. Compare structure, not bytes (ZIP metadata and XML order vary).
+### TSK-5.2.6 — DOCX structural regression
+- **Priority:** P0 · **Depends on:** 5.2.5 · **Kit:** `docx/DocxInspector`, `docx/StructureDiff`
+- **Acceptance:**
+  - [ ] Checks paragraph order, styles, alignment, font sizes, table shape and cell text, image count/relationship/extent (EMU), section page size/orientation (twips).
+  - [ ] Compares structure, never bytes.
+  - [ ] DOCX opens in Apache POI; a truncated or non-DOCX ZIP is rejected (`ArtifactValidatorTest`).
+- **Verify:** `mvn -B verify`
 
-### TSK-5.2.7 — Visual regression (P1)
-- Render DOCX → PDF/images; compare text position, table geometry, image placement, page count, overflow, blank pages, clipping.
-- **Accept:** renderer and version documented; baselines versioned; thresholds configurable; inspectable diff report; missing renderer reported explicitly. Stays separate from 5.2.6.
+### TSK-5.2.7 — Visual regression
+- **Priority:** P1 · **Depends on:** 5.2.5 · **Kit:** `scripts/visual_diff.py`, `scripts/tests/` (9 tests)
+- **Acceptance:**
+  - [ ] Renderer, versions and DPI recorded in the baseline manifest; baselines committed.
+  - [ ] Compares page count, per-page pixel change (configurable threshold and tolerance), blank pages, content at page edges.
+  - [ ] Writes `report.json` and a diff image per differing page.
+  - [ ] Missing renderer → explicit NOT RUN (exit 3), never pass.
+  - [ ] Runs as its own CI job, separate from structure tests.
+- **Verify:** `python scripts/visual_diff.py compare <docx> --baseline <dir> --out target/visual; echo $?`
+
+---
 
 ## Phase 6 — Production reliability and security
 
-| Ticket | Objective | Priority |
-|---|---|---|
-| TSK-6.1 | Validate CLI arguments and input files | P0 |
-| TSK-6.2 | Structured, correlation-aware logging (`runId`) | P0 |
-| TSK-6.3 | External API timeouts and retries | P0 |
-| TSK-6.4 | Validate intermediate and final artifacts | P0 |
-| TSK-6.5 | Configuration and secret validation | P0 |
-| TSK-6.6 | Safe temporary-file handling | P0 |
-| TSK-6.7 | Resource and document-size limits | P1 |
-| TSK-6.8 | Resumable processing checkpoints | P1 |
-| TSK-6.9 | Processing metrics and benchmarks | P1 |
-| TSK-6.10 | Security and dependency audit | P1 |
+Details and defaults: `references/production-hardening.md`.
 
-- **6.1:** reject missing/unsupported input, check output-dir permissions, handle spaces in paths, reject bad config, meaningful exit codes, usage text, never overwrite silently.
-- **6.2:** log stage, duration, retries, error category, pages, extracted/translated block counts, validation results. Illustrative event: `{"timestamp","level","runId","stage","event","durationMs","status"}`. No keys, auth headers or document content.
-- **6.3:** configurable connect timeout, request timeout, max retries, max backoff, provider concurrency, overall deadline. Separate transport, rate-limit, server and permanent client errors. Azure submit / poll / fetch each get their own policy.
-- **6.4:** existence, non-zero size, signature, JSON validity, PNG validity, DOCX reopen, required content, final location. Temp → validate → atomic move. Keep diagnostics on failure.
+| Ticket | Objective | P | Kit |
+|---|---|---|---|
+| TSK-6.1 | Validate CLI arguments and input files | P0 | `cli/*` (10 tests) |
+| TSK-6.2 | Structured, correlation-aware logging | P0 | `reporting/RunLog`, `Redactor` (4 tests + E2E log checks) |
+| TSK-6.3 | External API timeouts and retries | P0 | `retry/*`, `provider/*` (12 stub tests) |
+| TSK-6.4 | Validate intermediate and final artifacts | P0 | `validation/*` (10 tests) |
+| TSK-6.5 | Configuration and secret validation | P0 | guidance only |
+| TSK-6.6 | Safe temporary-file handling | P0 | `AtomicPublisher.stage`; run-dir guidance |
+| TSK-6.7 | Resource and document-size limits | P1 | guidance only |
+| TSK-6.8 | Resumable processing checkpoints | P1 | guidance only |
+| TSK-6.9 | Processing metrics and benchmarks | P1 | report counts/durations |
+| TSK-6.10 | Security and dependency audit | P1 | guidance only |
 
 ## Phase 7 — CI and quality
 
 ### TSK-7.1 — Build and test automation (P0)
-On pull requests and pushes to the main branch: pinned JDK, Python 3.12 (or the declared version), install Python deps, `python -m compileall -q vision`, Python unit tests, `mvn clean verify`, archive test reports, publish the build artifact only when required checks pass.
+Template: `templates/ci.yml`, `templates/verify.sh`, `templates/verify.ps1`. On PRs and pushes to main: pinned JDK, Python 3.12, deps, `compileall`, Python tests, `mvn clean verify`, upload reports, publish the JAR only when checks pass, visual job separate.
 
 ### TSK-7.2 — Quality gates
 Collect baselines first, then set targets.
@@ -85,14 +129,16 @@ Collect baselines first, then set targets.
 | Metric | Measures | Verified by |
 |---|---|---|
 | Extraction completeness | Required source text recovered | Expected-text comparison |
-| Translation completeness | Required blocks translated | Block-level validation |
-| Structural preservation | Paragraph and table integrity | DOCX structure checks |
-| Layout fidelity | Position and formatting | Rendered-page comparison |
-| Artifact validity | Outputs readable | Format validation |
-| Retry reliability | Recovery from transient failures | Fault-injection tests |
-| Performance | Time per page | Benchmark suite |
+| Translation completeness | Required blocks translated | `TranslationValidator` |
+| Structural preservation | Paragraph and table integrity | `StructureDiff` |
+| Layout fidelity | Position and formatting | `visual_diff.py` |
+| Artifact validity | Outputs readable | `ArtifactValidator` |
+| Retry reliability | Recovery from transient failures | Stub fault injection |
+| Performance | Time per page | Benchmark over repeated fixture runs (median, p95) |
 | Memory | Peak usage | Instrumented benchmark |
 | Reproducibility | Consistent output | Repeated fixture runs |
+
+Don't promise 100% OCR accuracy or perfect layout. Define supported document classes and show each meets its documented thresholds.
 
 ## Target architecture
 
@@ -104,4 +150,4 @@ CLI → Input Validation → Document Classification → PDF/Image Preflight
     → Layout Reconstruction → DOCX Generation → Artifact Validation → Processing Report
 ```
 
-Target layout (adapt; don't move working files blindly): `src/main/java/com/taikatranslator/{cli,config,core,extraction,translation,vision,assembly,validation,reporting,model}`, `src/test/resources/{fixtures,expected,mocks}`, `vision/{segmenter.py,requirements.txt,tests/}`, `scripts/verify.{sh,ps1}`, `.github/workflows/ci.yml`, `docs/{architecture,configuration,testing,troubleshooting,performance}.md`, plus `README`, `CHANGELOG`, `CONTRIBUTING`, `SECURITY`.
+Target layout (adapt; don't move working files blindly): `src/main/java/com/taikatranslator/{cli,config,core,extraction,translation,vision,assembly,validation,reporting,model}`, `src/test/resources/{fixtures,expected,mocks,baselines}`, `vision/{segmenter.py,requirements.txt,tests/}`, `scripts/verify.{sh,ps1}`, `scripts/visual_diff.py`, `.github/workflows/ci.yml`, `docs/{architecture,configuration,testing,troubleshooting,performance}.md`, plus `README`, `CHANGELOG`, `CONTRIBUTING`, `SECURITY`.

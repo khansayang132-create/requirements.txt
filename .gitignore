@@ -6,3 +6,6 @@ __pycache__/
 *.db-shm
 apex/out/
 .pytest_cache/
+
+# Build output of the TaikaTranslator starter kit
+.claude/skills/taikatranslator-engineering/starter/target/

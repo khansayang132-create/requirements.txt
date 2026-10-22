@@ -1,0 +1,501 @@
+{
+  "status": "succeeded",
+  "analyzeResult": {
+    "apiVersion": "2024-11-30",
+    "modelId": "prebuilt-layout",
+    "content": "Service Agreement\n1. Payment Terms\nThe client pays {amount} within 30 days of the invoice date.\nQuestions go to billing@example.com or https://example.com/help.\nItem\nPrice\nTranslation\n120 EUR\nReview\n45 EUR\nTotal amount due\n1",
+    "pages": [
+      {
+        "pageNumber": 1,
+        "width": 8.5,
+        "height": 11,
+        "unit": "inch",
+        "angle": 0
+      }
+    ],
+    "paragraphs": [
+      {
+        "content": "Service Agreement",
+        "boundingRegions": [
+          {
+            "pageNumber": 1,
+            "polygon": [
+              1.0,
+              1.0,
+              7.5,
+              1.0,
+              7.5,
+              1.5,
+              1.0,
+              1.5
+            ]
+          }
+        ],
+        "spans": [
+          {
+            "offset": 0,
+            "length": 17
+          }
+        ],
+        "role": "title"
+      },
+      {
+        "content": "1. Payment Terms",
+        "boundingRegions": [
+          {
+            "pageNumber": 1,
+            "polygon": [
+              1.0,
+              1.8,
+              7.5,
+              1.8,
+              7.5,
+              2.1,
+              1.0,
+              2.1
+            ]
+          }
+        ],
+        "spans": [
+          {
+            "offset": 18,
+            "length": 16
+          }
+        ],
+        "role": "sectionHeading"
+      },
+      {
+        "content": "The client pays {amount} within 30 days of the invoice date.",
+        "boundingRegions": [
+          {
+            "pageNumber": 1,
+            "polygon": [
+              1.0,
+              2.3,
+              7.5,
+              2.3,
+              7.5,
+              2.6,
+              1.0,
+              2.6
+            ]
+          }
+        ],
+        "spans": [
+          {
+            "offset": 35,
+            "length": 60
+          }
+        ]
+      },
+      {
+        "content": "Questions go to billing@example.com or https://example.com/help.",
+        "boundingRegions": [
+          {
+            "pageNumber": 1,
+            "polygon": [
+              1.0,
+              2.7,
+              8.55,
+              2.7,
+              8.55,
+              3.0,
+              1.0,
+              3.0
+            ]
+          }
+        ],
+        "spans": [
+          {
+            "offset": 96,
+            "length": 64
+          }
+        ]
+      },
+      {
+        "content": "Item",
+        "boundingRegions": [
+          {
+            "pageNumber": 1,
+            "polygon": [
+              1.0,
+              3.3,
+              4.25,
+              3.3,
+              4.25,
+              3.6333333333333333,
+              1.0,
+              3.6333333333333333
+            ]
+          }
+        ],
+        "spans": [
+          {
+            "offset": 161,
+            "length": 4
+          }
+        ]
+      },
+      {
+        "content": "Price",
+        "boundingRegions": [
+          {
+            "pageNumber": 1,
+            "polygon": [
+              4.25,
+              3.3,
+              7.5,
+              3.3,
+              7.5,
+              3.6333333333333333,
+              4.25,
+              3.6333333333333333
+            ]
+          }
+        ],
+        "spans": [
+          {
+            "offset": 166,
+            "length": 5
+          }
+        ]
+      },
+      {
+        "content": "Translation",
+        "boundingRegions": [
+          {
+            "pageNumber": 1,
+            "polygon": [
+              1.0,
+              3.6333333333333333,
+              4.25,
+              3.6333333333333333,
+              4.25,
+              3.966666666666667,
+              1.0,
+              3.966666666666667
+            ]
+          }
+        ],
+        "spans": [
+          {
+            "offset": 172,
+            "length": 11
+          }
+        ]
+      },
+      {
+        "content": "120 EUR",
+        "boundingRegions": [
+          {
+            "pageNumber": 1,
+            "polygon": [
+              4.25,
+              3.6333333333333333,
+              7.5,
+              3.6333333333333333,
+              7.5,
+              3.966666666666667,
+              4.25,
+              3.966666666666667
+            ]
+          }
+        ],
+        "spans": [
+          {
+            "offset": 184,
+            "length": 7
+          }
+        ]
+      },
+      {
+        "content": "Review",
+        "boundingRegions": [
+          {
+            "pageNumber": 1,
+            "polygon": [
+              1.0,
+              3.9666666666666663,
+              4.25,
+              3.9666666666666663,
+              4.25,
+              4.3,
+              1.0,
+              4.3
+            ]
+          }
+        ],
+        "spans": [
+          {
+            "offset": 192,
+            "length": 6
+          }
+        ]
+      },
+      {
+        "content": "45 EUR",
+        "boundingRegions": [
+          {
+            "pageNumber": 1,
+            "polygon": [
+              4.25,
+              3.9666666666666663,
+              7.5,
+              3.9666666666666663,
+              7.5,
+              4.3,
+              4.25,
+              4.3
+            ]
+          }
+        ],
+        "spans": [
+          {
+            "offset": 199,
+            "length": 6
+          }
+        ]
+      },
+      {
+        "content": "Total amount due",
+        "boundingRegions": [
+          {
+            "pageNumber": 1,
+            "polygon": [
+              1.0,
+              4.6,
+              2.6,
+              4.6,
+              2.6,
+              4.85,
+              1.0,
+              4.85
+            ]
+          }
+        ],
+        "spans": [
+          {
+            "offset": 206,
+            "length": 16
+          }
+        ]
+      },
+      {
+        "content": "1",
+        "boundingRegions": [
+          {
+            "pageNumber": 1,
+            "polygon": [
+              4.1,
+              10.3,
+              4.4,
+              10.3,
+              4.4,
+              10.5,
+              4.1,
+              10.5
+            ]
+          }
+        ],
+        "spans": [
+          {
+            "offset": 223,
+            "length": 1
+          }
+        ],
+        "role": "pageNumber"
+      }
+    ],
+    "tables": [
+      {
+        "rowCount": 3,
+        "columnCount": 2,
+        "cells": [
+          {
+            "kind": "columnHeader",
+            "rowIndex": 0,
+            "columnIndex": 0,
+            "content": "Item",
+            "boundingRegions": [
+              {
+                "pageNumber": 1,
+                "polygon": [
+                  1.0,
+                  3.3,
+                  4.25,
+                  3.3,
+                  4.25,
+                  3.6333333333333333,
+                  1.0,
+                  3.6333333333333333
+                ]
+              }
+            ],
+            "spans": [
+              {
+                "offset": 161,
+                "length": 4
+              }
+            ]
+          },
+          {
+            "kind": "columnHeader",
+            "rowIndex": 0,
+            "columnIndex": 1,
+            "content": "Price",
+            "boundingRegions": [
+              {
+                "pageNumber": 1,
+                "polygon": [
+                  4.25,
+                  3.3,
+                  7.5,
+                  3.3,
+                  7.5,
+                  3.6333333333333333,
+                  4.25,
+                  3.6333333333333333
+                ]
+              }
+            ],
+            "spans": [
+              {
+                "offset": 166,
+                "length": 5
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "rowIndex": 1,
+            "columnIndex": 0,
+            "content": "Translation",
+            "boundingRegions": [
+              {
+                "pageNumber": 1,
+                "polygon": [
+                  1.0,
+                  3.6333333333333333,
+                  4.25,
+                  3.6333333333333333,
+                  4.25,
+                  3.966666666666667,
+                  1.0,
+                  3.966666666666667
+                ]
+              }
+            ],
+            "spans": [
+              {
+                "offset": 172,
+                "length": 11
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "rowIndex": 1,
+            "columnIndex": 1,
+            "content": "120 EUR",
+            "boundingRegions": [
+              {
+                "pageNumber": 1,
+                "polygon": [
+                  4.25,
+                  3.6333333333333333,
+                  7.5,
+                  3.6333333333333333,
+                  7.5,
+                  3.966666666666667,
+                  4.25,
+                  3.966666666666667
+                ]
+              }
+            ],
+            "spans": [
+              {
+                "offset": 184,
+                "length": 7
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "rowIndex": 2,
+            "columnIndex": 0,
+            "content": "Review",
+            "boundingRegions": [
+              {
+                "pageNumber": 1,
+                "polygon": [
+                  1.0,
+                  3.9666666666666663,
+                  4.25,
+                  3.9666666666666663,
+                  4.25,
+                  4.3,
+                  1.0,
+                  4.3
+                ]
+              }
+            ],
+            "spans": [
+              {
+                "offset": 192,
+                "length": 6
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "rowIndex": 2,
+            "columnIndex": 1,
+            "content": "45 EUR",
+            "boundingRegions": [
+              {
+                "pageNumber": 1,
+                "polygon": [
+                  4.25,
+                  3.9666666666666663,
+                  7.5,
+                  3.9666666666666663,
+                  7.5,
+                  4.3,
+                  4.25,
+                  4.3
+                ]
+              }
+            ],
+            "spans": [
+              {
+                "offset": 199,
+                "length": 6
+              }
+            ]
+          }
+        ],
+        "boundingRegions": [
+          {
+            "pageNumber": 1,
+            "polygon": [
+              1.0,
+              3.3,
+              7.5,
+              3.3,
+              7.5,
+              4.3,
+              1.0,
+              4.3
+            ]
+          }
+        ],
+        "spans": [
+          {
+            "offset": 161,
+            "length": 44
+          }
+        ]
+      }
+    ]
+  }
+}

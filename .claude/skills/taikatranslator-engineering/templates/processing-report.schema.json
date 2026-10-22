@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://taikatranslator.local/schemas/processing-report-v1.json",
+  "title": "TaikaTranslator processing report",
+  "description": "Written for every run, successful or not. The evidence for the six acceptance gates. Never contains keys, auth headers or document text.",
+  "type": "object",
+  "required": ["schemaVersion", "runId", "startedAt", "finishedAt", "status", "environment", "inputs", "stages", "artifacts", "gates"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "runId": { "type": "string", "minLength": 1 },
+    "startedAt": { "type": "string", "format": "date-time" },
+    "finishedAt": { "type": "string", "format": "date-time" },
+    "status": { "enum": ["SUCCESS", "SUCCESS_WITH_WARNINGS", "FAILED"] },
+    "environment": {
+      "type": "object",
+      "description": "Versions needed to reproduce: java, app version, git commit, provider API versions, renderer versions.",
+      "additionalProperties": { "type": "string" }
+    },
+    "inputs": {
+      "type": "object",
+      "description": "File name, sha256, page count, source/target language. Not content.",
+      "properties": { "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" } }
+    },
+    "stages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "status", "durationMs", "retries", "counts", "warnings"],
+        "properties": {
+          "name": { "type": "string" },
+          "status": { "enum": ["SUCCESS", "SUCCESS_WITH_WARNINGS", "FAILED", "SKIPPED"] },
+          "durationMs": { "type": "integer", "minimum": 0 },
+          "retries": { "type": "integer", "minimum": 0 },
+          "counts": { "type": "object", "additionalProperties": { "type": "number" } },
+          "warnings": { "type": "array", "items": { "type": "string" } },
+          "errorCategory": { "type": ["string", "null"], "enum": [null, "TRANSPORT", "TIMEOUT", "RATE_LIMITED", "SERVER", "QUOTA_EXCEEDED", "AUTHENTICATION", "CLIENT", "INVALID_RESPONSE"] }
+        }
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["role", "path", "bytes", "valid", "problems"],
+        "properties": {
+          "role": { "type": "string" },
+          "path": { "type": "string" },
+          "sha256": { "type": ["string", "null"] },
+          "bytes": { "type": "integer", "minimum": 0 },
+          "valid": { "type": "boolean" },
+          "problems": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "gates": {
+      "type": "array",
+      "description": "One entry per acceptance gate that was evaluated. A gate that was not run is absent here and shows as a SKIPPED stage; it is never recorded as passed.",
+      "items": {
+        "type": "object",
+        "required": ["name", "passed", "evidence"],
+        "properties": {
+          "name": { "type": "string" },
+          "passed": { "type": "boolean" },
+          "evidence": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  }
+}

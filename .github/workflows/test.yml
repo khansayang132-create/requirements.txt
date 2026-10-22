@@ -64,3 +64,37 @@ jobs:
         timeout-minutes: 22
       - run: pip install -r requirements.txt
       - run: python -m pytest -q
+
+  # The TaikaTranslator skill's starter kit: unit tests (Surefire), stub-server and
+  # end-to-end fixture tests (Failsafe), and the visual-diff script's tests.
+  # JDK 17 is the kit's declared floor (maven.compiler.release=17).
+  taika-starter:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: .claude/skills/taikatranslator-engineering/starter
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: maven
+          cache-dependency-path: .claude/skills/taikatranslator-engineering/starter/pom.xml
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - run: pip install pillow==11.1.0 pytest==8.3.4
+      - run: python -m compileall -q scripts src/test/resources/fixtures
+      - run: python -m pytest -q -p no:cacheprovider scripts/tests
+      - run: mvn -B -ntp clean verify
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: taika-starter-evidence
+          path: |
+            .claude/skills/taikatranslator-engineering/starter/target/surefire-reports/
+            .claude/skills/taikatranslator-engineering/starter/target/failsafe-reports/
+            .claude/skills/taikatranslator-engineering/starter/target/e2e-evidence/
+          if-no-files-found: warn

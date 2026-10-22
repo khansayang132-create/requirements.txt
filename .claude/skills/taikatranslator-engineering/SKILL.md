@@ -1,80 +1,96 @@
 ---
 name: taikatranslator-engineering
-description: Professional engineering playbook for TaikaTranslator Enterprise (Java/Maven PDF → OCR/extraction → DeepL translation → DOCX reconstruction, with a Python vision helper). Use when asked to plan, write, test, harden, review or report on TaikaTranslator work, write or update SpecKit tickets (TSK-x.y), set up its CI, or decide whether a ticket can be marked PASS.
+description: Professional engineering playbook and verified starter kit for TaikaTranslator Enterprise (Java/Maven PDF → Azure Document Intelligence extraction → DeepL translation → DOCX reconstruction, with a Python vision helper). Use when asked to plan, implement, test, harden, review or report on TaikaTranslator work; write or update SpecKit tickets (TSK-x.y); decide whether a ticket can be marked PASS; set up its CI, fixtures or visual regression; or debug coordinates, text expansion, retries, DOCX output or provider (Azure/DeepL) behaviour.
 ---
 
 # TaikaTranslator engineering
 
-A working method, not a code dump. TaikaTranslator's source is **not in this repo**; it lives in the owner's own project. Everything here applies to that codebase once it is available (uploaded ZIP, attached repo or local folder). This skill does not touch `bot.py` or `apex/`.
+A method plus working code. TaikaTranslator's own source is **not in this repo**; it lives in the owner's project. This skill gives you the rules, the reference material and a **starter kit whose 94 Java tests and 9 Python tests have actually been run** (`starter/STATUS.md`). Port its patterns into the real code; never present kit evidence as evidence about TaikaTranslator. Nothing here touches `bot.py` or `apex/`.
 
-Files next to this one:
-- [`ticket-template.md`](./ticket-template.md): the SpecKit format every ticket uses.
-- [`backlog.md`](./backlog.md): Phases 5–7, the acceptance principle, the quality metrics and the execution order.
+## 0. First moves, every time
 
-## 0. First move, every time
+1. **Get the real code.** No source, no changes. Ask for `pom.xml`, `src/`, `vision/`, `walkthrough.md`, `GRAPH_REPORT.md`, existing tests, config templates. Tell the owner to leave out `.env`, keys, passwords and private documents.
+2. **Inspect before moving anything** (`references/adoption-guide.md` §0). If the project has a Graphify knowledge graph, query it first (`graphify query` callers/callees/tests, `graphify path`, `graphify explain`) and fall back to Grep/Read. Record Java release, test framework, artifact name, HTTP client, logging stack, and where extraction/translation/retry/DOCX live.
+3. **Run what exists** (`mvn -B clean verify`, `python -m compileall -q vision`) and keep the output. That's the baseline, red or green.
+4. **Pick the next ticket** from the execution order in `backlog.md`. Foundation before features.
 
-1. **Get the real code.** No source, no changes. Ask for `pom.xml`, `src/`, `vision/`, `walkthrough.md`, `GRAPH_REPORT.md` (if any), existing tests and config templates. Tell the owner to leave out `.env`, keys, passwords and private documents.
-2. **Inspect before moving anything.** If the project has a knowledge graph (Graphify: `graphify query` / `path` / `explain`), use it first for callers, dependents and test coverage; fall back to Grep/Read. Record the baseline: Java version in `maven-compiler-plugin`, the JAR name `mvn package` really produces, test framework, current packages, which interfaces already exist (extraction, translation, vision, retry).
-3. **Run what already exists** (`mvn -q clean test`, `python -m compileall -q vision`) and write down the real result before changing anything. That is the baseline evidence.
-4. Pick the next ticket from the execution order in `backlog.md`. Foundation before features: a reliable, verifiable pipeline beats a bigger one nobody can check.
+## 1. Where to look
 
-## 1. The acceptance principle
+`starter/.../` below is short for `starter/src/main/java/com/taikatranslator/`; each package has its tests under `starter/src/test/java/com/taikatranslator/`.
 
-A zero exit code from `java -jar` proves only that the process ended. A translated document is accepted only when these six are checked **separately**, each with its own observable result:
+| You're asked to… | Open |
+|---|---|
+| Plan work, write or update a ticket, set a status | `backlog.md`, `templates/ticket-template.md`, §4 below |
+| Add tests, make tests deterministic, build fixtures | `references/testing-playbook.md`, `starter/src/test/` |
+| Coordinates, units, rotation, page sizes | `references/layout-and-geometry.md`, `starter/.../geometry/` |
+| Font size / text expansion / overflow | `references/layout-and-geometry.md` § Text fitting, `starter/.../layout/` |
+| Retries, timeouts, 429/456/5xx, polling | `references/providers.md`, `starter/.../retry/`, `starter/.../provider/` |
+| Azure or DeepL request/response details | `references/providers.md` |
+| CLI, logging, config, secrets, temp files, limits, checkpoints, audit | `references/production-hardening.md` |
+| Output validation, safe publishing | `starter/.../validation/` |
+| DOCX structure checks | `starter/.../docx/DocxInspector`, `StructureDiff` |
+| Visual regression | `starter/scripts/visual_diff.py`, testing playbook § Visual |
+| CI and local verify scripts | `templates/ci.yml`, `templates/verify.sh`, `templates/verify.ps1` |
+| Processing report format | `templates/processing-report.schema.json`, `starter/.../reporting/ProcessingReport` |
+| Review a change (yours or theirs) | `references/review-checklist.md` |
+| Something behaves strangely | `references/traps.md` first |
+| Port the kit into the real repo | `references/adoption-guide.md` |
+| Report progress | `templates/status-report.md` |
 
-| # | Gate | Evidence |
-|---|---|---|
-| 1 | Execution | Pipeline finished; every stage reported an outcome |
-| 2 | Content | Expected source text extracted; required blocks translated |
-| 3 | Structure | Paragraph order, table rows/columns, element counts preserved |
-| 4 | Visual fidelity | Rendered pages compared to baseline within thresholds |
-| 5 | Artifact integrity | DOCX reopens in Apache POI; files have valid signatures |
-| 6 | Auditability | Inputs, config (no secrets), versions and commit recorded so the run can be reproduced |
+## 2. The acceptance principle
 
-Never merge gates. Passing an XML/structure test does not prove visual alignment; a structure pass does not prove the translation is complete.
+A zero exit code proves only that the process ended. A translated document is accepted only when six gates are checked **separately**, each with its own recorded result:
 
-## 2. Engineering rules
+| # | Gate | Evidence | Kit |
+|---|---|---|---|
+| 1 | Execution | every stage reported an outcome | report `stages[]` |
+| 2 | Content | expected source text extracted; every block translated, placeholders intact | `content.extracted`, `content.translated` gates |
+| 3 | Structure | paragraph order, styles, tables, sizes match expectation | `structure` gate, `StructureDiff` |
+| 4 | Visual fidelity | rendered pages within thresholds of a baseline | `visual_diff.py` (separate job) |
+| 5 | Artifact integrity | files have valid signatures; DOCX reopens in POI | `artifact.integrity` gate |
+| 6 | Auditability | input hash, runId, versions, config (redacted) recorded | report `inputs`, `environment` |
 
-- **Interfaces at every external edge.** Azure Document Intelligence, DeepL and the vision process are injected through interfaces so unit tests run with fakes and no credentials or network.
-- **Unit vs integration.** Surefire runs `*Test` (no network, no keys). Failsafe runs `*IT` (real or stub services). Live cloud tests are tagged and opt-in; provider behaviour, availability and price vary.
-- **Deterministic tests.** Inject the clock and the sleep/delay strategy; never `Thread.sleep` real backoff in a test. Use `@TempDir`; tests clean up after themselves. Same input → same output on every run.
-- **Canonical coordinates.** Internally use normalized page coordinates in `[0,1]` with a documented origin and rotation rule; convert to pixels/points/EMU only at named boundaries. If an existing interface uses another system, keep it and add a tested adapter. Never silently change what a field means.
-- **Invalid geometry is loud.** Zero-size, negative, out-of-page or missing bounds produce a validation error or a documented recovery action, never a quiet made-up position.
-- **Text fitting.** Measure with font metrics, available width, line spacing and paragraph constraints; a character-count ratio is only a fallback estimate. Font size is never zero, negative, NaN or infinite; it respects configured min/max; text is never silently truncated; a block that cannot fit records a layout warning. Spanish and other expanding languages are the normal case, not the edge case.
-- **Retries are a policy, not a loop.** Bounded attempts; retry transport errors, 429 (honour `Retry-After`) and 5xx; fail fast on other 4xx; exponential backoff with jitter and a max interval; propagate `InterruptedException` (restore the interrupt flag). Only retry non-idempotent calls when the provider's API makes it safe. For Azure's async analysis, submission, polling and result retrieval each get their own policy.
-- **Artifacts are validated, then moved.** Write to a temp location, check existence, non-zero size, file signature (`%PDF`, PNG header, ZIP/DOCX), JSON structure, DOCX reopen and required content, then atomic-move into the final directory where the filesystem allows. On failure keep the diagnostics. A filename existing is not success.
-- **CLI fails early.** Validate arguments, input file type, output-dir permissions and config before any expensive call. Handle paths with spaces. Meaningful exit codes, usage text on bad input, and never overwrite an existing result silently.
-- **Structured logs with a `runId`.** Log stage, event, duration, retry count, error category, pages, extracted and translated block counts and validation results. Never log API keys, auth headers or document content by default.
-- **Fixtures are synthetic or licensed.** Mock Azure/DeepL responses are stored as files under `src/test/resources/mocks/`; expected extraction and expected translation live in `expected/`, separate from the code.
-- **Small steps.** Introduce the proposed components (`DocumentClassifier`, `DocumentValidator`, `TranslationValidator`, `ArtifactValidator`, `ProcessingReportWriter`, `ProcessingCheckpointStore`) one at a time when a ticket needs them, not as empty abstractions up front. The target layout in `backlog.md` is a direction, not a move order.
-- **Java version agrees everywhere.** Compiler release, CI JDK and production runtime must match; pin it.
+A gate that didn't run is **SKIPPED**, never passed. Structure passing never implies visual passing; the kit's own render proved it (`references/traps.md` #5).
 
-## 3. Definition of Done
+## 3. Engineering rules
 
-A ticket is PASS only when it has all of:
+1. **Interfaces at every external edge** (Azure, DeepL, vision subprocess, clock, sleeper, randomness). Unit tests use fakes: no network, no credentials, no real sleeping.
+2. **Unit vs integration vs live.** `*Test` → Surefire; `*IT` → Failsafe against `127.0.0.1` stubs; `@Tag("live")` excluded by default, skipped (never passed) without keys.
+3. **One canonical coordinate system** (normalized [0,1], top-left, rotation applied). Convert only at boundaries. Keep existing field meanings; add adapters. Compare with tolerances.
+4. **Invalid geometry is loud:** a named error or a documented recovery that shows in the report.
+5. **Text fitting uses real font metrics** of the DOCX font; character ratios only as fallback. Size always finite, positive, within [min, max]; text never truncated; overflow is a warning.
+6. **Retries are a policy:** categories, not exceptions; bounded by attempts and time; full jitter; capped Retry-After; non-idempotent calls (Azure submit) not retried after timeout/5xx; 456 never retried; interrupts propagate.
+7. **Artifacts:** stage next to the destination → validate (signature, structure, required content) → atomic no-clobber publish → keep diagnostics on failure. A filename existing is not success.
+8. **CLI fails early,** before any paid call, with documented exit codes and no silent overwrite.
+9. **Logs:** JSON lines, runId on every line, counts not content, never keys or document text.
+10. **Fixtures** synthetic or licensed, generated by a script, expectations in files not code. Mocks marked synthetic until re-recorded live.
+11. **Small, green steps.** Port behaviour plus its tests per PR. Don't move packages before the code is understood and covered. No abstraction without two implementations.
+12. **Java version agrees** in `maven.compiler.release`, CI and production.
 
-- An implementation, or a written reason no code change is needed.
-- The relevant tests passing on the **current** commit.
-- Every acceptance-criteria box checked with what was observed.
-- Evidence: command, environment, result, report location (Surefire/Failsafe XML, logs, the generated artifact).
-- Updated docs when behaviour or config changed.
-- No credentials or sensitive document content anywhere in the change, logs or report.
+## 4. Definition of Done and status
 
-Status values: `NOT_STARTED`, `IN_PROGRESS`, `BLOCKED` (name the dependency), `PASS`, `FAIL` (verification ran and a criterion failed). Code written is not PASS. Evidence from an older commit is not PASS.
+PASS requires all of: implementation (or a written reason none is needed); relevant tests passing **on the current commit**; every acceptance box checked with what was observed; evidence (command, environment, result, report path); docs updated when behaviour/config changed; no secrets or document content anywhere.
 
-## 4. Reporting
+`NOT_STARTED` · `IN_PROGRESS` · `BLOCKED` (name the dependency) · `PASS` · `FAIL` (verification ran, a criterion failed). Code written is not PASS. Old-commit evidence is not PASS. Kit evidence is not TaikaTranslator evidence.
 
-Report like `apex/STATUS.md`: what you ran, what passed (with counts), what failed, what is blocked and why, and the next action. Keep verified results and untested claims in separate lists. Don't promise 100% OCR accuracy or perfect layout; define supported document classes and show each meets its documented thresholds.
+## 5. Reporting
 
-## 5. Verification commands
+Use `templates/status-report.md`: Verified / Failed / Not verified (with why and how to verify) / Blocked / ticket transitions / next action. Report counts ("77 passed, 0 failed"), not adjectives. Don't promise 100% OCR accuracy or perfect layout: define supported document classes and show each meets its thresholds.
 
-Linux CI and Windows PowerShell use the same commands:
+## 6. Verification commands
 
 ```
-python --version
-python -m pip --version
+python --version && python -m pip --version
 python -m compileall -q vision
-mvn clean verify
+mvn -B clean verify                       # unit + integration; reports in target/*-reports/
+python scripts/visual_diff.py compare <out.docx> --baseline <dir> --out target/visual
 ```
+Same commands on Linux and Windows PowerShell (`templates/verify.ps1` wraps them). `compileall` proves only that Python parses; model-backed vision needs its own integration test. Check the real JAR name in `pom.xml` before writing any `java -jar target/<name>.jar --input … --output-dir …` instruction.
 
-`compileall` proves only that the Python parses; model-backed vision needs its own integration test. Check the real JAR name in `pom.xml` before writing any `java -jar target/<name>.jar --input ... --output-dir ...` instruction.
+## 7. The starter kit
+
+```
+cd .claude/skills/taikatranslator-engineering/starter
+mvn -B clean verify && python -m pytest -q scripts/tests
+```
+Map of packages to tickets: `starter/README.md`. What was really run, defects found, and what's still unverified: `starter/STATUS.md`. CI runs it on every push (`taika-starter` job in this repo's `.github/workflows/test.yml`). If you change the kit, rerun both commands and update `STATUS.md`.
