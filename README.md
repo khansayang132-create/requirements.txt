@@ -30,6 +30,21 @@ or directly to OpenAI if no OmniRoute key is set.
    python bot.py
    ```
 
+## Run 24/7 (Linux)
+
+Make the bot start at boot, restart itself if it crashes, and keep running after you log out:
+```
+cd ~/path/to/this/repo
+sudo bash service/install.sh                  # bot only
+sudo bash service/install.sh --with-omniroute # bot + OmniRoute as services
+```
+If you use `--with-omniroute`, first stop any OmniRoute you started by hand (Ctrl+C in its window),
+so the service can use port 20128.
+
+- Logs: `journalctl -u lskhan-bot -f` (and `journalctl -u lskhan-omniroute -f`)
+- After editing `.env`: `sudo systemctl restart lskhan-bot`
+- Stop for good: `sudo bash service/install.sh uninstall`
+
 ## Commands
 
 - `/caption <brief>` — TikTok caption with hashtags
