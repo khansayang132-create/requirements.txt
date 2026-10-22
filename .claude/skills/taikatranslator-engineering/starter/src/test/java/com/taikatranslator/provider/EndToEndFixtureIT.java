@@ -131,11 +131,13 @@ class EndToEndFixtureIT {
             } else if (b instanceof CanonicalDocument.Table t) {
                 if (t.rows() != e.get("rows").asInt() || t.columns() != e.get("columns").asInt()) problems.add(i + ": table shape");
                 if (!JSON.valueToTree(t.cells()).equals(e.get("cells"))) problems.add(i + ": table cells " + t.cells());
+                List<List<Integer>> spans = t.spans().stream().map(sp -> List.of(sp.row(), sp.col(), sp.rowSpan(), sp.colSpan())).toList();
+                if (!JSON.valueToTree(spans).equals(e.get("spans"))) problems.add(i + ": table spans " + spans);
             }
         }
         assertTrue(problems.isEmpty(), "extraction differs:\n" + String.join("\n", problems));
-        assertEquals(1, mapper.recoveries().size(), "the 0.6% overflow on p4 is clamped and recorded");
-        assertTrue(mapper.recoveries().get(0).startsWith("p4: clamped"));
+        assertEquals(1, mapper.recoveries().size(), "the 0.6% overflow on p5 is clamped and recorded");
+        assertTrue(mapper.recoveries().get(0).startsWith("p5: clamped"), mapper.recoveries().toString());
     }
 
     @Test
@@ -175,7 +177,7 @@ class EndToEndFixtureIT {
         // 3. Artifact published and reopened; structure equals the expected file
         assertTrue(Files.exists(out));
         Snapshot actual = new DocxInspector().inspect(out);
-        List<String> diff = StructureDiff.compare(expectedSnapshot(actual), actual);
+        List<String> diff = StructureDiff.compare(expectedSnapshot(), actual);
         assertTrue(diff.isEmpty(), "DOCX structure differs from expected/service-agreement.ES.structure.json:\n" + String.join("\n", diff));
 
         // 4. Text expansion: the long Spanish line shrank to fit instead of being cut
@@ -183,7 +185,13 @@ class EndToEndFixtureIT {
         assertEquals("Importe total adeudado pendiente de pago", last.text());
         assertTrue(last.fontSizes().get(0) < 11.0);
 
-        // 5. Auditability: input hash, run id, no secrets, no document text in the log
+        // 5. Blank (merged-away) cells were never sent to the translator
+        JsonNode translation = null;
+        for (JsonNode st : stages) if (st.get("name").asText().equals("translation")) translation = st;
+        assertNotNull(translation);
+        assertEquals(1, translation.get("counts").get("blank").asInt());
+
+        // 6. Auditability: input hash, run id, no secrets, no document text in the log
         assertEquals(64, JSON.valueToTree(m.get("inputs")).get("sha256").asText().length());
         assertFalse(r.log().contains("fixture-key"), "key leaked into log");
         assertFalse(r.log().contains("Importe total"), "document text leaked into log");
@@ -191,7 +199,7 @@ class EndToEndFixtureIT {
     }
 
     /** Builds the expected snapshot from the JSON file. Alignment is LEFT and there are no images in this fixture. */
-    private static Snapshot expectedSnapshot(Snapshot actual) {
+    private static Snapshot expectedSnapshot() {
         List<Element> body = new ArrayList<>();
         for (JsonNode e : expectedStructure.get("body")) {
             if (e.get("type").asText().equals("paragraph")) {
@@ -204,11 +212,17 @@ class EndToEndFixtureIT {
                     row.forEach(c -> r.add(c.asText()));
                     cells.add(r);
                 });
-                body.add(new DocxInspector.Table(e.get("rows").asInt(), e.get("columns").asInt(), cells));
+                List<String> merges = new ArrayList<>();
+                e.get("merges").forEach(m -> merges.add(m.asText()));
+                body.add(new DocxInspector.Table(e.get("rows").asInt(), e.get("columns").asInt(), cells, merges));
             }
         }
         JsonNode s = expectedStructure.get("section");
-        return new Snapshot(body, new DocxInspector.Section(s.get("pageWidthTwips").asLong(), s.get("pageHeightTwips").asLong(), s.get("orientation").asText()));
+        List<String> headers = new ArrayList<>(), footers = new ArrayList<>();
+        expectedStructure.get("headers").forEach(h -> headers.add(h.asText()));
+        expectedStructure.get("footers").forEach(f -> footers.add(f.asText()));
+        return new Snapshot(body, new DocxInspector.Section(s.get("pageWidthTwips").asLong(), s.get("pageHeightTwips").asLong(), s.get("orientation").asText()),
+                headers, footers, expectedStructure.get("pageNumberField").asBoolean());
     }
 
     @Test

@@ -42,12 +42,18 @@ public final class StructureDiff {
             } else if (e instanceof Table et && a instanceof Table tt) {
                 if (et.rows() != tt.rows() || et.columns() != tt.columns())
                     d.add(at + "table is " + tt.rows() + "x" + tt.columns() + ", expected " + et.rows() + "x" + et.columns());
+                if (!et.merges().equals(tt.merges()))
+                    d.add(at + "merged cells " + tt.merges() + ", expected " + et.merges());
                 for (int r = 0; r < Math.min(et.rows(), tt.rows()); r++)
                     for (int c = 0; c < Math.min(et.cells().get(r).size(), tt.cells().get(r).size()); c++)
                         if (!et.cells().get(r).get(c).equals(tt.cells().get(r).get(c)))
                             d.add(at + "cell [" + r + "," + c + "] \"" + clip(tt.cells().get(r).get(c)) + "\", expected \"" + clip(et.cells().get(r).get(c)) + "\"");
             }
         }
+        if (!expected.headers().equals(actual.headers())) d.add("headers " + actual.headers() + ", expected " + expected.headers());
+        if (!expected.footers().equals(actual.footers())) d.add("footers " + actual.footers() + ", expected " + expected.footers());
+        if (expected.pageNumberField() != actual.pageNumberField())
+            d.add("page number field " + (actual.pageNumberField() ? "present" : "missing") + ", expected " + (expected.pageNumberField() ? "present" : "absent"));
         if (expected.section() != null && !expected.section().equals(actual.section()))
             d.add("section " + actual.section() + ", expected " + expected.section());
         return d;

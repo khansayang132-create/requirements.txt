@@ -27,9 +27,13 @@
     },
     {
       "type": "table",
-      "rows": 3,
+      "rows": 4,
       "columns": 2,
       "cells": [
+        [
+          "Honorarios",
+          ""
+        ],
         [
           "Concepto",
           "Precio"
@@ -42,6 +46,9 @@
           "Revisión",
           "45 EUR"
         ]
+      ],
+      "merges": [
+        "0,0 1x2"
       ]
     },
     {
@@ -51,6 +58,11 @@
       "fontSize": 7.5
     }
   ],
+  "headers": [
+    "CONFIDENCIAL"
+  ],
+  "footers": [],
+  "pageNumberField": true,
   "section": {
     "pageWidthTwips": 12240,
     "pageHeightTwips": 15840,

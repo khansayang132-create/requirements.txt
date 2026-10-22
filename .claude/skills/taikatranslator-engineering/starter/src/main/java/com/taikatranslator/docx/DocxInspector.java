@@ -3,6 +3,8 @@ package com.taikatranslator.docx;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFFooter;
+import org.apache.poi.xwpf.usermodel.XWPFHeader;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFPicture;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
@@ -11,6 +13,9 @@ import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageSz;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSimpleField;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,11 +43,13 @@ public final class DocxInspector {
 
     public record Para(String style, String text, String alignment, List<Double> fontSizes, List<Image> images) implements Element { }
 
-    public record Table(int rows, int columns, List<List<String>> cells) implements Element { }
+    /** cells is the grid: merged-away positions hold "". merges lists "row,col rowSpanxcolSpan" for spans > 1x1. */
+    public record Table(int rows, int columns, List<List<String>> cells, List<String> merges) implements Element { }
 
     public record Section(long pageWidthTwips, long pageHeightTwips, String orientation) { }
 
-    public record Snapshot(List<Element> body, Section section) {
+    public record Snapshot(List<Element> body, Section section, List<String> headers, List<String> footers,
+                           boolean pageNumberField) {
         public long paragraphCount() { return body.stream().filter(e -> e instanceof Para).count(); }
         public long tableCount() { return body.stream().filter(e -> e instanceof Table).count(); }
         public long imageCount() {
@@ -65,7 +72,16 @@ public final class DocxInspector {
                 if (el instanceof XWPFParagraph p) body.add(para(p));
                 else if (el instanceof XWPFTable t) body.add(table(t));
             }
-            return new Snapshot(body, section(doc));
+            List<String> headers = new ArrayList<>(), footers = new ArrayList<>();
+            boolean pageField = false;
+            for (XWPFHeader h : doc.getHeaderList())
+                for (XWPFParagraph p : h.getParagraphs()) if (!p.getText().isBlank()) headers.add(p.getText().strip());
+            for (XWPFFooter f : doc.getFooterList())
+                for (XWPFParagraph p : f.getParagraphs()) {
+                    if (hasPageField(p)) pageField = true;
+                    else if (!p.getText().isBlank()) footers.add(p.getText().strip());
+                }
+            return new Snapshot(body, section(doc), headers, footers, pageField);
         }
     }
 
@@ -86,16 +102,43 @@ public final class DocxInspector {
         return new Para(p.getStyle(), p.getText(), a == null ? "LEFT" : a.name(), List.copyOf(sizes), images);
     }
 
+    /** Rebuilds the logical grid from gridSpan (horizontal) and vMerge (vertical). */
     private static Table table(XWPFTable t) {
-        List<List<String>> cells = new ArrayList<>();
+        int rows = t.getRows().size();
+        List<List<String>> grid = new ArrayList<>();
+        List<int[]> anchors = new ArrayList<>(); // {row, col, colSpan}
+        List<List<Boolean>> continues = new ArrayList<>();
         int cols = 0;
-        for (XWPFTableRow row : t.getRows()) {
-            List<String> r = new ArrayList<>();
-            for (XWPFTableCell c : row.getTableCells()) r.add(c.getText());
-            cols = Math.max(cols, r.size());
-            cells.add(r);
+        for (int r = 0; r < rows; r++) {
+            List<String> line = new ArrayList<>();
+            List<Boolean> cont = new ArrayList<>();
+            for (XWPFTableCell c : t.getRow(r).getTableCells()) {
+                CTTcPr pr = c.getCTTc().getTcPr();
+                int span = pr != null && pr.isSetGridSpan() ? pr.getGridSpan().getVal().intValue() : 1;
+                boolean vCont = pr != null && pr.isSetVMerge()
+                        && (pr.getVMerge().getVal() == null || pr.getVMerge().getVal() == STMerge.CONTINUE);
+                if (!vCont && (span > 1 || (pr != null && pr.isSetVMerge()))) anchors.add(new int[]{r, line.size(), span});
+                line.add(vCont ? "" : c.getText());
+                cont.add(vCont);
+                for (int k = 1; k < span; k++) { line.add(""); cont.add(vCont); }
+            }
+            cols = Math.max(cols, line.size());
+            grid.add(line);
+            continues.add(cont);
         }
-        return new Table(t.getRows().size(), cols, cells);
+        List<String> merges = new ArrayList<>();
+        for (int[] a : anchors) {
+            int rowSpan = 1;
+            while (a[0] + rowSpan < rows && a[1] < continues.get(a[0] + rowSpan).size() && continues.get(a[0] + rowSpan).get(a[1])) rowSpan++;
+            if (rowSpan > 1 || a[2] > 1) merges.add(a[0] + "," + a[1] + " " + rowSpan + "x" + a[2]);
+        }
+        return new Table(rows, cols, grid, merges);
+    }
+
+    private static boolean hasPageField(XWPFParagraph p) {
+        for (CTSimpleField f : p.getCTP().getFldSimpleList())
+            if (f.getInstr() != null && f.getInstr().trim().toUpperCase().startsWith("PAGE")) return true;
+        return p.getCTP().xmlText().contains("instrText") && p.getCTP().xmlText().matches("(?s).*instrText[^>]*>\\s*PAGE\\b.*");
     }
 
     private static Section section(XWPFDocument doc) {

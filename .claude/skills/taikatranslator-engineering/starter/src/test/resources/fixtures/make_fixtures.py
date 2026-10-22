@@ -28,6 +28,8 @@ PAGE = {"pageNumber": 1, "width": 8.5, "height": 11, "unit": "inch", "angle": 0}
 
 # (role, english, spanish, box inches x0, y0, x1, y1). Role None = body.
 BLOCKS = [
+    # Page header: must land in the DOCX header part, not the body.
+    ("pageHeader", "CONFIDENTIAL", "CONFIDENCIAL", (3.5, 0.4, 5.0, 0.6)),
     ("title", "Service Agreement", "Contrato de servicios", (1.0, 1.0, 7.5, 1.5)),
     ("sectionHeading", "1. Payment Terms", "1. Condiciones de pago", (1.0, 1.8, 7.5, 2.1)),
     (None, "The client pays {amount} within 30 days of the invoice date.",
@@ -49,9 +51,22 @@ BODY_SIZE = 11.0
 
 TABLE = {
     "box": (1.0, 3.3, 7.5, 4.3),
-    "en": [["Item", "Price"], ["Translation", "120 EUR"], ["Review", "45 EUR"]],
-    "es": [["Concepto", "Precio"], ["Traducción", "120 EUR"], ["Revisión", "45 EUR"]],
+    # Row 0 is one cell spanning both columns; "" marks the covered position.
+    "en": [["Fees", ""], ["Item", "Price"], ["Translation", "120 EUR"], ["Review", "45 EUR"]],
+    "es": [["Honorarios", ""], ["Concepto", "Precio"], ["Traducción", "120 EUR"], ["Revisión", "45 EUR"]],
+    "spans": [(0, 0, 1, 2)],  # row, col, rowSpan, colSpan
 }
+
+
+def covered(r, c):
+    return any(r0 <= r < r0 + rs and c0 <= c < c0 + cs and (r, c) != (r0, c0) for r0, c0, rs, cs in TABLE["spans"])
+
+
+def span_of(r, c):
+    for r0, c0, rs, cs in TABLE["spans"]:
+        if (r0, c0) == (r, c):
+            return rs, cs
+    return 1, 1
 
 
 def poly(x0, y0, x1, y1):
@@ -89,7 +104,7 @@ def build():
         offset += len(text) + 1  # "\n" separator
         return {"offset": start, "length": len(text)}
 
-    expected_blocks, expected_docx = [], []
+    expected_blocks, expected_docx, headers, footers = [], [], [], []
     pid = 0
     for b in BLOCKS:
         if b == "TABLE":
@@ -99,21 +114,31 @@ def build():
             x0, y0, x1, y1 = TABLE["box"]
             for r in range(rows):
                 for c in range(cols):
+                    if covered(r, c):
+                        continue  # Azure lists a merged cell once, at its anchor
                     text = TABLE["en"][r][c]
+                    rs, cs = span_of(r, c)
                     span = add(text)
                     cx0 = x0 + (x1 - x0) * c / cols
                     cy0 = y0 + (y1 - y0) * r / rows
-                    region = [{"pageNumber": 1, "polygon": poly(cx0, cy0, cx0 + (x1 - x0) / cols, cy0 + (y1 - y0) / rows)}]
-                    cells.append({"kind": "columnHeader" if r == 0 else "content", "rowIndex": r, "columnIndex": c,
-                                  "content": text, "boundingRegions": region, "spans": [span]})
+                    region = [{"pageNumber": 1, "polygon": poly(cx0, cy0, cx0 + (x1 - x0) * cs / cols, cy0 + (y1 - y0) * rs / rows)}]
+                    cell = {"kind": "columnHeader" if r <= 1 else "content", "rowIndex": r, "columnIndex": c,
+                            "content": text, "boundingRegions": region, "spans": [span]}
+                    if rs > 1:
+                        cell["rowSpan"] = rs
+                    if cs > 1:
+                        cell["columnSpan"] = cs
+                    cells.append(cell)
                     # Azure also lists cell text as paragraphs; the mapper must drop these.
                     paragraphs.append({"content": text, "boundingRegions": region, "spans": [span]})
                     deepl[protect(text)] = protect(TABLE["es"][r][c])
             tables.append({"rowCount": rows, "columnCount": cols, "cells": cells,
                            "boundingRegions": [{"pageNumber": 1, "polygon": poly(*TABLE["box"])}],
                            "spans": [{"offset": t_start, "length": offset - 1 - t_start}]})
-            expected_blocks.append({"type": "table", "id": "t1", "rows": rows, "columns": cols, "cells": TABLE["en"]})
-            expected_docx.append({"type": "table", "rows": rows, "columns": cols, "cells": TABLE["es"]})
+            expected_blocks.append({"type": "table", "id": "t1", "rows": rows, "columns": cols, "cells": TABLE["en"],
+                                    "spans": [list(sp) for sp in TABLE["spans"]]})
+            expected_docx.append({"type": "table", "rows": rows, "columns": cols, "cells": TABLE["es"],
+                                  "merges": [f"{r},{c} {rs}x{cs}" for r, c, rs, cs in TABLE["spans"]]})
             continue
         role, en, es, box = b
         para = {"content": en, "boundingRegions": [{"pageNumber": 1, "polygon": poly(*box)}], "spans": [add(en)]}
@@ -122,9 +147,14 @@ def build():
         paragraphs.append(para)
         deepl[protect(en)] = protect(es)
         pid += 1
-        canonical_role = {"title": "TITLE", "sectionHeading": "HEADING", "pageNumber": "PAGE_NUMBER"}.get(role, "BODY")
+        canonical_role = {"title": "TITLE", "sectionHeading": "HEADING", "pageNumber": "PAGE_NUMBER",
+                          "pageHeader": "HEADER", "pageFooter": "FOOTER"}.get(role, "BODY")
         expected_blocks.append({"type": "paragraph", "id": f"p{pid}", "role": canonical_role, "text": en})
-        if canonical_role != "PAGE_NUMBER":
+        if canonical_role == "HEADER":
+            headers.append(es)
+        elif canonical_role == "FOOTER":
+            footers.append(es)
+        elif canonical_role != "PAGE_NUMBER":
             style = {"TITLE": "Title", "HEADING": "Heading1"}.get(canonical_role)
             expected_docx.append({"type": "paragraph", "style": style, "text": es,
                                   "fontSize": EXPECTED_SIZE.get(en, BODY_SIZE)})
@@ -137,7 +167,8 @@ def build():
         "paragraphs": paragraphs,
         "tables": tables,
     }
-    return result, deepl, expected_blocks, expected_docx
+    return result, deepl, expected_blocks, {"body": expected_docx, "headers": headers, "footers": footers,
+                                             "pageNumberField": any(b != "TABLE" and b[0] == "pageNumber" for b in BLOCKS)}
 
 
 def write_json(rel, data):
@@ -149,14 +180,22 @@ def write_json(rel, data):
 
 
 def write_html():
-    rows = "".join("<tr>" + "".join(f"<td>{c}</td>" for c in r) + "</tr>" for r in TABLE["en"])
+    rows = ""
+    for r, row in enumerate(TABLE["en"]):
+        tds = ""
+        for c, text in enumerate(row):
+            if covered(r, c):
+                continue
+            rs, cs = span_of(r, c)
+            tds += f'<td rowspan="{rs}" colspan="{cs}">{text}</td>'
+        rows += f"<tr>{tds}</tr>"
     body = []
     for b in BLOCKS:
         if b == "TABLE":
             body.append(f'<table border="1">{rows}</table>')
             continue
         role, en, _, _ = b
-        tag = {"title": "h1", "sectionHeading": "h2", "pageNumber": "p"}.get(role, "p")
+        tag = {"title": "h1", "sectionHeading": "h2", "pageNumber": "p", "pageHeader": "p"}.get(role, "p")
         body.append(f"<{tag}>{en}</{tag}>")
     html = ("<!doctype html><html><head><meta charset=\"utf-8\"><title>Service Agreement</title></head><body>"
             + "".join(body) + "</body></html>\n")
@@ -183,6 +222,6 @@ if __name__ == "__main__":
     write_json("mocks/azure-layout-service-agreement.json", {"status": "succeeded", "analyzeResult": result})
     write_json("mocks/deepl-es-service-agreement.json", deepl)
     write_json("expected/service-agreement.extraction.json", {"pages": 1, "blocks": blocks})
-    write_json("expected/service-agreement.ES.structure.json", {"targetLang": "ES", "body": docx,
+    write_json("expected/service-agreement.ES.structure.json", {"targetLang": "ES", **docx,
                                                                  "section": {"pageWidthTwips": 12240, "pageHeightTwips": 15840, "orientation": "portrait"}})
     render_pdf(write_html())

@@ -1,8 +1,10 @@
 {
+  "CONFIDENTIAL": "CONFIDENCIAL",
   "Service Agreement": "Contrato de servicios",
   "1. Payment Terms": "1. Condiciones de pago",
   "The client pays <ph id=\"0\">{amount}</ph> within 30 days of the invoice date.": "El cliente paga <ph id=\"0\">{amount}</ph> en un plazo de 30 días desde la fecha de la factura.",
   "Questions go to <ph id=\"0\">billing@example.com</ph> or <ph id=\"1\">https://example.com/help</ph>.": "Las consultas van a <ph id=\"0\">billing@example.com</ph> o <ph id=\"1\">https://example.com/help</ph>.",
+  "Fees": "Honorarios",
   "Item": "Concepto",
   "Price": "Precio",
   "Translation": "Traducción",

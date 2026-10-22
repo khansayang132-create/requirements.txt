@@ -53,14 +53,24 @@ public final class AzureLayoutMapper {
                 for (int c = 0; c < cols; c++) row.add("");
                 cells.add(row);
             }
+            List<CanonicalDocument.Span> spans = new ArrayList<>();
+            boolean[][] taken = new boolean[rows][cols];
             for (JsonNode cell : table.path("cells")) {
                 int r = cell.path("rowIndex").asInt(), c = cell.path("columnIndex").asInt();
-                if (r >= rows || c >= cols) throw new IllegalStateException(id + ": cell [" + r + "," + c + "] outside " + rows + "x" + cols);
+                int rs = cell.path("rowSpan").asInt(1), cs = cell.path("columnSpan").asInt(1);
+                if (r < 0 || c < 0 || rs < 1 || cs < 1 || r + rs > rows || c + cs > cols)
+                    throw new IllegalStateException(id + ": cell [" + r + "," + c + "] span " + rs + "x" + cs + " outside " + rows + "x" + cols);
+                for (int i = r; i < r + rs; i++)
+                    for (int j = c; j < c + cs; j++) {
+                        if (taken[i][j]) throw new IllegalStateException(id + ": cells overlap at [" + i + "," + j + "]");
+                        taken[i][j] = true;
+                    }
                 cells.get(r).set(c, cell.path("content").asText(""));
+                if (rs > 1 || cs > 1) spans.add(new CanonicalDocument.Span(r, c, rs, cs));
             }
             for (JsonNode s : table.path("spans")) tableSpans.add(new long[]{s.path("offset").asLong(), s.path("offset").asLong() + s.path("length").asLong()});
             Located loc = locate(id, table, byNumber);
-            ordered.add(new Ordered(firstOffset(table), new Table(id, rows, cols, cells, loc.page, loc.result.box())));
+            ordered.add(new Ordered(firstOffset(table), new Table(id, rows, cols, cells, spans, loc.page, loc.result.box())));
         }
 
         int p = 0;

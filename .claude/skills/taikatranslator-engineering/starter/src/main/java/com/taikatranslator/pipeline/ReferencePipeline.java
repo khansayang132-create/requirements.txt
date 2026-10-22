@@ -93,14 +93,20 @@ public final class ReferencePipeline {
                     for (int r = 0; r < t.rows(); r++)
                         for (int c = 0; c < t.columns(); c++) { ids.add(t.id() + "[" + r + "," + c + "]"); sources.add(t.cells().get(r).get(c)); }
             }
-            List<PlaceholderProtector.Protected> prot = sources.stream().map(protector::protect).toList();
+            // Blank blocks (empty or merged-away table cells) are kept as they are and never sent: a request
+            // for "" costs a call and some engines reject it.
+            List<Integer> toSend = new ArrayList<>();
+            for (int i = 0; i < sources.size(); i++) if (!sources.get(i).isBlank()) toSend.add(i);
+            List<PlaceholderProtector.Protected> prot = toSend.stream().map(i -> protector.protect(sources.get(i))).toList();
             Translator.Response resp = translator.translate(new Translator.Request(
                     prot.stream().map(PlaceholderProtector.Protected::xml).toList(), Optional.empty(), targetLang, true));
-            if (resp.texts().size() != sources.size())
-                throw new IllegalStateException("translator returned " + resp.texts().size() + " texts for " + sources.size());
-            List<String> translated = new ArrayList<>();
-            for (int i = 0; i < sources.size(); i++) translated.add(protector.restore(resp.texts().get(i), prot.get(i).tokens()));
-            stage(report, "translation", t0, List.of(), resp.retries(), Map.of("blocks", sources.size()));
+            if (resp.texts().size() != toSend.size())
+                throw new IllegalStateException("translator returned " + resp.texts().size() + " texts for " + toSend.size());
+            List<String> translated = new ArrayList<>(sources);
+            for (int k = 0; k < toSend.size(); k++)
+                translated.set(toSend.get(k), protector.restore(resp.texts().get(k), prot.get(k).tokens()));
+            stage(report, "translation", t0, List.of(), resp.retries(),
+                    Map.of("blocks", sources.size(), "sent", toSend.size(), "blank", sources.size() - toSend.size()));
 
             // 4. Translation validation
             List<TranslationValidator.Block> tb = new ArrayList<>();
@@ -180,7 +186,7 @@ public final class ReferencePipeline {
                     for (int c = 0; c < t.columns(); c++) row.add(translated.get(i++));
                     cells.add(row);
                 }
-                out.add(new Table(t.id(), t.rows(), t.columns(), cells, t.page(), t.box()));
+                out.add(new Table(t.id(), t.rows(), t.columns(), cells, t.spans(), t.page(), t.box()));
             }
         }
         return new CanonicalDocument(src.pages(), out);

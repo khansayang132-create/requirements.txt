@@ -4,33 +4,43 @@
     {
       "type": "paragraph",
       "id": "p1",
+      "role": "HEADER",
+      "text": "CONFIDENTIAL"
+    },
+    {
+      "type": "paragraph",
+      "id": "p2",
       "role": "TITLE",
       "text": "Service Agreement"
     },
     {
       "type": "paragraph",
-      "id": "p2",
+      "id": "p3",
       "role": "HEADING",
       "text": "1. Payment Terms"
     },
     {
       "type": "paragraph",
-      "id": "p3",
+      "id": "p4",
       "role": "BODY",
       "text": "The client pays {amount} within 30 days of the invoice date."
     },
     {
       "type": "paragraph",
-      "id": "p4",
+      "id": "p5",
       "role": "BODY",
       "text": "Questions go to billing@example.com or https://example.com/help."
     },
     {
       "type": "table",
       "id": "t1",
-      "rows": 3,
+      "rows": 4,
       "columns": 2,
       "cells": [
+        [
+          "Fees",
+          ""
+        ],
         [
           "Item",
           "Price"
@@ -43,17 +53,25 @@
           "Review",
           "45 EUR"
         ]
+      ],
+      "spans": [
+        [
+          0,
+          0,
+          1,
+          2
+        ]
       ]
     },
     {
       "type": "paragraph",
-      "id": "p5",
+      "id": "p6",
       "role": "BODY",
       "text": "Total amount due"
     },
     {
       "type": "paragraph",
-      "id": "p6",
+      "id": "p7",
       "role": "PAGE_NUMBER",
       "text": "1"
     }
