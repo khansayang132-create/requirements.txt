@@ -17,6 +17,7 @@ This records what was actually run on the kit. It says nothing about the real Ta
 | Visual diff logic | `pytest scripts/tests` | 9 passed (8 synthetic-image tests + 1 real LibreOffice render of the E2E DOCX) |
 | Visual diff round trip | `visual_diff.py baseline` then `compare` on the same DOCX; then on a copy with one sentence lengthened | identical: PASS exit 0; modified: FAIL exit 1, 1.1962% pixels changed (> 0.2%), `diff-1.png` written and inspected |
 | `verify.sh` | `shellcheck -S warning` 0.10.0 | clean |
+| JDK 17 runtime | CI `taika-starter` job, Temurin 17, run 68 on commit `8d3b4bf` | success: pytest, `compileall`, `mvn -B -ntp clean verify` all green; reports uploaded as `taika-starter-evidence` |
 
 ## Defects found and fixed while verifying
 1. Exact double equality in a geometry test (pixel vs inch path differs in the last bit) → `NormalizedBox.approxEquals`.
@@ -31,7 +32,6 @@ This records what was actually run on the kit. It says nothing about the real Ta
 ## NOT VERIFIED
 | Item | Why | How to verify |
 |---|---|---|
-| Build and tests on JDK 17 | Only JDK 21 is installed here; `--release 17` guarantees the API level, not runtime behaviour | `taika-starter` CI job runs on Temurin 17 |
 | Live Azure / DeepL calls | No keys here, and tests must not need them | `@Tag("live")` tests in the real project with keys from env |
 | Azure mock fidelity | Mock is hand-authored from the documented shape | Re-record from one live `prebuilt-layout` call |
 | Windows `verify.ps1` | No Windows here | Run on a Windows dev machine |
