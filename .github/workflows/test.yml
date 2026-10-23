@@ -74,3 +74,21 @@ jobs:
         timeout-minutes: 22
       - run: pip install -r requirements.txt
       - run: python -m pytest -q
+
+  done:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: done
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: done/package-lock.json
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run lint:ui
+      - run: npx vite build

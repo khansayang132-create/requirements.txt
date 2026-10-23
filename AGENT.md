@@ -69,7 +69,8 @@
 | Topic | Source of Truth |
 |---|---|
 | **HarnessFlow** (AI workflow pack, third-party) | [`.github/HarnessFlow/`](./.github/HarnessFlow/readme.md), vendored from `HangYu8123/HarnessFlow` @ `aa9f74c`. Opt-in: runs only on a filled-in template from `request_template/`. Generated files (`AGENTS.md`, `.github/copilot-instructions.md`, `.claude/agents/`, `.claude/rules/`, `.codex/agents/`) come from `bash .github/HarnessFlow/cli_setup.sh`; don't hand-edit them. CI (`check`) regenerates them and fails if anything changes: after editing `agents/*.agent.md`, run `python3 sync_agent_definitions.py` in the pack, then `bash .github/HarnessFlow/cli_setup.sh`, and commit. Repo memory lives in `.github/HarnessFlow/repo_info/` and is committed here. Its "don't commit" safety rule applies inside a HarnessFlow run only. |
-| **DONE Protocol UI** (not LSKhan; Solana USDC escrow app) | [`.claude/skills/done-protocol/`](./.claude/skills/done-protocol/SKILL.md): `SKILL.md` (rules, pages, resolved spec conflicts), `reference/components.md` + `reference/protocol.md` (copy-paste code), `scripts/ui_lint.py` (enforces the hard rules; tested in `tests/test_done_ui_lint.py`). `.agents/skills/done_protocol` is a symlink to it. The app's code lives outside this repo. |
+| **DONE Protocol UI** (not LSKhan; Solana USDC escrow app) | [`.claude/skills/done-protocol/`](./.claude/skills/done-protocol/SKILL.md): `SKILL.md` (rules, pages, resolved spec conflicts), `reference/components.md` + `reference/protocol.md` (copy-paste code), `scripts/ui_lint.py` (enforces the hard rules; tested in `tests/test_done_ui_lint.py`). `.agents/skills/done_protocol` is a symlink to it. |
+| **DONE Protocol app** | [`done/`](./done/README.md): Vite + React app built from that skill. Mock mode only (no program deployed); status table in its README. CI job `done`: typecheck, vitest, UI lint, build. |
 | **Spotify artist profiles** (not LSKhan) | [`.claude/skills/artist-profile/`](./.claude/skills/artist-profile/SKILL.md): `SKILL.md` (steps) + `template.md`. Profiles go in `profiles/<artist-slug>.md`; unknown fields stay `TBD`. |
 
 ---
@@ -94,7 +95,7 @@ Violating any of these is a bug, not a preference.
 | **Dashboard** | Stays read-only and bound to 127.0.0.1 by default. Media is served only from a completed job's recorded `final` path, never from a URL path. |
 | **Job states** | Change state only through `JobQueue` methods (they call `_move`, which enforces `ALLOWED_TRANSITIONS` and writes the audit log). Never `UPDATE jobs SET state=` directly. |
 | **Facts in scripts** | No invented statistics, quotes or sources. Illustrative arithmetic is fine. `review_script` rejects unsourced percentages. |
-| **Merging** | CI green on the branch head first: `check`, `service` ×2, `termux`, `apex`. |
+| **Merging** | CI green on the branch head first: `check`, `service` ×2, `termux`, `apex`, `done`. |
 
 ---
 
