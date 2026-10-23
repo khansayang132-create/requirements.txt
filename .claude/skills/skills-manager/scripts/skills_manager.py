@@ -733,6 +733,62 @@ def update(root, cfg, name, scope, yes=False, accept_risk=False):
     return {**result, "status": "updated", **r}
 
 
+def upgrade(root, cfg, scope="project", yes=False):
+    """Bring every pinned source to its upstream HEAD and update the skills installed from it, unattended-safe:
+    a source moves only if each managed skill it changes is still valid and scans below policy.confirm_risk.
+    Anything else is held for a human, with the reason. New skills are never installed here."""
+    reg = load_registry(scope, root)
+    report = []
+    for src in cfg["sources"]:
+        row = {"source": src["id"], "pinned": src.get("commit")}
+        if not src.get("commit"):
+            report.append({**row, "status": "skipped", "detail": "not pinned; use `update <name>`"})
+            continue
+        r = git("ls-remote", src["url"], src.get("ref") or "HEAD", timeout=30)
+        if r.returncode or not r.stdout.strip():
+            report.append({**row, "status": "BLOCKED", "detail": r.stderr.strip()[-150:] or "no HEAD"})
+            continue
+        head = row["upstream"] = r.stdout.split()[0]
+        if head == src["commit"]:
+            report.append({**row, "status": "up to date"})
+            continue
+        remote, problems = discover_remote({**cfg, "sources": [{**src, "commit": head}]}, only=src["id"])
+        if problems:
+            report.append({**row, "status": "BLOCKED", "detail": problems[0]["error"]})
+            continue
+        changes, held = [], []
+        for e in (e for e in reg["installed"].values() if e["source"] == src["id"]):
+            cand = next((c for c in remote if c["name"] == e["name"]), None)
+            if not cand:
+                held.append({"name": e["name"], "reason": "removed upstream"})
+                continue
+            new = file_hashes(Path(cand["path"]))
+            changed = sorted(k for k in set(e["files"]) | set(new) if e["files"].get(k) != new.get(k))
+            if not changed:
+                continue
+            risk = scan(Path(cand["path"]))["risk"]
+            if cand["errors"]:
+                held.append({"name": e["name"], "reason": "invalid SKILL.md: " + "; ".join(cand["errors"])})
+            elif SEVERITY[risk] >= SEVERITY[cfg["policy"]["confirm_risk"]]:
+                held.append({"name": e["name"], "reason": f"new version scans {risk}; run `inspect` and review"})
+            else:
+                changes.append({"name": e["name"], "changed_files": changed, "risk": risk})
+        row.update(changes=changes, held=held)
+        if held:
+            report.append({**row, "status": "held", "detail": "pin not moved; a human must review the held skills"})
+        elif not yes:
+            report.append({**row, "status": "would upgrade", "detail": "pass --yes to apply"})
+        else:
+            pin_source(root, src["id"], head)
+            moved = load_config(root)
+            for c in changes:
+                update(root, moved, c["name"], scope, yes=True)
+            cfg = moved
+            report.append({**row, "status": "upgraded"})
+    log_history(scope, root, "upgrade", "*", "PASS", sources={r["source"]: r["status"] for r in report})
+    return report
+
+
 # ---------------------------------------------------------------- verify / audit / doctor
 
 def check(name, status, detail=""):
@@ -962,6 +1018,8 @@ def main(argv=None):
     sub.add_parser("audit", help="scan every local skill; writes .claude/skills-manager/reports/skills-audit.json")
     p = sub.add_parser("doctor", help="diagnose config, sources, skill folders and the registry")
     p.add_argument("--live", action="store_true")
+    p = sub.add_parser("upgrade", help="move pinned sources to upstream HEAD and update installed skills; low-risk only, --yes applies")
+    p.add_argument("--scope", choices=["project", "user"], default="project"); p.add_argument("--yes", action="store_true")
     p = sub.add_parser("pin", help="pin a source to a commit in config.json (default: its current HEAD); --clear unpins")
     p.add_argument("source"); p.add_argument("--commit"); p.add_argument("--clear", action="store_true")
     p = sub.add_parser("note", help="record which skill was used for a task and how it helped")
@@ -1086,6 +1144,18 @@ def main(argv=None):
             else:
                 print_checks(checks)
             return 1 if any(c["status"] == "FAIL" for c in checks) else 0
+        elif a.cmd == "upgrade":
+            rows = upgrade(root, cfg, a.scope, a.yes)
+            if a.json:
+                out(rows)
+            else:
+                for r in rows:
+                    print(f"  {r['status']:<14} {r['source']}" + (f": {r['detail']}" if r.get("detail") else ""))
+                    for c in r.get("changes", []):
+                        print(f"      update {c['name']} ({c['risk']}): {', '.join(c['changed_files'])}")
+                    for h in r.get("held", []):
+                        print(f"      HELD   {h['name']}: {h['reason']}")
+            return 1 if any(r["status"] in ("held", "BLOCKED") for r in rows) else 0
         elif a.cmd == "pin":
             res = pin_source(root, a.source, a.commit, a.clear)
             if a.json:

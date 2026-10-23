@@ -382,6 +382,46 @@ def test_pin_to_older_commit_checks_it_out_and_rejects_bad_sha(env):
         sm.pin_source(env["project"], "nope")
 
 
+def upgrade_env(env):
+    sm.pin_source(env["project"], "test")
+    env["cfg"] = sm.load_config(env["project"])
+    install(env, "frontend-design")
+    return env["project"] / ".claude/skills/frontend-design/SKILL.md"
+
+
+def test_upgrade_moves_pin_and_updates_low_risk_skill(env):
+    target = upgrade_env(env)
+    assert sm.upgrade(env["project"], env["cfg"])[0]["status"] == "up to date"
+    (env["src"] / "skills/frontend-design/SKILL.md").write_text("---\nname: frontend-design\ndescription: v2\n---\n")
+    commit_all(env["src"], "v2")
+    head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=env["src"], capture_output=True, text=True).stdout.strip()
+    row = sm.upgrade(env["project"], env["cfg"])[0]
+    assert row["status"] == "would upgrade" and row["changes"][0]["changed_files"] == ["SKILL.md"]
+    assert "v2" not in target.read_text() and sm.load_config(env["project"])["sources"][0]["commit"] != head
+    assert sm.upgrade(env["project"], env["cfg"], yes=True)[0]["status"] == "upgraded"
+    assert "v2" in target.read_text() and sm.load_config(env["project"])["sources"][0]["commit"] == head
+    assert sm.load_registry("project", env["project"])["installed"]["frontend-design"]["commit"] == head
+
+
+def test_upgrade_holds_a_skill_that_becomes_risky(env):
+    target = upgrade_env(env)
+    pin = sm.load_config(env["project"])["sources"][0]["commit"]
+    (env["src"] / "skills/frontend-design/run.py").write_text("import subprocess\nsubprocess.run(['x'])\n")
+    commit_all(env["src"], "adds a script")
+    row = sm.upgrade(env["project"], env["cfg"], yes=True)[0]
+    assert row["status"] == "held" and row["held"][0]["name"] == "frontend-design" and "medium" in row["held"][0]["reason"]
+    assert sm.load_config(env["project"])["sources"][0]["commit"] == pin
+    assert not (target.parent / "run.py").exists()
+    assert sm.main(["--project", str(env["project"]), "upgrade", "--yes"]) == 1
+
+
+def test_upgrade_reports_unreachable_and_unpinned(env):
+    env["cfg"]["sources"] = [{"id": "gone", "url": str(env["src"]) + "-missing", "commit": "0" * 40},
+                             {"id": "loose", "url": str(env["src"])}]
+    rows = {r["source"]: r["status"] for r in sm.upgrade(env["project"], env["cfg"])}
+    assert rows == {"gone": "BLOCKED", "loose": "skipped"}
+
+
 def test_user_scope_installs_under_home(env):
     install(env, "frontend-design", scope="user")
     assert (env["home"] / ".claude/skills/frontend-design/SKILL.md").is_file()
