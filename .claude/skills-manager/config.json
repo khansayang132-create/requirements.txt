@@ -1,0 +1,34 @@
+{
+  "sources": [
+    {
+      "id": "anthropics-skills",
+      "url": "https://github.com/anthropics/skills",
+      "path": "skills",
+      "trust": "official",
+      "note": "Anthropic's official example skills (Apache-2.0 / source-available per skill)."
+    },
+    {
+      "id": "obra-superpowers",
+      "url": "https://github.com/obra/superpowers",
+      "path": "skills",
+      "trust": "catalogued",
+      "note": "Community. Catalogued in .github/HarnessFlow/skills/skill_workflow_skills.md. Stars are not trust: inspect before installing."
+    },
+    {
+      "id": "addyosmani-agent-skills",
+      "url": "https://github.com/addyosmani/agent-skills",
+      "trust": "catalogued",
+      "note": "Community. Catalogued in .github/HarnessFlow/skills/index.md. Inspect before installing."
+    }
+  ],
+  "policy": {
+    "block_risk": "high",
+    "confirm_risk": "medium",
+    "max_installs_per_day": 5,
+    "default_scope": "project"
+  },
+  "synonyms": {
+    "tiktok": ["video", "caption", "hook"],
+    "telegram": ["bot"]
+  }
+}

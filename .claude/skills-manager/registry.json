@@ -1,0 +1,98 @@
+{
+  "failed": [],
+  "installed": {
+    "frontend-design": {
+      "backup": "/home/user/requirements.txt/.claude/skills-manager/backups/frontend-design/20261023T195727127459",
+      "commit": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
+      "compatible": [
+        "claude-code"
+      ],
+      "content_hash": "98e239f3f6a8e0a6391affe6ab96f1e7ed56072132bfd152ebcd761e79c45dc4",
+      "dependencies": {
+        "dependency_files": [],
+        "interpreters": [],
+        "missing": [],
+        "python_imports": []
+      },
+      "description": "Guidance for distinctive, intentional visual design when building new UI or reshaping an existing one. Helps with aesthetic direction, typography, and making choices that don't read as templated defaults.",
+      "files": {
+        "LICENSE.txt": "0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594",
+        "SKILL.md": "d91970639e9f5c37682ac7ab60094d35f1c7c1f38d731bd56396563aee10c1d3"
+      },
+      "installed_at": "2026-10-23T19:55:53+00:00",
+      "license": "Complete terms in LICENSE.txt",
+      "name": "frontend-design",
+      "path": ".claude/skills/frontend-design",
+      "reason": "Session MCP instructions route UI/web work to a frontend-design skill that wasn't installed; needed for LSKhan Studio / APEX dashboard UI work",
+      "repo_path": "skills/frontend-design",
+      "restored_at": "2026-10-23T19:57:27+00:00",
+      "restored_from": "/home/user/requirements.txt/.claude/skills-manager/backups/frontend-design/20261023T195727127459",
+      "scope": "project",
+      "security": {
+        "accepted_risk": false,
+        "findings": [],
+        "hosts": [
+          "www.apache.org"
+        ],
+        "risk": "none",
+        "scripts": []
+      },
+      "source": "anthropics-skills",
+      "trust": "official",
+      "url": "https://github.com/anthropics/skills",
+      "verification": {
+        "at": "2026-10-23T19:59:26+00:00",
+        "checks": [
+          {
+            "check": "files installed",
+            "detail": "/home/user/requirements.txt/.claude/skills/frontend-design",
+            "status": "PASS"
+          },
+          {
+            "check": "files match registry hashes",
+            "detail": "2 files",
+            "status": "PASS"
+          },
+          {
+            "check": "SKILL.md valid",
+            "detail": "",
+            "status": "PASS"
+          },
+          {
+            "check": "name matches registry",
+            "detail": "frontend-design",
+            "status": "PASS"
+          },
+          {
+            "check": "location is a Claude Code skill root",
+            "detail": "/home/user/requirements.txt/.claude/skills",
+            "status": "PASS"
+          },
+          {
+            "check": "source exists",
+            "detail": "https://github.com/anthropics/skills HEAD dbd4588f9e10",
+            "status": "PASS"
+          },
+          {
+            "check": "dependencies available",
+            "detail": "none needed",
+            "status": "PASS"
+          },
+          {
+            "check": "Claude Code discovers it",
+            "detail": "43 skills in init event",
+            "status": "PASS"
+          },
+          {
+            "check": "Claude Code loads it",
+            "detail": "Skill tool called=True; reply: '# Frontend Design'",
+            "status": "PASS"
+          }
+        ],
+        "status": "PASS"
+      }
+    }
+  },
+  "removed": {},
+  "schema": 1
+}
