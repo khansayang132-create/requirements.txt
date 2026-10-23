@@ -57,11 +57,19 @@ def normalize_for_speech(text: str, language: str) -> str:
     if language != "id":
         return text
 
-    def rupiah(m: re.Match) -> str:
-        return f"{id_number_words(int(m.group(1).replace('.', '')))} rupiah"
+    number = r"(\d{1,3}(?:\.\d{3})+|\d+)(?:,(\d+))?"  # 1.250.000 or 1,5 (decimal comma)
 
-    text = re.sub(r"Rp\.?\s?(\d{1,3}(?:\.\d{3})+|\d+)", rupiah, text)
-    text = re.sub(r"\b(\d{1,3}(?:\.\d{3})+)\b", lambda m: id_number_words(int(m.group(1).replace(".", ""))), text)
+    def spoken_number(m: re.Match) -> str:
+        words = id_number_words(int(m.group(1).replace(".", "")))
+        if m.group(2):  # decimals are read digit by digit: 2,25 -> dua koma dua lima
+            words += " koma " + " ".join(id_number_words(int(d)) for d in m.group(2))
+        return words
+
+    def rupiah(m: re.Match) -> str:  # "Rp1,5 juta" -> "satu koma lima juta rupiah"
+        return f"{spoken_number(m)}{(m.group(3) or '').lower()} rupiah"
+
+    text = re.sub(rf"Rp\.?\s?{number}(\s+(?i:ribu|juta|miliar|triliun)\b)?", rupiah, text)
+    text = re.sub(rf"\b{number}\b", lambda m: spoken_number(m) if (m.group(2) or "." in m.group(1)) else m.group(0), text)
     text = re.sub(r"\b(\d+)\b", lambda m: id_number_words(int(m.group(1))), text)
     text = re.sub(r"\s*×\s*", " kali ", text)
     return re.sub(r"\s+", " ", text).strip()
