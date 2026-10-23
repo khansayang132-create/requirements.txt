@@ -20,3 +20,10 @@
 - apex/apex/tts.py normalize_for_speech: decimal comma read as 'koma' + digits, and a scale word after an Rp amount moves before 'rupiah' ('Rp1,5 juta' -> 'satu koma lima juta rupiah'; was 'satu rupiah,lima juta').
 - apex/tests/test_core.py: 6 parametrized cases (5 failed before the fix).
 - Test count 81 -> 87 in AGENT.md, apex/README.md, apex/STATUS.md and the overviews. Sample narration reads the same, so the committed sample output is unchanged.
+
+{=====================Update Log=====================}
+{2026-10-23 16:52 · 4}
+{Request: scheduled repo-improver run #2; the owner's phone log showed telegram.error.TimedOut crashes}
+- bot.py: new build_app() with 30 s Telegram timeouts (library default 5 s); main() runs run_polling(bootstrap_retries=-1) so startup retries instead of exiting.
+- Reproduced against a local server that never answers: old code exits after 5.1 s on its first attempt; fixed code was still retrying (3 attempts) when stopped at 70 s.
+- tests/test_bot.py: 2 tests (both fail on the old code). AGENT.md trap 12.

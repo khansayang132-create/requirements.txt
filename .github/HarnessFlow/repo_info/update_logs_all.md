@@ -1,6 +1,13 @@
 # Update Logs (complete history, newest first)
 
 {=====================Update Log=====================}
+{2026-10-23 16:52 · 4}
+{Request: scheduled repo-improver run #2; the owner's phone log showed telegram.error.TimedOut crashes}
+- bot.py: new build_app() with 30 s Telegram timeouts (library default 5 s); main() runs run_polling(bootstrap_retries=-1) so startup retries instead of exiting.
+- Reproduced against a local server that never answers: old code exits after 5.1 s on its first attempt; fixed code was still retrying (3 attempts) when stopped at 70 s.
+- tests/test_bot.py: 2 tests (both fail on the old code). AGENT.md trap 12.
+
+{=====================Update Log=====================}
 {2026-10-23 14:50 · 3}
 {Request: scheduled repo-improver run #1 (owner asked for continuous improvement)}
 - apex/apex/tts.py normalize_for_speech: decimal comma read as 'koma' + digits, and a scale word after an Rp amount moves before 'rupiah' ('Rp1,5 juta' -> 'satu koma lima juta rupiah'; was 'satu rupiah,lima juta').

@@ -63,6 +63,7 @@ Also tracked:
   - all exceptions logged, with an Indonesian apology sent to the user
 - **`/ping`** uses the same gate and reports which route answered and whether it fell back.
 - **Owner gate:** `is_admin` / `allowed` fail closed. With `TELEGRAM_ADMIN_ID` unset nobody passes, and the bot replies with the sender's ID to put in `.env`. Tested in `tests/test_bot.py`.
+- **Telegram connection:** `build_app()` uses 30 s timeouts and `main()` retries startup forever (`bootstrap_retries=-1`), so slow phone networks no longer crash it.
 - **Content rules:** live in `CINTA_PERSONA` (`bot.py`) and `RULES` in the external LSKhan Studio artifact. Change both or neither.
 
 ## Part 2: 24/7 runners
