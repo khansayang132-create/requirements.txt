@@ -1,6 +1,91 @@
 {
-  "duplicates": {},
-  "generated_at": "2026-10-23T20:40:40+00:00",
+  "duplicates": {
+    "brainstorming": [
+      "project",
+      "user"
+    ],
+    "chinese-code-review": [
+      "project",
+      "user"
+    ],
+    "chinese-commit-conventions": [
+      "project",
+      "user"
+    ],
+    "chinese-documentation": [
+      "project",
+      "user"
+    ],
+    "chinese-git-workflow": [
+      "project",
+      "user"
+    ],
+    "diagnosing-superpowers": [
+      "project",
+      "user"
+    ],
+    "dispatching-parallel-agents": [
+      "project",
+      "user"
+    ],
+    "executing-plans": [
+      "project",
+      "user"
+    ],
+    "finishing-a-development-branch": [
+      "project",
+      "user"
+    ],
+    "mcp-builder": [
+      "project",
+      "user"
+    ],
+    "receiving-code-review": [
+      "project",
+      "user"
+    ],
+    "requesting-code-review": [
+      "project",
+      "user"
+    ],
+    "subagent-driven-development": [
+      "project",
+      "user"
+    ],
+    "systematic-debugging": [
+      "project",
+      "user"
+    ],
+    "test-driven-development": [
+      "project",
+      "user"
+    ],
+    "using-git-worktrees": [
+      "project",
+      "user"
+    ],
+    "using-superpowers": [
+      "project",
+      "user"
+    ],
+    "verification-before-completion": [
+      "project",
+      "user"
+    ],
+    "workflow-runner": [
+      "project",
+      "user"
+    ],
+    "writing-plans": [
+      "project",
+      "user"
+    ],
+    "writing-skills": [
+      "project",
+      "user"
+    ]
+  },
+  "generated_at": "2026-10-23T20:48:56+00:00",
   "skills": [
     {
       "allowed_tools": "",
@@ -470,6 +555,238 @@
     {
       "allowed_tools": "",
       "errors": [],
+      "findings": [
+        {
+          "file": "scripts/server.cjs",
+          "line": 85,
+          "message": "reads environment variables",
+          "rule": "ENV_READ",
+          "severity": "low"
+        },
+        {
+          "file": "scripts/server.cjs",
+          "line": 445,
+          "message": "network access",
+          "rule": "NETWORK",
+          "severity": "medium"
+        },
+        {
+          "file": "scripts/server.cjs",
+          "line": 537,
+          "message": "runs external commands",
+          "rule": "SHELL_EXEC",
+          "severity": "medium"
+        }
+      ],
+      "hash_drift": null,
+      "hosts": [
+        "github.com",
+        "host",
+        "localhost",
+        "primeradiant.com"
+      ],
+      "managed": false,
+      "name": "brainstorming",
+      "path": "/root/.claude/skills/brainstorming",
+      "risk": "medium",
+      "scope": "user",
+      "scripts": [
+        "scripts/helper.js",
+        "scripts/server.cjs",
+        "scripts/start-server.sh",
+        "scripts/stop-server.sh"
+      ],
+      "warnings": []
+    },
+    {
+      "allowed_tools": "",
+      "errors": [],
+      "findings": [],
+      "hash_drift": null,
+      "hosts": [
+        "cheatsheetseries.owasp.org"
+      ],
+      "managed": false,
+      "name": "chinese-code-review",
+      "path": "/root/.claude/skills/chinese-code-review",
+      "risk": "none",
+      "scope": "user",
+      "scripts": [],
+      "warnings": []
+    },
+    {
+      "allowed_tools": "",
+      "errors": [],
+      "findings": [],
+      "hash_drift": null,
+      "hosts": [
+        "gitee.com"
+      ],
+      "managed": false,
+      "name": "chinese-commit-conventions",
+      "path": "/root/.claude/skills/chinese-commit-conventions",
+      "risk": "none",
+      "scope": "user",
+      "scripts": [],
+      "warnings": []
+    },
+    {
+      "allowed_tools": "",
+      "errors": [],
+      "findings": [],
+      "hash_drift": null,
+      "hosts": [
+        "example.com",
+        "gitee.com",
+        "github.com",
+        "img.shields.io"
+      ],
+      "managed": false,
+      "name": "chinese-documentation",
+      "path": "/root/.claude/skills/chinese-documentation",
+      "risk": "none",
+      "scope": "user",
+      "scripts": [],
+      "warnings": []
+    },
+    {
+      "allowed_tools": "",
+      "errors": [],
+      "findings": [
+        {
+          "file": "SKILL.md",
+          "line": 39,
+          "message": "touches credential files",
+          "rule": "CREDENTIAL_PATH",
+          "severity": "high"
+        }
+      ],
+      "hash_drift": null,
+      "hosts": [
+        "cnb.cool",
+        "e.coding.net",
+        "gitee.com",
+        "github.com",
+        "github.com.proxy",
+        "gitlab.yourcompany.com",
+        "jihulab.com",
+        "registry.npmmirror.com"
+      ],
+      "managed": false,
+      "name": "chinese-git-workflow",
+      "path": "/root/.claude/skills/chinese-git-workflow",
+      "risk": "high",
+      "scope": "user",
+      "scripts": [],
+      "warnings": []
+    },
+    {
+      "allowed_tools": "",
+      "errors": [],
+      "findings": [],
+      "hash_drift": null,
+      "hosts": [
+        "api.github.com",
+        "github.com"
+      ],
+      "managed": false,
+      "name": "diagnosing-superpowers",
+      "path": "/root/.claude/skills/diagnosing-superpowers",
+      "risk": "none",
+      "scope": "user",
+      "scripts": [],
+      "warnings": []
+    },
+    {
+      "allowed_tools": "",
+      "errors": [],
+      "findings": [],
+      "hash_drift": null,
+      "hosts": [],
+      "managed": false,
+      "name": "dispatching-parallel-agents",
+      "path": "/root/.claude/skills/dispatching-parallel-agents",
+      "risk": "none",
+      "scope": "user",
+      "scripts": [],
+      "warnings": []
+    },
+    {
+      "allowed_tools": "",
+      "errors": [],
+      "findings": [],
+      "hash_drift": null,
+      "hosts": [],
+      "managed": false,
+      "name": "executing-plans",
+      "path": "/root/.claude/skills/executing-plans",
+      "risk": "low",
+      "scope": "user",
+      "scripts": [
+        "scripts/task-done",
+        "scripts/task-start"
+      ],
+      "warnings": []
+    },
+    {
+      "allowed_tools": "",
+      "errors": [],
+      "findings": [],
+      "hash_drift": null,
+      "hosts": [],
+      "managed": false,
+      "name": "finishing-a-development-branch",
+      "path": "/root/.claude/skills/finishing-a-development-branch",
+      "risk": "none",
+      "scope": "user",
+      "scripts": [],
+      "warnings": []
+    },
+    {
+      "allowed_tools": "",
+      "errors": [],
+      "findings": [],
+      "hash_drift": null,
+      "hosts": [],
+      "managed": false,
+      "name": "mcp-builder",
+      "path": "/root/.claude/skills/mcp-builder",
+      "risk": "none",
+      "scope": "user",
+      "scripts": [],
+      "warnings": []
+    },
+    {
+      "allowed_tools": "",
+      "errors": [],
+      "findings": [],
+      "hash_drift": null,
+      "hosts": [],
+      "managed": false,
+      "name": "receiving-code-review",
+      "path": "/root/.claude/skills/receiving-code-review",
+      "risk": "none",
+      "scope": "user",
+      "scripts": [],
+      "warnings": []
+    },
+    {
+      "allowed_tools": "",
+      "errors": [],
+      "findings": [],
+      "hash_drift": null,
+      "hosts": [],
+      "managed": false,
+      "name": "requesting-code-review",
+      "path": "/root/.claude/skills/requesting-code-review",
+      "risk": "none",
+      "scope": "user",
+      "scripts": [],
+      "warnings": []
+    },
+    {
+      "allowed_tools": "",
+      "errors": [],
       "findings": [],
       "hash_drift": null,
       "hosts": [],
@@ -482,6 +799,165 @@
       "warnings": [
         "name 'startup-hook-skill' differs from folder 'session-start-hook'; Claude Code uses the name"
       ]
+    },
+    {
+      "allowed_tools": "",
+      "errors": [],
+      "findings": [],
+      "hash_drift": null,
+      "hosts": [],
+      "managed": false,
+      "name": "subagent-driven-development",
+      "path": "/root/.claude/skills/subagent-driven-development",
+      "risk": "low",
+      "scope": "user",
+      "scripts": [
+        "scripts/review-package",
+        "scripts/sdd-workspace",
+        "scripts/task-brief"
+      ],
+      "warnings": []
+    },
+    {
+      "allowed_tools": "",
+      "errors": [],
+      "findings": [],
+      "hash_drift": null,
+      "hosts": [],
+      "managed": false,
+      "name": "systematic-debugging",
+      "path": "/root/.claude/skills/systematic-debugging",
+      "risk": "low",
+      "scope": "user",
+      "scripts": [
+        "condition-based-waiting-example.ts",
+        "find-polluter.sh"
+      ],
+      "warnings": []
+    },
+    {
+      "allowed_tools": "",
+      "errors": [],
+      "findings": [],
+      "hash_drift": null,
+      "hosts": [],
+      "managed": false,
+      "name": "test-driven-development",
+      "path": "/root/.claude/skills/test-driven-development",
+      "risk": "none",
+      "scope": "user",
+      "scripts": [],
+      "warnings": []
+    },
+    {
+      "allowed_tools": "",
+      "errors": [],
+      "findings": [],
+      "hash_drift": null,
+      "hosts": [],
+      "managed": false,
+      "name": "using-git-worktrees",
+      "path": "/root/.claude/skills/using-git-worktrees",
+      "risk": "none",
+      "scope": "user",
+      "scripts": [],
+      "warnings": []
+    },
+    {
+      "allowed_tools": "",
+      "errors": [],
+      "findings": [],
+      "hash_drift": null,
+      "hosts": [
+        "docs.qoder.com",
+        "github.com"
+      ],
+      "managed": false,
+      "name": "using-superpowers",
+      "path": "/root/.claude/skills/using-superpowers",
+      "risk": "none",
+      "scope": "user",
+      "scripts": [],
+      "warnings": []
+    },
+    {
+      "allowed_tools": "",
+      "errors": [],
+      "findings": [],
+      "hash_drift": null,
+      "hosts": [],
+      "managed": false,
+      "name": "verification-before-completion",
+      "path": "/root/.claude/skills/verification-before-completion",
+      "risk": "none",
+      "scope": "user",
+      "scripts": [],
+      "warnings": []
+    },
+    {
+      "allowed_tools": "",
+      "errors": [],
+      "findings": [],
+      "hash_drift": null,
+      "hosts": [
+        "github.com"
+      ],
+      "managed": false,
+      "name": "workflow-runner",
+      "path": "/root/.claude/skills/workflow-runner",
+      "risk": "none",
+      "scope": "user",
+      "scripts": [],
+      "warnings": []
+    },
+    {
+      "allowed_tools": "",
+      "errors": [],
+      "findings": [],
+      "hash_drift": null,
+      "hosts": [],
+      "managed": false,
+      "name": "writing-plans",
+      "path": "/root/.claude/skills/writing-plans",
+      "risk": "none",
+      "scope": "user",
+      "scripts": [],
+      "warnings": []
+    },
+    {
+      "allowed_tools": "",
+      "errors": [],
+      "findings": [
+        {
+          "file": "render-graphs.js",
+          "line": 18,
+          "message": "runs external commands",
+          "rule": "SHELL_EXEC",
+          "severity": "medium"
+        },
+        {
+          "file": "render-graphs.js",
+          "line": 124,
+          "message": "installs packages at runtime",
+          "rule": "RUNTIME_INSTALL",
+          "severity": "medium"
+        }
+      ],
+      "hash_drift": null,
+      "hosts": [
+        "agentskills.io",
+        "mintcdn.com",
+        "platform.claude.com"
+      ],
+      "managed": false,
+      "name": "writing-skills",
+      "path": "/root/.claude/skills/writing-skills",
+      "risk": "medium",
+      "scope": "user",
+      "scripts": [
+        "render-graphs.js"
+      ],
+      "warnings": []
     },
     {
       "allowed_tools": "",
@@ -1034,6 +1510,165 @@
     {
       "allowed_tools": "",
       "errors": [],
+      "findings": [
+        {
+          "file": "scripts/server.cjs",
+          "line": 85,
+          "message": "reads environment variables",
+          "rule": "ENV_READ",
+          "severity": "low"
+        },
+        {
+          "file": "scripts/server.cjs",
+          "line": 445,
+          "message": "network access",
+          "rule": "NETWORK",
+          "severity": "medium"
+        },
+        {
+          "file": "scripts/server.cjs",
+          "line": 537,
+          "message": "runs external commands",
+          "rule": "SHELL_EXEC",
+          "severity": "medium"
+        }
+      ],
+      "hash_drift": null,
+      "hosts": [
+        "github.com",
+        "host",
+        "localhost",
+        "primeradiant.com"
+      ],
+      "managed": false,
+      "name": "brainstorming",
+      "path": "/home/user/requirements.txt/.agents/skills/brainstorming",
+      "risk": "medium",
+      "scope": "codex",
+      "scripts": [
+        "scripts/helper.js",
+        "scripts/server.cjs",
+        "scripts/start-server.sh",
+        "scripts/stop-server.sh"
+      ],
+      "warnings": []
+    },
+    {
+      "allowed_tools": "",
+      "errors": [],
+      "findings": [],
+      "hash_drift": null,
+      "hosts": [
+        "cheatsheetseries.owasp.org"
+      ],
+      "managed": false,
+      "name": "chinese-code-review",
+      "path": "/home/user/requirements.txt/.agents/skills/chinese-code-review",
+      "risk": "none",
+      "scope": "codex",
+      "scripts": [],
+      "warnings": []
+    },
+    {
+      "allowed_tools": "",
+      "errors": [],
+      "findings": [],
+      "hash_drift": null,
+      "hosts": [
+        "gitee.com"
+      ],
+      "managed": false,
+      "name": "chinese-commit-conventions",
+      "path": "/home/user/requirements.txt/.agents/skills/chinese-commit-conventions",
+      "risk": "none",
+      "scope": "codex",
+      "scripts": [],
+      "warnings": []
+    },
+    {
+      "allowed_tools": "",
+      "errors": [],
+      "findings": [],
+      "hash_drift": null,
+      "hosts": [
+        "example.com",
+        "gitee.com",
+        "github.com",
+        "img.shields.io"
+      ],
+      "managed": false,
+      "name": "chinese-documentation",
+      "path": "/home/user/requirements.txt/.agents/skills/chinese-documentation",
+      "risk": "none",
+      "scope": "codex",
+      "scripts": [],
+      "warnings": []
+    },
+    {
+      "allowed_tools": "",
+      "errors": [],
+      "findings": [
+        {
+          "file": "SKILL.md",
+          "line": 39,
+          "message": "touches credential files",
+          "rule": "CREDENTIAL_PATH",
+          "severity": "high"
+        }
+      ],
+      "hash_drift": null,
+      "hosts": [
+        "cnb.cool",
+        "e.coding.net",
+        "gitee.com",
+        "github.com",
+        "github.com.proxy",
+        "gitlab.yourcompany.com",
+        "jihulab.com",
+        "registry.npmmirror.com"
+      ],
+      "managed": false,
+      "name": "chinese-git-workflow",
+      "path": "/home/user/requirements.txt/.agents/skills/chinese-git-workflow",
+      "risk": "high",
+      "scope": "codex",
+      "scripts": [],
+      "warnings": []
+    },
+    {
+      "allowed_tools": "",
+      "errors": [],
+      "findings": [],
+      "hash_drift": null,
+      "hosts": [
+        "api.github.com",
+        "github.com"
+      ],
+      "managed": false,
+      "name": "diagnosing-superpowers",
+      "path": "/home/user/requirements.txt/.agents/skills/diagnosing-superpowers",
+      "risk": "none",
+      "scope": "codex",
+      "scripts": [],
+      "warnings": []
+    },
+    {
+      "allowed_tools": "",
+      "errors": [],
+      "findings": [],
+      "hash_drift": null,
+      "hosts": [],
+      "managed": false,
+      "name": "dispatching-parallel-agents",
+      "path": "/home/user/requirements.txt/.agents/skills/dispatching-parallel-agents",
+      "risk": "none",
+      "scope": "codex",
+      "scripts": [],
+      "warnings": []
+    },
+    {
+      "allowed_tools": "",
+      "errors": [],
       "findings": [],
       "hash_drift": null,
       "hosts": [
@@ -1050,6 +1685,238 @@
       "warnings": [
         "name 'done-protocol' differs from folder 'done_protocol'; Claude Code uses the name"
       ]
+    },
+    {
+      "allowed_tools": "",
+      "errors": [],
+      "findings": [],
+      "hash_drift": null,
+      "hosts": [],
+      "managed": false,
+      "name": "executing-plans",
+      "path": "/home/user/requirements.txt/.agents/skills/executing-plans",
+      "risk": "low",
+      "scope": "codex",
+      "scripts": [
+        "scripts/task-done",
+        "scripts/task-start"
+      ],
+      "warnings": []
+    },
+    {
+      "allowed_tools": "",
+      "errors": [],
+      "findings": [],
+      "hash_drift": null,
+      "hosts": [],
+      "managed": false,
+      "name": "finishing-a-development-branch",
+      "path": "/home/user/requirements.txt/.agents/skills/finishing-a-development-branch",
+      "risk": "none",
+      "scope": "codex",
+      "scripts": [],
+      "warnings": []
+    },
+    {
+      "allowed_tools": "",
+      "errors": [],
+      "findings": [],
+      "hash_drift": null,
+      "hosts": [],
+      "managed": false,
+      "name": "mcp-builder",
+      "path": "/home/user/requirements.txt/.agents/skills/mcp-builder",
+      "risk": "none",
+      "scope": "codex",
+      "scripts": [],
+      "warnings": []
+    },
+    {
+      "allowed_tools": "",
+      "errors": [],
+      "findings": [],
+      "hash_drift": null,
+      "hosts": [],
+      "managed": false,
+      "name": "receiving-code-review",
+      "path": "/home/user/requirements.txt/.agents/skills/receiving-code-review",
+      "risk": "none",
+      "scope": "codex",
+      "scripts": [],
+      "warnings": []
+    },
+    {
+      "allowed_tools": "",
+      "errors": [],
+      "findings": [],
+      "hash_drift": null,
+      "hosts": [],
+      "managed": false,
+      "name": "requesting-code-review",
+      "path": "/home/user/requirements.txt/.agents/skills/requesting-code-review",
+      "risk": "none",
+      "scope": "codex",
+      "scripts": [],
+      "warnings": []
+    },
+    {
+      "allowed_tools": "",
+      "errors": [],
+      "findings": [],
+      "hash_drift": null,
+      "hosts": [],
+      "managed": false,
+      "name": "subagent-driven-development",
+      "path": "/home/user/requirements.txt/.agents/skills/subagent-driven-development",
+      "risk": "low",
+      "scope": "codex",
+      "scripts": [
+        "scripts/review-package",
+        "scripts/sdd-workspace",
+        "scripts/task-brief"
+      ],
+      "warnings": []
+    },
+    {
+      "allowed_tools": "",
+      "errors": [],
+      "findings": [],
+      "hash_drift": null,
+      "hosts": [],
+      "managed": false,
+      "name": "systematic-debugging",
+      "path": "/home/user/requirements.txt/.agents/skills/systematic-debugging",
+      "risk": "low",
+      "scope": "codex",
+      "scripts": [
+        "condition-based-waiting-example.ts",
+        "find-polluter.sh"
+      ],
+      "warnings": []
+    },
+    {
+      "allowed_tools": "",
+      "errors": [],
+      "findings": [],
+      "hash_drift": null,
+      "hosts": [],
+      "managed": false,
+      "name": "test-driven-development",
+      "path": "/home/user/requirements.txt/.agents/skills/test-driven-development",
+      "risk": "none",
+      "scope": "codex",
+      "scripts": [],
+      "warnings": []
+    },
+    {
+      "allowed_tools": "",
+      "errors": [],
+      "findings": [],
+      "hash_drift": null,
+      "hosts": [],
+      "managed": false,
+      "name": "using-git-worktrees",
+      "path": "/home/user/requirements.txt/.agents/skills/using-git-worktrees",
+      "risk": "none",
+      "scope": "codex",
+      "scripts": [],
+      "warnings": []
+    },
+    {
+      "allowed_tools": "",
+      "errors": [],
+      "findings": [],
+      "hash_drift": null,
+      "hosts": [
+        "docs.qoder.com",
+        "github.com"
+      ],
+      "managed": false,
+      "name": "using-superpowers",
+      "path": "/home/user/requirements.txt/.agents/skills/using-superpowers",
+      "risk": "none",
+      "scope": "codex",
+      "scripts": [],
+      "warnings": []
+    },
+    {
+      "allowed_tools": "",
+      "errors": [],
+      "findings": [],
+      "hash_drift": null,
+      "hosts": [],
+      "managed": false,
+      "name": "verification-before-completion",
+      "path": "/home/user/requirements.txt/.agents/skills/verification-before-completion",
+      "risk": "none",
+      "scope": "codex",
+      "scripts": [],
+      "warnings": []
+    },
+    {
+      "allowed_tools": "",
+      "errors": [],
+      "findings": [],
+      "hash_drift": null,
+      "hosts": [
+        "github.com"
+      ],
+      "managed": false,
+      "name": "workflow-runner",
+      "path": "/home/user/requirements.txt/.agents/skills/workflow-runner",
+      "risk": "none",
+      "scope": "codex",
+      "scripts": [],
+      "warnings": []
+    },
+    {
+      "allowed_tools": "",
+      "errors": [],
+      "findings": [],
+      "hash_drift": null,
+      "hosts": [],
+      "managed": false,
+      "name": "writing-plans",
+      "path": "/home/user/requirements.txt/.agents/skills/writing-plans",
+      "risk": "none",
+      "scope": "codex",
+      "scripts": [],
+      "warnings": []
+    },
+    {
+      "allowed_tools": "",
+      "errors": [],
+      "findings": [
+        {
+          "file": "render-graphs.js",
+          "line": 18,
+          "message": "runs external commands",
+          "rule": "SHELL_EXEC",
+          "severity": "medium"
+        },
+        {
+          "file": "render-graphs.js",
+          "line": 124,
+          "message": "installs packages at runtime",
+          "rule": "RUNTIME_INSTALL",
+          "severity": "medium"
+        }
+      ],
+      "hash_drift": null,
+      "hosts": [
+        "agentskills.io",
+        "mintcdn.com",
+        "platform.claude.com"
+      ],
+      "managed": false,
+      "name": "writing-skills",
+      "path": "/home/user/requirements.txt/.agents/skills/writing-skills",
+      "risk": "medium",
+      "scope": "codex",
+      "scripts": [
+        "render-graphs.js"
+      ],
+      "warnings": []
     },
     {
       "allowed_tools": "",
@@ -1152,10 +2019,10 @@
     }
   ],
   "summary": {
-    "high": 1,
+    "high": 3,
     "info": 0,
-    "low": 9,
-    "medium": 9,
-    "none": 31
+    "low": 15,
+    "medium": 13,
+    "none": 61
   }
 }
