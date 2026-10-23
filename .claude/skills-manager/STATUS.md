@@ -26,9 +26,11 @@ Last updated 2026-10-23 (Claude Code 2.1.309, Ubuntu 24.04 x86_64, Python 3.13.1
 | Policy gates: `--reason`, `--accept-risk` for medium, block on high, `--force` for duplicates, daily cap | VERIFIED | unit tests; mutation test (disabling the block makes 2 tests fail) |
 | `verify` (files, hashes, SKILL.md, skill root, source, deps, live discovery, live load) | VERIFIED | real run below |
 | `update` (diff, then `--yes`), `remove` (`--yes`, managed only, backup), `rollback` | VERIFIED | unit tests; real remove → rollback below; mutation test on the `--yes` guard |
+| Commit pinning per source (`commit` in `config.json`, `pin` command); refresh and update never move a pin | VERIFIED | unit tests; real run: `anthropics-skills` pinned to its parent commit `9d630808` → cache checked it out from GitHub by SHA → pinned back to `dbd4588f` → checked out again. All 3 sources are pinned to their 2026-10-23 HEADs |
 | `audit` (risk, hash drift, duplicates, missing files) → `reports/skills-audit.json` | VERIFIED | real run below |
 | `doctor` | VERIFIED | real run: all PASS |
 | Self-improvement record (`--reason` on install, `note` after use) | IMPLEMENTED | history lines exist; the workflow itself is guidance in SKILL.md, not enforced code |
+| Codex adapter (install into `.agents/skills/`) | NOT IMPLEMENTED: BLOCKED | no Codex CLI in this container, so Codex discovery can't be checked; left out rather than shipped unverified |
 | claude.ai catalog (`SearchSkills`, `SuggestSkills`, `SearchPlugins` agent tools) | NOT IMPLEMENTED in the script | agent tools a script can't call; SKILL.md tells the agent to use them as an extra source |
 
 ## Real end-to-end run
@@ -52,7 +54,8 @@ Then: `remove` without `--yes` → REFUSED (exit 2). `remove --yes` → deleted,
 
 ## Tests
 
-`python -m pytest -q tests` → **91 passed** (51 in `tests/test_skills_manager.py`, 40 existing). These are unit and integration tests: sources are real local git repos and HOME is a temp folder. **They don't exercise the live `claude` CLI**; the live checks above do, and CI can't run them (no logged-in CLI there).
+`python -m pytest -q tests` → **93 passed** (53 in `tests/test_skills_manager.py`, 40 existing). These are unit and integration tests: sources are real local git repos and HOME is a temp folder. **They don't exercise the live `claude` CLI**; the live checks above do, and CI can't run them (no logged-in CLI there).
+GitHub CI on commit `8679b92` (run #97: `check`, `service` ×2, `termux`, `apex`): **PASS**.
 Mutation checks: disabling the high-risk block → 2 failures. Disabling the `remove --yes` guard → 1 failure.
 
 ## Security and compatibility report
@@ -68,4 +71,5 @@ Compatibility: every install is recorded as `compatible: ["claude-code"]`. Codex
 - The scan is a line-based heuristic. It can't follow obfuscation across lines or files, or see what an allowed network call sends. Treat medium as "read it", not "fine".
 - Search is lexical (idf plus a small synonym map). Unrelated installed skills can still appear as a second pick when they share words ("page", "web"). The agent must read the description before using one.
 - Backups (`backups/`) are gitignored and live in the container, so they vanish with it. The committed registry still records source and commit, so an install can be repeated.
-- Next: an optional `.agents/skills/` adapter for Codex, and signed or pinned commits per source (`ref` in `config.json` is supported but not set).
+- Pins are commit SHAs, not signatures: they stop silent upstream changes, but they don't prove who wrote a commit. Moving a pin still needs a human review of the diff (`update` lists the changed files).
+- Next: a Codex adapter once a Codex CLI is available to verify it.

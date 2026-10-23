@@ -352,6 +352,36 @@ def test_update_shows_change_then_applies_with_backup(env):
     assert "v2" in (env["project"] / ".claude/skills/frontend-design/SKILL.md").read_text()
 
 
+def test_pinned_source_stays_on_its_commit(env):
+    old = subprocess.run(["git", "rev-parse", "HEAD"], cwd=env["src"], capture_output=True, text=True).stdout.strip()
+    sm.pin_source(env["project"], "test")
+    cfg = sm.load_config(env["project"])
+    assert cfg["sources"][0]["commit"] == old
+    install(env, "frontend-design")
+    (env["src"] / "skills/frontend-design/SKILL.md").write_text("---\nname: frontend-design\ndescription: v2\n---\n")
+    commit_all(env["src"], "v2")
+    res = sm.update(env["project"], cfg, "frontend-design", "project", yes=True)
+    assert res["status"] == "up to date" and res["pinned"] == old  # upstream moved, the pin didn't
+    sm.pin_source(env["project"], "test", clear=True)
+    res = sm.update(env["project"], sm.load_config(env["project"]), "frontend-design", "project")
+    assert res["changed_files"] == ["SKILL.md"] and "pinned" not in res
+
+
+def test_pin_to_older_commit_checks_it_out_and_rejects_bad_sha(env):
+    old = subprocess.run(["git", "rev-parse", "HEAD"], cwd=env["src"], capture_output=True, text=True).stdout.strip()
+    sm.discover_remote(env["cfg"])  # clone at the old HEAD
+    skill(env["src"] / "skills" / "later", "later", "Added after the pin.")
+    commit_all(env["src"], "later")
+    sm.discover_remote(env["cfg"], refresh=True)  # cache now at the new HEAD
+    sm.pin_source(env["project"], "test", commit=old)
+    remote, problems = sm.discover_remote(sm.load_config(env["project"]), refresh=True)
+    assert problems == [] and all(r["version"] == old for r in remote) and "later" not in {r["name"] for r in remote}
+    with pytest.raises(sm.Refused, match="40-character"):
+        sm.pin_source(env["project"], "test", commit="abc")
+    with pytest.raises(sm.Refused, match="no source"):
+        sm.pin_source(env["project"], "nope")
+
+
 def test_user_scope_installs_under_home(env):
     install(env, "frontend-design", scope="user")
     assert (env["home"] / ".claude/skills/frontend-design/SKILL.md").is_file()

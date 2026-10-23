@@ -5,3 +5,9 @@
 {"action": "verify", "live": true, "load": false, "name": "frontend-design", "result": "PASS", "ts": "2026-10-23T19:57:36+00:00"}
 {"action": "usage", "name": "frontend-design", "outcome": "installed from anthropics/skills@dbd4588, discovered and loaded by claude -p; remove/rollback round-trip restored identical files", "result": "NOTE", "task": "E2E verification of skills-manager", "ts": "2026-10-23T19:57:37+00:00"}
 {"action": "verify", "live": true, "load": true, "name": "frontend-design", "result": "PASS", "ts": "2026-10-23T19:59:26+00:00"}
+{"action": "pin", "commit": "dbd4588f9e1033efb41dad4bef2f7947c8993d44", "name": "anthropics-skills", "result": "PASS", "ts": "2026-10-23T20:26:42+00:00"}
+{"action": "pin", "commit": "2ce8aa15d05bd57213e6f746f953aafb7ded7a8b", "name": "obra-superpowers", "result": "PASS", "ts": "2026-10-23T20:26:43+00:00"}
+{"action": "pin", "commit": "aeac41d4d005999432bb7312f7ff06383a91d59d", "name": "addyosmani-agent-skills", "result": "PASS", "ts": "2026-10-23T20:26:43+00:00"}
+{"action": "verify", "live": true, "load": false, "name": "frontend-design", "result": "PASS", "ts": "2026-10-23T20:26:53+00:00"}
+{"action": "pin", "commit": "9d630808e4add0a7146de4af9384155d5dee350a", "name": "anthropics-skills", "result": "PASS", "ts": "2026-10-23T20:27:05+00:00"}
+{"action": "pin", "commit": "dbd4588f9e1033efb41dad4bef2f7947c8993d44", "name": "anthropics-skills", "result": "PASS", "ts": "2026-10-23T20:27:06+00:00"}

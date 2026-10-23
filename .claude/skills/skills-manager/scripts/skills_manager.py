@@ -403,14 +403,43 @@ def source_checkout(src, refresh=False):
             if r.returncode:
                 shutil.rmtree(dest, ignore_errors=True)
                 return None, None, r.stderr.strip()[-300:]
-        elif refresh:
+        elif refresh and not src.get("commit"):
             r = git("fetch", "-q", "--depth", "1", "origin", src.get("ref") or "HEAD", cwd=dest)
             if r.returncode:
                 return dest, git("rev-parse", "HEAD", cwd=dest).stdout.strip(), "refresh failed: " + r.stderr.strip()[-200:]
             git("reset", "-q", "--hard", "FETCH_HEAD", cwd=dest)
+        pin = src.get("commit")
+        if pin and git("rev-parse", "HEAD", cwd=dest).stdout.strip() != pin:
+            # A pinned source stays on that exact commit, refresh or not; moving it is a config.json change.
+            r = git("fetch", "-q", "--depth", "1", "origin", pin, cwd=dest)
+            if r.returncode or git("checkout", "-q", "--detach", "FETCH_HEAD", cwd=dest).returncode:
+                return None, None, f"pinned commit {pin[:12]} not fetchable: " + r.stderr.strip()[-200:]
     except (OSError, subprocess.TimeoutExpired) as e:
         return None, None, str(e)
     return dest, git("rev-parse", "HEAD", cwd=dest).stdout.strip(), None
+
+
+def pin_source(root, source_id, commit=None, clear=False):
+    """Pin a source to a commit (default: its current upstream HEAD) in config.json, or clear the pin."""
+    path = state_dir("project", root) / "config.json"
+    data = json.loads(path.read_text())
+    src = next((x for x in data.get("sources", []) if x["id"] == source_id), None)
+    if not src:
+        raise Refused(f"no source {source_id!r} in config.json")
+    if clear:
+        src.pop("commit", None)
+    else:
+        if not commit:
+            r = git("ls-remote", src["url"], src.get("ref") or "HEAD", timeout=30)
+            if r.returncode or not r.stdout.strip():
+                raise Refused(f"can't read {src['url']} HEAD: {r.stderr.strip()[-150:]}")
+            commit = r.stdout.split()[0]
+        if not re.fullmatch(r"[0-9a-f]{40}", commit):
+            raise Refused("--commit must be a full 40-character SHA")
+        src["commit"] = commit
+    path.write_text(json.dumps(data, indent=2) + "\n")
+    log_history("project", root, "pin", source_id, "PASS", commit=src.get("commit"))
+    return {"source": source_id, "commit": src.get("commit")}
 
 
 def discover_remote(cfg, refresh=False, only=None):
@@ -692,6 +721,9 @@ def update(root, cfg, name, scope, yes=False, accept_risk=False):
     old = entry["files"]
     changed = sorted(k for k in set(old) | set(new) if old.get(k) != new.get(k))
     result = {"name": name, "installed_commit": entry["commit"], "latest_commit": cand["version"], "changed_files": changed}
+    pinned = next((x.get("commit") for x in cfg["sources"] if x["id"] == entry["source"]), None)
+    if pinned:
+        result["pinned"] = pinned
     if not changed:
         return {**result, "status": "up to date"}
     if not yes:
@@ -930,6 +962,8 @@ def main(argv=None):
     sub.add_parser("audit", help="scan every local skill; writes .claude/skills-manager/reports/skills-audit.json")
     p = sub.add_parser("doctor", help="diagnose config, sources, skill folders and the registry")
     p.add_argument("--live", action="store_true")
+    p = sub.add_parser("pin", help="pin a source to a commit in config.json (default: its current HEAD); --clear unpins")
+    p.add_argument("source"); p.add_argument("--commit"); p.add_argument("--clear", action="store_true")
     p = sub.add_parser("note", help="record which skill was used for a task and how it helped")
     p.add_argument("name"); p.add_argument("--task", required=True); p.add_argument("--outcome", required=True)
     p.add_argument("--scope", choices=["project", "user"], default="project")
@@ -1052,6 +1086,11 @@ def main(argv=None):
             else:
                 print_checks(checks)
             return 1 if any(c["status"] == "FAIL" for c in checks) else 0
+        elif a.cmd == "pin":
+            res = pin_source(root, a.source, a.commit, a.clear)
+            if a.json:
+                return out(res)
+            print(f"{res['source']}: " + (f"pinned to {res['commit']}" if res["commit"] else "unpinned (follows HEAD)"))
         elif a.cmd == "note":
             e = log_history(a.scope, root, "usage", a.name, "NOTE", task=a.task, outcome=a.outcome)
             print(json.dumps(e) if a.json else f"Recorded usage of {a.name}.")

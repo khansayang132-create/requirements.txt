@@ -41,7 +41,7 @@
       "trust": "official",
       "url": "https://github.com/anthropics/skills",
       "verification": {
-        "at": "2026-10-23T19:59:26+00:00",
+        "at": "2026-10-23T20:26:53+00:00",
         "checks": [
           {
             "check": "files installed",
@@ -85,8 +85,8 @@
           },
           {
             "check": "Claude Code loads it",
-            "detail": "Skill tool called=True; reply: '# Frontend Design'",
-            "status": "PASS"
+            "detail": "pass --load",
+            "status": "NOT RUN"
           }
         ],
         "status": "PASS"

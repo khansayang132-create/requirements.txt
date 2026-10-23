@@ -25,6 +25,7 @@ python3 $M <command> [--json]
 | `update <name>` | `python3 $M update <name>` shows the change; `--yes` applies it |
 | `remove <name>` | `python3 $M remove <name> --yes` (only skills this tool installed; a backup is kept) |
 | `rollback <name>` | `python3 $M rollback <name>`: restores the newest backup |
+| `pin <source>` | `python3 $M pin <source-id> [--commit <sha>] [--clear]`: hold a source at one commit (all three are pinned); moving a pin is a config change, so ask first |
 | `audit` | `python3 $M audit`: scans every local skill, flags hash drift and duplicates, writes the report |
 | `doctor` | `python3 $M doctor [--live]`: config, sources, folders, registry, `claude` CLI |
 | (after using a skill) | `python3 $M note <name> --task "<task>" --outcome "<what it did>"` |
@@ -44,7 +45,7 @@ The tool refuses these without an explicit flag. Get the user's OK, then add the
 - **Risk `medium` or higher** (scripts, shell or network calls, runtime installs). Show the `inspect` findings and ask; then `--accept-risk`. Risk `high` (credential paths, piping downloads to a shell, permission bypass, hidden-action instructions, symlinks out of the folder, opaque binaries) is **blocked outright**. Don't work around a block.
 - **Scope `user`**: writes to `~/.claude/skills/` and affects every project.
 - **`--force`** (replace or add a duplicate), **`remove --yes`**, **`update --yes`**.
-- Adding a new source to `config.json`. A star count is not trust; inspect the repo first.
+- Moving or clearing a source pin (`pin`), or adding a new source to `config.json`. A star count is not trust; inspect the repo first.
 
 ## Rules
 
