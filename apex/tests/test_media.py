@@ -98,6 +98,14 @@ def test_espeak_produces_indonesian_audio(tmp_path):
     assert probe_duration(wav) > 1.0
 
 
+@needs_espeak
+def test_espeak_speaks_narration_that_starts_with_a_dash(tmp_path):
+    # espeak-ng read a leading "-" as an option and wrote no audio at all (exit 0, no file).
+    from apex.tts import EspeakProvider
+    wav = EspeakProvider().synthesize("-50% itu bukan diskon", "id", tmp_path / "x.wav")
+    assert probe_duration(wav) > 1.0
+
+
 def test_cached_render_is_reused_without_running_blender(tmp_path):
     board = build_storyboard(two_scene_script(), [3.0, 3.0], "9:16", 2)
     scene = board.scenes[0].model_dump()
