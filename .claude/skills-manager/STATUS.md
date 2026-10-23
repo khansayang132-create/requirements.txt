@@ -27,6 +27,7 @@ Last updated 2026-10-23 (Claude Code 2.1.309, Ubuntu 24.04 x86_64, Python 3.13.1
 | `verify` (files, hashes, SKILL.md, skill root, source, deps, live discovery, live load) | VERIFIED | real run below |
 | `update` (diff, then `--yes`), `remove` (`--yes`, managed only, backup), `rollback` | VERIFIED | unit tests; real remove → rollback below; mutation test on the `--yes` guard |
 | Commit pinning per source (`commit` in `config.json`, `pin` command); refresh and update never move a pin | VERIFIED | unit tests; real run: `anthropics-skills` pinned to its parent commit `9d630808` → cache checked it out from GitHub by SHA → pinned back to `dbd4588f` → checked out again. All 3 sources are pinned to their 2026-10-23 HEADs |
+| `upgrade`: moves pins and updates installed skills; held when a changed skill scans medium or higher, is invalid, or was removed upstream | VERIFIED | unit tests (upgrade, hold, BLOCKED, skipped); real run 2026-10-23: all 3 sources up to date |
 | `audit` (risk, hash drift, duplicates, missing files) → `reports/skills-audit.json` | VERIFIED | real run below |
 | `doctor` | VERIFIED | real run: all PASS |
 | Self-improvement record (`--reason` on install, `note` after use) | IMPLEMENTED | history lines exist; the workflow itself is guidance in SKILL.md, not enforced code |
@@ -54,7 +55,7 @@ Then: `remove` without `--yes` → REFUSED (exit 2). `remove --yes` → deleted,
 
 ## Tests
 
-`python -m pytest -q tests` → **93 passed** (53 in `tests/test_skills_manager.py`, 40 existing). These are unit and integration tests: sources are real local git repos and HOME is a temp folder. **They don't exercise the live `claude` CLI**; the live checks above do, and CI can't run them (no logged-in CLI there).
+`python -m pytest -q tests` → **96 passed** (56 in `tests/test_skills_manager.py`, 40 existing). These are unit and integration tests: sources are real local git repos and HOME is a temp folder. **They don't exercise the live `claude` CLI**; the live checks above do, and CI can't run them (no logged-in CLI there).
 GitHub CI on commit `8679b92` (run #97: `check`, `service` ×2, `termux`, `apex`): **PASS**.
 Mutation checks: disabling the high-risk block → 2 failures. Disabling the `remove --yes` guard → 1 failure.
 
