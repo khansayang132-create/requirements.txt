@@ -1,6 +1,13 @@
 # Update Logs (complete history, newest first)
 
 {=====================Update Log=====================}
+{2026-10-23 14:50 · 3}
+{Request: scheduled repo-improver run #1 (owner asked for continuous improvement)}
+- apex/apex/tts.py normalize_for_speech: decimal comma read as 'koma' + digits, and a scale word after an Rp amount moves before 'rupiah' ('Rp1,5 juta' -> 'satu koma lima juta rupiah'; was 'satu rupiah,lima juta').
+- apex/tests/test_core.py: 6 parametrized cases (5 failed before the fix).
+- Test count 81 -> 87 in AGENT.md, apex/README.md, apex/STATUS.md and the overviews. Sample narration reads the same, so the committed sample output is unchanged.
+
+{=====================Update Log=====================}
 {2026-10-22 21:30 · 2}
 {Request: guard HarnessFlow's generated files against drift}
 - .github/workflows/test.yml: check job regenerates agent definitions and entry points and fails on any change.

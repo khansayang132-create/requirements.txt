@@ -106,6 +106,19 @@ def test_rupiah_normalized_for_speech():
     assert normalize_for_speech("Rp25.000", "en") == "Rp25.000"
 
 
+@pytest.mark.parametrize("text, spoken", [
+    # Indonesian writes decimals with a comma; read as "koma" + digits, the scale before "rupiah".
+    ("tabungan Rp1,5 juta", "tabungan satu koma lima juta rupiah"),
+    ("Rp 2,25 miliar", "dua koma dua lima miliar rupiah"),
+    ("Rp500 ribu", "lima ratus ribu rupiah"),
+    ("Rp9 Juta", "sembilan juta rupiah"),
+    ("bunga 2,5 persen", "bunga dua koma lima persen"),
+    ("1.250,75 gram", "seribu dua ratus lima puluh koma tujuh lima gram"),
+])
+def test_decimal_comma_normalized_for_speech(text, spoken):
+    assert normalize_for_speech(text, "id") == spoken
+
+
 # ---------------------------------------------------------------- script engine
 
 def test_extract_json_variants():

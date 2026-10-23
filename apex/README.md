@@ -67,7 +67,7 @@ offline espeak-ng voice otherwise.
 Docker: `docker build -t apex-worker . && docker run -v $PWD/data:/data apex-worker`
 (the worker reads and writes `/data/jobs.db`).
 
-Tests: `.venv/bin/python -m pytest -q` (81 tests)
+Tests: `.venv/bin/python -m pytest -q` (87 tests)
 
 ## Modules
 
