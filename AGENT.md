@@ -69,6 +69,7 @@
 | Topic | Source of Truth |
 |---|---|
 | **HarnessFlow** (AI workflow pack, third-party) | [`.github/HarnessFlow/`](./.github/HarnessFlow/readme.md), vendored from `HangYu8123/HarnessFlow` @ `aa9f74c`. Opt-in: runs only on a filled-in template from `request_template/`. Generated files (`AGENTS.md`, `.github/copilot-instructions.md`, `.claude/agents/`, `.claude/rules/`, `.codex/agents/`) come from `bash .github/HarnessFlow/cli_setup.sh`; don't hand-edit them. CI (`check`) regenerates them and fails if anything changes: after editing `agents/*.agent.md`, run `python3 sync_agent_definitions.py` in the pack, then `bash .github/HarnessFlow/cli_setup.sh`, and commit. Repo memory lives in `.github/HarnessFlow/repo_info/` and is committed here. Its "don't commit" safety rule applies inside a HarnessFlow run only. |
+| **DONE Protocol UI** (not LSKhan; Solana USDC escrow app) | [`.claude/skills/done-protocol/`](./.claude/skills/done-protocol/SKILL.md): `SKILL.md` (rules, pages, resolved spec conflicts), `reference/components.md` + `reference/protocol.md` (copy-paste code), `scripts/ui_lint.py` (enforces the hard rules; tested in `tests/test_done_ui_lint.py`). `.agents/skills/done_protocol` is a symlink to it. The app's code lives outside this repo. |
 | **Spotify artist profiles** (not LSKhan) | [`.claude/skills/artist-profile/`](./.claude/skills/artist-profile/SKILL.md): `SKILL.md` (steps) + `template.md`. Profiles go in `profiles/<artist-slug>.md`; unknown fields stay `TBD`. |
 
 ---
