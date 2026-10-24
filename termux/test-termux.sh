@@ -67,6 +67,8 @@ sv status lskhan-bot
 bash termux/install.sh uninstall
 test ! -d "$PREFIX/var/service/lskhan-bot"
 test ! -d "$PREFIX/var/service/lskhan-omniroute"
+! compgen -G "$PREFIX/var/service/.lskhan-*" >/dev/null   # no half-removed folders left
+bash termux/install.sh uninstall   # idempotent: a second run is a no-op
 test ! -e "$HOME/.termux/boot/lskhan-start"
 test ! -e "$PREFIX/etc/profile.d/lskhan-wakelock.sh"
 

@@ -127,11 +127,19 @@ logs() {
 
 uninstall() {
     start_service_daemon >/dev/null 2>&1 || true
-    local name
+    local name gone
     for name in lskhan-bot lskhan-omniroute; do
+        gone="${SV:?}/.$name.removing"
+        rm -rf "$gone" 2>/dev/null || true   # left over from an interrupted uninstall
         [[ -d $SV/$name ]] || continue
         sv down "$name" 2>/dev/null || true
-        rm -rf "${SV:?}/$name"
+        # After "sv down" its runsv keeps writing supervise/, so a plain rm races it ("Directory not
+        # empty"). Hide the folder from runsvdir (it skips dot-folders and stops runsv for vanished
+        # ones), tell runsv to exit, then delete, retrying until runsv has let go.
+        mv "$SV/$name" "$gone"
+        sv exit "$gone/log" "$gone" 2>/dev/null || true
+        for _ in $(seq 1 20); do rm -rf "$gone" 2>/dev/null && break; sleep 0.5; done
+        [[ ! -e $gone ]] || die "Could not remove $gone; run this again in a few seconds."
     done
     rm -f "$BOOT" "$WAKELOCK"
     ok "Background services removed. (The bot's files and .env are untouched.)"
