@@ -105,3 +105,19 @@ def test_chat_falls_back_only_on_connection_errors(load_bot):
     bot.routes = [("Headroom", _client(ValueError("bad request"))), ("OmniRoute", _client("ok"))]
     with pytest.raises(ValueError):
         asyncio.run(bot.chat(model="m", messages=[]))
+
+
+def test_telegram_requests_allow_slow_phone_networks(load_bot):
+    bot = load_bot(TELEGRAM_BOT_TOKEN="123:abc")
+    for request in bot.build_app().bot._request:  # (get_updates request, every other request)
+        timeout = request._client_kwargs["timeout"]
+        assert timeout.connect == timeout.read == bot.TELEGRAM_TIMEOUT == 30
+
+
+def test_startup_retries_until_telegram_is_reachable(load_bot, monkeypatch):
+    # With the library default (bootstrap_retries=0) one slow get_me crashed the bot with TimedOut.
+    bot = load_bot(TELEGRAM_BOT_TOKEN="123:abc")
+    seen = {}
+    monkeypatch.setattr(bot.Application, "run_polling", lambda self, **kwargs: seen.update(kwargs))
+    bot.main()
+    assert seen["bootstrap_retries"] == -1

@@ -166,10 +166,17 @@ async def ping(update: Update, context: ContextTypes.DEFAULT_TYPE):
         logging.exception("AI ping failed")
         await update.message.reply_text(f"❌ Could not reach {target}: {type(e).__name__}")
 
-def main():
-    if not TOKEN:
-        raise SystemExit("Missing TELEGRAM_BOT_TOKEN in .env")
-    app = Application.builder().token(TOKEN).build()
+# Phone networks are slow and drop out. The library gives each Telegram request 5 s and makes one
+# startup attempt, so a slow moment crashed the bot with TimedOut. Allow 30 s, and keep retrying startup.
+TELEGRAM_TIMEOUT = 30
+
+def build_app() -> Application:
+    app = (
+        Application.builder().token(TOKEN)
+        .connect_timeout(TELEGRAM_TIMEOUT).read_timeout(TELEGRAM_TIMEOUT).write_timeout(TELEGRAM_TIMEOUT)
+        .get_updates_connect_timeout(TELEGRAM_TIMEOUT).get_updates_read_timeout(TELEGRAM_TIMEOUT)
+        .build()
+    )
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("help", help_command))
     app.add_handler(CommandHandler("caption", caption))
@@ -177,7 +184,12 @@ def main():
     app.add_handler(CommandHandler("hook", hook))
     app.add_handler(CommandHandler("script", script))
     app.add_handler(CommandHandler("ping", ping))
-    app.run_polling()
+    return app
+
+def main():
+    if not TOKEN:
+        raise SystemExit("Missing TELEGRAM_BOT_TOKEN in .env")
+    build_app().run_polling(bootstrap_retries=-1)  # -1: retry startup until Telegram is reachable
 
 if __name__ == "__main__":
     main()

@@ -45,6 +45,9 @@ bash termux/install.sh logs 5
 # Simulate a phone restart without Termux:Boot: kill everything, then "open Termux" (a login shell).
 sv down lskhan-bot lskhan-omniroute || true
 pkill -f runsvdir || true
+# runsv outlives runsvdir and keeps writing supervise/; a real restart kills it too, and rm races it otherwise.
+pkill -x runsv || true
+for _ in $(seq 1 20); do pgrep -x runsv >/dev/null || break; sleep 0.5; done
 rm -f "$PREFIX/var/run/service-daemon.pid"
 for f in "$PREFIX"/var/service/*/supervise "$PREFIX"/var/service/*/log/supervise; do rm -rf "$f"; done
 sleep 2

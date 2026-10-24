@@ -110,7 +110,7 @@ def parse_reply(raw: str) -> dict:
     lines = [ln for ln in text.splitlines() if ln.strip()]
     if lines and "\t" in lines[0]:  # TSV: header + one or more value lines
         header = lines[0].split("\t")
-        rows = [dict(zip(header, (coerce(c) for c in ln.split("\t")))) for ln in lines[1:]]
+        rows = [dict(zip(header, (coerce(c) for c in ln.split("\t")))) for ln in lines[1:]]  # noqa: B905 (3.9)
         if len(rows) == 1:
             out["fields"] = rows[0]
         else:
@@ -152,9 +152,10 @@ class Daw:
         except (FileNotFoundError, ConnectionRefusedError) as e:
             return {"ok": False, "code": 71, "symbol": "DAW_NOT_RUNNING",
                     "message": f"No DAW listening on {self.sock_path} ({e.__class__.__name__}). Start Stratawright first."}
-        except socket.timeout:
+        except socket.timeout:  # noqa: UP041 (not TimeoutError on 3.9)
             return {"ok": False, "code": 1, "symbol": "TIMEOUT",
-                    "message": f"No reply within {self.timeout}s. The command may or may not have run: check state before retrying."}
+                    "message": f"No reply within {self.timeout}s. The command may or may not have run: "
+                               "check state before retrying."}
         result = parse_reply(b"".join(chunks).decode("utf-8", "replace"))
         result["command"] = line.strip()
         if mutation:
