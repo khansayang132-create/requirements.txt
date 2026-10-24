@@ -1,0 +1,47 @@
+version: "1.0.0"
+
+pipeline:
+  auto_mode: true
+  phases: [1, 2, 3, 4, 5, 6, 7]
+  workspace: "./sa-workspace"
+  skip_eval: false
+
+target:
+  type: auto  # auto | api | cli | library | workflow | service
+  url: null
+  path: null
+  name: null
+  extra_docs: []
+
+platforms:
+  enabled: [claude-code, openclaw, codex, generic]
+  primary: claude-code
+
+eval:
+  num_test_cases: 5
+  num_trigger_queries: 20
+  runs_per_query: 3
+  runs_per_config: 3
+  max_optimization_iterations: 5
+  num_workers: 10
+  timeout: 30
+  trigger_threshold: 0.5
+  holdout: 0.4
+  model: null
+
+obfuscation:
+  enabled: false
+  tool: pyarmor
+  protect_scripts:
+    - analyze_target.py
+    - design_skill.py
+    - init_skill.py
+    - generate_tests.py
+    - package_multiplatform.py
+    - obfuscate.py
+
+output:
+  skill_name: null
+  description_style: pushy
+  include_evals: false
+  dist_dir: "./dist"

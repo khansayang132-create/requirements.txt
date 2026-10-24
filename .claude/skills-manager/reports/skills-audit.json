@@ -1,6 +1,6 @@
 {
   "duplicates": {},
-  "generated_at": "2026-10-23T20:43:54+00:00",
+  "generated_at": "2026-10-24T04:25:30+00:00",
   "skills": [
     {
       "allowed_tools": "",
@@ -50,6 +50,135 @@
       "risk": "none",
       "scope": "project",
       "scripts": [],
+      "warnings": []
+    },
+    {
+      "allowed_tools": "",
+      "errors": [],
+      "findings": [
+        {
+          "file": "scripts/improve_description.py",
+          "line": 87,
+          "message": "installs packages at runtime",
+          "rule": "RUNTIME_INSTALL",
+          "severity": "medium"
+        },
+        {
+          "file": "scripts/run_benchmark.py",
+          "line": 50,
+          "message": "runs external commands",
+          "rule": "SHELL_EXEC",
+          "severity": "medium"
+        },
+        {
+          "file": "scripts/analyze_target.py",
+          "line": 23,
+          "message": "network access",
+          "rule": "NETWORK",
+          "severity": "medium"
+        },
+        {
+          "file": "scripts/analyze_target.py",
+          "line": 111,
+          "message": "runs external commands",
+          "rule": "SHELL_EXEC",
+          "severity": "medium"
+        },
+        {
+          "file": "scripts/init_skill.py",
+          "line": 86,
+          "message": "network access",
+          "rule": "NETWORK",
+          "severity": "medium"
+        },
+        {
+          "file": "scripts/run_eval.py",
+          "line": 49,
+          "message": "runs external commands",
+          "rule": "SHELL_EXEC",
+          "severity": "medium"
+        },
+        {
+          "file": "scripts/obfuscate.py",
+          "line": 111,
+          "message": "runs external commands",
+          "rule": "SHELL_EXEC",
+          "severity": "medium"
+        },
+        {
+          "file": "scripts/obfuscate.py",
+          "line": 145,
+          "message": "installs packages at runtime",
+          "rule": "RUNTIME_INSTALL",
+          "severity": "medium"
+        }
+      ],
+      "hash_drift": [],
+      "hosts": [
+        "github-readme-stats.vercel.app",
+        "github.com",
+        "img.shields.io",
+        "localhost",
+        "pyarmor.dashingsoft.com",
+        "readme-typing-svg.demolab.com",
+        "www.apache.org"
+      ],
+      "managed": true,
+      "name": "skill-anything",
+      "path": "/home/user/requirements.txt/.claude/skills/skill-anything",
+      "risk": "medium",
+      "scope": "project",
+      "scripts": [
+        "eval-viewer/generate_review.py",
+        "scripts/__init__.py",
+        "scripts/aggregate_benchmark.py",
+        "scripts/analyze_target.py",
+        "scripts/design_skill.py",
+        "scripts/generate_report.py",
+        "scripts/generate_tests.py",
+        "scripts/improve_description.py",
+        "scripts/init_skill.py",
+        "scripts/obfuscate.py",
+        "scripts/package_multiplatform.py",
+        "scripts/package_skill.py",
+        "scripts/quick_validate.py",
+        "scripts/run_benchmark.py",
+        "scripts/run_eval.py",
+        "scripts/run_loop.py",
+        "scripts/utils.py"
+      ],
+      "warnings": []
+    },
+    {
+      "allowed_tools": "",
+      "errors": [],
+      "findings": [
+        {
+          "file": "scripts/run_loop_pro.py",
+          "line": 7,
+          "message": "installs packages at runtime",
+          "rule": "RUNTIME_INSTALL",
+          "severity": "medium"
+        },
+        {
+          "file": "scripts/trigger_eval.py",
+          "line": 61,
+          "message": "runs external commands",
+          "rule": "SHELL_EXEC",
+          "severity": "medium"
+        }
+      ],
+      "hash_drift": null,
+      "hosts": [],
+      "managed": false,
+      "name": "skill-anything-pro",
+      "path": "/home/user/requirements.txt/.claude/skills/skill-anything-pro",
+      "risk": "medium",
+      "scope": "project",
+      "scripts": [
+        "scripts/run_loop_pro.py",
+        "scripts/trigger_eval.py"
+      ],
       "warnings": []
     },
     {
@@ -442,6 +571,7 @@
         "scripts/office/validators/docx.py",
         "scripts/office/validators/pptx.py",
         "scripts/office/validators/redlining.py",
+        "scripts/slide_text.py",
         "scripts/thumbnail.py"
       ],
       "warnings": []
@@ -764,7 +894,7 @@
     "high": 0,
     "info": 0,
     "low": 6,
-    "medium": 7,
+    "medium": 9,
     "none": 16
   }
 }

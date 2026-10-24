@@ -1,0 +1,318 @@
+<!-- Adapted from Anthropic Skill Creator (Apache 2.0) - see NOTICE -->
+<!-- Eval Review Template: Review trigger eval queries with editing and export -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trigger Eval Query Editor</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: #f0f2f5;
+  padding: 2em;
+  color: #333;
+}
+h1 { margin-bottom: 0.5em; color: #1a1a2e; }
+.subtitle { color: #666; margin-bottom: 1.5em; }
+
+/* Toolbar */
+.toolbar {
+  display: flex;
+  gap: 1em;
+  margin-bottom: 1.5em;
+  flex-wrap: wrap;
+  align-items: center;
+  background: white;
+  padding: 1em;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.toolbar button {
+  padding: 8px 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  background: white;
+  font-size: 0.9em;
+  transition: all 0.2s;
+}
+.toolbar button:hover { background: #e8e8e8; }
+.toolbar button.primary { background: #3498db; color: white; border-color: #3498db; }
+.toolbar button.primary:hover { background: #2980b9; }
+.toolbar button.success { background: #2ecc71; color: white; border-color: #2ecc71; }
+.toolbar button.success:hover { background: #27ae60; }
+.toolbar button.danger { background: #e74c3c; color: white; border-color: #e74c3c; }
+.toolbar button.danger:hover { background: #c0392b; }
+.toolbar .spacer { flex: 1; }
+.toolbar .count { font-weight: bold; color: #555; }
+
+/* File input */
+.file-input-wrapper {
+  position: relative;
+}
+.file-input-wrapper input[type="file"] {
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+/* Query cards */
+.query-list { display: flex; flex-direction: column; gap: 0.75em; }
+.query-card {
+  background: white;
+  border-radius: 8px;
+  padding: 1em 1.5em;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  transition: all 0.2s;
+}
+.query-card:hover { box-shadow: 0 2px 6px rgba(0,0,0,0.12); }
+.query-card.should-trigger { border-left: 4px solid #2ecc71; }
+.query-card.should-not-trigger { border-left: 4px solid #e74c3c; }
+
+.query-text {
+  flex: 1;
+  font-size: 0.95em;
+}
+.query-text input {
+  width: 100%;
+  border: 1px solid transparent;
+  padding: 6px 8px;
+  border-radius: 4px;
+  font-size: inherit;
+  font-family: inherit;
+}
+.query-text input:focus {
+  border-color: #3498db;
+  outline: none;
+  background: #f8f9ff;
+}
+
+/* Toggle switch */
+.toggle-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  min-width: 160px;
+}
+.toggle {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  cursor: pointer;
+}
+.toggle input { display: none; }
+.toggle .slider {
+  position: absolute;
+  inset: 0;
+  background: #e74c3c;
+  border-radius: 12px;
+  transition: background 0.3s;
+}
+.toggle .slider::before {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: white;
+  top: 3px;
+  left: 3px;
+  transition: transform 0.3s;
+}
+.toggle input:checked + .slider { background: #2ecc71; }
+.toggle input:checked + .slider::before { transform: translateX(20px); }
+.toggle-label { font-size: 0.8em; color: #666; white-space: nowrap; }
+
+.delete-btn {
+  background: none;
+  border: none;
+  color: #ccc;
+  cursor: pointer;
+  font-size: 1.2em;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+.delete-btn:hover { color: #e74c3c; background: #fee; }
+
+/* Stats */
+.stats {
+  display: flex;
+  gap: 2em;
+  margin-bottom: 1.5em;
+  background: white;
+  padding: 1em 1.5em;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.stat-item { text-align: center; }
+.stat-value { font-size: 1.5em; font-weight: bold; }
+.stat-label { font-size: 0.8em; color: #666; }
+.stat-value.trigger { color: #2ecc71; }
+.stat-value.no-trigger { color: #e74c3c; }
+</style>
+</head>
+<body>
+
+<h1>Trigger Eval Query Editor</h1>
+<p class="subtitle">Edit queries, toggle should_trigger, and export to evals.json</p>
+
+<div class="stats" id="stats"></div>
+
+<div class="toolbar">
+  <div class="file-input-wrapper">
+    <button>Import JSON</button>
+    <input type="file" accept=".json" onchange="importJSON(event)">
+  </div>
+  <button class="primary" onclick="addQuery()">+ Add Query</button>
+  <div class="spacer"></div>
+  <span class="count" id="query-count"></span>
+  <button class="success" onclick="exportJSON()">Export JSON</button>
+  <button class="danger" onclick="clearAll()">Clear All</button>
+</div>
+
+<div class="query-list" id="query-list"></div>
+
+<script>
+let queries = [
+  { query: "Example: help me create a presentation", should_trigger: true },
+  { query: "Example: what is the weather today", should_trigger: false },
+];
+
+function render() {
+  const list = document.getElementById('query-list');
+  list.innerHTML = '';
+
+  queries.forEach((q, idx) => {
+    const card = document.createElement('div');
+    card.className = 'query-card ' + (q.should_trigger ? 'should-trigger' : 'should-not-trigger');
+
+    card.innerHTML = `
+      <div class="query-text">
+        <input type="text" value="${escapeAttr(q.query)}"
+               onchange="updateQuery(${idx}, this.value)"
+               placeholder="Enter query text...">
+      </div>
+      <div class="toggle-wrapper">
+        <label class="toggle">
+          <input type="checkbox" ${q.should_trigger ? 'checked' : ''}
+                 onchange="toggleTrigger(${idx}, this.checked)">
+          <span class="slider"></span>
+        </label>
+        <span class="toggle-label">${q.should_trigger ? 'Should trigger' : 'Should NOT trigger'}</span>
+      </div>
+      <button class="delete-btn" onclick="deleteQuery(${idx})" title="Delete query">&times;</button>
+    `;
+
+    list.appendChild(card);
+  });
+
+  updateStats();
+}
+
+function updateStats() {
+  const total = queries.length;
+  const triggers = queries.filter(q => q.should_trigger).length;
+  const noTriggers = total - triggers;
+
+  document.getElementById('stats').innerHTML = `
+    <div class="stat-item">
+      <div class="stat-value">${total}</div>
+      <div class="stat-label">Total Queries</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value trigger">${triggers}</div>
+      <div class="stat-label">Should Trigger</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value no-trigger">${noTriggers}</div>
+      <div class="stat-label">Should NOT Trigger</div>
+    </div>
+  `;
+
+  document.getElementById('query-count').textContent = `${total} queries`;
+}
+
+function addQuery() {
+  queries.push({ query: '', should_trigger: true });
+  render();
+  // Focus the new input
+  const inputs = document.querySelectorAll('.query-text input');
+  if (inputs.length > 0) {
+    inputs[inputs.length - 1].focus();
+  }
+}
+
+function deleteQuery(idx) {
+  queries.splice(idx, 1);
+  render();
+}
+
+function updateQuery(idx, value) {
+  queries[idx].query = value;
+}
+
+function toggleTrigger(idx, checked) {
+  queries[idx].should_trigger = checked;
+  render();
+}
+
+function exportJSON() {
+  const clean = queries.filter(q => q.query.trim() !== '').map(q => ({
+    query: q.query.trim(),
+    should_trigger: q.should_trigger,
+  }));
+  const blob = new Blob([JSON.stringify(clean, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'evals.json';
+  a.click();
+}
+
+function importJSON(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (Array.isArray(data)) {
+        queries = data.map(q => ({
+          query: q.query || '',
+          should_trigger: q.should_trigger !== false,
+        }));
+        render();
+      } else {
+        alert('Invalid JSON: expected an array of query objects');
+      }
+    } catch (err) {
+      alert('Failed to parse JSON: ' + err.message);
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+function clearAll() {
+  if (confirm('Delete all queries? This cannot be undone.')) {
+    queries = [];
+    render();
+  }
+}
+
+function escapeAttr(s) {
+  return s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+// Initialize
+render();
+</script>
+</body>
+</html>

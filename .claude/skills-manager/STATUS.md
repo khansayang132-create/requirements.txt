@@ -53,9 +53,24 @@ Why: this session's MCP instructions route web and UI work to a `frontend-design
 
 Then: `remove` without `--yes` → REFUSED (exit 2). `remove --yes` → deleted, backup kept. `rollback` → restored. `verify --live` → PASS again. Also from the init event: `skills-manager` itself is discovered (PASS). The full trail is in `history.jsonl`.
 
+## Second install: skill-anything + skill-anything-pro (2026-10-24)
+
+Skill: `skill-anything` from `https://github.com/AgentSkillOS/SkillAnything` @ `0f7d5274` (MIT, community, 49 files, 17 scripts). Added as source `agentskillos-skillanything` (pinned) on the owner's request. Risk **medium**: 8 findings, each read by hand. Subprocess calls use argument lists (`<tool> --help`, `claude -p`, `pyarmor`), urllib GETs only the target the user gives, and the two "runtime install" hits are printed hints. Installed with `--accept-risk`.
+
+| Check (`verify skill-anything --live --load`) | Result |
+|---|---|
+| files, hashes, SKILL.md, name, skill root, source | PASS |
+| dependencies available | FAIL: `scripts` is the skill's own package (false positive); `anthropic` is missing and only Phase 6 needs it |
+| Claude Code discovers it | PASS (44 skills; 45 with the pro skill) |
+| Claude Code loads it | PASS: reply `# SkillAnything` |
+
+**Upstream bug found:** `scripts/run_eval.py` (Phases 5 and 6) runs `claude -p --output-format stream-json` without `--verbose`, and the CLI refuses that. It also looks for a tool named after the skill instead of `Skill`, and it writes temp files into `~/.claude/commands`. Result: nothing ever counts as triggered. On a 2-positive/2-negative jq set, upstream scored 0 true positives (pass rate 50%, from the negatives alone).
+
+**`skill-anything-pro`** (hand-written, not managed): `trigger_eval.py` runs each query in its own temp project with `--verbose --max-turns 1 --allowedTools Skill`, detects `Skill {"skill": <name>}`, and reports CLI failures as errors. On the same set: **4/4, FP 0, FN 0, errors 0** (live, ~3 s per query). `run_loop_pro.py` runs upstream's `run_loop` with the fixed eval: imports and `--help` are VERIFIED. A full optimization run is NOT RUN because there's no `anthropic` package or API key here. Audit: medium (the `claude -p` subprocess call plus a docstring that mentions `pip install`).
+
 ## Tests
 
-`python -m pytest -q tests` → **96 passed** (56 in `tests/test_skills_manager.py`, 40 existing). These are unit and integration tests: sources are real local git repos and HOME is a temp folder. **They don't exercise the live `claude` CLI**; the live checks above do, and CI can't run them (no logged-in CLI there).
+`python -m pytest -q tests` → **105 passed** (9 in `tests/test_skill_anything_pro.py`; mutation: dropping `--verbose` → 1 failure). Earlier: **96 passed** (56 in `tests/test_skills_manager.py`, 40 existing). These are unit and integration tests: sources are real local git repos and HOME is a temp folder. **They don't exercise the live `claude` CLI**; the live checks above do, and CI can't run them (no logged-in CLI there).
 GitHub CI on commit `8679b92` (run #97: `check`, `service` ×2, `termux`, `apex`): **PASS**.
 Mutation checks: disabling the high-risk block → 2 failures. Disabling the `remove --yes` guard → 1 failure.
 

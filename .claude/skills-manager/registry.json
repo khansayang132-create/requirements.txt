@@ -91,6 +91,232 @@
         ],
         "status": "PASS"
       }
+    },
+    "skill-anything": {
+      "backup": null,
+      "commit": "0f7d527492ca84b28148600880a4854374df8c24",
+      "compatible": [
+        "claude-code"
+      ],
+      "content_hash": "073282715191a73cdcc174d97302ad96d20669848488fe1d5677e33881a1c9a3",
+      "dependencies": {
+        "dependency_files": [],
+        "interpreters": [
+          "python3"
+        ],
+        "missing": [
+          "anthropic",
+          "scripts"
+        ],
+        "python_imports": [
+          "anthropic",
+          "scripts",
+          "yaml"
+        ]
+      },
+      "description": "Automatically generate production-ready Skills for any software, API, CLI tool, library, workflow, or service. Use this skill whenever the user wants to create a skill from scratch for a target application, convert an existing tool into an agent-native skill, generate skills for multiple platforms (Claude Code, OpenClaw, Codex), or automate the full skill creation pipeline including analysis, design, implementation, testing, optimization, and multi-platform packaging. Also use when the user mentions \"skill-anything\", \"generate a skill for\", \"make a skill from\", \"skillify\", or wants to turn any software into an agent-ready skill. Even if they just say \"create a skill for X\" where X is any tool or API, this skill should trigger.",
+      "files": {
+        ".github/profile/README.md": "1057078c2b00c10f17b46febc9df8e621a645fd4031b0c0bf36d0472243c15c1",
+        ".gitignore": "e2224d6e99e511035dc680b04c9ef7d6142db3dbf9ae17e7eb8967f78e38d018",
+        "LICENSE": "05eeaef4ab8b95598582b7e38d4e5a16119defab0945cc48e7ecfaf34a7c6d04",
+        "METHODOLOGY.md": "6a574a020bf9b6b0849604de89c536a6ec669a43d2ef16b48bbb885be3e7c4a3",
+        "NOTICE": "12ac94e344ab1211ced2b56ec5ebf6ba22a75ed59eaebf6c21ef35318bfae5cd",
+        "README.md": "f4dfbc28377c230bdd96a193ec6cb7808dd243e0a1d49945f8cacb19e5a6dfa0",
+        "SKILL.md": "4ff703c04a23f3ecad66190533af74ef62ee5b3356faeb9dc6351ebbdfbc813e",
+        "agents/analyzer.md": "67dc0a2bed13c7f4765f0d9fa8050f38a9869c6a2eee3bacf98ea4c610625d05",
+        "agents/comparator.md": "3e9d8898ae69901f2199eb887e87b330779818b9da599bc2f491ce467476949e",
+        "agents/designer.md": "a6d990339cf44c8507e3eac13b08696bd009ba6fe3befdd2a8c9c1d3745884bd",
+        "agents/grader.md": "fa302f7250b215f0ff48bd1237fbc66279e11ff15dc8c31541d946ef284e708d",
+        "agents/implementer.md": "90d38de2ebe04fae61bfac4fbf2f331542edd811e8b864d897e17e6eb6ff20c2",
+        "agents/optimizer.md": "725163f3acc5ebbfa1fff17cf84bc6abc1ee0ce991ed6297855f0f7047acd539",
+        "agents/packager.md": "f9fe6c1cc2518e7baab3d72fc7933629ddab936c32a1dd7834830983e371b959",
+        "assets/eval_review.html": "0104104c7e3baa45c4b6092fc501af98985383912a49a091bd3e3826562e50c3",
+        "config.yaml": "a9097770f7402141ee5646bf79060062311d0b9ab9530f9bb5e629bc8f34d915",
+        "eval-viewer/generate_review.py": "b8736a33da7406daa46c94df22e7576492088a2e2a2324398556c637feabb3c6",
+        "evals/evals.json": "babe7aedceba0e248b8772b8d1bf1ef27cf4ec9d45dd325dae9997ac172f0c6f",
+        "promo/chinese-social-media.md": "33ccd931be93f9f0fba090e311d07c62e28d3397b733bbc590116a6885719a52",
+        "promo/community-announcement.md": "8a233efbafb80955afa6ad742d3fa857af3f4ed9b3a9574a05b91ef8753a919f",
+        "promo/product-hunt-pitch.md": "f63fb1a53a9c8993158c530690d2ce51dd8e594a8d9ba3f0759ff91c126e0d34",
+        "promo/twitter-launch-thread.md": "b8b53aa598f3212073c41985c444fa3d4c0b7613f415f927e7215b86dab44a39",
+        "references/obfuscation-guide.md": "641f7cbca479f8a34b8abdc0b6e3a57e0cf033f89e39d0b53c826d3c7626554a",
+        "references/pipeline-phases.md": "71abf09d9ccb76ef66166c20331321e1bab739bf06b177847cfa1812669257cf",
+        "references/platform-formats.md": "7595aafb7ed542830d4ceaae793b9d95b6d08c7484e0e1aa2bc26f791ba300ca",
+        "references/schemas.md": "a33cbf755450727fb01578ac48523bc968c8a9118b72deb1343e923a7ffcd371",
+        "scripts/__init__.py": "10527e9650f23d961ea76fc37a98fb71c3f963213dba62dd49caa76bc5b3d1c4",
+        "scripts/aggregate_benchmark.py": "9480f2eb056b17f17533b791b8dc8a40d764d3bb4777e9e9cc14813d5b64aee9",
+        "scripts/analyze_target.py": "a5a82a1235b5ad1bbc67aee97b1bbac0e968e8a22cf45397b27f0cbcd66c83ee",
+        "scripts/design_skill.py": "80885fab266ff976c92bb647a8fb58ccb210545358265ef52420d9f23f7ebdb2",
+        "scripts/generate_report.py": "0535379c6c6d5428e57850cdd2dc64bf7c4ec920349fb87caba277ba619e531e",
+        "scripts/generate_tests.py": "19000b34f15dcdcb1236b32f108ad105013e6ac0edebc17ed6500f27994782bd",
+        "scripts/improve_description.py": "568245d021def6595573686c3c281295360847a38e0119a1c3efc1ef2165fa6d",
+        "scripts/init_skill.py": "bb2d6537faa5ba852a90ddf4c7cc8256bd027fb4886907124ddcd087ec74ec93",
+        "scripts/obfuscate.py": "c1c84bafc1c610eb21f1a98298279d0f36f32e2e1c3c7df0e9fe30d40f96b0c0",
+        "scripts/package_multiplatform.py": "2304d63228ca8e97bf2c7d560a4eb65447cb96546116c061b38ae36e13ce74f5",
+        "scripts/package_skill.py": "69bb2006f7a01024f124ee25475d614d635308a4e8318038593264be2050a24f",
+        "scripts/quick_validate.py": "d46db72aa4091e735d3e6e5e995983192a67f3959ba38f486f2891bc615ec852",
+        "scripts/run_benchmark.py": "74f07b145ecd76122311a5f498e2fdd1451b0a1dc8b81c5acbf5de64ad71f858",
+        "scripts/run_eval.py": "5f1ac744d99fd68149246abfeeffdcb4afaac0e57fa100d0526b8fbc03e49bf2",
+        "scripts/run_loop.py": "e80c97dfcc0ed5b05540eefe02d9344379aee7d1a00f0c6ceb158418042d9f7a",
+        "scripts/utils.py": "451446de6109fdc1f0153e124a7d44aff32f68ccab80314d4e1b31900dd04aa3",
+        "templates/platform-adapters/claude-code.md.tmpl": "c2466ede86cafdd855110f7faccb45556f69d4321a4c374037383ce8d27c7f95",
+        "templates/platform-adapters/codex.md.tmpl": "4dfb54844b8432a8524d12a870fc5eb4346190c5355a478d0b01fbcc5f7a9558",
+        "templates/platform-adapters/generic.md.tmpl": "a3a97f6103b1e4dd12c875c78b1c2fb76d05742fe0484de86a0402daaffbfcd4",
+        "templates/platform-adapters/openclaw.md.tmpl": "b7e44a95b031c705f4691b614cbcd3eade484fcb5bb62b25e74b44002e5e3bef",
+        "templates/skill-scaffold/SKILL.md.tmpl": "be29df9e8c27a69ad6a6f91ba3b751bd86f121e52ad993f6eb070a24b3054a42",
+        "templates/skill-scaffold/config.yaml.tmpl": "e88902c5711c9bb3f98ab9e960c46f02aaef192a9ea9f5205f33153cb66e9f0a",
+        "templates/skill-scaffold/evals/evals.json.tmpl": "48151f9cf651c672ea096abc3489f615473c7831cfa02b0db913fa60d91501df"
+      },
+      "installed_at": "2026-10-24T04:21:30+00:00",
+      "license": "",
+      "name": "skill-anything",
+      "path": ".claude/skills/skill-anything",
+      "reason": "Owner asked to install SkillAnything (generate production-ready skills for any tool/API/workflow)",
+      "repo_path": ".",
+      "scope": "project",
+      "security": {
+        "accepted_risk": true,
+        "findings": [
+          {
+            "file": "scripts/improve_description.py",
+            "line": 87,
+            "message": "installs packages at runtime",
+            "rule": "RUNTIME_INSTALL",
+            "severity": "medium"
+          },
+          {
+            "file": "scripts/run_benchmark.py",
+            "line": 50,
+            "message": "runs external commands",
+            "rule": "SHELL_EXEC",
+            "severity": "medium"
+          },
+          {
+            "file": "scripts/analyze_target.py",
+            "line": 23,
+            "message": "network access",
+            "rule": "NETWORK",
+            "severity": "medium"
+          },
+          {
+            "file": "scripts/analyze_target.py",
+            "line": 111,
+            "message": "runs external commands",
+            "rule": "SHELL_EXEC",
+            "severity": "medium"
+          },
+          {
+            "file": "scripts/init_skill.py",
+            "line": 86,
+            "message": "network access",
+            "rule": "NETWORK",
+            "severity": "medium"
+          },
+          {
+            "file": "scripts/run_eval.py",
+            "line": 49,
+            "message": "runs external commands",
+            "rule": "SHELL_EXEC",
+            "severity": "medium"
+          },
+          {
+            "file": "scripts/obfuscate.py",
+            "line": 111,
+            "message": "runs external commands",
+            "rule": "SHELL_EXEC",
+            "severity": "medium"
+          },
+          {
+            "file": "scripts/obfuscate.py",
+            "line": 145,
+            "message": "installs packages at runtime",
+            "rule": "RUNTIME_INSTALL",
+            "severity": "medium"
+          }
+        ],
+        "hosts": [
+          "github-readme-stats.vercel.app",
+          "github.com",
+          "img.shields.io",
+          "localhost",
+          "pyarmor.dashingsoft.com",
+          "readme-typing-svg.demolab.com",
+          "www.apache.org"
+        ],
+        "risk": "medium",
+        "scripts": [
+          "eval-viewer/generate_review.py",
+          "scripts/__init__.py",
+          "scripts/aggregate_benchmark.py",
+          "scripts/analyze_target.py",
+          "scripts/design_skill.py",
+          "scripts/generate_report.py",
+          "scripts/generate_tests.py",
+          "scripts/improve_description.py",
+          "scripts/init_skill.py",
+          "scripts/obfuscate.py",
+          "scripts/package_multiplatform.py",
+          "scripts/package_skill.py",
+          "scripts/quick_validate.py",
+          "scripts/run_benchmark.py",
+          "scripts/run_eval.py",
+          "scripts/run_loop.py",
+          "scripts/utils.py"
+        ]
+      },
+      "source": "agentskillos-skillanything",
+      "trust": "catalogued",
+      "url": "https://github.com/AgentSkillOS/SkillAnything",
+      "verification": {
+        "at": "2026-10-24T04:21:44+00:00",
+        "checks": [
+          {
+            "check": "files installed",
+            "detail": "/home/user/requirements.txt/.claude/skills/skill-anything",
+            "status": "PASS"
+          },
+          {
+            "check": "files match registry hashes",
+            "detail": "49 files",
+            "status": "PASS"
+          },
+          {
+            "check": "SKILL.md valid",
+            "detail": "",
+            "status": "PASS"
+          },
+          {
+            "check": "name matches registry",
+            "detail": "skill-anything",
+            "status": "PASS"
+          },
+          {
+            "check": "location is a Claude Code skill root",
+            "detail": "/home/user/requirements.txt/.claude/skills",
+            "status": "PASS"
+          },
+          {
+            "check": "source exists",
+            "detail": "https://github.com/AgentSkillOS/SkillAnything HEAD 0f7d527492ca",
+            "status": "PASS"
+          },
+          {
+            "check": "dependencies available",
+            "detail": "missing: anthropic, scripts",
+            "status": "FAIL"
+          },
+          {
+            "check": "Claude Code discovers it",
+            "detail": "44 skills in init event",
+            "status": "PASS"
+          },
+          {
+            "check": "Claude Code loads it",
+            "detail": "Skill tool called=True; reply: '# SkillAnything'",
+            "status": "PASS"
+          }
+        ],
+        "status": "FAIL"
+      }
     }
   },
   "removed": {},

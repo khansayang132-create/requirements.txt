@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+*.egg
+
+# PyArmor obfuscated output
+dist-protected/
+pyarmor_runtime*/
+
+# Workspace
+sa-workspace/
+*-workspace/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Env
+.env
+.venv/
+env/
+venv/
+
+# Claude
+.claude/

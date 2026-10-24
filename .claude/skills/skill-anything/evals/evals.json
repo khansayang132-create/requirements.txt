@@ -1,0 +1,60 @@
+{
+  "skill_name": "skill-anything",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I have this Python library called fastcache that I wrote for work. It's at ~/projects/fastcache/. Can you create a skill for it so Claude can help people use it?",
+      "expected_output": "A complete skill directory with SKILL.md, scripts, and references targeting the fastcache library",
+      "files": [],
+      "expectations": [
+        "Generated skill has valid SKILL.md with frontmatter",
+        "Analysis correctly identifies target as a library",
+        "Skill includes usage examples from the library"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Make a multi-platform skill for the httpie CLI tool. I want it to work on Claude Code, OpenClaw, and Codex.",
+      "expected_output": "Skill packaged for all three platforms in dist/ directory",
+      "files": [],
+      "expectations": [
+        "Analysis detects httpie as a CLI tool",
+        "dist/ contains claude-code, openclaw, and codex directories",
+        "Each platform has a valid SKILL.md with correct frontmatter"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "I want to turn this workflow into a skill: first pull data from our Postgres DB, then clean it with pandas, then upload to S3. Create a skill that guides Claude through this.",
+      "expected_output": "Workflow-type skill with step-by-step instructions",
+      "files": [],
+      "expectations": [
+        "Skill type is workflow-orchestrator",
+        "SKILL.md contains clear step-by-step instructions",
+        "Dependencies include postgres, pandas, and boto3"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Generate a skill for the Stripe API. Focus on payment intents and customer management.",
+      "expected_output": "API-type skill with endpoint references and auth patterns",
+      "files": [],
+      "expectations": [
+        "Analysis identifies Stripe as an API target",
+        "Skill includes authentication setup instructions",
+        "References include endpoint documentation"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Create a skill for jq and optimize the description so it triggers accurately. Run the full pipeline including benchmarks.",
+      "expected_output": "Complete skill with optimized description and benchmark results",
+      "files": [],
+      "expectations": [
+        "Full 7-phase pipeline executed",
+        "Description optimization ran with train/test split",
+        "benchmark.json exists with pass rates"
+      ]
+    }
+  ]
+}

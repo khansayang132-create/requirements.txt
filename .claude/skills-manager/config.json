@@ -22,6 +22,13 @@
       "trust": "catalogued",
       "note": "Community. Catalogued in .github/HarnessFlow/skills/index.md. Inspect before installing.",
       "commit": "aeac41d4d005999432bb7312f7ff06383a91d59d"
+    },
+    {
+      "id": "agentskillos-skillanything",
+      "url": "https://github.com/AgentSkillOS/SkillAnything",
+      "trust": "catalogued",
+      "note": "Community (MIT). Added on the owner's request 2026-10-24 after a manual read of its scripts: list-form subprocess only (`<tool> --help`, `claude -p`, `pyarmor`), urllib GET of the user-given target. Medium risk, accepted.",
+      "commit": "0f7d527492ca84b28148600880a4854374df8c24"
     }
   ],
   "policy": {
