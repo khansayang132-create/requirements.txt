@@ -59,7 +59,7 @@ class Playbook:
     steps: tuple[Step, ...]
 
 
-SHELL_SCRIPTS = ["service/install.sh", "service/test-service.sh", "termux/install.sh", "termux/test-termux.sh"]
+SHELL_SCRIPTS = ["service/install.sh", "service/test-service.sh", "termux/install.sh", "termux/test-termux.sh", "scripts/agency-setup.sh"]
 
 PLAYBOOKS: dict[str, Playbook] = {
     "health": Playbook("Repository health check: dependencies, tests, lint, secrets", (
