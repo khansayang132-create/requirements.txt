@@ -122,21 +122,19 @@ async def idea(update: Update, context: ContextTypes.DEFAULT_TYPE):
     task = "Buat satu ide video TikTok jastip LSKhan yang mudah direkam sendirian, lengkap dengan hook, adegan, dan CTA. Brief: " + " ".join(context.args)
     await generate(update, context, task)
 
-def brief_or_default(context: ContextTypes.DEFAULT_TYPE) -> str:
-    brief = " ".join(context.args).strip()
-    return brief or "Pilih sendiri satu topik segar (emosional, lucu, budaya, keluarga, edukasi, debat, atau Islami) tentang nikah beda negara Indonesia × Pakistan."
+DEFAULT_TOPIC = "Pilih sendiri satu topik segar (emosional, lucu, budaya, keluarga, edukasi, debat, atau Islami) tentang nikah beda negara Indonesia × Pakistan."
 
-async def hook(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    task = (
+# Task prompts for CINTA_PERSONA, shared with LSKhan Studio (studio/studio_ai.py) so both write alike.
+def hook_task(topic: str) -> str:
+    return (
         "Buat 5 hook TikTok (kalimat pembuka 1-2 detik pertama) yang berbeda gaya: misteri, emosional, "
         "kontroversial/debat, lucu, dan edukasi. Untuk tiap hook beri: kalimat yang diucapkan, teks di layar "
         "(singkat, kata kunci huruf kapital seperti NIKAH BEDA NEGARA / ORANG PAKISTAN / TERNYATA...), "
-        "dan satu baris kenapa hook ini membuat orang berhenti scroll. Topik: " + brief_or_default(context)
+        "dan satu baris kenapa hook ini membuat orang berhenti scroll. Topik: " + (topic.strip() or DEFAULT_TOPIC)
     )
-    await generate(update, context, task, CINTA_PERSONA)
 
-async def script(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    task = (
+def script_task(topic: str) -> str:
+    return (
         "Buat naskah video TikTok 15-35 detik (boleh sampai 60 detik hanya jika ceritanya memang butuh). "
         "Struktur: HOOK → CERITA → KETEGANGAN/TWIST → PAYOFF → PERTANYAAN. Untuk tiap bagian tulis: "
         "perkiraan detik, kalimat yang diucapkan, teks di layar (singkat), dan visual/B-roll yang relevan "
@@ -144,9 +142,14 @@ async def script(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "Lalu beri: saran musik/suara sesuai emosi, pertanyaan penutup alami untuk komentar, "
         "caption singkat yang bikin penasaran, dan 4-7 hashtag relevan (misal #NikahBedaNegara "
         "#IndonesiaPakistan #MixedMarriage). Jika cerita cocok dijadikan series, sarankan Part 2. "
-        "Topik/cerita: " + brief_or_default(context)
+        "Topik/cerita: " + (topic.strip() or DEFAULT_TOPIC)
     )
-    await generate(update, context, task, CINTA_PERSONA)
+
+async def hook(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await generate(update, context, hook_task(" ".join(context.args)), CINTA_PERSONA)
+
+async def script(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await generate(update, context, script_task(" ".join(context.args)), CINTA_PERSONA)
 
 async def ping(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not await allowed(update):

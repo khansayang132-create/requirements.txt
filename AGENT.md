@@ -16,7 +16,7 @@
 
 **What that means for you.**
 - Viewer-facing text is **Bahasa Indonesia**, warm and natural. Code, comments and docs are English.
-- Content follows the LSKhan rules: curiosity without lying, no fake drama, no invented serious events, the husband never looks stupid and the wife never cruel, respectful Islamic and family topics. These rules live in `CINTA_PERSONA` in `bot.py` and `RULES` in the LSKhan Studio app. Change them in both or neither.
+- Content follows the LSKhan rules: curiosity without lying, no fake drama, no invented serious events, the husband never looks stupid and the wife never cruel, respectful Islamic and family topics. These rules live in `CINTA_PERSONA` in `bot.py` (the `studio/` app imports it) and `RULES` in the LSKhan Studio artifact. Change them in both or neither.
 - **Nothing is "done" without evidence.** A claim of success needs a test run, a CI run, or an output file you inspected. `apex/STATUS.md` is the model: IMPLEMENTED / VERIFIED / BLOCKED / NOT IMPLEMENTED.
 
 **The one rule.** If a task touches an existing system, the file that owns it is the source of truth. This index only points. If a rule below conflicts with that file, the file wins.
@@ -35,6 +35,14 @@
 | **Headroom for Claude Code** | [`scripts/headroom.sh`](./scripts/headroom.sh) `setup` / `mcp` / `status`. Installs `headroom-ai[proxy]==0.41.0` into `~/.cache/lskhan-headroom` (~60 s, 780 MB), runs the proxy on 127.0.0.1:8765 with the beacon off, and `mcp` serves `headroom_compress` / `headroom_retrieve` / `headroom_stats` over stdio. |
 | **jac-shadcn MCP for Claude Code** (not LSKhan; Jac UI component library) | [`scripts/jac-shadcn-mcp.sh`](./scripts/jac-shadcn-mcp.sh) `setup` / `mcp` / `status`, registered in [`.mcp.json`](./.mcp.json). Not on PyPI: clones `SahanUday/jac_shadcn_mcp` @ `7e61a9b` into `~/.cache/lskhan-jac-shadcn` (~15 s). `mcp==1.30.0` is pinned on purpose (2.x breaks the server). 9 tools + 8 `shadcn://` guides. Component lookups need `jac-shadcn.jaseci.org`; the guides work offline. |
 | **Setup for humans** | [`README.md`](./README.md): install, Termux 24/7, Linux 24/7, commands. |
+
+### LSKhan Studio app (`studio/`)
+| Topic | Source of Truth |
+|---|---|
+| **What it is** | [`studio/main.jac`](./studio/main.jac): phone web app (Jac + jac-shadcn; style vega, theme rose, base stone, font Nunito Sans). Tabs Hook / Naskah / Caption / Series / Cek (the 10-point pre-upload check). Not the same thing as the LSKhan Studio *artifact* below. |
+| **AI and rules** | [`studio/studio_ai.py`](./studio/studio_ai.py): imports `bot` for `CINTA_PERSONA`, `hook_task` / `script_task`, routes and `chat()`; adds `caption_task`, `series_task` and the 10 `ANGLES`. Gate: `STUDIO_ACCESS_CODE`, fails closed. Tests: [`tests/test_studio.py`](./tests/test_studio.py). |
+| **Run / build** | [`studio/run.sh`](./studio/run.sh) `setup` / start / `hash` (phone: `--no-deps` jaclang 0.16.7 + jac-client 0.3.25, serves `studio/prebuilt/`, port 8000). [`studio/build.sh`](./studio/build.sh) (computer/CI only) rebuilds `studio/prebuilt/` + `SOURCE_HASH`; commit both. CI: `studio` (hash current, builds, serves) and `studio-termux` (real Termux userland). |
+| **Components** | `studio/components/ui/` came from jac-shadcn's own `export_service` at commit `1d69100` with the settings in `studio/jac.toml [jac-shadcn]`; only the 15 used are kept. Add more with `jac add --shadcn <name>`, or the jac-shadcn MCP server (`scripts/jac-shadcn-mcp.sh`). |
 
 ### Running 24/7
 | Topic | Source of Truth |
@@ -96,7 +104,8 @@ Violating any of these is a bug, not a preference.
 | **Dashboard** | Stays read-only and bound to 127.0.0.1 by default. Media is served only from a completed job's recorded `final` path, never from a URL path. |
 | **Job states** | Change state only through `JobQueue` methods (they call `_move`, which enforces `ALLOWED_TRANSITIONS` and writes the audit log). Never `UPDATE jobs SET state=` directly. |
 | **Facts in scripts** | No invented statistics, quotes or sources. Illustrative arithmetic is fine. `review_script` rejects unsourced percentages. |
-| **Merging** | CI green on the branch head first: `check`, `service` ×2, `termux`, `apex`. |
+| **Merging** | CI green on the branch head first: `check`, `service` ×2, `termux`, `studio`, `studio-termux`, `apex`. |
+| **Studio** | Every walker that spends AI calls checks `STUDIO_ACCESS_CODE` first (`access_error`), failing closed. After changing anything `run.sh hash` covers, run `studio/build.sh` and commit `studio/prebuilt/`; CI fails on a stale hash. |
 
 ---
 
@@ -137,7 +146,7 @@ libass SRT canvas:      288 lines tall
 3. `python -m py_compile bot.py` and `python -m pytest -q tests` (needs `pip install -r requirements.txt pytest`). CI runs both. Add a test in `tests/test_bot.py` for any new gate or routing rule.
 
 ### Changing the LSKhan content rules
-Edit `CINTA_PERSONA` in `bot.py` **and** `RULES` in the LSKhan Studio artifact. Keep the meaning identical.
+Edit `CINTA_PERSONA` in `bot.py` **and** `RULES` in the LSKhan Studio artifact. Keep the meaning identical. The `studio/` app imports `CINTA_PERSONA`, so it needs no edit and no rebuild.
 
 ### Changing a 24/7 runner
 1. Edit `termux/install.sh` or `service/install.sh`.
@@ -187,3 +196,7 @@ Real failures from this repo, roughly in order of how much time they cost:
 10. **Headroom phones home by default.** `headroom proxy` uploads session summaries to Headroom Labs unless `HEADROOM_BEACON=off` (or `DO_NOT_TRACK=1`). Always start it with the beacon off.
 11. **An admin check that fails open.** `if ADMIN_ID and user != ADMIN_ID` let anyone spend the owner's AI quota whenever `TELEGRAM_ADMIN_ID` was empty, and the old defaults also said `localhost` despite trap 1. Both shipped unnoticed because the bot had no tests. `tests/test_bot.py` now fails on either.
 12. **Telegram timeouts on the phone.** python-telegram-bot gives each request 5 s and makes one startup attempt, so a slow mobile moment crashed the bot with `telegram.error.TimedOut` and runit restarted it in a loop. `build_app()` sets 30 s timeouts and `main()` passes `bootstrap_retries=-1`; `tests/test_bot.py` guards both. If `TimedOut` persists, test the network: `curl -m 20 https://api.telegram.org` (000 means Telegram is blocked on that network).
+13. **jac binds 0.0.0.0.** jaclang 0.16.7 hard-codes `0.0.0.0` in `JacAPIServer` and ignores `--host`; `--dev` also opens a second API port. Anyone on the phone's Wi-Fi can reach Studio, hence `STUDIO_ACCESS_CODE`. Never run Studio with `--dev` on the phone.
+14. **jac never rebuilds a stale page.** `jac start` serves `.jac/client/dist` as-is whenever any `client.*.js` is there. `build.sh` and `run.sh` delete it first; keep it that way.
+15. **No bun or llvmlite on Termux.** jac builds pages with bun (a glibc binary) and jaclang lists llvmlite (native compiler only; no Android wheel). The phone installs with `--no-deps` and serves `studio/prebuilt/`.
+16. **Jac client gotchas** (cost real time here): module-level `glob`s used by the page must sit inside `cl { }` or the page crashes with `X is not defined`; a comma in `[plugins.client.app_meta_data] description` breaks the HTML meta tag; `ToggleGroupItem` doesn't inherit the group's `variant`; `jac check` reports errors even on the stock jac-shadcn components, so the build plus a browser run is the real test.

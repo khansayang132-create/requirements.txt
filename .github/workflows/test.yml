@@ -21,7 +21,7 @@ jobs:
           test -z "$(git status --porcelain)" || { git status --short; echo "Run the two commands above and commit the result."; exit 1; }
       - run: pip install -r requirements.txt pytest
       - run: python -m pytest -q tests
-      - run: shellcheck -S warning service/install.sh service/test-service.sh termux/install.sh termux/test-termux.sh
+      - run: shellcheck -S warning service/install.sh service/test-service.sh termux/install.sh termux/test-termux.sh studio/run.sh studio/build.sh studio/test-studio.sh studio/test-studio-termux.sh
 
   service:
     strategy:
@@ -38,6 +38,24 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - run: docker run --rm --privileged -v "$PWD":/mnt/repo:ro termux/termux-docker:x86_64 bash /mnt/repo/termux/test-termux.sh
+
+  # LSKhan Studio: prebuilt bundle is current, it builds, and run.sh serves it.
+  studio:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - run: python -m venv /tmp/studio-venv && /tmp/studio-venv/bin/pip install -q jac-client==0.3.25
+      - run: PATH=/tmp/studio-venv/bin:$PATH bash studio/test-studio.sh --build
+
+  # The same app on a real Termux userland: installs without llvmlite, serves without bun.
+  studio-termux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - run: docker run --rm --privileged -v "$PWD":/mnt/repo:ro termux/termux-docker:x86_64 bash /mnt/repo/studio/test-studio-termux.sh
 
   apex:
     runs-on: ubuntu-24.04

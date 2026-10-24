@@ -70,6 +70,24 @@ as your Termux, and some phones can't install it. It's not required.)
 - After editing `.env`: run `bash termux/install.sh` again
 - Stop for good: `bash termux/install.sh uninstall`
 
+## LSKhan Studio (app on the phone)
+
+A phone web app for hooks, scripts (naskah), captions and series plans, plus the 10-point check
+before uploading. It writes with the same rules and AI connection as the bot (`CINTA_PERSONA`,
+OmniRoute). Built with [jac-shadcn](https://github.com/jaseci-labs/jac-shadcn) (`studio/`).
+
+In Termux, inside the bot folder (OmniRoute must be running, as for the bot):
+```
+git pull && bash studio/run.sh setup && bash studio/run.sh
+```
+Then open **http://127.0.0.1:8000** in the phone's browser. The first start makes an access code
+in `.env`; see it with `grep STUDIO_ACCESS_CODE .env` and type it in once. The phone remembers it
+("Kunci" forgets it). Studio refuses every AI request without the right code, because other
+devices on the same Wi-Fi can reach the port. Stop it with Ctrl+C.
+
+Changed the app's code? Rebuild the page on a computer (`pip install jac-client==0.3.25`, then
+`bash studio/build.sh`) and commit `studio/prebuilt/`; the phone can't build it.
+
 ## Run 24/7 (Linux)
 
 Make the bot start at boot, restart itself if it crashes, and keep running after you log out:
