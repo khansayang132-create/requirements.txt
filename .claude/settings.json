@@ -17,9 +17,7 @@
       }
     ]
   },
-  "enabledMcpjsonServers": [
-    "headroom"
-  ],
+  "enabledMcpjsonServers": ["headroom", "21st"],
   "env": {
     "MCP_TIMEOUT": "300000"
   }
