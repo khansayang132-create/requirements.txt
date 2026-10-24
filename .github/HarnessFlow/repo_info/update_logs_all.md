@@ -1,6 +1,14 @@
 # Update Logs (complete history, newest first)
 
 {=====================Update Log=====================}
+{2026-10-24 16:50 · 6}
+{Request: scheduled repo-improver run #4 (covers the 12:47 and 16:47 UTC firings)}
+- apex/apex/tts.py normalize_for_speech: Rp amounts with social-media shorthand are read correctly. 'Rp10rb' -> 'sepuluh ribu rupiah' (was 'sepuluh rupiahrb'), 'Rp50k' -> 'lima puluh ribu rupiah', 'Rp1,5jt' -> 'satu koma lima juta rupiah'. The scale word may now follow the number without a space.
+- apex/tests/test_core.py: 4 parametrized cases (3 fail before the fix; 'Rp5 kali lipat' guards against matching words that start with k).
+- Test count 88 -> 93 in AGENT.md, apex/README.md, apex/STATUS.md and the overviews (93 collected; one more test came from another session).
+- known_issues_auto_generated.md: new entry for forms still misread (time, date, 3x, English decimal point, %).
+
+{=====================Update Log=====================}
 {2026-10-23 20:57 · 5}
 {Request: scheduled repo-improver run #3}
 - apex/apex/tts.py EspeakProvider: pass '--' before the narration. espeak-ng read text starting with '-' (e.g. '-50% itu bukan diskon') as an option, exited 0 and wrote no WAV, so the job failed with 'no usable audio' and retried until dead-lettered.

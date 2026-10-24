@@ -112,6 +112,11 @@ def test_rupiah_normalized_for_speech():
     ("Rp 2,25 miliar", "dua koma dua lima miliar rupiah"),
     ("Rp500 ribu", "lima ratus ribu rupiah"),
     ("Rp9 Juta", "sembilan juta rupiah"),
+    # Social-media shorthand: rb / k = ribu, jt = juta, written straight after the number.
+    ("kopi Rp10rb", "kopi sepuluh ribu rupiah"),
+    ("Rp 50k sehari", "lima puluh ribu rupiah sehari"),
+    ("Rp1,5jt", "satu koma lima juta rupiah"),
+    ("Rp5 kali lipat", "lima rupiah kali lipat"),
     ("bunga 2,5 persen", "bunga dua koma lima persen"),
     ("1.250,75 gram", "seribu dua ratus lima puluh koma tujuh lima gram"),
 ])
