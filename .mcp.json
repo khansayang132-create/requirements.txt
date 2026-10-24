@@ -2,7 +2,17 @@
   "mcpServers": {
     "headroom": {
       "command": "bash",
-      "args": ["${CLAUDE_PROJECT_DIR:-.}/scripts/headroom.sh", "mcp"]
+      "args": [
+        "${CLAUDE_PROJECT_DIR:-.}/scripts/headroom.sh",
+        "mcp"
+      ]
+    },
+    "jac-shadcn": {
+      "command": "bash",
+      "args": [
+        "${CLAUDE_PROJECT_DIR:-.}/scripts/jac-shadcn-mcp.sh",
+        "mcp"
+      ]
     }
   }
 }
