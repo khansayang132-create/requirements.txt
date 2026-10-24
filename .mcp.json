@@ -3,6 +3,10 @@
     "headroom": {
       "command": "bash",
       "args": ["${CLAUDE_PROJECT_DIR:-.}/scripts/headroom.sh", "mcp"]
+    },
+    "playwright": {
+      "command": "bash",
+      "args": ["${CLAUDE_PROJECT_DIR:-.}/scripts/playwright-mcp.sh"]
     }
   }
 }

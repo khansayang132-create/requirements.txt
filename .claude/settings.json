@@ -12,7 +12,10 @@
       }
     ]
   },
-  "enabledMcpjsonServers": ["headroom"],
+  "enabledMcpjsonServers": ["headroom", "playwright"],
+  "permissions": {
+    "allow": ["mcp__playwright"]
+  },
   "env": {
     "MCP_TIMEOUT": "300000"
   }
