@@ -17,6 +17,10 @@ rm -rf studio/.jac .env
 # phone, and building their Rust parts here would take most of the job. tests/test_studio.py covers
 # the real AI path.
 cat > bot.py <<'EOF'
+import os, pathlib
+for line in (pathlib.Path(__file__).parent / ".env").read_text().splitlines():  # like load_dotenv()
+    if "=" in line:
+        os.environ.setdefault(*line.split("=", 1))
 routes, MODEL, CINTA_PERSONA, DEFAULT_TOPIC = [], "", "persona", "topik"
 def hook_task(topic): return topic
 def script_task(topic): return topic
