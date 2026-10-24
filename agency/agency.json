@@ -1,0 +1,10 @@
+{
+  "health_urls": [
+    "http://127.0.0.1:8790/health",
+    "http://127.0.0.1:8787/health"
+  ],
+  "mcp_servers": {
+    "headroom": ["bash", "scripts/headroom.sh", "mcp"]
+  },
+  "token_prices_per_million": {}
+}

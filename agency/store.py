@@ -71,8 +71,12 @@ CREATE TABLE IF NOT EXISTS tool_calls (
   finished_at REAL NOT NULL, status TEXT NOT NULL, exit_code INTEGER, summary TEXT NOT NULL,
   output TEXT NOT NULL, evidence TEXT NOT NULL);
 CREATE INDEX IF NOT EXISTS events_entity ON events(entity_id, id);
+CREATE TABLE IF NOT EXISTS heartbeats (worker TEXT PRIMARY KEY, at REAL NOT NULL, detail TEXT);
 CREATE INDEX IF NOT EXISTS tasks_mission ON tasks(mission_id, state);
 """
+# Columns added after the first release; ALTER keeps existing databases working.
+MISSION_COLUMNS = {"requires_approval": "INTEGER NOT NULL DEFAULT 0", "approved_by": "TEXT",
+                   "params": "TEXT NOT NULL DEFAULT '{}'", "planner_usage": "TEXT"}
 
 
 class InvalidTransition(RuntimeError):
@@ -88,11 +92,19 @@ class Store:
         self.db.row_factory = sqlite3.Row
         self.db.execute("PRAGMA journal_mode=WAL")
         self.db.executescript(SCHEMA)
+        self._migrate()
+
+    def _migrate(self) -> None:
+        have = {r["name"] for r in self.db.execute("PRAGMA table_info(missions)")}
+        for col, decl in MISSION_COLUMNS.items():
+            if col not in have:
+                self.db.execute(f"ALTER TABLE missions ADD COLUMN {col} {decl}")
 
     # ------------------------------------------------------------- transitions
     def _move(self, entity: str, entity_id: str, to: State, detail: str = "", **fields) -> None:
         table = "missions" if entity == "mission" else "tasks"
-        row = self.db.execute(f"SELECT state FROM {table} WHERE id=?", (entity_id,)).fetchone()
+        # Table and column names below come from code, never from input; every value is a bound parameter.
+        row = self.db.execute(f"SELECT state FROM {table} WHERE id=?", (entity_id,)).fetchone()  # nosec B608
         if row is None:
             raise KeyError(f"no {entity} {entity_id}")
         frm = State(row["state"])
@@ -102,7 +114,7 @@ class Store:
         sets = ", ".join(f"{k}=?" for k in fields)
         self.db.execute("BEGIN IMMEDIATE")
         try:
-            cur = self.db.execute(f"UPDATE {table} SET state=?, updated_at=?{', ' + sets if sets else ''} "
+            cur = self.db.execute(f"UPDATE {table} SET state=?, updated_at=?{', ' + sets if sets else ''} "  # nosec B608
                                   "WHERE id=? AND state=?", (to.value, now, *fields.values(), entity_id, frm.value))
             if cur.rowcount != 1:
                 raise InvalidTransition(f"{entity} {entity_id} changed state concurrently")
@@ -113,18 +125,28 @@ class Store:
             self.db.execute("ROLLBACK")
             raise
 
-    def move_mission(self, mission_id: str, to: State, detail: str = "") -> None:
-        self._move("mission", mission_id, to, detail)
+    def move_mission(self, mission_id: str, to: State, detail: str = "", **fields) -> None:
+        self._move("mission", mission_id, to, detail, **fields)
+
+    def heartbeat(self, worker: str, detail: str = "") -> None:
+        self.db.execute("INSERT INTO heartbeats VALUES (?,?,?) ON CONFLICT(worker) DO UPDATE SET at=excluded.at, "
+                        "detail=excluded.detail", (worker, self.clock(), detail))
+
+    def heartbeats(self) -> list[sqlite3.Row]:
+        return self.db.execute("SELECT * FROM heartbeats ORDER BY at DESC").fetchall()
 
     def move_task(self, task_id: str, to: State, detail: str = "", **fields) -> None:
         self._move("task", task_id, to, detail, **fields)
 
     # ----------------------------------------------------------------- create
-    def create_mission(self, playbook: str, title: str, call_budget: int) -> str:
+    def create_mission(self, playbook: str, title: str, call_budget: int, params: dict | None = None,
+                       requires_approval: bool = False, planner_usage: dict | None = None) -> str:
         mid = "m-" + uuid.uuid4().hex[:10]
         now = self.clock()
-        self.db.execute("INSERT INTO missions VALUES (?,?,?,?,?,?,?)",
-                        (mid, playbook, title, S.CREATED.value, call_budget, now, now))
+        self.db.execute("INSERT INTO missions (id, playbook, title, state, call_budget, created_at, updated_at, "
+                        "requires_approval, params, planner_usage) VALUES (?,?,?,?,?,?,?,?,?,?)",
+                        (mid, playbook, title, S.CREATED.value, call_budget, now, now, int(requires_approval),
+                         json.dumps(params or {}), json.dumps(planner_usage) if planner_usage else None))
         self.db.execute("INSERT INTO events (entity, entity_id, from_state, to_state, at, detail) "
                         "VALUES ('mission', ?, NULL, 'CREATED', ?, ?)", (mid, now, f"playbook {playbook}"))
         return mid

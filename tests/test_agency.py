@@ -47,10 +47,10 @@ def repo(tmp_path):
     return tmp_path
 
 
-def make(repo, env=None, provider_factory=None):
+def make(repo, env=None, provider_factory=None, config=None):
     kwargs = {"provider_factory": provider_factory} if provider_factory else {}
     tb = Toolbox(repo, suites={"ok": (".", ["t_ok"]), "bad": (".", ["t_bad"])}, env=env or {"PATH": "/usr/bin:/bin"},
-                 **kwargs)
+                 config=config or {}, **kwargs)
     return Store(repo / "agency.db"), tb
 
 
@@ -76,8 +76,11 @@ def test_roles_are_distinct_and_tools_exist(repo):
 
 def test_shipped_playbooks_are_valid(repo):
     tb = Toolbox(Path(__file__).resolve().parents[1])
-    for pb in orch.PLAYBOOKS.values():
-        orch.validate_playbook(pb, tb)
+    params = {"request": "x", "paths": "bot.py", "branch": "b", "patch": "x", "role": "fullstack",
+              "package": "pytest", "server": "headroom"}
+    for name in orch.playbook_names():
+        pb = orch.PLAYBOOKS.get(name) or orch.dynamic_playbook(name, tb)
+        orch.validate_playbook(orch.with_params(pb, params, tb), tb)
 
 
 @pytest.mark.parametrize("steps, message", [
@@ -218,10 +221,10 @@ def test_cancel_stops_a_mission(repo, monkeypatch):
 
 def test_evidence_mismatch_is_caught():
     task = {"tool": "run_tests"}
-    forged = {"status": "PASS", "exit_code": 1, "output": "1 failed, 3 passed in 0.1s"}
+    forged = {"status": "PASS", "exit_code": 1, "output": "1 failed, 3 passed in 0.1s", "evidence": "{}"}
     assert orch.check_evidence(task, forged)[0] is False
     assert orch.check_evidence(task, None)[0] is False
-    assert orch.check_evidence(task, {"status": "PASS", "exit_code": 0, "output": "3 passed in 0.1s"})[0] is True
+    assert orch.check_evidence(task, {"status": "PASS", "exit_code": 0, "output": "3 passed in 0.1s", "evidence": "{}"})[0] is True
 
 
 # --------------------------------------------------------------------------- approval and provider

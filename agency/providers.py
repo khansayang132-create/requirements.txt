@@ -37,6 +37,8 @@ class Completion:
 
 class OpenAICompatible:
     def __init__(self, base_url: str, api_key: str, model: str, timeout: float = 90.0, retries: int = 1):
+        if not base_url.startswith(("http://", "https://")):
+            raise ProviderUnavailable(f"LLM base URL must be http(s), got {base_url!r}")
         self.base_url, self.api_key, self.model = base_url.rstrip("/"), api_key, model
         self.timeout, self.retries = timeout, retries
 
@@ -52,7 +54,8 @@ class OpenAICompatible:
                                               "Content-Type": "application/json"})
         for attempt in range(self.retries + 1):
             try:
-                with urllib.request.urlopen(req, timeout=self.timeout) as resp:
+                # The http(s) scheme is checked in __init__.
+                with urllib.request.urlopen(req, timeout=self.timeout) as resp:  # nosec B310
                     data = json.load(resp)
                 break
             except urllib.error.HTTPError as e:
