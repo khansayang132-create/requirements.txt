@@ -93,7 +93,8 @@ class JobQueue:
         if to not in ALLOWED_TRANSITIONS[current]:
             raise InvalidTransition(f"{job_id}: {current.value} -> {to.value} is not allowed")
         sets = ", ".join(["state=?", "updated_at=?"] + [f"{k}=?" for k in fields])
-        self.db.execute(f"UPDATE jobs SET {sets} WHERE id=?", (to.value, self.clock(), *fields.values(), job_id))
+        # Column names come from keyword arguments in this module; values are bound parameters.
+        self.db.execute(f"UPDATE jobs SET {sets} WHERE id=?", (to.value, self.clock(), *fields.values(), job_id))  # nosec B608
         self.db.execute("INSERT INTO job_events(job_id, from_state, to_state, at, detail) VALUES (?,?,?,?,?)",
                         (job_id, current.value, to.value, self.clock(), detail))
 
