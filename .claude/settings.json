@@ -7,12 +7,19 @@
             "type": "command",
             "command": "[ \"$CLAUDE_CODE_REMOTE\" = true ] || exit 0; bash \"$CLAUDE_PROJECT_DIR\"/scripts/headroom.sh setup",
             "timeout": 300
+          },
+          {
+            "type": "command",
+            "command": "[ \"$CLAUDE_CODE_REMOTE\" = true ] || exit 0; bash \"$CLAUDE_PROJECT_DIR\"/scripts/agency-setup.sh",
+            "timeout": 600
           }
         ]
       }
     ]
   },
-  "enabledMcpjsonServers": ["headroom"],
+  "enabledMcpjsonServers": [
+    "headroom"
+  ],
   "env": {
     "MCP_TIMEOUT": "300000"
   }
