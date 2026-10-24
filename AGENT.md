@@ -42,7 +42,7 @@
 | **What it is** | [`studio/main.jac`](./studio/main.jac): phone web app (Jac + jac-shadcn; style vega, theme rose, base stone, font Nunito Sans). Tabs Hook / Naskah / Caption / Series / Cek (the 10-point pre-upload check). Not the same thing as the LSKhan Studio *artifact* below. |
 | **AI and rules** | [`studio/studio_ai.py`](./studio/studio_ai.py): imports `bot` for `CINTA_PERSONA`, `hook_task` / `script_task`, routes and `chat()`; adds `caption_task`, `series_task` and the 10 `ANGLES`. Gate: `STUDIO_ACCESS_CODE`, fails closed. Tests: [`tests/test_studio.py`](./tests/test_studio.py). |
 | **Run / build** | [`studio/run.sh`](./studio/run.sh) `setup` / start / `hash` (phone: `--no-deps` jaclang 0.16.7 + jac-client 0.3.25, serves `studio/prebuilt/`, port 8000). [`studio/build.sh`](./studio/build.sh) (computer/CI only) rebuilds `studio/prebuilt/` + `SOURCE_HASH`; commit both. CI: `studio` (hash current, builds, serves) and `studio-termux` (real Termux userland). |
-| **Components** | `studio/components/ui/` came from jac-shadcn's own `export_service` at commit `1d69100` with the settings in `studio/jac.toml [jac-shadcn]`; only the 15 used are kept. Add more with `jac add --shadcn <name>`, or the jac-shadcn MCP server (`scripts/jac-shadcn-mcp.sh`). |
+| **Components** | `studio/components/ui/` came from jac-shadcn's own `export_service` at commit `1d69100` with the settings in `studio/jac.toml [jac-shadcn]`; only the 14 used are kept. Add more with `jac add --shadcn <name>`, or the jac-shadcn MCP server (`scripts/jac-shadcn-mcp.sh`). |
 
 ### Running 24/7
 | Topic | Source of Truth |
