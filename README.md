@@ -80,13 +80,15 @@ In Termux, inside the bot folder (OmniRoute must be running, as for the bot):
 ```
 git pull && bash studio/run.sh setup && bash studio/run.sh
 ```
-Then open **http://127.0.0.1:8000** in the phone's browser. The first start makes an access code
+Then open **http://127.0.0.1:8000** in the phone's browser (Chrome menu → **Add to Home screen**
+puts it next to your apps; Termux must still be running it). The first start makes an access code
 in `.env`; see it with `grep STUDIO_ACCESS_CODE .env` and type it in once. The phone remembers it
 ("Kunci" forgets it). Studio refuses every AI request without the right code, because other
 devices on the same Wi-Fi can reach the port. Stop it with Ctrl+C.
 
-Changed the app's code? Rebuild the page on a computer (`pip install jac-client==0.3.25`, then
-`bash studio/build.sh`) and commit `studio/prebuilt/`; the phone can't build it.
+Changed the app's code? Rebuild the page on a computer (`pip install jac-client==0.3.25`,
+`bash studio/run.sh setup`, then `bash studio/build.sh`) and commit `studio/prebuilt/`; the phone
+can't build it.
 
 ## Run 24/7 (Linux)
 

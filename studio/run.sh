@@ -6,9 +6,9 @@
 #   bash studio/run.sh hash    print the source hash that build.sh records in prebuilt/SOURCE_HASH
 #
 # The phone never builds the web page: jac builds with bun, which doesn't run in Termux. It
-# serves the bundle that build.sh made on a computer (studio/prebuilt/, committed). jaclang's
-# only dependency, llvmlite, is for native compilation and has no Android wheel, so it is
-# skipped with --no-deps.
+# serves the PWA bundle that build.sh made on a computer (studio/prebuilt/, committed), which
+# the browser can also add to the home screen. jaclang's only dependency, llvmlite, is for
+# native compilation and has no Android wheel, so it is skipped with --no-deps.
 set -euo pipefail
 
 STUDIO_DIR=$(cd "$(dirname "$0")" && pwd)
@@ -20,7 +20,7 @@ JAC_PKGS=("jaclang==0.16.7" "jac-client==0.3.25")
 die() { echo "❌ $*" >&2; exit 1; }
 
 source_hash() {
-    (cd "$STUDIO_DIR" && find main.jac jac.toml global.css studio_ai.py components lib -type f | LC_ALL=C sort \
+    (cd "$STUDIO_DIR" && find main.jac jac.toml global.css studio_ai.py components lib pwa_icons -type f | LC_ALL=C sort \
         | xargs sha256sum | sha256sum | cut -d' ' -f1)
 }
 
@@ -50,7 +50,7 @@ start() {
         echo "🔑 Made a Studio access code in .env. See it with: grep STUDIO_ACCESS_CODE $BOT_DIR/.env"
     fi
 
-    # jac serves .jac/client/dist and never rebuilds while a client.*.js is there.
+    # jac serves .jac/client/dist; with its manifest.json (PWA) it never rebuilds.
     rm -rf "$STUDIO_DIR/.jac/client/dist"
     mkdir -p "$STUDIO_DIR/.jac/client/dist"
     cp "$STUDIO_DIR"/prebuilt/* "$STUDIO_DIR/.jac/client/dist/"

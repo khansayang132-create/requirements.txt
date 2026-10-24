@@ -10,12 +10,11 @@ LOG="${TMPDIR:-/tmp}/studio-test.log"
 
 [[ "$(bash studio/run.sh hash)" == "$(cat studio/prebuilt/SOURCE_HASH)" ]] \
     || { echo "studio/prebuilt is stale: run bash studio/build.sh and commit"; exit 1; }
+bash studio/run.sh setup
+bash studio/run.sh setup  # idempotent
 if [[ ${1:-} == --build ]]; then
     bash studio/build.sh
 fi
-
-bash studio/run.sh setup
-bash studio/run.sh setup  # idempotent
 rm -f .env
 STUDIO_PORT=$PORT bash studio/run.sh > "$LOG" 2>&1 &
 trap 'kill %1 2>/dev/null || true; cat "$LOG"' EXIT
@@ -47,3 +46,6 @@ assert walker("Generate", kind="hook", code="wrong")["ok"] is False
 assert walker("AiStatus", code=code)["access"] is True
 print("studio OK")
 EOF
+# Served the prebuilt files as they are: a rebuild would have fetched bun and written source maps.
+diff <(cd studio/prebuilt && printf '%s\n' * | grep -vx SOURCE_HASH) <(cd studio/.jac/client/dist && printf '%s\n' *)
+[[ ! -e studio/.jac/bin/bun || ${1:-} == --build ]]

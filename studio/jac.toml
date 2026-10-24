@@ -39,6 +39,15 @@ title = "LSKhan Studio"
 description = "Hook naskah caption dan series TikTok untuk LSKhan Cinta Beda Negara"
 theme_color = "#e11d48"
 
+[plugins.client.pwa]
+theme_color = "#e11d48"
+background_color = "#ffffff"
+
+[plugins.client.pwa.manifest]
+name = "LSKhan Studio"
+short_name = "LSKhan"
+description = "Hook naskah caption dan series TikTok untuk Cinta Beda Negara"
+
 [plugins.client.vite]
 plugins = ["tailwindcss()"]
 lib_imports = ["import tailwindcss from '@tailwindcss/vite'"]
