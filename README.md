@@ -99,8 +99,9 @@ Never commit `.env`; it is ignored by git.
 ## Engineering agency (checks for this repo)
 
 `agency/` runs the repo's own checks as a team of specialist roles: tests, lint, secret scan,
-dependency and vulnerability checks. Each result is checked by a second role, and the run ends
-with a report.
+dependency and vulnerability checks. It can also make code changes on a separate branch, test that
+branch and push it, always asking you first. Each result is checked by a second role, and the run
+ends with a report.
 ```
 python -m agency run health      # needs: pip install -r requirements.txt -r apex/requirements.txt pytest
 python -m agency dashboard       # http://127.0.0.1:8790, read-only

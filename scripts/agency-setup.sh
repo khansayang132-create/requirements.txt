@@ -10,7 +10,7 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 VENV="$ROOT/.venv"
-TOOLS="pytest ruff==0.17.2 pip-audit==2.9.0 shellcheck-py==0.10.0.1"
+TOOLS="pytest ruff==0.17.2 pip-audit==2.9.0 shellcheck-py==0.10.0.1 bandit==1.8.6"
 PY="${AGENCY_PYTHON:-python3.13}"  # APEX's bpy wheels need 3.13
 
 stamp() { cat "$ROOT/requirements.txt" "$ROOT/apex/requirements.txt" | sha256sum | cut -d' ' -f1; echo "$TOOLS"; }

@@ -14,13 +14,19 @@ Running:
 - Tools that need approval leave their task in NEEDS_APPROVAL until `approve()` is called by a human.
 - Verification: after a call, the verifier re-reads the audit row (not the runner's in-memory result) and
   checks the verdict against the evidence, e.g. that a PASS for tests has exit code 0, passes and no failures.
-- Cancellation is checked before each task starts and before each result is applied. A running subprocess
-  finishes (bounded by its timeout); its result is recorded in the audit log but does not change state.
+- Cancellation is checked every second: running subprocesses are killed (whole process group) and their
+  calls are recorded in the audit log without changing state.
+- Parameters: `{name}` in a step argument is filled from the mission's params at plan time; a list argument
+  given as "{name}" is split on commas. Missing params reject the plan.
+- Missions planned by the LLM planner (`plan_steps(..., requires_approval=True)`) don't run until a human
+  calls `approve_mission`, even though each step was already validated.
 """
 from __future__ import annotations
 
+import dataclasses
 import json
 import os
+import re
 import socket
 import time
 from concurrent.futures import FIRST_COMPLETED, Future, ThreadPoolExecutor, wait
@@ -78,6 +84,42 @@ PLAYBOOKS: dict[str, Playbook] = {
         Step("secrets", "No credentials in tracked files", "security", "secret_scan"),
         Step("audit", "Known vulnerabilities in bot dependencies", "security", "pip_audit",
              {"manifest": "requirements.txt"}, ("bot-deps",)),
+        Step("apex-audit", "Known vulnerabilities in APEX dependencies", "security", "pip_audit",
+             {"manifest": "apex/requirements.txt"}, ("apex-deps",)),
+        Step("sast", "Static security analysis (bandit, medium+)", "security", "bandit",
+             {"paths": ["bot.py", "agency", "apex/apex"]}),
+    )),
+    "change": Playbook("LLM-written change on its own branch: propose, apply, test (approvals: send code, commit)", (
+        Step("propose", "Propose a diff for {request}", "ai_engineer", "propose_patch",
+             {"request": "{request}", "paths": "{paths}"}),
+        Step("apply", "Commit the diff to agency/{branch}", "fullstack", "apply_patch", {"branch": "{branch}"},
+             ("propose",), {"patch": ("propose", "patch")}),
+        Step("test", "Bot and agency tests on the branch", "qa", "run_tests", {"suite": "bot"}, ("apply",),
+             {"worktree": ("apply", "worktree")}),
+        Step("apex-test", "APEX tests on the branch", "ml_engineer", "run_tests", {"suite": "apex"}, ("apply",),
+             {"worktree": ("apply", "worktree")}),
+    )),
+    "patch": Playbook("Human-written diff on its own branch: apply, test (approval: commit)", (
+        Step("apply", "Commit the diff to agency/{branch}", "{role}", "apply_patch",
+             {"branch": "{branch}", "patch": "{patch}"}),
+        Step("test", "Bot and agency tests on the branch", "qa", "run_tests", {"suite": "bot"}, ("apply",),
+             {"worktree": ("apply", "worktree")}),
+        Step("apex-test", "APEX tests on the branch", "ml_engineer", "run_tests", {"suite": "apex"}, ("apply",),
+             {"worktree": ("apply", "worktree")}),
+    )),
+    "ship": Playbook("Push a tested agency/{branch} to GitHub (approval: push)", (
+        Step("push", "Push agency/{branch}", "release", "git_push", {"branch": "{branch}"}),
+    )),
+    "perf": Playbook("Measure test-suite timings", (
+        Step("bot", "Time bot and agency tests", "performance", "pytest_durations", {"suite": "bot"}),
+        Step("apex", "Time APEX tests", "performance", "pytest_durations", {"suite": "apex"}),
+    )),
+    "research": Playbook("PyPI facts for {package}", (
+        Step("pypi", "Version, license and release date of {package}", "research", "pypi_info",
+             {"package": "{package}"}),
+    )),
+    "mcp-check": Playbook("List the tools of MCP server {server}", (
+        Step("list", "Connect and list tools on {server}", "integration", "mcp_list_tools", {"server": "{server}"}),
     )),
     "review": Playbook("Model-assisted review of uncommitted changes (needs approval: sends the diff out)", (
         Step("diff", "Collect the diff", "code_review", "git_diff"),
@@ -85,6 +127,53 @@ PLAYBOOKS: dict[str, Playbook] = {
              {"diff": ("diff", "diff")}),
     )),
 }
+
+DEFAULT_PARAMS = {"patch": {"role": "fullstack"}}
+
+
+def dynamic_playbook(name: str, toolbox: Toolbox) -> Playbook | None:
+    """Playbooks built from config at plan time."""
+    if name == "deploy-check":
+        urls = toolbox.config.get("health_urls", [])
+        return Playbook("Health endpoints from agency.json", tuple(
+            Step(f"url{i}", f"GET {u}", "sre", "http_health", {"url": u}) for i, u in enumerate(urls, 1)))
+    return None
+
+
+def playbook_names() -> list[str]:
+    return sorted([*PLAYBOOKS, "deploy-check"])
+
+
+def _fill(value, params: dict, list_typed: bool):
+    if isinstance(value, list):
+        return [_fill(v, params, False) for v in value]
+    if not isinstance(value, str):
+        return value
+    whole = re.fullmatch(r"\{(\w+)\}", value)
+    if whole and list_typed:
+        return [v.strip() for v in str(params[whole.group(1)]).split(",") if v.strip()]
+    if whole:
+        return params[whole.group(1)]
+    return re.sub(r"\{(\w+)\}", lambda m: str(params[m.group(1)]), value)
+
+
+def with_params(pb: Playbook, params: dict, toolbox: Toolbox) -> Playbook:
+    used = set()
+    for s in pb.steps:
+        for text in [s.title, s.role, *map(json.dumps, s.args.values())]:
+            used |= set(re.findall(r"\{(\w+)\}", text))
+    missing = sorted(used - set(params))
+    if missing:
+        raise PlanError(f"missing parameter(s): {', '.join(missing)} (pass --param name=value)")
+    steps = []
+    for s in pb.steps:
+        tool = toolbox.tools.get(s.tool)
+        args = {k: _fill(v, params, bool(tool and tool.params.get(k) and tool.params[k].type is list))
+                for k, v in s.args.items()}
+        steps.append(dataclasses.replace(s, title=_fill(s.title, params, False), role=_fill(s.role, params, False),
+                                         args=args))
+    return Playbook(_fill(pb.title, params, False), tuple(steps))
+
 
 VERDICT = {State.COMPLETED: "PASS", State.FAILED: "FAIL", State.BLOCKED: "BLOCKED"}
 
@@ -96,6 +185,8 @@ def verdict(task) -> str:
 def validate_playbook(pb: Playbook, toolbox: Toolbox) -> list[str]:
     """Return steps in dependency order, or raise PlanError."""
     ids = [s.id for s in pb.steps]
+    if not ids:
+        raise PlanError("playbook has no steps (an empty mission would prove nothing)")
     if len(set(ids)) != len(ids):
         raise PlanError("duplicate step ids")
     by_id = {s.id: s for s in pb.steps}
@@ -116,7 +207,7 @@ def validate_playbook(pb: Playbook, toolbox: Toolbox) -> list[str]:
             if src not in s.after:
                 raise PlanError(f"{s.id}: handoff for {arg} comes from {src}, which is not a dependency")
         try:
-            toolbox.tools[s.tool].validate({**s.args, **{a: "" for a in s.handoff}})
+            toolbox.tools[s.tool].validate(s.args, deferred=frozenset(s.handoff))
         except InvalidInput as e:
             raise PlanError(f"{s.id}: {e}") from None
     order, done, pending = [], set(), list(ids)
@@ -131,13 +222,25 @@ def validate_playbook(pb: Playbook, toolbox: Toolbox) -> list[str]:
     return order
 
 
-def plan(store: Store, toolbox: Toolbox, name: str, call_budget: int = 50, max_attempts: int = 2) -> str:
-    pb = PLAYBOOKS.get(name)
+def plan(store: Store, toolbox: Toolbox, name: str, call_budget: int = 50, max_attempts: int = 2,
+         params: dict | None = None) -> str:
+    pb = PLAYBOOKS.get(name) or dynamic_playbook(name, toolbox)
     if pb is None:
-        raise PlanError(f"unknown playbook {name!r}; choose from {sorted(PLAYBOOKS)}")
-    mid = store.create_mission(name, pb.title, call_budget)
+        raise PlanError(f"unknown playbook {name!r}; choose from {playbook_names()}")
+    params = {**DEFAULT_PARAMS.get(name, {}), **(params or {})}
+    return plan_steps(store, toolbox, name, pb, call_budget, max_attempts, params)
+
+
+def plan_steps(store: Store, toolbox: Toolbox, name: str, pb: Playbook, call_budget: int = 50,
+               max_attempts: int = 2, params: dict | None = None, requires_approval: bool = False,
+               planner_usage: dict | None = None) -> str:
+    params = params or {}
+    shown = {k: (v if len(str(v)) < 200 else f"<{len(str(v))} chars>") for k, v in params.items()}
+    mid = store.create_mission(name, pb.title, call_budget, shown, requires_approval, planner_usage)
     store.move_mission(mid, State.ANALYZING, "validating roles, permissions and dependency graph")
     try:
+        pb = with_params(pb, params, toolbox)
+        store.db.execute("UPDATE missions SET title=? WHERE id=?", (pb.title, mid))
         order = validate_playbook(pb, toolbox)
     except PlanError as e:
         store.move_mission(mid, State.FAILED, f"plan rejected: {e}")
@@ -151,14 +254,25 @@ def plan(store: Store, toolbox: Toolbox, name: str, call_budget: int = 50, max_a
         else:
             store.move_task(tid, State.READY)
     store.move_mission(mid, State.PLANNED, f"{len(order)} task(s)")
-    store.move_mission(mid, State.READY)
+    if requires_approval:
+        store.move_mission(mid, State.NEEDS_APPROVAL, "plan written by the LLM planner; a human must approve it")
+    else:
+        store.move_mission(mid, State.READY)
     return mid
+
+
+def approve_mission(store: Store, mission_id: str, who: str) -> None:
+    m = store.mission(mission_id)
+    if not m["requires_approval"]:
+        raise PlanError(f"{mission_id} has no mission-level approval; approve its tasks instead")
+    store.move_mission(mission_id, State.READY, f"plan approved by {who}", approved_by=who)
 
 
 def approve(store: Store, task_id: str, who: str) -> None:
     store.move_task(task_id, State.READY, f"approved by {who}", approved_by=who)
     mission = store.mission(store.task(task_id)["mission_id"])
-    if mission["state"] == State.NEEDS_APPROVAL.value:
+    plan_pending = mission["requires_approval"] and not mission["approved_by"]
+    if mission["state"] == State.NEEDS_APPROVAL.value and not plan_pending:
         store.move_mission(mission["id"], State.READY, f"approval from {who}")
 
 
@@ -183,11 +297,24 @@ def retry(store: Store, mission_id: str, who: str) -> list[str]:
     return again
 
 
-def check_evidence(task, call) -> tuple[bool, str]:
-    """Independent check of a recorded call. Returns (verdict agrees with evidence, note)."""
+def check_evidence(task, call, toolbox: Toolbox | None = None) -> tuple[bool, str]:
+    """Independent check of a recorded call. Returns (verdict agrees with evidence, note).
+
+    With a toolbox, claims about the repository are re-checked against git itself, not the recorded output."""
     if call is None:
         return False, "no audit record for this task"
     status, code = call["status"], call["exit_code"]
+    ev = json.loads(call["evidence"] or "{}")
+    if task["tool"] == "http_health" and status == "PASS":
+        return 200 <= (ev.get("http_status") or 0) < 400, f"HTTP {ev.get('http_status')}"
+    if task["tool"] == "apply_patch" and status == "PASS":
+        if not (ev.get("branch") and ev.get("commit")):
+            return False, "no branch/commit in evidence"
+        if toolbox is not None:
+            rc, out, _ = toolbox._run(["git", "rev-parse", "--verify", "--quiet", ev["branch"]], toolbox.root, 15)
+            if rc != 0 or out.strip() != ev["commit"]:
+                return False, f"git says {ev['branch']} is {out.strip() or 'missing'}, evidence says {ev['commit'][:10]}"
+        return True, f"{ev['branch']} at {ev['commit'][:10]} confirmed by git"
     if task["tool"] == "run_tests":
         c = pytest_counts(call["output"])
         if status == "PASS":
@@ -223,6 +350,9 @@ class Orchestrator:
         m = store.mission(mission_id)
         if m["state"] == State.CANCELLED.value:
             return m["state"]
+        if m["requires_approval"] and not m["approved_by"]:
+            return m["state"]  # an LLM-written plan never runs before a human approves it
+        self.toolbox.cancel_event.clear()
         if m["state"] in (State.NEEDS_APPROVAL.value, State.BLOCKED.value, State.FAILED.value):
             store.move_mission(mission_id, State.READY, "resumed")
         if store.mission(mission_id)["state"] == State.READY.value:
@@ -231,6 +361,9 @@ class Orchestrator:
         with ThreadPoolExecutor(max_workers=self.concurrency) as pool:
             while True:
                 if self._cancelled(mission_id):
+                    self.toolbox.cancel_event.set()  # kill running subprocesses, then audit what they did
+                    for fut, (task, _role, args, attempt, t0) in inflight.items():
+                        self._finish(task, args, attempt, t0, fut.result())
                     break
                 self._block_on_bad_deps(mission_id)
                 for task in self._runnable(mission_id, exclude={v[0]["id"] for v in inflight.values()}):
@@ -243,7 +376,9 @@ class Orchestrator:
                     inflight[pool.submit(self._execute, *started[:3])] = started
                 if not inflight:
                     break
-                finished, _ = wait(inflight, return_when=FIRST_COMPLETED)
+                finished, _ = wait(inflight, timeout=1.0, return_when=FIRST_COMPLETED)
+                if not finished and self._cancelled(mission_id):
+                    self.toolbox.cancel_event.set()  # kills running subprocesses; results are audited only
                 for fut in finished:
                     task, _role, args, attempt, t0 = inflight.pop(fut)
                     self._finish(task, args, attempt, t0, fut.result())
@@ -304,7 +439,7 @@ class Orchestrator:
             return
         store.move_task(tid, State.REVIEWING, f"{outcome.status}: {outcome.summary}", **done)
         store.move_task(tid, State.VERIFYING, f"handed to {task['verifier']} for verification")
-        agrees, note = check_evidence(task, store.last_call(tid))
+        agrees, note = check_evidence(task, store.last_call(tid), self.toolbox)
         if not agrees:
             store.move_task(tid, State.FAILED, f"{task['verifier']}: evidence contradicts {outcome.status} ({note})",
                             verification=f"MISMATCH: {note}")

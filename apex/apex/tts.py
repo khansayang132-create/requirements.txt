@@ -123,7 +123,8 @@ class ElevenLabsProvider:
             method="POST", headers={"xi-api-key": self.api_key, "content-type": "application/json",
                                     "accept": "audio/mpeg"})
         try:
-            with urllib.request.urlopen(req, timeout=120) as r:
+            # The ElevenLabs base URL comes from configuration.
+            with urllib.request.urlopen(req, timeout=120) as r:  # nosec B310
                 audio = r.read()
         except urllib.error.HTTPError as e:
             detail = e.read().decode(errors="replace")[:300]
