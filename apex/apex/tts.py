@@ -65,10 +65,13 @@ def normalize_for_speech(text: str, language: str) -> str:
             words += " koma " + " ".join(id_number_words(int(d)) for d in m.group(2))
         return words
 
-    def rupiah(m: re.Match) -> str:  # "Rp1,5 juta" -> "satu koma lima juta rupiah"
-        return f"{spoken_number(m)}{(m.group(3) or '').lower()} rupiah"
+    shorthand = {"rb": "ribu", "k": "ribu", "jt": "juta"}  # social-media forms: Rp10rb, Rp50k, Rp1,5jt
 
-    text = re.sub(rf"Rp\.?\s?{number}(\s+(?i:ribu|juta|miliar|triliun)\b)?", rupiah, text)
+    def rupiah(m: re.Match) -> str:  # "Rp1,5 juta" -> "satu koma lima juta rupiah"
+        scale = (m.group(3) or "").lower()
+        return f"{spoken_number(m)}{' ' + shorthand.get(scale, scale) if scale else ''} rupiah"
+
+    text = re.sub(rf"Rp\.?\s?{number}(?:\s*((?i:ribu|juta|miliar|triliun|rb|jt|k))\b)?", rupiah, text)
     text = re.sub(rf"\b{number}\b", lambda m: spoken_number(m) if (m.group(2) or "." in m.group(1)) else m.group(0), text)
     text = re.sub(r"\b(\d+)\b", lambda m: id_number_words(int(m.group(1))), text)
     text = re.sub(r"\s*×\s*", " kali ", text)
