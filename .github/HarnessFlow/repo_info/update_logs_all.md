@@ -1,6 +1,13 @@
 # Update Logs (complete history, newest first)
 
 {=====================Update Log=====================}
+{2026-10-23 20:57 · 5}
+{Request: scheduled repo-improver run #3}
+- apex/apex/tts.py EspeakProvider: pass '--' before the narration. espeak-ng read text starting with '-' (e.g. '-50% itu bukan diskon') as an option, exited 0 and wrote no WAV, so the job failed with 'no usable audio' and retried until dead-lettered.
+- apex/tests/test_media.py: test_espeak_speaks_narration_that_starts_with_a_dash; it fails before the fix and passes after (run in an ubuntu:24.04 container with real espeak-ng and ffmpeg).
+- Test count 87 -> 88 in AGENT.md, apex/README.md, apex/STATUS.md and the overviews. The termux cleanup race this run first looked at was already fixed on main (0bf42b3).
+
+{=====================Update Log=====================}
 {2026-10-23 16:52 · 4}
 {Request: scheduled repo-improver run #2; the owner's phone log showed telegram.error.TimedOut crashes}
 - bot.py: new build_app() with 30 s Telegram timeouts (library default 5 s); main() runs run_polling(bootstrap_retries=-1) so startup retries instead of exiting.

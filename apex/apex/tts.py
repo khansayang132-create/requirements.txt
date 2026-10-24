@@ -89,7 +89,8 @@ class EspeakProvider:
     def synthesize(self, text: str, language: str, out_wav: Path) -> Path:
         out_wav.parent.mkdir(parents=True, exist_ok=True)
         spoken = normalize_for_speech(text, language)
-        subprocess.run(["espeak-ng", "-v", language, "-s", str(self.speed), "-w", str(out_wav), spoken],
+        # "--" ends the options: narration starting with "-" was read as a flag and produced no audio.
+        subprocess.run(["espeak-ng", "-v", language, "-s", str(self.speed), "-w", str(out_wav), "--", spoken],
                        check=True, capture_output=True)
         if not out_wav.exists() or out_wav.stat().st_size < 1000 or probe_duration(out_wav) <= 0:
             raise RuntimeError(f"espeak-ng produced no usable audio for: {text[:40]!r}")
