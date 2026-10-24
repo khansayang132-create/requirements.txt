@@ -11,8 +11,9 @@ request ─▶ playbook ─▶ plan (validate roles, permissions, graph) ─▶ 
 
 ## Use it
 
-From the repo root, in a Python that has the project's dependencies (the test tasks run with the same
-interpreter):
+In Claude Code cloud sessions `.venv` is prepared by the SessionStart hook (`scripts/agency-setup.sh`), so
+just run `.venv/bin/python -m agency run health`. Elsewhere, from the repo root, in a Python that has the
+project's dependencies (the test tasks run with the same interpreter):
 
 ```
 python3.13 -m venv .venv
