@@ -31,6 +31,8 @@ Last updated 2026-10-28 (Claude Code 2.1.312, Ubuntu 24.04 x86_64, Python 3.13.1
 | `audit` (risk, hash drift, duplicates, missing files) → `reports/skills-audit.json` | VERIFIED | real run below |
 | `disable` / `enable` (park a managed skill outside the skill root; `update --yes` refuses and `upgrade` holds the source while it's disabled) | VERIFIED | unit tests (files and neighbours unchanged, survives a fresh registry read, remove and rollback while disabled); mutation tests (copy instead of move → 4 failures; no upgrade hold → 1 failure); real run 2026-10-28: init event 43 → 42 → 43 skills, then `--load` PASS |
 | Network timeouts reported as BLOCKED, not a crash | VERIFIED | found live 2026-10-28: a 30 s `git ls-remote` timeout crashed `doctor` with a traceback. `git()` now returns exit 124; unit test |
+| Autopilot (`autopilot` command + daily workflow `skills-autopilot.yml`; commits only when a pin or managed skill moved, after tests and `doctor`) | IMPLEMENTED; command VERIFIED | unit tests (low-risk upgrade lands and nothing new is installed; a risky upgrade is held and a hand edit is reported, exit 1); mutation tests (ignore held → 1 failure; ignore hand edits → 1 failure); real run 2026-10-28 in a throwaway worktree: PASS, `anthropics-skills` pin `dbd4588f` → `ca45fc49`, no installed skill changed. Workflow: see *Autopilot runs* |
+| Session-start health line (`doctor --offline --brief` in `.claude/settings.json`) | VERIFIED | unit test (no network call, one line when healthy, problems listed); run through the hook command: `skills-manager: 29 local skills, 1 managed, all checks PASS` |
 | `doctor` | VERIFIED | real run: all PASS |
 | Self-improvement record (`--reason` on install, `note` after use) | IMPLEMENTED | history lines exist; the workflow itself is guidance in SKILL.md, not enforced code |
 | Codex adapter (install into `.agents/skills/`) | NOT IMPLEMENTED: BLOCKED | no Codex CLI in this container, so Codex discovery can't be checked; left out rather than shipped unverified |
@@ -80,7 +82,11 @@ Every check below was run again in this session against the real CLI and real Gi
 | `doctor --live` | PASS | 13/13, `claude -p` init lists 43 skills |
 | `audit` | PASS | high 0 · medium 7 · low 6 · none 16 |
 
-Update available, not applied: `upgrade` reports `anthropics-skills` HEAD moved to `ca45fc49` ("would upgrade"; no installed skill changes). Moving a pin needs the owner's OK, so it's left at `dbd4588f`.
+Update available: `anthropics-skills` HEAD moved to `ca45fc49` (no installed skill changes). Left for the first autopilot run to apply, which the owner approved.
+
+## Autopilot runs
+
+NOT RUN yet on GitHub (added 2026-10-28; first run is triggered after merge).
 
 ## Security and compatibility report
 

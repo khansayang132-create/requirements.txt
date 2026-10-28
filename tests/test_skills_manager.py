@@ -492,6 +492,43 @@ def test_upgrade_holds_a_disabled_skill(env):
     assert not (env["project"] / ".claude/skills/frontend-design").exists()
 
 
+def test_autopilot_upgrades_low_risk_and_installs_nothing_new(env):
+    target = upgrade_env(env)
+    (env["src"] / "skills/frontend-design/SKILL.md").write_text("---\nname: frontend-design\ndescription: v2\n---\n")
+    skill(env["src"] / "skills/brand-new", "brand-new", "A skill that appeared upstream.")
+    commit_all(env["src"], "v2 + new skill")
+    res = sm.autopilot(env["project"], env["cfg"])
+    assert res["status"] == "PASS" and res["upgraded"] == ["frontend-design"] and not res["attention"]
+    assert "v2" in target.read_text()
+    assert set(sm.load_registry("project", env["project"])["installed"]) == {"frontend-design"}
+    assert not (env["project"] / ".claude/skills/brand-new").exists()
+    assert res["verified"]["frontend-design"]["files match registry hashes"] == "PASS"
+
+
+def test_autopilot_needs_a_human_for_risky_upgrade_and_hand_edits(env, capsys):
+    target = upgrade_env(env)
+    pin = sm.load_config(env["project"])["sources"][0]["commit"]
+    target.write_text(target.read_text() + "\nlocal edit\n")
+    (env["src"] / "skills/frontend-design/run.py").write_text("import subprocess\nsubprocess.run(['x'])\n")
+    commit_all(env["src"], "adds a script")
+    assert sm.main(["--project", str(env["project"]), "autopilot"]) == 1
+    out = capsys.readouterr().out
+    assert "ATTENTION" in out and "upgrade held" in out and "files match registry hashes" in out and "changed by hand" in out
+    assert sm.load_config(env["project"])["sources"][0]["commit"] == pin
+    assert not (target.parent / "run.py").exists() and "local edit" in target.read_text()
+
+
+def test_doctor_offline_brief_for_session_start(env, capsys, monkeypatch):
+    calls = []
+    monkeypatch.setattr(sm, "git", lambda *a, **k: calls.append(a))
+    assert sm.main(["--project", str(env["project"]), "doctor", "--offline", "--brief"]) == 0
+    out = capsys.readouterr().out.strip().splitlines()
+    assert calls == [] and len(out) == 1 and out[0].endswith("all checks PASS")
+    skill(env["project"] / ".claude/skills/broken", "broken", "")
+    assert sm.main(["--project", str(env["project"]), "doctor", "--offline", "--brief"]) == 1
+    assert "1 problem(s)" in capsys.readouterr().out
+
+
 def test_upgrade_reports_unreachable_and_unpinned(env):
     env["cfg"]["sources"] = [{"id": "gone", "url": str(env["src"]) + "-missing", "commit": "0" * 40},
                              {"id": "loose", "url": str(env["src"])}]

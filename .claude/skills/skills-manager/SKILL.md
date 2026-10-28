@@ -29,7 +29,8 @@ python3 $M <command> [--json]
 | `pin <source>` | `python3 $M pin <source-id> [--commit <sha>] [--clear]`: hold a source at one commit (all three are pinned); moving a pin is a config change, so ask first |
 | `upgrade` | `python3 $M upgrade [--yes]`: moves each pinned source to upstream HEAD and updates the skills installed from it, but only if every changed skill is valid and scans below medium; otherwise the source is held (pin unchanged) and the command exits 1. It never installs new skills |
 | `audit` | `python3 $M audit`: scans every local skill, flags hash drift and duplicates, writes the report |
-| `doctor` | `python3 $M doctor [--live]`: config, sources, folders, registry, `claude` CLI |
+| `doctor` | `python3 $M doctor [--live] [--offline] [--brief]`: config, sources, folders, registry, `claude` CLI. Every session starts with `doctor --offline --brief` (SessionStart hook in `.claude/settings.json`): one line, plus anything broken |
+| `autopilot` | `python3 $M autopilot`: the unattended run: `doctor`, `upgrade --yes`, `verify` every managed skill, `audit`. Exit 1 lists what needs a human. Runs daily in `.github/workflows/skills-autopilot.yml`, which commits what moved to main after the tests pass |
 | (after using a skill) | `python3 $M note <name> --task "<task>" --outcome "<what it did>"` |
 
 ## When a task might need a new skill
@@ -51,7 +52,7 @@ The tool refuses these without an explicit flag. Get the user's OK, then add the
 
 ## Limits on unattended runs
 
-`upgrade --yes` is the only change this tool makes without a person reviewing it. A run with no person present must not install a new skill, pass `--accept-risk` or `--force`, move a pin that `upgrade` held, add a source, or change `config.json` policy. It reports held and BLOCKED sources instead. Any permission to commit or merge comes from whoever started the run, not from this file.
+`upgrade --yes` (inside `autopilot`) is the only change this tool makes without a person reviewing it. The owner turned this on for the daily workflow on 2026-10-28; that is the standing permission for its commits to main, and nothing broader. A run with no person present must not install a new skill, pass `--accept-risk` or `--force`, move a pin that `upgrade` held, add a source, or change `config.json` policy. It reports held and BLOCKED sources instead. Any permission to commit or merge comes from whoever started the run, not from this file.
 
 ## Rules
 

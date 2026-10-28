@@ -993,7 +993,7 @@ def audit(root, write=True):
     return report
 
 
-def doctor(root, cfg, live=False):
+def doctor(root, cfg, live=False, offline=False):
     checks = [check("python ≥ 3.8", "PASS" if sys.version_info >= (3, 8) else "FAIL", sys.version.split()[0]),
               check("git available", "PASS" if shutil.which("git") else "FAIL", shutil.which("git") or "install git")]
     try:
@@ -1006,7 +1006,7 @@ def doctor(root, cfg, live=False):
         checks.append(check("cache writable", "FAIL", str(e)))
     cfg_path = state_dir("project", root) / "config.json"
     checks.append(check("config.json present", "PASS" if cfg_path.exists() else "FAIL", str(cfg_path)))
-    for src in cfg["sources"]:
+    for src in ([] if offline else cfg["sources"]):
         r = git("ls-remote", src["url"], "HEAD", timeout=30) if shutil.which("git") else None
         ok = r is not None and r.returncode == 0
         checks.append(check(f"source {src['id']} reachable", "PASS" if ok else "BLOCKED",
@@ -1038,6 +1038,38 @@ def doctor(root, cfg, live=False):
     for s in mcp_servers(root):
         checks.append(check(f"MCP server {s['name']}", "FAIL" if "error" in s else "PASS", s.get("error") or s["command"]))
     return checks
+
+
+def autopilot(root, cfg, scope="project"):
+    """The unattended run (nightly CI): health, `upgrade --yes`, re-verify every managed skill, audit.
+    It only does what SKILL.md allows without a person: no new installs, no --accept-risk, no --force, no moving a
+    held pin. Anything that needs a human comes back in `attention`; the caller exits non-zero so the run goes red."""
+    attention = []
+    health = doctor(root, cfg)
+    attention += [f"doctor: {c['check']}: {c['detail']}" for c in health if c["status"] == "FAIL"]
+    rows = upgrade(root, cfg, scope, yes=True)
+    for r in rows:
+        if r["status"] in ("held", "BLOCKED"):
+            why = "; ".join(f"{h['name']}: {h['reason']}" for h in r.get("held", [])) or r.get("detail", "")
+            attention.append(f"upgrade {r['status']}: {r['source']}: {why}")
+    cfg = load_config(root)  # upgrade may have moved pins
+    verified = {}
+    for name in load_registry(scope, root)["installed"]:
+        checks = verify(root, cfg, name, scope)
+        verified[name] = {c["check"]: c["status"] for c in checks}
+        attention += [f"verify {name}: {c['check']}: {c['detail']}" for c in checks if c["status"] == "FAIL"]
+    rep = audit(root)
+    for r in rep["skills"]:
+        if r["risk"] == "high" or r["errors"] or r.get("hash_drift"):
+            attention.append(f"audit {r['name']} ({r['scope']}): risk {r['risk']}"
+                             + (f", errors {r['errors']}" if r["errors"] else "")
+                             + (f", changed by hand: {r['hash_drift']}" if r.get("hash_drift") else ""))
+    result = {"at": now(), "status": "ATTENTION" if attention else "PASS", "attention": attention,
+              "upgrade": [{k: v for k, v in r.items() if k in ("source", "status", "detail", "upstream")} for r in rows],
+              "verified": verified, "audit": rep["summary"],
+              "upgraded": [c["name"] for r in rows if r["status"] == "upgraded" for c in r.get("changes", [])]}
+    log_history(scope, root, "autopilot", "*", result["status"], attention=len(attention), upgraded=result["upgraded"])
+    return result
 
 
 # ---------------------------------------------------------------- CLI
@@ -1096,7 +1128,9 @@ def main(argv=None):
     p.add_argument("name"); p.add_argument("--scope", choices=["project", "user"], default="project")
     sub.add_parser("audit", help="scan every local skill; writes .claude/skills-manager/reports/skills-audit.json")
     p = sub.add_parser("doctor", help="diagnose config, sources, skill folders and the registry")
-    p.add_argument("--live", action="store_true")
+    p.add_argument("--live", action="store_true"); p.add_argument("--offline", action="store_true", help="skip the source reachability checks")
+    p.add_argument("--brief", action="store_true", help="one summary line plus anything that isn't PASS (for session start)")
+    sub.add_parser("autopilot", help="unattended run: doctor, upgrade --yes, verify, audit; exit 1 when a human is needed")
     p = sub.add_parser("upgrade", help="move pinned sources to upstream HEAD and update installed skills; low-risk only, --yes applies")
     p.add_argument("--scope", choices=["project", "user"], default="project"); p.add_argument("--yes", action="store_true")
     p = sub.add_parser("pin", help="pin a source to a commit in config.json (default: its current HEAD); --clear unpins")
@@ -1227,9 +1261,15 @@ def main(argv=None):
                 print(f"  {r['risk'].upper():<7} {r['name']:<28} {r['scope']:<11} {'; '.join(flags)}")
             print(f"summary: {rep['summary']}  duplicates: {rep['duplicates'] or 'none'}\nwritten: {rep['written_to']}")
         elif a.cmd == "doctor":
-            checks = doctor(root, cfg, a.live)
+            checks = doctor(root, cfg, a.live, a.offline)
             if a.json:
                 out(checks)
+            elif a.brief:
+                bad = [c for c in checks if c["status"] not in ("PASS", "BLOCKED")]
+                n = sum(len(load_registry(s, root)["installed"]) for s in ("project", "user"))
+                print(f"skills-manager: {len(discover_local(root))} local skills, {n} managed, "
+                      + (f"{len(bad)} problem(s):" if bad else "all checks PASS"))
+                print_checks(bad)
             else:
                 print_checks(checks)
             return 1 if any(c["status"] == "FAIL" for c in checks) else 0
@@ -1245,6 +1285,23 @@ def main(argv=None):
                     for h in r.get("held", []):
                         print(f"      HELD   {h['name']}: {h['reason']}")
             return 1 if any(r["status"] in ("held", "BLOCKED") for r in rows) else 0
+        elif a.cmd == "autopilot":
+            res = autopilot(root, cfg)
+            if a.json:
+                out(res)
+            else:
+                print(f"## Skills autopilot: {res['status']}  ({res['at']})\n")
+                for r in res["upgrade"]:
+                    print(f"- upgrade `{r['source']}`: {r['status']}" + (f" ({r['detail']})" if r.get("detail") else ""))
+                print(f"- upgraded skills: {', '.join(res['upgraded']) or 'none'}")
+                for n, c in res["verified"].items():
+                    print(f"- verify `{n}`: " + ", ".join(f"{k} {v}" for k, v in c.items() if v != "NOT RUN"))
+                print(f"- audit: {res['audit']}")
+                if res["attention"]:
+                    print("\n### Needs a human\n")
+                    for x in res["attention"]:
+                        print(f"- {x}")
+            return 1 if res["attention"] else 0
         elif a.cmd == "pin":
             res = pin_source(root, a.source, a.commit, a.clear)
             if a.json:
