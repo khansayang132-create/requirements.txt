@@ -1,0 +1,69 @@
+name: skills-autopilot
+
+# The skills manager on autopilot (.claude/skills/skills-manager/). Daily: health check, `upgrade --yes`, re-verify
+# every managed skill, audit. It only does what SKILL.md allows without a person: pinned sources move to upstream
+# HEAD and installed skills update only when every changed skill is valid and scans below medium risk. It never
+# installs a new skill, accepts a risk, forces, or moves a held pin.
+# When something moved, the skills manager's own tests and doctor run again, then the change is committed to main.
+# Anything that needs a human (a held upgrade, a hand-edited or broken skill, an unreachable source) turns the run red,
+# which GitHub emails to the owner. The report is in the run summary.
+on:
+  schedule:
+    - cron: "41 4 * * *"  # 04:41 UTC daily (11:41 WIB)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: skills-autopilot
+  cancel-in-progress: false
+
+jobs:
+  autopilot:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      M: .claude/skills/skills-manager/scripts/skills_manager.py
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - run: pip install -q pytest
+      - name: autopilot
+        id: ap
+        run: |
+          set +e
+          python3 "$M" autopilot > autopilot.md
+          code=$?
+          cat autopilot.md
+          cat autopilot.md >> "$GITHUB_STEP_SUMMARY"
+          echo "code=$code" >> "$GITHUB_OUTPUT"
+      - name: commit what moved
+        run: |
+          if git diff --quiet -- .claude/skills-manager/config.json .claude/skills; then
+            echo "Nothing upgraded; nothing to commit."; exit 0
+          fi
+          python -m pytest -q tests/test_skills_manager.py
+          python3 "$M" doctor
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .claude/skills-manager .claude/skills
+          git commit -q -m "skills-autopilot: upgrade pinned sources" -m "$(cat autopilot.md)"
+          git push origin HEAD:main || { git pull -q --rebase origin main && git push origin HEAD:main; }
+          echo "Committed $(git rev-parse --short HEAD) to main." >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: skills-autopilot
+          path: |
+            autopilot.md
+            .claude/skills-manager/reports/skills-audit.json
+      - name: needs a human?
+        if: steps.ap.outputs.code != '0'
+        run: |
+          echo "::error::Skills autopilot needs a human: see 'Needs a human' in the run summary."
+          exit 1

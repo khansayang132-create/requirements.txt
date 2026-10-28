@@ -1,5 +1,11 @@
 {
-  "failed": [],
+  "failed": [
+    {
+      "error": "/home/user/requirements.txt/.claude/skills/frontend-design already exists; pass --force to replace it (a backup is kept)",
+      "name": "frontend-design",
+      "ts": "2026-10-28T20:32:15+00:00"
+    }
+  ],
   "installed": {
     "frontend-design": {
       "backup": "/home/user/requirements.txt/.claude/skills-manager/backups/frontend-design/20261023T195727127459",
@@ -41,7 +47,7 @@
       "trust": "official",
       "url": "https://github.com/anthropics/skills",
       "verification": {
-        "at": "2026-10-23T20:26:53+00:00",
+        "at": "2026-10-28T20:31:58+00:00",
         "checks": [
           {
             "check": "files installed",
@@ -70,7 +76,7 @@
           },
           {
             "check": "source exists",
-            "detail": "https://github.com/anthropics/skills HEAD dbd4588f9e10",
+            "detail": "https://github.com/anthropics/skills HEAD ca45fc496a34",
             "status": "PASS"
           },
           {
@@ -85,8 +91,8 @@
           },
           {
             "check": "Claude Code loads it",
-            "detail": "pass --load",
-            "status": "NOT RUN"
+            "detail": "Skill tool called=True; reply: '# Frontend Design'",
+            "status": "PASS"
           }
         ],
         "status": "PASS"
