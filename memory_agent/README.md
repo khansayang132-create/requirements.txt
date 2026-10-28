@@ -9,9 +9,10 @@ only: nothing to `pip install`, no API key, no network, so it also runs in Termu
 ```
 Claude Code ──MCP stdio──► python3 -m memory_agent serve ──► SQLite (.claude/memory/memory.db, gitignored)
      │                                                              ▲   │
-     ├─ SessionStart hook: memory_agent context ── import snapshot ─┘   │  prints status, open tasks,
+     ├─ SessionStart hook: memory_agent session-start ── import ────┘   │  prints status, open tasks,
      │                                                                  │  preferences, decisions, conflicts
-     └─ Stop hook: memory_agent export ──► .claude/memory/snapshot.jsonl (committed to git)
+     └─ Stop hook: memory_agent stop ──► .claude/memory/snapshot.jsonl ──► auto-commit (that file only)
+                                    └──► code changed, memory not? ask Claude once to record it
 ```
 
 - **Store** (`store.py`): one `memories` table, an FTS5 index (falls back to LIKE search when SQLite lacks FTS5),
@@ -31,6 +32,21 @@ Claude Code ──MCP stdio──► python3 -m memory_agent serve ──► SQL
   forgets everything. The Stop hook writes every non-private memory to `snapshot.jsonl` (sorted, rewritten
   only when something changed); commit it with your work. The next session's SessionStart hook merges it
   back in.
+
+## Autopilot
+
+Runs by itself through the hooks in `.claude/settings.json` (`autopilot.py`); nobody has to remember:
+- **Every session start**: the snapshot is merged in, the summary is shown, and a baseline is recorded
+  (`.claude/memory/state.json`, gitignored).
+- **Every time Claude finishes a turn**: the snapshot is exported. With `CLAUDE_MEMORY_AUTOCOMMIT=1` (set in
+  `.claude/settings.json`) a changed snapshot is committed on its own: `git commit --only` of that one file, so
+  other work stays uncommitted; never during a merge, rebase or cherry-pick, never on a detached HEAD, never an
+  empty commit, and never pushed by the hook (the session's normal push carries it).
+- **If the code changed but memory didn't**, the stop is blocked once with a request to record the verified
+  result, decisions, bug fixes and tasks. One nudge per change: a second stop, or a stop after any memory
+  write, goes through. The autopilot's own snapshot commit doesn't count as a change.
+
+Turn auto-commit off by removing `CLAUDE_MEMORY_AUTOCOMMIT` from `.claude/settings.json`.
 
 ## Tools (MCP server `memory`)
 
@@ -76,6 +92,7 @@ python3 -m memory_agent doctor               # integrity check: SQLite, FTS inde
 python3 -m memory_agent backup               # .claude/memory/backups/memory-<time>.db
 python3 -m memory_agent restore FILE --yes   # checks the backup first, backs up current data first
 python3 -m memory_agent export | import      # snapshot by hand
+python3 -m memory_agent session-start | stop # the autopilot hooks (stop reads the hook JSON on stdin)
 ```
 
 Start / stop: Claude Code starts `memory_agent serve` with the session and stops it at the end. In a session,

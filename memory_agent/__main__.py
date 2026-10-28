@@ -3,7 +3,9 @@
 
   python3 -m memory_agent serve                 MCP server on stdio (what .mcp.json starts)
   python3 -m memory_agent context               SessionStart hook: import the snapshot, print the session summary
-  python3 -m memory_agent export                Stop hook: write the git snapshot (only rewrites on change)
+  python3 -m memory_agent export                write the git snapshot (only rewrites on change)
+  python3 -m memory_agent session-start         SessionStart hook: context + autopilot baseline (autopilot.py)
+  python3 -m memory_agent stop                  Stop hook: export, optional auto-commit, nudge to save (autopilot.py)
   python3 -m memory_agent import [FILE]         merge a snapshot into the database
   python3 -m memory_agent search QUERY          search (this project + global)
   python3 -m memory_agent list [--kind K]       list
@@ -20,9 +22,11 @@ Project:  CLAUDE_MEMORY_PROJECT (default owner/repo from the git remote).
 import argparse
 import json
 import os
+import subprocess  # nosec B404
 import sys
 from pathlib import Path
 
+from . import autopilot
 from . import security as sec
 from .store import MemoryStore, NotFound, StorageError, project_root
 
@@ -45,6 +49,8 @@ def main(argv=None) -> int:
     sub.add_parser("serve")
     sub.add_parser("context")
     sub.add_parser("export")
+    sub.add_parser("session-start")
+    sub.add_parser("stop")
     p = sub.add_parser("import")
     p.add_argument("file", nargs="?")
     p = sub.add_parser("search")
@@ -89,11 +95,22 @@ def main(argv=None) -> int:
         return 0
 
     # Hooks must never break a session: report the problem in one line and carry on.
-    if a.cmd in ("context", "export"):
+    if a.cmd in ("context", "export", "session-start", "stop"):
         try:
             store = MemoryStore(project=a.project)
             snap = snapshot_path()
-            if a.cmd == "context":
+            if a.cmd == "session-start":
+                out(autopilot.session_start(store, project_root(), snap))
+            elif a.cmd == "stop":
+                raw = sys.stdin.read() if not sys.stdin.isatty() else ""
+                try:
+                    hook_input = json.loads(raw) if raw.strip() else {}
+                except json.JSONDecodeError:
+                    hook_input = {}
+                answer = autopilot.stop(store, project_root(), snap, hook_input if isinstance(hook_input, dict) else {})
+                if answer:
+                    out(answer)
+            elif a.cmd == "context":
                 if snap:
                     res = store.import_snapshot(snap)
                     for err in res["errors"][:5]:
@@ -102,7 +119,7 @@ def main(argv=None) -> int:
             elif snap:
                 store.export_snapshot(snap)
             return 0
-        except (StorageError, sec.ValidationError, OSError) as e:
+        except (StorageError, sec.ValidationError, OSError, subprocess.SubprocessError) as e:
             print(f"Claude Memory Agent unavailable: {sec.redact(str(e))}", file=sys.stderr)
             return 1
 

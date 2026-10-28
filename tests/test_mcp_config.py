@@ -33,4 +33,4 @@ def test_memory_server_runs_the_repo_package():
     assert server["args"] == ["-m", "memory_agent", "serve"]
     assert server["env"]["PYTHONPATH"] == "${CLAUDE_PROJECT_DIR:-.}"
     hooks = json.dumps(SETTINGS["hooks"])
-    assert "memory_agent context" in hooks and "memory_agent export" in hooks
+    assert "memory_agent session-start" in hooks and "memory_agent stop" in hooks

@@ -11,3 +11,4 @@ agency/out/
 .venv.lock
 .claude/memory/backups/
 .claude/memory/*.tmp
+.claude/memory/state.json

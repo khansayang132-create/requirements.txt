@@ -351,3 +351,79 @@ def test_staleness_and_expiry(tmp_path):
     assert s.expire() == 1
     with pytest.raises(NotFound):
         s.get(tmp)
+
+
+# Autopilot (Stop hook): snapshot auto-commit and the one-time nudge to save memory
+@pytest.fixture
+def repo(tmp_path):
+    root = tmp_path / "repo"
+    root.mkdir()
+    for args in (["init", "-q", "-b", "main"], ["config", "user.email", "t@example.com"], ["config", "user.name", "t"]):
+        subprocess.run(["git", "-C", str(root), *args], check=True)
+    (root / "app.py").write_text("x = 1\n")
+    subprocess.run(["git", "-C", str(root), "add", "."], check=True)
+    subprocess.run(["git", "-C", str(root), "commit", "-qm", "init"], check=True)
+    env = {**os.environ, "PYTHONPATH": str(ROOT), "CLAUDE_PROJECT_DIR": str(root), "CLAUDE_MEMORY_PROJECT": P,
+           "CLAUDE_MEMORY_AUTOCOMMIT": "1"}
+    for k in ("CLAUDE_MEMORY_DB", "CLAUDE_MEMORY_SNAPSHOT"):
+        env.pop(k, None)
+
+    def run(*args, stdin=""):
+        return subprocess.run([sys.executable, "-m", "memory_agent", *args], input=stdin, capture_output=True,
+                              text=True, env=env, cwd=root, timeout=60, check=False)
+
+    return root, run
+
+
+def git_log(root):
+    return subprocess.run(["git", "-C", str(root), "log", "--format=%s", "--name-only"], capture_output=True,
+                          text=True, check=True).stdout
+
+
+def test_autopilot_nudges_once_per_unrecorded_change(repo):
+    root, run = repo
+    assert run("session-start").returncode == 0
+    assert run("stop", stdin="{}").stdout == ""  # nothing changed: Claude may stop
+    (root / "app.py").write_text("x = 2\n")
+    answer = json.loads(run("stop", stdin="{}").stdout)
+    assert answer["decision"] == "block" and "memory_update_project_status" in answer["reason"]
+    assert run("stop", stdin='{"stop_hook_active": true}').stdout == ""  # never loops
+    (root / "app.py").write_text("x = 3\n")
+    assert run("stop", stdin="{}").stdout  # a new change gets a new nudge
+    (root / "app.py").write_text("x = 4\n")
+    run("add", "--kind", "decision", "--title", "x is 4", "--content", "because tests")
+    assert run("stop", stdin="not json").stdout == ""  # memory was written: no nudge, bad input tolerated
+
+
+def test_autopilot_commits_only_the_snapshot(repo):
+    root, run = repo
+    run("session-start")
+    (root / "app.py").write_text("x = 2\n")  # uncommitted work must stay uncommitted
+    run("add", "--kind", "task", "--title", "Ship", "--content", "push it")
+    run("stop", stdin="{}")
+    log = git_log(root)
+    assert log.startswith("memory: update snapshot\n\n.claude/memory/snapshot.jsonl")
+    assert "app.py" not in log.split("init")[0]
+    status = subprocess.run(["git", "-C", str(root), "status", "--porcelain"], capture_output=True, text=True,
+                            check=True).stdout
+    assert " M app.py" in status and "snapshot" not in status
+    run("stop", stdin="{}")
+    assert git_log(root).count("memory: update snapshot") == 1  # unchanged snapshot: no empty commits
+
+
+def test_autopilot_own_commit_is_not_a_change(repo):
+    root, run = repo
+    run("add", "--kind", "task", "--title", "Ship", "--content", "push it")  # saved before the session baseline
+    run("session-start")
+    assert run("stop", stdin="{}").stdout == ""
+    assert "memory: update snapshot" in git_log(root)
+    assert run("stop", stdin="{}").stdout == ""
+
+
+def test_autopilot_does_not_commit_on_detached_head(repo):
+    root, run = repo
+    subprocess.run(["git", "-C", str(root), "checkout", "-q", "--detach"], check=True)
+    run("session-start")
+    run("add", "--kind", "task", "--title", "Ship", "--content", "push it")
+    res = run("stop", stdin="{}")
+    assert "detached HEAD" in res.stderr and "memory: update snapshot" not in git_log(root)

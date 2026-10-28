@@ -15,7 +15,7 @@
           },
           {
             "type": "command",
-            "command": "cd \"$CLAUDE_PROJECT_DIR\" && python3 -m memory_agent context",
+            "command": "cd \"$CLAUDE_PROJECT_DIR\" && python3 -m memory_agent session-start",
             "timeout": 30
           }
         ]
@@ -26,7 +26,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cd \"$CLAUDE_PROJECT_DIR\" && python3 -m memory_agent export",
+            "command": "cd \"$CLAUDE_PROJECT_DIR\" && python3 -m memory_agent stop",
             "timeout": 30
           }
         ]
@@ -35,6 +35,7 @@
   },
   "enabledMcpjsonServers": ["headroom", "21st", "memory"],
   "env": {
-    "MCP_TIMEOUT": "300000"
+    "MCP_TIMEOUT": "300000",
+    "CLAUDE_MEMORY_AUTOCOMMIT": "1"
   }
 }
