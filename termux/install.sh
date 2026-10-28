@@ -7,6 +7,8 @@
 #   bash termux/install.sh status            are they running?
 #   bash termux/install.sh logs              last lines of the bot's log
 #   bash termux/install.sh uninstall         stop and remove the background services
+#   bash termux/install.sh check             is OmniRoute answering with your key? are the services up?
+#   bash termux/install.sh update            update the bot and OmniRoute, restart, then check
 #   bash termux/install.sh site              publish the website on this phone (port 8080 by
 #                                            default) at your fixed ngrok address, 24/7
 #
@@ -203,6 +205,61 @@ site() {
     echo "   Log:    tail $PREFIX/var/log/sv/lskhan-site/current"
 }
 
+# Is OmniRoute up, does it accept the key in .env, and does it offer OMNIROUTE_MODEL?
+check() {
+    local base key model tmp code ids rc=0
+    base=$(env_get OMNIROUTE_BASE_URL); base=${base:-http://127.0.0.1:20128/v1}; base=${base%/}
+    key=$(env_get OMNIROUTE_API_KEY); model=$(env_get OMNIROUTE_MODEL)
+    command -v curl >/dev/null || pkg install -y curl >/dev/null
+    tmp=$(mktemp)
+    # The key goes to curl on stdin, so it never shows in a process list.
+    code=$( { [[ -n $key ]] && printf 'header = "Authorization: Bearer %s"\n' "$key"; true; } \
+            | curl -s -m 10 -K - -o "$tmp" -w '%{http_code}' "$base/models" ) || code=000
+    case $code in
+        200)
+            ids=$(python -c 'import json,sys; print("\n".join(m.get("id","") for m in json.load(open(sys.argv[1])).get("data",[])))' "$tmp" 2>/dev/null || true)
+            ok "OmniRoute is up at $base ($(printf '%s\n' "$ids" | grep -c . ) models)."
+            if [[ -n $model && $model != auto ]] && ! printf '%s\n' "$ids" | grep -qxF "$model"; then
+                echo "⚠️  OMNIROUTE_MODEL=$model is not in OmniRoute's model list. Check the name in the dashboard."; rc=1
+            fi ;;
+        401|403)
+            echo "❌ OmniRoute refused the key (HTTP $code). Copy a key from the dashboard into OMNIROUTE_API_KEY in .env."; rc=1 ;;
+        000)
+            echo "❌ Nothing answers at $base. Start it: bash termux/install.sh (or run omniroute)."; rc=1 ;;
+        *)
+            echo "❌ OmniRoute answered HTTP $code at $base/models."; rc=1 ;;
+    esac
+    rm -f "$tmp"
+    status
+    return $rc
+}
+
+# Pull the latest bot code, update its packages and OmniRoute, restart the services, then check.
+update() {
+    if git -C "$BOT_DIR" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+        echo "⬇️  Updating the bot code..."
+        git -C "$BOT_DIR" pull --ff-only || die "git pull failed (local changes?). Run: git -C \"$BOT_DIR\" status"
+    else
+        echo "⚠️  $BOT_DIR is not a git clone, so the bot code was not updated."
+    fi
+    echo "📦 Updating the bot's Python packages..."
+    pip install -q -U -r "$BOT_DIR/requirements.txt" || die "Python packages failed to update."
+    if command -v omniroute >/dev/null; then
+        command -v npm >/dev/null || pkg install -y nodejs >/dev/null
+        echo "📦 Updating OmniRoute..."
+        npm install -g omniroute@latest >/dev/null || die "OmniRoute update failed. Try: pkg upgrade nodejs, then run this again."
+    fi
+    start_service_daemon >/dev/null 2>&1 || true
+    local name
+    for name in lskhan-omniroute lskhan-bot lskhan-site; do
+        [[ -d $SV/$name ]] && sv restart "$name" >/dev/null 2>&1 || true
+    done
+    # OmniRoute needs a few seconds to start listening after a restart.
+    local _
+    for _ in $(seq 1 15); do check >/dev/null 2>&1 && break; sleep 2; done
+    check
+}
+
 status() {
     start_service_daemon >/dev/null 2>&1 || true
     local name
@@ -245,5 +302,7 @@ case ${1:-} in
     logs)        logs "${2:-40}" ;;
     uninstall)   uninstall ;;
     site)        site ;;
-    *)           die "Use: bash termux/install.sh [--bot-only | status | logs | site | uninstall]" ;;
+    check)       check ;;
+    update)      update ;;
+    *)           die "Use: bash termux/install.sh [--bot-only | status | check | update | logs | site | uninstall]" ;;
 esac

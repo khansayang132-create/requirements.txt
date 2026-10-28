@@ -64,6 +64,38 @@ done
 bash termux/install.sh
 sv status lskhan-bot
 
+# check: talks to OmniRoute with the key from .env. A stand-in OmniRoute that only accepts one key:
+cat > "$HOME/fake_omni.py" <<'PYEOF'
+import json
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+class H(BaseHTTPRequestHandler):
+    def do_GET(self):
+        if self.headers.get("authorization") != "Bearer good-key":
+            self.send_response(401); self.end_headers(); return
+        b = json.dumps({"data": [{"id": "cc/claude-opus-5-5"}]}).encode()
+        self.send_response(200); self.send_header("content-length", str(len(b))); self.end_headers(); self.wfile.write(b)
+    def log_message(self, *a): pass
+ThreadingHTTPServer(("127.0.0.1", 20199), H).serve_forever()
+PYEOF
+python "$HOME/fake_omni.py" &
+fake_omni=$!
+sleep 2
+printf 'TELEGRAM_BOT_TOKEN=123456:fake\nOMNIROUTE_BASE_URL=http://127.0.0.1:20199/v1\nOMNIROUTE_API_KEY=good-key\nOMNIROUTE_MODEL=cc/claude-opus-5-5\n' > .env
+bash termux/install.sh check | grep -q 'OmniRoute is up'
+sed -i 's/^OMNIROUTE_API_KEY=.*/OMNIROUTE_API_KEY=bad-key/' .env
+if bash termux/install.sh check; then echo "check must fail on a refused key"; exit 1; fi
+sed -i 's/^OMNIROUTE_API_KEY=.*/OMNIROUTE_API_KEY=good-key/' .env
+
+# update: updates OmniRoute through npm, restarts the services, and ends with a passing check.
+printf '#!%s/bin/sh\necho "$*" >> "%s/npm-calls"\n' "$PREFIX" "$HOME" > "$PREFIX/bin/npm"
+chmod +x "$PREFIX/bin/npm"
+rm -rf .git   # the CI copy has no usable remote; update must still work and say so
+bash termux/install.sh update | tee "$HOME/update.out"
+grep -q 'install -g omniroute@latest' "$HOME/npm-calls"
+grep -q 'not a git clone' "$HOME/update.out"
+grep -q 'OmniRoute is up' "$HOME/update.out"
+kill "$fake_omni"
+
 # Website publishing: refuses to go public by accident, then runs ngrok as a service.
 printf '#!%s/bin/sh\necho "FAKE NGROK $*"\nexec sleep 100000\n' "$PREFIX" > "$PREFIX/bin/ngrok"
 chmod +x "$PREFIX/bin/ngrok"
