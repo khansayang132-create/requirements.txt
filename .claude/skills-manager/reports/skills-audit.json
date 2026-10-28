@@ -1,6 +1,6 @@
 {
   "duplicates": {},
-  "generated_at": "2026-10-23T20:43:54+00:00",
+  "generated_at": "2026-10-28T20:45:41+00:00",
   "skills": [
     {
       "allowed_tools": "",
@@ -12,7 +12,7 @@
       ],
       "managed": false,
       "name": "artist-profile",
-      "path": "/home/user/requirements.txt/.claude/skills/artist-profile",
+      "path": "/home/runner/work/requirements.txt/requirements.txt/.claude/skills/artist-profile",
       "risk": "none",
       "scope": "project",
       "scripts": [],
@@ -28,7 +28,7 @@
       ],
       "managed": false,
       "name": "done-protocol",
-      "path": "/home/user/requirements.txt/.claude/skills/done-protocol",
+      "path": "/home/runner/work/requirements.txt/requirements.txt/.claude/skills/done-protocol",
       "risk": "low",
       "scope": "project",
       "scripts": [
@@ -46,7 +46,7 @@
       ],
       "managed": true,
       "name": "frontend-design",
-      "path": "/home/user/requirements.txt/.claude/skills/frontend-design",
+      "path": "/home/runner/work/requirements.txt/requirements.txt/.claude/skills/frontend-design",
       "risk": "none",
       "scope": "project",
       "scripts": [],
@@ -68,7 +68,7 @@
       "hosts": [],
       "managed": false,
       "name": "skills-manager",
-      "path": "/home/user/requirements.txt/.claude/skills/skills-manager",
+      "path": "/home/runner/work/requirements.txt/requirements.txt/.claude/skills/skills-manager",
       "risk": "low",
       "scope": "project",
       "scripts": [
@@ -81,576 +81,12 @@
       "errors": [],
       "findings": [],
       "hash_drift": null,
-      "hosts": [],
-      "managed": false,
-      "name": "startup-hook-skill",
-      "path": "/root/.claude/skills/session-start-hook",
-      "risk": "none",
-      "scope": "user",
-      "scripts": [],
-      "warnings": [
-        "name 'startup-hook-skill' differs from folder 'session-start-hook'; Claude Code uses the name"
-      ]
-    },
-    {
-      "allowed_tools": "",
-      "errors": [],
-      "findings": [],
-      "hash_drift": null,
-      "hosts": [
-        "open.spotify.com"
-      ],
-      "managed": false,
-      "name": "artist-profile",
-      "path": "/root/.claude/skills/synced/50314b33-7e9c-4caf-947a-a7e8d3ec1b07_10abc18c-c886-4df6-aa3e-e4ff4fac9bbc/artist-profile",
-      "risk": "none",
-      "scope": "synced",
-      "scripts": [],
-      "warnings": []
-    },
-    {
-      "allowed_tools": "",
-      "errors": [],
-      "findings": [],
-      "hash_drift": null,
-      "hosts": [
-        "www.anthropic.com"
-      ],
-      "managed": false,
-      "name": "built-in-browser",
-      "path": "/root/.claude/skills/synced/50314b33-7e9c-4caf-947a-a7e8d3ec1b07_10abc18c-c886-4df6-aa3e-e4ff4fac9bbc/built-in-browser",
-      "risk": "none",
-      "scope": "synced",
-      "scripts": [],
-      "warnings": []
-    },
-    {
-      "allowed_tools": "",
-      "errors": [],
-      "findings": [],
-      "hash_drift": null,
-      "hosts": [
-        "www.anthropic.com"
-      ],
-      "managed": false,
-      "name": "chrome-browser",
-      "path": "/root/.claude/skills/synced/50314b33-7e9c-4caf-947a-a7e8d3ec1b07_10abc18c-c886-4df6-aa3e-e4ff4fac9bbc/chrome-browser",
-      "risk": "none",
-      "scope": "synced",
-      "scripts": [],
-      "warnings": []
-    },
-    {
-      "allowed_tools": "",
-      "errors": [],
-      "findings": [],
-      "hash_drift": null,
-      "hosts": [
-        "www.anthropic.com"
-      ],
-      "managed": false,
-      "name": "computer-use",
-      "path": "/root/.claude/skills/synced/50314b33-7e9c-4caf-947a-a7e8d3ec1b07_10abc18c-c886-4df6-aa3e-e4ff4fac9bbc/computer-use",
-      "risk": "none",
-      "scope": "synced",
-      "scripts": [],
-      "warnings": []
-    },
-    {
-      "allowed_tools": "",
-      "errors": [],
-      "findings": [],
-      "hash_drift": null,
-      "hosts": [],
-      "managed": false,
-      "name": "deep-research",
-      "path": "/root/.claude/skills/synced/50314b33-7e9c-4caf-947a-a7e8d3ec1b07_10abc18c-c886-4df6-aa3e-e4ff4fac9bbc/deep-research",
-      "risk": "none",
-      "scope": "synced",
-      "scripts": [],
-      "warnings": []
-    },
-    {
-      "allowed_tools": "",
-      "errors": [],
-      "findings": [],
-      "hash_drift": null,
-      "hosts": [],
-      "managed": false,
-      "name": "docs",
-      "path": "/root/.claude/skills/synced/50314b33-7e9c-4caf-947a-a7e8d3ec1b07_10abc18c-c886-4df6-aa3e-e4ff4fac9bbc/docs",
-      "risk": "none",
-      "scope": "synced",
-      "scripts": [],
-      "warnings": []
-    },
-    {
-      "allowed_tools": "",
-      "errors": [],
-      "findings": [
-        {
-          "file": "scripts/accept_changes.py",
-          "line": 68,
-          "message": "runs external commands",
-          "rule": "SHELL_EXEC",
-          "severity": "medium"
-        },
-        {
-          "file": "scripts/office/soffice.py",
-          "line": 28,
-          "message": "reads environment variables",
-          "rule": "ENV_READ",
-          "severity": "low"
-        },
-        {
-          "file": "scripts/office/soffice.py",
-          "line": 38,
-          "message": "runs external commands",
-          "rule": "SHELL_EXEC",
-          "severity": "medium"
-        },
-        {
-          "file": "scripts/office/soffice.py",
-          "line": 55,
-          "message": "network access",
-          "rule": "NETWORK",
-          "severity": "medium"
-        },
-        {
-          "file": "scripts/office/validators/redlining.py",
-          "line": 254,
-          "message": "runs external commands",
-          "rule": "SHELL_EXEC",
-          "severity": "medium"
-        }
-      ],
-      "hash_drift": null,
-      "hosts": [
-        "dublincore.org",
-        "github.com",
-        "openoffice.org",
-        "purl.org",
-        "schemas.microsoft.com",
-        "schemas.openxmlformats.org",
-        "www.anthropic.com",
-        "www.w3.org"
-      ],
-      "managed": false,
-      "name": "docx",
-      "path": "/root/.claude/skills/synced/50314b33-7e9c-4caf-947a-a7e8d3ec1b07_10abc18c-c886-4df6-aa3e-e4ff4fac9bbc/docx",
-      "risk": "medium",
-      "scope": "synced",
-      "scripts": [
-        "scripts/__init__.py",
-        "scripts/accept_changes.py",
-        "scripts/comment.py",
-        "scripts/merge_runs.py",
-        "scripts/office/helpers/__init__.py",
-        "scripts/office/helpers/pptx_chart.py",
-        "scripts/office/helpers/pptx_slide.py",
-        "scripts/office/helpers/pptx_theme.py",
-        "scripts/office/soffice.py",
-        "scripts/office/validate.py",
-        "scripts/office/validators/__init__.py",
-        "scripts/office/validators/base.py",
-        "scripts/office/validators/docx.py",
-        "scripts/office/validators/pptx.py",
-        "scripts/office/validators/redlining.py"
-      ],
-      "warnings": []
-    },
-    {
-      "allowed_tools": "",
-      "errors": [],
-      "findings": [],
-      "hash_drift": null,
       "hosts": [
         "explorer.solana.com"
       ],
       "managed": false,
       "name": "done-protocol",
-      "path": "/root/.claude/skills/synced/50314b33-7e9c-4caf-947a-a7e8d3ec1b07_10abc18c-c886-4df6-aa3e-e4ff4fac9bbc/done-protocol",
-      "risk": "low",
-      "scope": "synced",
-      "scripts": [
-        "scripts/ui_lint.py"
-      ],
-      "warnings": []
-    },
-    {
-      "allowed_tools": "",
-      "errors": [],
-      "findings": [
-        {
-          "file": "scripts/render_export.py",
-          "line": 123,
-          "message": "runs external commands",
-          "rule": "SHELL_EXEC",
-          "severity": "medium"
-        }
-      ],
-      "hash_drift": null,
-      "hosts": [
-        "investor.apple.com"
-      ],
-      "managed": false,
-      "name": "google-workspace",
-      "path": "/root/.claude/skills/synced/50314b33-7e9c-4caf-947a-a7e8d3ec1b07_10abc18c-c886-4df6-aa3e-e4ff4fac9bbc/google-workspace",
-      "risk": "medium",
-      "scope": "synced",
-      "scripts": [
-        "scripts/docs_index.py",
-        "scripts/render_export.py",
-        "scripts/sheets_helper.py",
-        "scripts/slides_helper.py"
-      ],
-      "warnings": []
-    },
-    {
-      "allowed_tools": "",
-      "errors": [],
-      "findings": [
-        {
-          "file": "SKILL.md",
-          "line": 14,
-          "message": "instructs the agent to hide actions or drop its rules (in a warning or comment; check the context)",
-          "rule": "PROMPT_INJECTION",
-          "severity": "medium"
-        }
-      ],
-      "hash_drift": null,
-      "hosts": [],
-      "managed": false,
-      "name": "import-memory",
-      "path": "/root/.claude/skills/synced/50314b33-7e9c-4caf-947a-a7e8d3ec1b07_10abc18c-c886-4df6-aa3e-e4ff4fac9bbc/import-memory",
-      "risk": "medium",
-      "scope": "synced",
-      "scripts": [],
-      "warnings": []
-    },
-    {
-      "allowed_tools": "",
-      "errors": [],
-      "findings": [],
-      "hash_drift": null,
-      "hosts": [
-        "claude.ai",
-        "github.com",
-        "openfontlicense.org"
-      ],
-      "managed": false,
-      "name": "morning",
-      "path": "/root/.claude/skills/synced/50314b33-7e9c-4caf-947a-a7e8d3ec1b07_10abc18c-c886-4df6-aa3e-e4ff4fac9bbc/morning",
-      "risk": "none",
-      "scope": "synced",
-      "scripts": [],
-      "warnings": []
-    },
-    {
-      "allowed_tools": "",
-      "errors": [],
-      "findings": [],
-      "hash_drift": null,
-      "hosts": [
-        "www.anthropic.com"
-      ],
-      "managed": false,
-      "name": "pdf",
-      "path": "/root/.claude/skills/synced/50314b33-7e9c-4caf-947a-a7e8d3ec1b07_10abc18c-c886-4df6-aa3e-e4ff4fac9bbc/pdf",
-      "risk": "low",
-      "scope": "synced",
-      "scripts": [
-        "scripts/check_bounding_boxes.py",
-        "scripts/check_fillable_fields.py",
-        "scripts/convert_pdf_to_images.py",
-        "scripts/create_validation_image.py",
-        "scripts/extract_form_field_info.py",
-        "scripts/extract_form_structure.py",
-        "scripts/fill_fillable_fields.py",
-        "scripts/fill_pdf_form_with_annotations.py"
-      ],
-      "warnings": []
-    },
-    {
-      "allowed_tools": "",
-      "errors": [],
-      "findings": [
-        {
-          "file": "scripts/thumbnail.py",
-          "line": 200,
-          "message": "runs external commands",
-          "rule": "SHELL_EXEC",
-          "severity": "medium"
-        },
-        {
-          "file": "scripts/office/soffice.py",
-          "line": 28,
-          "message": "reads environment variables",
-          "rule": "ENV_READ",
-          "severity": "low"
-        },
-        {
-          "file": "scripts/office/soffice.py",
-          "line": 38,
-          "message": "runs external commands",
-          "rule": "SHELL_EXEC",
-          "severity": "medium"
-        },
-        {
-          "file": "scripts/office/soffice.py",
-          "line": 55,
-          "message": "network access",
-          "rule": "NETWORK",
-          "severity": "medium"
-        },
-        {
-          "file": "scripts/office/validators/redlining.py",
-          "line": 254,
-          "message": "runs external commands",
-          "rule": "SHELL_EXEC",
-          "severity": "medium"
-        }
-      ],
-      "hash_drift": null,
-      "hosts": [
-        "dublincore.org",
-        "github.com",
-        "purl.org",
-        "schemas.microsoft.com",
-        "schemas.openxmlformats.org",
-        "www.anthropic.com",
-        "www.w3.org"
-      ],
-      "managed": false,
-      "name": "pptx",
-      "path": "/root/.claude/skills/synced/50314b33-7e9c-4caf-947a-a7e8d3ec1b07_10abc18c-c886-4df6-aa3e-e4ff4fac9bbc/pptx",
-      "risk": "medium",
-      "scope": "synced",
-      "scripts": [
-        "scripts/__init__.py",
-        "scripts/add_slide.py",
-        "scripts/apply_theme.js",
-        "scripts/clean.py",
-        "scripts/office/helpers/__init__.py",
-        "scripts/office/helpers/pptx_chart.py",
-        "scripts/office/helpers/pptx_slide.py",
-        "scripts/office/helpers/pptx_theme.py",
-        "scripts/office/soffice.py",
-        "scripts/office/validate.py",
-        "scripts/office/validators/__init__.py",
-        "scripts/office/validators/base.py",
-        "scripts/office/validators/docx.py",
-        "scripts/office/validators/pptx.py",
-        "scripts/office/validators/redlining.py",
-        "scripts/thumbnail.py"
-      ],
-      "warnings": []
-    },
-    {
-      "allowed_tools": "",
-      "errors": [],
-      "findings": [],
-      "hash_drift": null,
-      "hosts": [],
-      "managed": false,
-      "name": "setup-writing-style",
-      "path": "/root/.claude/skills/synced/50314b33-7e9c-4caf-947a-a7e8d3ec1b07_10abc18c-c886-4df6-aa3e-e4ff4fac9bbc/setup-writing-style",
-      "risk": "low",
-      "scope": "synced",
-      "scripts": [
-        "scripts/stylometry.py"
-      ],
-      "warnings": []
-    },
-    {
-      "allowed_tools": "",
-      "errors": [],
-      "findings": [
-        {
-          "file": "SKILL.md",
-          "line": 113,
-          "message": "asks to send secrets out (in a warning or comment; check the context)",
-          "rule": "EXFILTRATION",
-          "severity": "medium"
-        },
-        {
-          "file": "scripts/improve_description.py",
-          "line": 33,
-          "message": "reads environment variables",
-          "rule": "ENV_READ",
-          "severity": "low"
-        },
-        {
-          "file": "scripts/improve_description.py",
-          "line": 35,
-          "message": "runs external commands",
-          "rule": "SHELL_EXEC",
-          "severity": "medium"
-        },
-        {
-          "file": "scripts/run_eval.py",
-          "line": 83,
-          "message": "reads environment variables",
-          "rule": "ENV_READ",
-          "severity": "low"
-        },
-        {
-          "file": "scripts/run_eval.py",
-          "line": 85,
-          "message": "runs external commands",
-          "rule": "SHELL_EXEC",
-          "severity": "medium"
-        },
-        {
-          "file": "eval-viewer/generate_review.py",
-          "line": 411,
-          "message": "runs external commands",
-          "rule": "SHELL_EXEC",
-          "severity": "medium"
-        }
-      ],
-      "hash_drift": null,
-      "hosts": [
-        "cdn.sheetjs.com",
-        "fonts.googleapis.com",
-        "fonts.gstatic.com",
-        "localhost",
-        "www.apache.org"
-      ],
-      "managed": false,
-      "name": "skill-creator",
-      "path": "/root/.claude/skills/synced/50314b33-7e9c-4caf-947a-a7e8d3ec1b07_10abc18c-c886-4df6-aa3e-e4ff4fac9bbc/skill-creator",
-      "risk": "medium",
-      "scope": "synced",
-      "scripts": [
-        "eval-viewer/generate_review.py",
-        "scripts/__init__.py",
-        "scripts/aggregate_benchmark.py",
-        "scripts/generate_report.py",
-        "scripts/improve_description.py",
-        "scripts/package_skill.py",
-        "scripts/quick_validate.py",
-        "scripts/run_eval.py",
-        "scripts/run_loop.py",
-        "scripts/utils.py"
-      ],
-      "warnings": []
-    },
-    {
-      "allowed_tools": "",
-      "errors": [],
-      "findings": [
-        {
-          "file": "scripts/daw.py",
-          "line": 2,
-          "message": "network access",
-          "rule": "NETWORK",
-          "severity": "medium"
-        },
-        {
-          "file": "scripts/daw.py",
-          "line": 127,
-          "message": "reads environment variables",
-          "rule": "ENV_READ",
-          "severity": "low"
-        }
-      ],
-      "hash_drift": null,
-      "hosts": [],
-      "managed": false,
-      "name": "stratawright-daw",
-      "path": "/root/.claude/skills/synced/50314b33-7e9c-4caf-947a-a7e8d3ec1b07_10abc18c-c886-4df6-aa3e-e4ff4fac9bbc/stratawright-daw",
-      "risk": "medium",
-      "scope": "synced",
-      "scripts": [
-        "scripts/daw.py",
-        "scripts/install.sh"
-      ],
-      "warnings": []
-    },
-    {
-      "allowed_tools": "",
-      "errors": [],
-      "findings": [
-        {
-          "file": "scripts/recalc.py",
-          "line": 44,
-          "message": "runs external commands",
-          "rule": "SHELL_EXEC",
-          "severity": "medium"
-        },
-        {
-          "file": "scripts/office/soffice.py",
-          "line": 28,
-          "message": "reads environment variables",
-          "rule": "ENV_READ",
-          "severity": "low"
-        },
-        {
-          "file": "scripts/office/soffice.py",
-          "line": 38,
-          "message": "runs external commands",
-          "rule": "SHELL_EXEC",
-          "severity": "medium"
-        },
-        {
-          "file": "scripts/office/soffice.py",
-          "line": 55,
-          "message": "network access",
-          "rule": "NETWORK",
-          "severity": "medium"
-        },
-        {
-          "file": "scripts/office/validators/redlining.py",
-          "line": 254,
-          "message": "runs external commands",
-          "rule": "SHELL_EXEC",
-          "severity": "medium"
-        }
-      ],
-      "hash_drift": null,
-      "hosts": [
-        "dublincore.org",
-        "github.com",
-        "openoffice.org",
-        "purl.org",
-        "schemas.microsoft.com",
-        "schemas.openxmlformats.org",
-        "www.anthropic.com",
-        "www.w3.org"
-      ],
-      "managed": false,
-      "name": "xlsx",
-      "path": "/root/.claude/skills/synced/50314b33-7e9c-4caf-947a-a7e8d3ec1b07_10abc18c-c886-4df6-aa3e-e4ff4fac9bbc/xlsx",
-      "risk": "medium",
-      "scope": "synced",
-      "scripts": [
-        "scripts/office/helpers/__init__.py",
-        "scripts/office/helpers/pptx_chart.py",
-        "scripts/office/helpers/pptx_slide.py",
-        "scripts/office/helpers/pptx_theme.py",
-        "scripts/office/soffice.py",
-        "scripts/office/validate.py",
-        "scripts/office/validators/__init__.py",
-        "scripts/office/validators/base.py",
-        "scripts/office/validators/docx.py",
-        "scripts/office/validators/pptx.py",
-        "scripts/office/validators/redlining.py",
-        "scripts/recalc.py"
-      ],
-      "warnings": []
-    },
-    {
-      "allowed_tools": "",
-      "errors": [],
-      "findings": [],
-      "hash_drift": null,
-      "hosts": [
-        "explorer.solana.com"
-      ],
-      "managed": false,
-      "name": "done-protocol",
-      "path": "/home/user/requirements.txt/.agents/skills/done_protocol",
+      "path": "/home/runner/work/requirements.txt/requirements.txt/.agents/skills/done_protocol",
       "risk": "low",
       "scope": "codex",
       "scripts": [
@@ -675,7 +111,7 @@
       ],
       "managed": false,
       "name": "breakdown-pr",
-      "path": "/home/user/requirements.txt/.github/HarnessFlow/skills/breakdown-pr",
+      "path": "/home/runner/work/requirements.txt/requirements.txt/.github/HarnessFlow/skills/breakdown-pr",
       "risk": "none",
       "scope": "harnessflow",
       "scripts": [],
@@ -689,7 +125,7 @@
       "hosts": [],
       "managed": false,
       "name": "claude-native-skills-subagents",
-      "path": "/home/user/requirements.txt/.github/HarnessFlow/skills/claude-native-skills-subagents",
+      "path": "/home/runner/work/requirements.txt/requirements.txt/.github/HarnessFlow/skills/claude-native-skills-subagents",
       "risk": "none",
       "scope": "harnessflow",
       "scripts": [],
@@ -705,7 +141,7 @@
       "hosts": [],
       "managed": false,
       "name": "code-review-and-quality",
-      "path": "/home/user/requirements.txt/.github/HarnessFlow/skills/code-review-and-quality",
+      "path": "/home/runner/work/requirements.txt/requirements.txt/.github/HarnessFlow/skills/code-review-and-quality",
       "risk": "none",
       "scope": "harnessflow",
       "scripts": [],
@@ -719,7 +155,7 @@
       "hosts": [],
       "managed": false,
       "name": "code-simplification",
-      "path": "/home/user/requirements.txt/.github/HarnessFlow/skills/code-simplification",
+      "path": "/home/runner/work/requirements.txt/requirements.txt/.github/HarnessFlow/skills/code-simplification",
       "risk": "none",
       "scope": "harnessflow",
       "scripts": [],
@@ -735,7 +171,7 @@
       ],
       "managed": false,
       "name": "weekly-update-report",
-      "path": "/home/user/requirements.txt/.github/HarnessFlow/skills/weekly-update-report",
+      "path": "/home/runner/work/requirements.txt/requirements.txt/.github/HarnessFlow/skills/weekly-update-report",
       "risk": "none",
       "scope": "harnessflow",
       "scripts": [],
@@ -753,7 +189,7 @@
       ],
       "managed": false,
       "name": "write-readme",
-      "path": "/home/user/requirements.txt/.github/HarnessFlow/skills/write-readme",
+      "path": "/home/runner/work/requirements.txt/requirements.txt/.github/HarnessFlow/skills/write-readme",
       "risk": "none",
       "scope": "harnessflow",
       "scripts": [],
@@ -763,8 +199,8 @@
   "summary": {
     "high": 0,
     "info": 0,
-    "low": 6,
-    "medium": 7,
-    "none": 16
+    "low": 3,
+    "medium": 0,
+    "none": 8
   }
 }

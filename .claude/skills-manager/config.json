@@ -6,7 +6,7 @@
       "path": "skills",
       "trust": "official",
       "note": "Anthropic's official example skills (Apache-2.0 / source-available per skill).",
-      "commit": "dbd4588f9e1033efb41dad4bef2f7947c8993d44"
+      "commit": "ca45fc496a3436251f191354091d557da31c15b5"
     },
     {
       "id": "obra-superpowers",

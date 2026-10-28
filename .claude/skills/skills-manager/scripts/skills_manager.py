@@ -387,9 +387,14 @@ def discover_local(root):
 
 
 def git(*args, cwd=None, timeout=180):
+    """A slow network is a result, not a crash: a timeout comes back as a failed run (exit 124) so callers report
+    BLOCKED the same way they do for an unreachable host."""
     env = {**os.environ, "GIT_TERMINAL_PROMPT": "0"}
-    return subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "-c", "protocol.ext.allow=never", *args],
-                          cwd=cwd, env=env, capture_output=True, text=True, timeout=timeout)
+    cmd = ["git", "-c", "core.hooksPath=/dev/null", "-c", "protocol.ext.allow=never", *args]
+    try:
+        return subprocess.run(cmd, cwd=cwd, env=env, capture_output=True, text=True, timeout=timeout)
+    except subprocess.TimeoutExpired:
+        return subprocess.CompletedProcess(cmd, 124, "", f"git {args[0]} timed out after {timeout}s")
 
 
 def source_checkout(src, refresh=False):
@@ -655,7 +660,8 @@ def install(root, cfg, name, source=None, scope=None, accept_risk=False, force=F
 
 
 def installed_path(entry, root):
-    p = Path(entry["path"])
+    """Where the skill's files are now: its skill-root folder, or the parked copy while disabled."""
+    p = Path(entry["disabled"]["parked"] if entry.get("disabled") else entry["path"])
     return p if p.is_absolute() else root / p
 
 
@@ -682,6 +688,51 @@ def remove(root, name, scope, yes=False):
     return {"removed": str(path), "backup": str(b) if b else None}
 
 
+def disable(root, name, scope):
+    """Park a managed skill outside the skill root so Claude Code stops loading it. Files and hashes stay as they
+    are (a rename, not a copy), so `enable` puts back exactly what was there."""
+    check_name(name)
+    reg = load_registry(scope, root)
+    entry = reg["installed"].get(name)
+    if not entry:
+        raise Refused(f"{name!r} is not managed by skills-manager in {scope} scope; it won't touch skills it didn't install")
+    if entry.get("disabled"):
+        raise Refused(f"{name!r} is already disabled")
+    src = installed_path(entry, root)
+    if not (src / "SKILL.md").is_file():
+        raise Refused(f"{src} has no SKILL.md; run `audit`")
+    parked = state_dir(scope, root) / "disabled" / name
+    if parked.exists():
+        raise Refused(f"{parked} already exists; move it away first")
+    parked.parent.mkdir(parents=True, exist_ok=True)
+    src.replace(parked)
+    entry["disabled"] = {"at": now(), "parked": os.path.relpath(parked, root) if scope == "project" else str(parked)}
+    save_registry(reg, scope, root)
+    log_history(scope, root, "disable", name, "PASS", parked=entry["disabled"]["parked"])
+    return {"disabled": name, "parked": str(parked)}
+
+
+def enable(root, name, scope):
+    check_name(name)
+    reg = load_registry(scope, root)
+    entry = reg["installed"].get(name)
+    if not entry or not entry.get("disabled"):
+        raise Refused(f"{name!r} is not a disabled skill managed in {scope} scope")
+    parked = installed_path(entry, root)
+    target = Path(entry["path"]) if Path(entry["path"]).is_absolute() else root / entry["path"]
+    if target.exists():
+        raise Refused(f"{target} exists again (another copy?); resolve that first")
+    if not (parked / "SKILL.md").is_file():
+        raise Refused(f"parked copy {parked} is missing")
+    target.parent.mkdir(parents=True, exist_ok=True)
+    parked.replace(target)
+    del entry["disabled"]
+    entry["verification"] = {"status": "NOT RUN"}
+    save_registry(reg, scope, root)
+    log_history(scope, root, "enable", name, "PASS")
+    return {"enabled": name, "path": str(target)}
+
+
 def rollback(root, name, scope):
     """Restore the newest backup of `name` (made by remove, or by install/update --force replacing it)."""
     check_name(name)
@@ -695,10 +746,12 @@ def rollback(root, name, scope):
     if target.exists():
         backup(target, scope, root, name + ".pre-rollback")
         shutil.rmtree(target)
+    if prev and prev.get("disabled"):
+        shutil.rmtree(installed_path(prev, root), ignore_errors=True)  # the restored copy replaces the parked one
     shutil.copytree(snaps[-1], target, symlinks=True)
     hashes = file_hashes(target)
     if prev:
-        prev = {k: v for k, v in prev.items() if k != "removed_at"}
+        prev = {k: v for k, v in prev.items() if k not in ("removed_at", "disabled")}
         prev.update(files=hashes, content_hash=content_hash(hashes), restored_from=str(snaps[-1]), restored_at=now(),
                     verification={"status": "NOT RUN"})
         reg["installed"][name] = prev
@@ -713,6 +766,8 @@ def update(root, cfg, name, scope, yes=False, accept_risk=False):
     entry = reg["installed"].get(name)
     if not entry:
         raise Refused(f"{name!r} is not managed in {scope} scope")
+    if entry.get("disabled") and yes:
+        raise Refused(f"{name!r} is disabled; `enable` it first (updating would switch it back on)")
     remote, problems = discover_remote(cfg, refresh=True, only=entry["source"])
     if problems:
         raise Refused(f"could not refresh {entry['source']}: {problems[0]['error']}")
@@ -767,7 +822,9 @@ def upgrade(root, cfg, scope="project", yes=False):
             if not changed:
                 continue
             risk = scan(Path(cand["path"]))["risk"]
-            if cand["errors"]:
+            if e.get("disabled"):
+                held.append({"name": e["name"], "reason": "disabled; `enable` it to take the update"})
+            elif cand["errors"]:
                 held.append({"name": e["name"], "reason": "invalid SKILL.md: " + "; ".join(cand["errors"])})
             elif SEVERITY[risk] >= SEVERITY[cfg["policy"]["confirm_risk"]]:
                 held.append({"name": e["name"], "reason": f"new version scans {risk}; run `inspect` and review"})
@@ -844,6 +901,17 @@ def verify(root, cfg, name, scope, live=False, load=False):
     if not entry:
         checks.append(check("managed by skills-manager", "FAIL", f"not in {scope} registry"))
         return checks
+    if entry.get("disabled"):
+        parked = installed_path(entry, root)
+        ok = (parked / "SKILL.md").is_file() and file_hashes(parked) == entry["files"]
+        checks.append(check("parked copy intact", "PASS" if ok else "FAIL", str(parked)))
+        checks.append(check("enabled", "BLOCKED", f"disabled {entry['disabled']['at']}; run `enable {name}`"))
+        if live:
+            skills, err = claude_init(root)
+            checks.append(check("Claude Code no longer discovers it", "BLOCKED" if err else ("FAIL" if name in skills else "PASS"),
+                                err or f"{len(skills)} skills in init event"))
+        log_history(scope, root, "verify", name, "FAIL" if not ok else "DISABLED", live=live)
+        return checks
     path = installed_path(entry, root)
     checks.append(check("files installed", "PASS" if (path / "SKILL.md").is_file() else "FAIL", str(path)))
     if (path / "SKILL.md").is_file():
@@ -904,6 +972,12 @@ def audit(root, write=True):
             if not (installed_path(e, root) / "SKILL.md").is_file():
                 rows.append({"name": name, "scope": scope, "path": e["path"], "managed": True, "risk": "unknown",
                              "errors": ["registered but missing on disk"], "findings": [], "hash_drift": None})
+            elif e.get("disabled"):
+                d = installed_path(e, root)
+                now_h = file_hashes(d)
+                rows.append({"name": name, "scope": scope, "path": str(d), "managed": True, "disabled": True,
+                             "risk": scan(d)["risk"], "findings": [], "errors": [], "warnings": [],
+                             "hash_drift": sorted(k for k in set(e["files"]) | set(now_h) if e["files"].get(k) != now_h.get(k))})
     names = {}
     for r in rows:
         if r["scope"] in ("project", "user"):
@@ -919,7 +993,7 @@ def audit(root, write=True):
     return report
 
 
-def doctor(root, cfg, live=False):
+def doctor(root, cfg, live=False, offline=False):
     checks = [check("python ≥ 3.8", "PASS" if sys.version_info >= (3, 8) else "FAIL", sys.version.split()[0]),
               check("git available", "PASS" if shutil.which("git") else "FAIL", shutil.which("git") or "install git")]
     try:
@@ -932,7 +1006,7 @@ def doctor(root, cfg, live=False):
         checks.append(check("cache writable", "FAIL", str(e)))
     cfg_path = state_dir("project", root) / "config.json"
     checks.append(check("config.json present", "PASS" if cfg_path.exists() else "FAIL", str(cfg_path)))
-    for src in cfg["sources"]:
+    for src in ([] if offline else cfg["sources"]):
         r = git("ls-remote", src["url"], "HEAD", timeout=30) if shutil.which("git") else None
         ok = r is not None and r.returncode == 0
         checks.append(check(f"source {src['id']} reachable", "PASS" if ok else "BLOCKED",
@@ -955,7 +1029,8 @@ def doctor(root, cfg, live=False):
     for scope in ("project", "user"):
         for name, e in load_registry(scope, root)["installed"].items():
             ok = (installed_path(e, root) / "SKILL.md").is_file()
-            checks.append(check(f"registry entry {name} ({scope}) on disk", "PASS" if ok else "FAIL", e["path"]))
+            where = f"parked (disabled) at {e['disabled']['parked']}" if e.get("disabled") else e["path"]
+            checks.append(check(f"registry entry {name} ({scope}) on disk", "PASS" if ok else "FAIL", where))
     checks.append(check("claude CLI available", "PASS" if shutil.which("claude") else "BLOCKED", shutil.which("claude") or "not installed"))
     if live:
         skills, err = claude_init(root)
@@ -963,6 +1038,38 @@ def doctor(root, cfg, live=False):
     for s in mcp_servers(root):
         checks.append(check(f"MCP server {s['name']}", "FAIL" if "error" in s else "PASS", s.get("error") or s["command"]))
     return checks
+
+
+def autopilot(root, cfg, scope="project"):
+    """The unattended run (nightly CI): health, `upgrade --yes`, re-verify every managed skill, audit.
+    It only does what SKILL.md allows without a person: no new installs, no --accept-risk, no --force, no moving a
+    held pin. Anything that needs a human comes back in `attention`; the caller exits non-zero so the run goes red."""
+    attention = []
+    health = doctor(root, cfg)
+    attention += [f"doctor: {c['check']}: {c['detail']}" for c in health if c["status"] == "FAIL"]
+    rows = upgrade(root, cfg, scope, yes=True)
+    for r in rows:
+        if r["status"] in ("held", "BLOCKED"):
+            why = "; ".join(f"{h['name']}: {h['reason']}" for h in r.get("held", [])) or r.get("detail", "")
+            attention.append(f"upgrade {r['status']}: {r['source']}: {why}")
+    cfg = load_config(root)  # upgrade may have moved pins
+    verified = {}
+    for name in load_registry(scope, root)["installed"]:
+        checks = verify(root, cfg, name, scope)
+        verified[name] = {c["check"]: c["status"] for c in checks}
+        attention += [f"verify {name}: {c['check']}: {c['detail']}" for c in checks if c["status"] == "FAIL"]
+    rep = audit(root)
+    for r in rep["skills"]:
+        if r["risk"] == "high" or r["errors"] or r.get("hash_drift"):
+            attention.append(f"audit {r['name']} ({r['scope']}): risk {r['risk']}"
+                             + (f", errors {r['errors']}" if r["errors"] else "")
+                             + (f", changed by hand: {r['hash_drift']}" if r.get("hash_drift") else ""))
+    result = {"at": now(), "status": "ATTENTION" if attention else "PASS", "attention": attention,
+              "upgrade": [{k: v for k, v in r.items() if k in ("source", "status", "detail", "upstream")} for r in rows],
+              "verified": verified, "audit": rep["summary"],
+              "upgraded": [c["name"] for r in rows if r["status"] == "upgraded" for c in r.get("changes", [])]}
+    log_history(scope, root, "autopilot", "*", result["status"], attention=len(attention), upgraded=result["upgraded"])
+    return result
 
 
 # ---------------------------------------------------------------- CLI
@@ -1013,11 +1120,17 @@ def main(argv=None):
     p.add_argument("--yes", action="store_true"); p.add_argument("--accept-risk", action="store_true")
     p = sub.add_parser("remove", help="remove a skill this tool installed (backup kept; needs --yes)")
     p.add_argument("name"); p.add_argument("--scope", choices=["project", "user"], default="project"); p.add_argument("--yes", action="store_true")
+    for cmd, h in (("disable", "stop Claude Code loading a managed skill (files parked, not deleted)"),
+                   ("enable", "put a disabled skill back where Claude Code loads it")):
+        p = sub.add_parser(cmd, help=h)
+        p.add_argument("name"); p.add_argument("--scope", choices=["project", "user"], default="project")
     p = sub.add_parser("rollback", help="restore the newest backup of a skill")
     p.add_argument("name"); p.add_argument("--scope", choices=["project", "user"], default="project")
     sub.add_parser("audit", help="scan every local skill; writes .claude/skills-manager/reports/skills-audit.json")
     p = sub.add_parser("doctor", help="diagnose config, sources, skill folders and the registry")
-    p.add_argument("--live", action="store_true")
+    p.add_argument("--live", action="store_true"); p.add_argument("--offline", action="store_true", help="skip the source reachability checks")
+    p.add_argument("--brief", action="store_true", help="one summary line plus anything that isn't PASS (for session start)")
+    sub.add_parser("autopilot", help="unattended run: doctor, upgrade --yes, verify, audit; exit 1 when a human is needed")
     p = sub.add_parser("upgrade", help="move pinned sources to upstream HEAD and update installed skills; low-risk only, --yes applies")
     p.add_argument("--scope", choices=["project", "user"], default="project"); p.add_argument("--yes", action="store_true")
     p = sub.add_parser("pin", help="pin a source to a commit in config.json (default: its current HEAD); --clear unpins")
@@ -1051,6 +1164,10 @@ def main(argv=None):
             managed = {n for s in ("project", "user") for n in load_registry(s, root)["installed"]}
             for r in recs:
                 print(fmt_rec(r) + ("  [managed]" if r["name"] in managed and r["source_type"] == "local" else ""))
+            for s in ("project", "user"):
+                for n, e in load_registry(s, root)["installed"].items():
+                    if e.get("disabled"):
+                        print(f"  {n:<28} [disabled: {s}] parked at {e['disabled']['parked']}  (enable to use)")
             for s in mcp_servers(root):
                 print(f"  MCP server: {s['name']} ({s.get('command', s.get('error'))})")
             for pr in problems:
@@ -1123,6 +1240,12 @@ def main(argv=None):
             if a.json:
                 return out(res)
             print(f"Removed {res['removed']}\n  backup: {res['backup']}\n  undo:   skills_manager.py rollback {a.name}")
+        elif a.cmd in ("disable", "enable"):
+            res = (disable if a.cmd == "disable" else enable)(root, a.name, a.scope)
+            if a.json:
+                return out(res)
+            print(f"Disabled {a.name}: parked at {res['parked']}\n  undo: skills_manager.py enable {a.name}" if a.cmd == "disable"
+                  else f"Enabled {a.name}: {res['path']}\n  next: skills_manager.py verify {a.name} --live")
         elif a.cmd == "rollback":
             res = rollback(root, a.name, a.scope)
             if a.json:
@@ -1138,9 +1261,15 @@ def main(argv=None):
                 print(f"  {r['risk'].upper():<7} {r['name']:<28} {r['scope']:<11} {'; '.join(flags)}")
             print(f"summary: {rep['summary']}  duplicates: {rep['duplicates'] or 'none'}\nwritten: {rep['written_to']}")
         elif a.cmd == "doctor":
-            checks = doctor(root, cfg, a.live)
+            checks = doctor(root, cfg, a.live, a.offline)
             if a.json:
                 out(checks)
+            elif a.brief:
+                bad = [c for c in checks if c["status"] not in ("PASS", "BLOCKED")]
+                n = sum(len(load_registry(s, root)["installed"]) for s in ("project", "user"))
+                print(f"skills-manager: {len(discover_local(root))} local skills, {n} managed, "
+                      + (f"{len(bad)} problem(s):" if bad else "all checks PASS"))
+                print_checks(bad)
             else:
                 print_checks(checks)
             return 1 if any(c["status"] == "FAIL" for c in checks) else 0
@@ -1156,6 +1285,23 @@ def main(argv=None):
                     for h in r.get("held", []):
                         print(f"      HELD   {h['name']}: {h['reason']}")
             return 1 if any(r["status"] in ("held", "BLOCKED") for r in rows) else 0
+        elif a.cmd == "autopilot":
+            res = autopilot(root, cfg)
+            if a.json:
+                out(res)
+            else:
+                print(f"## Skills autopilot: {res['status']}  ({res['at']})\n")
+                for r in res["upgrade"]:
+                    print(f"- upgrade `{r['source']}`: {r['status']}" + (f" ({r['detail']})" if r.get("detail") else ""))
+                print(f"- upgraded skills: {', '.join(res['upgraded']) or 'none'}")
+                for n, c in res["verified"].items():
+                    print(f"- verify `{n}`: " + ", ".join(f"{k} {v}" for k, v in c.items() if v != "NOT RUN"))
+                print(f"- audit: {res['audit']}")
+                if res["attention"]:
+                    print("\n### Needs a human\n")
+                    for x in res["attention"]:
+                        print(f"- {x}")
+            return 1 if res["attention"] else 0
         elif a.cmd == "pin":
             res = pin_source(root, a.source, a.commit, a.clear)
             if a.json:

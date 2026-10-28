@@ -407,11 +407,27 @@ def test_worker_resumes_approved_work_and_never_approves(repo):
     ready = orch.plan_steps(store, tb, "t", Playbook("t", (Step("s", "", "devops", "git_status"),)))
     waiting = orch.plan_steps(store, tb, "llm", Playbook("p", (Step("s", "", "devops", "git_status"),)),
                               requires_approval=True)
-    wk = Worker(store, tb, playbook=None, every=3600)
+    wk = Worker(store, tb, playbook=None, every=3600, idle=0)
     assert wk.tick() == [(ready, "COMPLETED")]
     assert store.mission(waiting)["state"] == "NEEDS_APPROVAL" and store.calls(waiting) == []
     assert store.heartbeats()[0]["worker"] == wk.orch.worker
     assert wk.tick() == []  # nothing left to do, nothing scheduled
+
+
+def test_worker_leaves_a_mission_another_process_is_running(repo):
+    # Regression: the session worker picked up a `run health` in progress and marked it BLOCKED.
+    store, tb = make(repo)
+    pb = Playbook("t", (Step("a", "", "devops", "git_status"), Step("b", "", "devops", "git_status")))
+    mid = orch.plan_steps(store, tb, "t", pb)
+    assert Worker(store, tb, playbook=None, every=3600).resumable() == []  # just created: someone is on it
+    store.move_mission(mid, State.RUNNING, "other process")
+    store.move_task(f"{mid}.a", State.RUNNING, "other process", lease_owner="other:1",
+                    lease_expires_at=store.clock() + 300)
+    wk = Worker(store, tb, playbook=None, every=3600, idle=0)
+    assert wk.resumable() == [] and wk.tick() == []  # live lease: hands off
+    # Even if a second runner gets in, it doesn't finalize a mission whose task another runner holds.
+    assert orch.Orchestrator(store, tb).run(mid) == "RUNNING"
+    assert store.task(f"{mid}.a")["state"] == "RUNNING"
 
 
 def test_old_database_is_migrated(tmp_path):

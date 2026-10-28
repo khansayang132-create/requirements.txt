@@ -1,5 +1,11 @@
 {
-  "failed": [],
+  "failed": [
+    {
+      "error": "/home/user/requirements.txt/.claude/skills/frontend-design already exists; pass --force to replace it (a backup is kept)",
+      "name": "frontend-design",
+      "ts": "2026-10-28T20:32:15+00:00"
+    }
+  ],
   "installed": {
     "frontend-design": {
       "backup": "/home/user/requirements.txt/.claude/skills-manager/backups/frontend-design/20261023T195727127459",
@@ -41,11 +47,11 @@
       "trust": "official",
       "url": "https://github.com/anthropics/skills",
       "verification": {
-        "at": "2026-10-23T20:26:53+00:00",
+        "at": "2026-10-28T20:45:41+00:00",
         "checks": [
           {
             "check": "files installed",
-            "detail": "/home/user/requirements.txt/.claude/skills/frontend-design",
+            "detail": "/home/runner/work/requirements.txt/requirements.txt/.claude/skills/frontend-design",
             "status": "PASS"
           },
           {
@@ -65,12 +71,12 @@
           },
           {
             "check": "location is a Claude Code skill root",
-            "detail": "/home/user/requirements.txt/.claude/skills",
+            "detail": "/home/runner/work/requirements.txt/requirements.txt/.claude/skills",
             "status": "PASS"
           },
           {
             "check": "source exists",
-            "detail": "https://github.com/anthropics/skills HEAD dbd4588f9e10",
+            "detail": "https://github.com/anthropics/skills HEAD ca45fc496a34",
             "status": "PASS"
           },
           {
@@ -80,8 +86,8 @@
           },
           {
             "check": "Claude Code discovers it",
-            "detail": "43 skills in init event",
-            "status": "PASS"
+            "detail": "pass --live",
+            "status": "NOT RUN"
           },
           {
             "check": "Claude Code loads it",

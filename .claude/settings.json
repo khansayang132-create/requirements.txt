@@ -12,6 +12,11 @@
             "type": "command",
             "command": "[ \"$CLAUDE_CODE_REMOTE\" = true ] || exit 0; bash \"$CLAUDE_PROJECT_DIR\"/scripts/agency-setup.sh",
             "timeout": 600
+          },
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR\"/.claude/skills/skills-manager/scripts/skills_manager.py doctor --offline --brief || true",
+            "timeout": 60
           }
         ]
       }

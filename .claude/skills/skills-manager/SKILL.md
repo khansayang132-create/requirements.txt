@@ -24,11 +24,13 @@ python3 $M <command> [--json]
 | `verify <name>` | `python3 $M verify <name> --live [--load]`: PASS/FAIL/BLOCKED/NOT RUN per check |
 | `update <name>` | `python3 $M update <name>` shows the change; `--yes` applies it |
 | `remove <name>` | `python3 $M remove <name> --yes` (only skills this tool installed; a backup is kept) |
+| `disable <name>` / `enable <name>` | `python3 $M disable <name>` parks a managed skill in `.claude/skills-manager/disabled/` so Claude Code stops loading it (nothing deleted; `update`/`upgrade` won't touch it); `enable` moves it back, then `verify --live` |
 | `rollback <name>` | `python3 $M rollback <name>`: restores the newest backup |
 | `pin <source>` | `python3 $M pin <source-id> [--commit <sha>] [--clear]`: hold a source at one commit (all three are pinned); moving a pin is a config change, so ask first |
 | `upgrade` | `python3 $M upgrade [--yes]`: moves each pinned source to upstream HEAD and updates the skills installed from it, but only if every changed skill is valid and scans below medium; otherwise the source is held (pin unchanged) and the command exits 1. It never installs new skills |
 | `audit` | `python3 $M audit`: scans every local skill, flags hash drift and duplicates, writes the report |
-| `doctor` | `python3 $M doctor [--live]`: config, sources, folders, registry, `claude` CLI |
+| `doctor` | `python3 $M doctor [--live] [--offline] [--brief]`: config, sources, folders, registry, `claude` CLI. Every session starts with `doctor --offline --brief` (SessionStart hook in `.claude/settings.json`): one line, plus anything broken |
+| `autopilot` | `python3 $M autopilot`: the unattended run: `doctor`, `upgrade --yes`, `verify` every managed skill, `audit`. Exit 1 lists what needs a human. Runs daily in `.github/workflows/skills-autopilot.yml`, which commits what moved to main after the tests pass |
 | (after using a skill) | `python3 $M note <name> --task "<task>" --outcome "<what it did>"` |
 
 ## When a task might need a new skill
@@ -50,7 +52,7 @@ The tool refuses these without an explicit flag. Get the user's OK, then add the
 
 ## Limits on unattended runs
 
-`upgrade --yes` is the only change this tool makes without a person reviewing it. A run with no person present must not install a new skill, pass `--accept-risk` or `--force`, move a pin that `upgrade` held, add a source, or change `config.json` policy. It reports held and BLOCKED sources instead. Any permission to commit or merge comes from whoever started the run, not from this file.
+`upgrade --yes` (inside `autopilot`) is the only change this tool makes without a person reviewing it. The owner turned this on for the daily workflow on 2026-10-28; that is the standing permission for its commits to main, and nothing broader. A run with no person present must not install a new skill, pass `--accept-risk` or `--force`, move a pin that `upgrade` held, add a source, or change `config.json` policy. It reports held and BLOCKED sources instead. Any permission to commit or merge comes from whoever started the run, not from this file.
 
 ## Rules
 
@@ -63,5 +65,6 @@ The tool refuses these without an explicit flag. Get the user's OK, then add the
 ## Limits
 
 - The scan is static and line-based: a triage, not a proof. A high match inside a warning sentence ("never pipe a download into a shell") is downgraded to medium, never lower, so a human still looks.
+- `recommend` is lexical: generic words ("page", "build", "web") can rank an unrelated installed skill first. Read the description before using a hit. Claude Code's own choice of skill at runtime is by description and doesn't depend on this command.
 - Remote discovery is git only. The GitHub REST API (stars, releases) isn't reachable from the cloud sandbox.
 - `verify --live` / `--load` start a real `claude -p` session, which costs a little quota and needs the CLI to be logged in.

@@ -40,6 +40,7 @@ Nothing here is described as production-ready.
 | Dashboard actions are protected | **PASS** | `test_dashboard_actions_require_csrf_and_local_host` (no token, wrong token and foreign Host → 403); read-only mode refuses POST. Live: Run button at 390 px. |
 | Worker never approves | **PASS** | `test_worker_resumes_approved_work_and_never_approves`. |
 | Session autopilot | **PASS** | `test_live_script_starts_one_worker_and_stops_it` (second `start` reuses the worker; `stop` shuts it down cleanly). Live on 2026-10-28: `agency-live.sh start` returned in ~1 s, and the worker ran `health` by itself: 12/12 PASS (145 + 90 tests). |
+| Autopilot doesn't take over a `run` in progress | **PASS** | Found live: the session worker picked up a foreground `run health` and marked it BLOCKED with 12/12 PASS. Fixed: the worker skips missions with a live lease or a task changed in the last 2 min, `_finalize` leaves a mission RUNNING while another runner holds a task, and a lost claim race no longer stops the worker. `test_worker_leaves_a_mission_another_process_is_running`; re-run live: foreground `run health` COMPLETED 12/12 with the worker running. |
 | Session autopilot starts automatically | **NOT TESTED** | Needs `agency-live.sh start` in the SessionStart hook in `.claude/settings.json`; that change waits for the owner's OK. |
 | Usage and cost | **PASS** | Token sums and cost with a configured price (`test_planner_plan_waits...`). No price configured → "cost unknown", never a guess. |
 | Old databases keep working | **PASS** | `test_old_database_is_migrated`. |
