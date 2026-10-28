@@ -70,6 +70,15 @@ as your Termux, and some phones can't install it. It's not required.)
 - After editing `.env`: run `bash termux/install.sh` again
 - Stop for good: `bash termux/install.sh uninstall`
 
+## Keep OmniRoute connected and up to date (phone)
+
+```
+bash termux/install.sh check    # is OmniRoute answering with your key? is your model there?
+bash termux/install.sh update   # pull the latest bot, update OmniRoute, restart everything, check
+```
+`check` tells you exactly what's wrong: OmniRoute not running, key refused (copy a fresh key from the
+dashboard into `OMNIROUTE_API_KEY`), or `OMNIROUTE_MODEL` not in its model list.
+
 ## Publish the website on your phone (port 8080)
 
 This puts a website running on the phone (for example `http://localhost:8080`) at a fixed public
