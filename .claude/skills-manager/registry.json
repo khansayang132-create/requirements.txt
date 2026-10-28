@@ -47,11 +47,11 @@
       "trust": "official",
       "url": "https://github.com/anthropics/skills",
       "verification": {
-        "at": "2026-10-28T20:31:58+00:00",
+        "at": "2026-10-28T20:45:41+00:00",
         "checks": [
           {
             "check": "files installed",
-            "detail": "/home/user/requirements.txt/.claude/skills/frontend-design",
+            "detail": "/home/runner/work/requirements.txt/requirements.txt/.claude/skills/frontend-design",
             "status": "PASS"
           },
           {
@@ -71,7 +71,7 @@
           },
           {
             "check": "location is a Claude Code skill root",
-            "detail": "/home/user/requirements.txt/.claude/skills",
+            "detail": "/home/runner/work/requirements.txt/requirements.txt/.claude/skills",
             "status": "PASS"
           },
           {
@@ -86,13 +86,13 @@
           },
           {
             "check": "Claude Code discovers it",
-            "detail": "43 skills in init event",
-            "status": "PASS"
+            "detail": "pass --live",
+            "status": "NOT RUN"
           },
           {
             "check": "Claude Code loads it",
-            "detail": "Skill tool called=True; reply: '# Frontend Design'",
-            "status": "PASS"
+            "detail": "pass --load",
+            "status": "NOT RUN"
           }
         ],
         "status": "PASS"
