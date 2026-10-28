@@ -22,6 +22,7 @@ Nothing here is described as production-ready.
 | Token usage and cost (provider-reported tokens; cost only with a configured price) | `report.usage` | — |
 | Dashboard: read-only by default; `--actions` adds CSRF-protected buttons | `dashboard.py` | — |
 | Worker loop and a daily scheduled run on GitHub | `worker.py`, `.github/workflows/agency-nightly.yml` | never approves |
+| Session autopilot: background worker, one per session, health now then hourly | `scripts/agency-live.sh` | never approves |
 
 ## Quality gates
 
@@ -38,6 +39,8 @@ Nothing here is described as production-ready.
 | Health URLs and MCP are allowlisted | **PASS** | Metadata-IP URL refused; empty allowlist reaches nothing. Live: `mcp-check headroom` listed 3 real tools; `deploy-check` PASS on the running dashboard, FAIL on a stopped one. |
 | Dashboard actions are protected | **PASS** | `test_dashboard_actions_require_csrf_and_local_host` (no token, wrong token and foreign Host → 403); read-only mode refuses POST. Live: Run button at 390 px. |
 | Worker never approves | **PASS** | `test_worker_resumes_approved_work_and_never_approves`. |
+| Session autopilot | **PASS** | `test_live_script_starts_one_worker_and_stops_it` (second `start` reuses the worker; `stop` shuts it down cleanly). Live on 2026-10-28: `agency-live.sh start` returned in ~1 s, and the worker ran `health` by itself: 12/12 PASS (145 + 90 tests). |
+| Session autopilot starts automatically | **NOT TESTED** | Needs `agency-live.sh start` in the SessionStart hook in `.claude/settings.json`; that change waits for the owner's OK. |
 | Usage and cost | **PASS** | Token sums and cost with a configured price (`test_planner_plan_waits...`). No price configured → "cost unknown", never a guess. |
 | Old databases keep working | **PASS** | `test_old_database_is_migrated`. |
 | Lint, types, SAST | **PASS** | `ruff check agency`, `mypy agency` clean; bandit -ll clean after triage (7 findings reviewed: SQL identifiers from code with bound values, URLs from owner config or fixed pypi.org; the provider now refuses non-http(s) URLs). |
@@ -51,7 +54,7 @@ Nothing here is described as production-ready.
 
 - History lives in `agency/out/agency.db`, which is gitignored, so each cloud session starts empty. The nightly
   run keeps its report as a workflow artifact.
-- The worker runs while a session or host process keeps it running. The only always-on part is the
-  GitHub schedule.
+- The worker runs while a session or host process keeps it running (`scripts/agency-live.sh start` in a
+  session). The only always-on part is the GitHub schedule.
 - Roles are permissions and verification duties, not separate AI personalities. LLM work happens only in
   `propose_patch`, `llm_review` and the planner.

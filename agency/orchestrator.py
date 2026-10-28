@@ -66,7 +66,7 @@ class Playbook:
 
 
 SHELL_SCRIPTS = ["service/install.sh", "service/test-service.sh", "termux/install.sh", "termux/test-termux.sh",
-                 "scripts/agency-setup.sh"]
+                 "scripts/agency-setup.sh", "scripts/agency-live.sh"]
 
 PLAYBOOKS: dict[str, Playbook] = {
     "health": Playbook("Repository health check: dependencies, tests, lint, secrets", (

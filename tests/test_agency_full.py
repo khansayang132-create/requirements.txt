@@ -431,3 +431,25 @@ def test_provider_refuses_non_http_urls():
     from agency.providers import OpenAICompatible, ProviderUnavailable
     with pytest.raises(ProviderUnavailable, match="http"):
         OpenAICompatible("file:///etc", "k" * 10, "m")
+
+
+def test_live_script_starts_one_worker_and_stops_it(tmp_path):
+    script = Path(__file__).resolve().parents[1] / "scripts" / "agency-live.sh"
+    env = {"PATH": "/usr/bin:/bin", "AGENCY_LIVE_PYTHON": sys.executable, "AGENCY_LIVE_PLAYBOOK": "",
+           "AGENCY_LIVE_DB": str(tmp_path / "agency.db")}
+
+    def live(cmd):
+        return subprocess.run(["bash", str(script), cmd], env=env, capture_output=True, text=True, timeout=60)
+
+    try:
+        first = live("start")
+        assert first.returncode == 0, first.stderr
+        pid = (tmp_path / "worker.pid").read_text().strip()
+        assert f"running (pid {pid}" in first.stdout
+        assert live("start").returncode == 0 and (tmp_path / "worker.pid").read_text().strip() == pid  # no 2nd
+        assert live("status").returncode == 0
+    finally:
+        assert "stopped" in live("stop").stdout
+    status = live("status")
+    assert status.returncode == 1 and "not running" in status.stdout
+    assert "agency worker stopped" in (tmp_path / "worker.log").read_text()  # clean SIGTERM shutdown
