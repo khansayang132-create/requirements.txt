@@ -8,6 +8,11 @@
       "type": "http",
       "url": "https://21st.dev/api/mcp",
       "headers": { "x-api-key": "${API_KEY_21ST:-}" }
+    },
+    "memory": {
+      "command": "python3",
+      "args": ["-m", "memory_agent", "serve"],
+      "env": { "PYTHONPATH": "${CLAUDE_PROJECT_DIR:-.}", "CLAUDE_PROJECT_DIR": "${CLAUDE_PROJECT_DIR:-.}" }
     }
   }
 }

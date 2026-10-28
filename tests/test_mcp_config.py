@@ -26,3 +26,11 @@ def test_21st_server_reads_key_from_env():
 
 def test_project_servers_are_enabled():
     assert set(SETTINGS["enabledMcpjsonServers"]) == set(MCP["mcpServers"])
+
+
+def test_memory_server_runs_the_repo_package():
+    server = MCP["mcpServers"]["memory"]
+    assert server["args"] == ["-m", "memory_agent", "serve"]
+    assert server["env"]["PYTHONPATH"] == "${CLAUDE_PROJECT_DIR:-.}"
+    hooks = json.dumps(SETTINGS["hooks"])
+    assert "memory_agent context" in hooks and "memory_agent export" in hooks

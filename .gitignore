@@ -9,3 +9,5 @@ apex/out/
 .claude/skills-manager/backups/
 agency/out/
 .venv.lock
+.claude/memory/backups/
+.claude/memory/*.tmp

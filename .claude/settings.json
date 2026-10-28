@@ -12,12 +12,28 @@
             "type": "command",
             "command": "[ \"$CLAUDE_CODE_REMOTE\" = true ] || exit 0; bash \"$CLAUDE_PROJECT_DIR\"/scripts/agency-setup.sh",
             "timeout": 600
+          },
+          {
+            "type": "command",
+            "command": "cd \"$CLAUDE_PROJECT_DIR\" && python3 -m memory_agent context",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"$CLAUDE_PROJECT_DIR\" && python3 -m memory_agent export",
+            "timeout": 30
           }
         ]
       }
     ]
   },
-  "enabledMcpjsonServers": ["headroom", "21st"],
+  "enabledMcpjsonServers": ["headroom", "21st", "memory"],
   "env": {
     "MCP_TIMEOUT": "300000"
   }
