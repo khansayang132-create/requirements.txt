@@ -22,7 +22,7 @@ jobs:
       - run: pip install -r requirements.txt pytest bandit==1.8.6
       - run: python -m pytest -q tests
       - run: pip install ruff==0.17.2 && ruff check agency
-      - run: shellcheck -S warning service/install.sh service/test-service.sh termux/install.sh termux/test-termux.sh scripts/agency-setup.sh
+      - run: shellcheck -S warning service/install.sh service/test-service.sh termux/install.sh termux/test-termux.sh scripts/agency-setup.sh scripts/site.sh
 
   service:
     strategy:

@@ -7,6 +7,8 @@
 #   bash termux/install.sh status            are they running?
 #   bash termux/install.sh logs              last lines of the bot's log
 #   bash termux/install.sh uninstall         stop and remove the background services
+#   bash termux/install.sh site              publish the website on this phone (port 8080 by
+#                                            default) at your fixed ngrok address, 24/7
 #
 # For start-after-reboot, also install the "Termux:Boot" app (same place you got Termux,
 # e.g. F-Droid) and open it once.
@@ -110,10 +112,101 @@ install_all() {
     echo "     (Optional: the Termux:Boot app does this step for you, if your phone can install it.)"
 }
 
+# Read KEY=value from .env without running it as shell code.
+env_get() {
+    local line
+    line=$(grep -E "^$1=" "$BOT_DIR/.env" 2>/dev/null | tail -n 1) || true
+    line=${line#*=}; line=${line%$'\r'}; line=${line#\"}; line=${line%\"}
+    printf '%s' "$line"
+}
+
+install_ngrok() {
+    command -v ngrok >/dev/null && return 0
+    local arch
+    case $(uname -m) in
+        aarch64|arm64) arch=arm64 ;;
+        armv7l|armv8l|arm) arch=arm ;;
+        x86_64) arch=amd64 ;;
+        i686|i386) arch=386 ;;
+        *) die "No ngrok build for this phone's CPU ($(uname -m))." ;;
+    esac
+    echo "📦 Installing ngrok..."
+    command -v curl >/dev/null || pkg install -y curl >/dev/null
+    local tmp; tmp=$(mktemp -d)
+    curl -fsSL -o "$tmp/ngrok.tgz" "https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-$arch.tgz" \
+        || die "Could not download ngrok. Check the phone's internet connection."
+    tar -xzf "$tmp/ngrok.tgz" -C "$PREFIX/bin" ngrok
+    chmod +x "$PREFIX/bin/ngrok"
+    rm -rf "$tmp"
+}
+
+# Publish the phone's local website at the owner's fixed ngrok address, as a runit service.
+site() {
+    [[ -f $BOT_DIR/.env ]] || die "No .env yet: copy .env.example to .env first."
+    local token domain port auth public
+    token=$(env_get NGROK_AUTHTOKEN); domain=$(env_get SITE_DOMAIN)
+    port=$(env_get SITE_PORT); port=${port:-8080}
+    auth=$(env_get SITE_AUTH); public=$(env_get SITE_PUBLIC)
+    domain=${domain#https://}; domain=${domain#http://}; domain=${domain%%/*}
+
+    [[ -n $token ]] || die "Set NGROK_AUTHTOKEN in .env (ngrok dashboard → Your Authtoken)."
+    [[ -n $domain ]] || die "Set SITE_DOMAIN in .env to your free ngrok domain (ngrok dashboard → Domains), e.g. name.ngrok-free.app"
+    [[ $port =~ ^[0-9]+$ ]] || die "SITE_PORT must be a number (got: $port)."
+    if [[ -z $auth && $public != yes ]]; then
+        die "Set SITE_AUTH=username:password in .env, so only you (and Claude) can open the site. To publish it to everyone instead, set SITE_PUBLIC=yes."
+    fi
+    if [[ -n $auth ]]; then
+        [[ $auth =~ ^[^:]+:.{8,}$ ]] || die "SITE_AUTH must look like username:password, with a password of 8+ characters."
+        [[ $auth != *\"* && $auth != *\\* ]] || die "SITE_AUTH must not contain quotes or backslashes."
+    fi
+
+    install_ngrok
+    local conf=$HOME/.config/lskhan/ngrok.yml
+    mkdir -p "$(dirname "$conf")"
+    ( umask 077
+      {
+          echo "version: 3"
+          echo "agent:"
+          echo "  authtoken: \"$token\""
+          echo "  console_ui: false"
+          # Android has no /etc/resolv.conf, so Go programs can't find a DNS server by themselves.
+          echo "  dns_resolver_ips: [\"1.1.1.1\", \"8.8.8.8\"]"
+          echo "endpoints:"
+          echo "  - name: lskhan-site"
+          echo "    url: https://$domain"
+          echo "    upstream:"
+          echo "      url: $port"
+          if [[ -n $auth ]]; then
+              echo "    traffic_policy:"
+              echo "      on_http_request:"
+              echo "        - actions:"
+              echo "            - type: basic-auth"
+              echo "              config:"
+              echo "                credentials:"
+              echo "                  - \"$auth\""
+          fi
+      } > "$conf" )
+
+    command -v sv-enable >/dev/null || pkg install -y termux-services >/dev/null
+    pkill -f "ngrok start" 2>/dev/null || true
+    make_service lskhan-site ngrok start --config "\"$conf\"" --log stdout lskhan-site
+    start_service_daemon
+    enable_service lskhan-site
+    command -v termux-wake-lock >/dev/null && timeout 10 termux-wake-lock || true
+
+    if command -v curl >/dev/null && ! curl -s -m 5 -o /dev/null "http://127.0.0.1:$port/"; then
+        echo "⚠️  Nothing answers on http://127.0.0.1:$port yet. Start your website, and the address will work."
+    fi
+    ok "Website published at https://$domain${auth:+ (password protected)}."
+    echo "   It restarts automatically and comes back after a reboot like the bot."
+    echo "   Check:  bash termux/install.sh status"
+    echo "   Log:    tail $PREFIX/var/log/sv/lskhan-site/current"
+}
+
 status() {
     start_service_daemon >/dev/null 2>&1 || true
     local name
-    for name in lskhan-omniroute lskhan-bot; do
+    for name in lskhan-omniroute lskhan-bot lskhan-site; do
         [[ -d $SV/$name ]] || continue
         sv status "$name" || true
     done
@@ -128,7 +221,7 @@ logs() {
 uninstall() {
     start_service_daemon >/dev/null 2>&1 || true
     local name gone
-    for name in lskhan-bot lskhan-omniroute; do
+    for name in lskhan-bot lskhan-omniroute lskhan-site; do
         gone="${SV:?}/.$name.removing"
         rm -rf "$gone" 2>/dev/null || true   # left over from an interrupted uninstall
         [[ -d $SV/$name ]] || continue
@@ -151,5 +244,6 @@ case ${1:-} in
     status)      status ;;
     logs)        logs "${2:-40}" ;;
     uninstall)   uninstall ;;
-    *)           die "Use: bash termux/install.sh [--bot-only | status | logs | uninstall]" ;;
+    site)        site ;;
+    *)           die "Use: bash termux/install.sh [--bot-only | status | logs | site | uninstall]" ;;
 esac
