@@ -116,6 +116,15 @@ def test_unreachable_source_is_reported_not_hidden(env):
     assert [p["source"] for p in problems] == ["gone"]
 
 
+def test_git_timeout_is_blocked_not_a_crash(env, monkeypatch):
+    def slow(cmd, **kw):
+        raise subprocess.TimeoutExpired(cmd, kw.get("timeout"))
+    monkeypatch.setattr(sm.subprocess, "run", slow)
+    r = sm.git("ls-remote", "https://example.invalid/x", "HEAD", timeout=1)
+    assert r.returncode == 124 and "timed out" in r.stderr
+    assert statuses(sm.doctor(env["project"], env["cfg"]))["source test reachable"] == "BLOCKED"
+
+
 def test_search_ranks_by_relevance_and_uses_synonyms(env):
     recs, _ = sm.all_records(env["project"], env["cfg"])
     hits, _ = sm.rank(recs, "browser testing", env["cfg"])
@@ -338,6 +347,62 @@ def test_remove_and_rollback_reject_path_like_names(env, bad):
         sm.rollback(env["project"], bad, "project")
 
 
+def test_disable_parks_files_and_enable_restores_them(env):
+    skill(env["project"] / ".claude/skills/hand-made", "hand-made", "not managed")
+    with pytest.raises(sm.Refused, match="didn't install"):
+        sm.disable(env["project"], "hand-made", "project")
+    install(env, "frontend-design")
+    install(env, "webapp-testing")
+    target = env["project"] / ".claude/skills/frontend-design"
+    before = sm.file_hashes(target)
+    neighbours = {n: sm.file_hashes(env["project"] / ".claude/skills" / n) for n in ("hand-made", "webapp-testing")}
+    res = sm.disable(env["project"], "frontend-design", "project")
+    parked = Path(res["parked"])
+    assert not target.exists() and sm.file_hashes(parked) == before
+    assert parked.parent == env["project"] / ".claude/skills-manager/disabled"
+    # Claude Code scans only the skill roots: the parked copy must not be discoverable
+    assert "frontend-design" not in {r["name"] for r in sm.discover_local(env["project"])}
+    # survives a fresh read of the state files (as a new session would do)
+    assert sm.load_registry("project", env["project"])["installed"]["frontend-design"]["disabled"]["parked"]
+    with pytest.raises(sm.Refused, match="already disabled"):
+        sm.disable(env["project"], "frontend-design", "project")
+    s = statuses(sm.verify(env["project"], env["cfg"], "frontend-design", "project"))
+    assert s == {"parked copy intact": "PASS", "enabled": "BLOCKED"}
+    assert "FAIL" not in statuses(sm.doctor(env["project"], env["cfg"])).values()
+    assert not [r for r in sm.audit(env["project"])["skills"] if r["errors"] or r.get("hash_drift")]
+    sm.enable(env["project"], "frontend-design", "project")
+    assert sm.file_hashes(target) == before and not parked.exists()
+    assert "disabled" not in sm.load_registry("project", env["project"])["installed"]["frontend-design"]
+    assert {n: sm.file_hashes(env["project"] / ".claude/skills" / n) for n in neighbours} == neighbours
+    assert "FAIL" not in statuses(sm.verify(env["project"], env["cfg"], "frontend-design", "project")).values()
+    with pytest.raises(sm.Refused, match="not a disabled skill"):
+        sm.enable(env["project"], "frontend-design", "project")
+    assert [h["action"] for h in sm.read_history("project", env["project"])][-4:] == ["disable", "verify", "enable", "verify"]
+
+
+def test_disabled_skill_is_not_updated_and_can_be_removed_then_rolled_back(env):
+    install(env, "frontend-design")
+    sm.disable(env["project"], "frontend-design", "project")
+    (env["src"] / "skills/frontend-design/SKILL.md").write_text("---\nname: frontend-design\ndescription: v2\n---\n")
+    commit_all(env["src"], "v2")
+    assert sm.update(env["project"], env["cfg"], "frontend-design", "project")["status"].startswith("update available")
+    with pytest.raises(sm.Refused, match="enable"):
+        sm.update(env["project"], env["cfg"], "frontend-design", "project", yes=True)
+    assert not (env["project"] / ".claude/skills/frontend-design").exists()
+    sm.remove(env["project"], "frontend-design", "project", yes=True)
+    assert not (env["project"] / ".claude/skills-manager/disabled/frontend-design").exists()
+    sm.rollback(env["project"], "frontend-design", "project")
+    entry = sm.load_registry("project", env["project"])["installed"]["frontend-design"]
+    assert "disabled" not in entry and (env["project"] / ".claude/skills/frontend-design/SKILL.md").is_file()
+
+
+@pytest.mark.parametrize("bad", ["../escape", "a/b", ""])
+def test_disable_and_enable_reject_path_like_names(env, bad):
+    for fn in (sm.disable, sm.enable):
+        with pytest.raises(sm.Refused, match="not a valid skill name"):
+            fn(env["project"], bad, "project")
+
+
 def test_update_shows_change_then_applies_with_backup(env):
     install(env, "frontend-design")
     assert sm.update(env["project"], env["cfg"], "frontend-design", "project")["status"] == "up to date"
@@ -415,6 +480,18 @@ def test_upgrade_holds_a_skill_that_becomes_risky(env):
     assert sm.main(["--project", str(env["project"]), "upgrade", "--yes"]) == 1
 
 
+def test_upgrade_holds_a_disabled_skill(env):
+    upgrade_env(env)
+    pin = sm.load_config(env["project"])["sources"][0]["commit"]
+    sm.disable(env["project"], "frontend-design", "project")
+    (env["src"] / "skills/frontend-design/SKILL.md").write_text("---\nname: frontend-design\ndescription: v2\n---\n")
+    commit_all(env["src"], "v2")
+    row = sm.upgrade(env["project"], env["cfg"], yes=True)[0]
+    assert row["status"] == "held" and "disabled" in row["held"][0]["reason"]
+    assert sm.load_config(env["project"])["sources"][0]["commit"] == pin
+    assert not (env["project"] / ".claude/skills/frontend-design").exists()
+
+
 def test_upgrade_reports_unreachable_and_unpinned(env):
     env["cfg"]["sources"] = [{"id": "gone", "url": str(env["src"]) + "-missing", "commit": "0" * 40},
                              {"id": "loose", "url": str(env["src"])}]
@@ -457,5 +534,10 @@ def test_cli_exit_codes(env, capsys):
     assert "REFUSED" in capsys.readouterr().err
     assert sm.main(["--project", p, "--json", "install", "frontend-design", "--reason", "x"]) == 0
     assert sm.main(["--project", p, "verify", "frontend-design"]) == 0
+    assert sm.main(["--project", p, "disable", "frontend-design"]) == 0
+    assert sm.main(["--project", p, "list"]) == 0
+    assert "[disabled: project]" in capsys.readouterr().out
+    assert sm.main(["--project", p, "disable", "frontend-design"]) == 2
+    assert sm.main(["--project", p, "enable", "frontend-design"]) == 0
     assert sm.main(["--project", p, "note", "frontend-design", "--task", "t", "--outcome", "o"]) == 0
     assert sm.read_history("project", env["project"])[-1]["action"] == "usage"

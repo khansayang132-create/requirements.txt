@@ -1,6 +1,6 @@
 {
   "duplicates": {},
-  "generated_at": "2026-10-23T20:43:54+00:00",
+  "generated_at": "2026-10-28T20:33:08+00:00",
   "skills": [
     {
       "allowed_tools": "",
@@ -442,6 +442,7 @@
         "scripts/office/validators/docx.py",
         "scripts/office/validators/pptx.py",
         "scripts/office/validators/redlining.py",
+        "scripts/slide_text.py",
         "scripts/thumbnail.py"
       ],
       "warnings": []
@@ -574,7 +575,7 @@
       "findings": [
         {
           "file": "scripts/recalc.py",
-          "line": 44,
+          "line": 43,
           "message": "runs external commands",
           "rule": "SHELL_EXEC",
           "severity": "medium"

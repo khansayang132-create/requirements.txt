@@ -2,7 +2,7 @@
 
 How to use it: [`../skills/skills-manager/SKILL.md`](../skills/skills-manager/SKILL.md) (`/skills-manager <command>` in Claude Code, or `python3 .claude/skills/skills-manager/scripts/skills_manager.py <command>`).
 Status words: **PASS** checked and passed · **FAIL** checked and failed · **BLOCKED** couldn't be checked · **NOT RUN** not checked.
-Last updated 2026-10-23 (Claude Code 2.1.309, Ubuntu 24.04 x86_64, Python 3.13.17, git 2.x).
+Last updated 2026-10-28 (Claude Code 2.1.312, Ubuntu 24.04 x86_64, Python 3.13.17, git 2.x). Built 2026-10-23; re-verified from scratch 2026-10-28 (see *Re-verification*).
 
 ## Environment it was built against
 
@@ -29,6 +29,8 @@ Last updated 2026-10-23 (Claude Code 2.1.309, Ubuntu 24.04 x86_64, Python 3.13.1
 | Commit pinning per source (`commit` in `config.json`, `pin` command); refresh and update never move a pin | VERIFIED | unit tests; real run: `anthropics-skills` pinned to its parent commit `9d630808` → cache checked it out from GitHub by SHA → pinned back to `dbd4588f` → checked out again. All 3 sources are pinned to their 2026-10-23 HEADs |
 | `upgrade`: moves pins and updates installed skills; held when a changed skill scans medium or higher, is invalid, or was removed upstream | VERIFIED | unit tests (upgrade, hold, BLOCKED, skipped); real run 2026-10-23: all 3 sources up to date |
 | `audit` (risk, hash drift, duplicates, missing files) → `reports/skills-audit.json` | VERIFIED | real run below |
+| `disable` / `enable` (park a managed skill outside the skill root; `update --yes` refuses and `upgrade` holds the source while it's disabled) | VERIFIED | unit tests (files and neighbours unchanged, survives a fresh registry read, remove and rollback while disabled); mutation tests (copy instead of move → 4 failures; no upgrade hold → 1 failure); real run 2026-10-28: init event 43 → 42 → 43 skills, then `--load` PASS |
+| Network timeouts reported as BLOCKED, not a crash | VERIFIED | found live 2026-10-28: a 30 s `git ls-remote` timeout crashed `doctor` with a traceback. `git()` now returns exit 124; unit test |
 | `doctor` | VERIFIED | real run: all PASS |
 | Self-improvement record (`--reason` on install, `note` after use) | IMPLEMENTED | history lines exist; the workflow itself is guidance in SKILL.md, not enforced code |
 | Codex adapter (install into `.agents/skills/`) | NOT IMPLEMENTED: BLOCKED | no Codex CLI in this container, so Codex discovery can't be checked; left out rather than shipped unverified |
@@ -55,9 +57,30 @@ Then: `remove` without `--yes` → REFUSED (exit 2). `remove --yes` → deleted,
 
 ## Tests
 
-`python -m pytest -q tests` → **96 passed** (56 in `tests/test_skills_manager.py`, 40 existing). These are unit and integration tests: sources are real local git repos and HOME is a temp folder. **They don't exercise the live `claude` CLI**; the live checks above do, and CI can't run them (no logged-in CLI there).
+`python -m pytest -q tests` → **151 passed** on 2026-10-28 (62 in `tests/test_skills_manager.py`). Was 96 on 2026-10-23. These are unit and integration tests: sources are real local git repos and HOME is a temp folder. **They don't exercise the live `claude` CLI**; the live checks above do, and CI can't run them (no logged-in CLI there).
 GitHub CI on commit `8679b92` (run #97: `check`, `service` ×2, `termux`, `apex`): **PASS**.
 Mutation checks: disabling the high-risk block → 2 failures. Disabling the `remove --yes` guard → 1 failure.
+
+## Re-verification (2026-10-28)
+
+Every check below was run again in this session against the real CLI and real GitHub sources, not copied from the earlier run.
+
+| Acceptance test | Result | Evidence |
+|---|---|---|
+| 1 Discover from trusted sources | PASS | `list --all --refresh`: 59 remote (19 anthropics, 15 obra, 25 addyosmani) + 29 local, no source problems |
+| 2 Inspect without executing | PASS | `inspect webapp-testing`: MEDIUM, 2 findings, 4 scripts, `playwright` missing; nothing run |
+| 3 Install a safe skill | PASS (dry run) | `install internal-comms --dry-run`: risk none, nothing written. The real install proof is `frontend-design` above; no unneeded skill was added |
+| 4–6 Files exist, metadata valid, Claude discovers it | PASS | `verify frontend-design --live --load`: 9/9 PASS, Skill tool returned `# Frontend Design` |
+| 7 Routing for a sample task | PASS, with a limit | "debug a failing python test" → `debugging-and-error-recovery`; "security review of a pull request" → `code-review-and-quality` + `security-and-hardening`. "build a website landing page" → an unrelated installed skill first: lexical limit, see below |
+| 8 Duplicate install | PASS | `install frontend-design` → REFUSED, exit 2 |
+| 9 Invalid skill rejected | PASS | real CLI on a throwaway source: `Bad_Name` without description → REFUSED, nothing written |
+| 10 Failed install doesn't corrupt state | PASS | unit test `test_failed_copy_leaves_no_partial_install` |
+| 11 Records survive a restart | PASS | each CLI call is a new process reading `registry.json`; the disabled state was read back by later calls |
+| 12 Update/remove keep unrelated files | PASS | unit tests check neighbour hashes |
+| `doctor --live` | PASS | 13/13, `claude -p` init lists 43 skills |
+| `audit` | PASS | high 0 · medium 7 · low 6 · none 16 |
+
+Update available, not applied: `upgrade` reports `anthropics-skills` HEAD moved to `ca45fc49` ("would upgrade"; no installed skill changes). Moving a pin needs the owner's OK, so it's left at `dbd4588f`.
 
 ## Security and compatibility report
 
@@ -70,7 +93,7 @@ Compatibility: every install is recorded as `compatible: ["claude-code"]`. Codex
 ## Known limits and next steps
 
 - The scan is a line-based heuristic. It can't follow obfuscation across lines or files, or see what an allowed network call sends. Treat medium as "read it", not "fine".
-- Search is lexical (idf plus a small synonym map). Unrelated installed skills can still appear as a second pick when they share words ("page", "web"). The agent must read the description before using one.
+- Search is lexical (idf plus a small synonym map). Unrelated installed skills can still appear, even as the first pick, when they share generic words ("page", "build", "web"). Tried 2026-10-28: a `website` synonym made it worse (`done-protocol` first), so it wasn't kept. The agent must read the description before using a hit. Claude Code's own runtime choice is by description and doesn't depend on `recommend`.
 - Backups (`backups/`) are gitignored and live in the container, so they vanish with it. The committed registry still records source and commit, so an install can be repeated.
 - Pins are commit SHAs, not signatures: they stop silent upstream changes, but they don't prove who wrote a commit. Moving a pin still needs a human review of the diff (`update` lists the changed files).
 - Next: a Codex adapter once a Codex CLI is available to verify it.
