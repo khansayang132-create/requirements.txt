@@ -66,7 +66,7 @@ class Playbook:
 
 
 SHELL_SCRIPTS = ["service/install.sh", "service/test-service.sh", "termux/install.sh", "termux/test-termux.sh",
-                 "scripts/agency-setup.sh"]
+                 "scripts/agency-setup.sh", "scripts/agency-live.sh"]
 
 PLAYBOOKS: dict[str, Playbook] = {
     "health": Playbook("Repository health check: dependencies, tests, lint, secrets", (
@@ -454,6 +454,8 @@ class Orchestrator:
         if m["state"] != State.RUNNING.value:
             return m["state"]
         states = {t["state"] for t in store.tasks(mission_id)}
+        if State.RUNNING.value in states:
+            return m["state"]  # another runner holds a live lease on a task; it finalizes the mission
         if State.NEEDS_APPROVAL.value in states:
             store.move_mission(mission_id, State.NEEDS_APPROVAL, "waiting for human approval")
         elif State.FAILED.value in states:

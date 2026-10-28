@@ -33,6 +33,7 @@ bash scripts/agency-setup.sh                   # same pinned tools the cloud hoo
 | `run deploy-check` / `run mcp-check --param server=headroom` | GET the health URLs listed in `agency.json`; list an allowlisted MCP server's tools |
 | `run perf` / `run research --param package=NAME` | Slowest tests per suite; PyPI version, license and release date |
 | `worker --every 3600 --playbook health` | Loop: heartbeat, resume approved READY missions, run the playbook on schedule. Never approves. `--once` for one pass |
+| `bash scripts/agency-live.sh start` / `status` / `stop` | Autopilot for a session: starts the worker in the background (health now, then hourly; resumes approved work), only if none is running. `status` lists the latest missions and anything waiting for approval. Pid and log in `agency/out/`. `AGENCY_LIVE_PLAYBOOK` / `AGENCY_LIVE_EVERY` change the schedule |
 | `missions` / `show ID` / `report ID --out FILE` | List missions; print or save the Markdown report |
 | `approve TASK_ID` / `approve-plan ID`, then `resume ID` | Approve a task (or an LLM-written plan) and continue the mission |
 | `retry ID` | Put FAILED / BLOCKED tasks back to READY with one more attempt (e.g. after installing a tool) |

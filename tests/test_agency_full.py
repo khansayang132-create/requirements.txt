@@ -407,11 +407,27 @@ def test_worker_resumes_approved_work_and_never_approves(repo):
     ready = orch.plan_steps(store, tb, "t", Playbook("t", (Step("s", "", "devops", "git_status"),)))
     waiting = orch.plan_steps(store, tb, "llm", Playbook("p", (Step("s", "", "devops", "git_status"),)),
                               requires_approval=True)
-    wk = Worker(store, tb, playbook=None, every=3600)
+    wk = Worker(store, tb, playbook=None, every=3600, idle=0)
     assert wk.tick() == [(ready, "COMPLETED")]
     assert store.mission(waiting)["state"] == "NEEDS_APPROVAL" and store.calls(waiting) == []
     assert store.heartbeats()[0]["worker"] == wk.orch.worker
     assert wk.tick() == []  # nothing left to do, nothing scheduled
+
+
+def test_worker_leaves_a_mission_another_process_is_running(repo):
+    # Regression: the session worker picked up a `run health` in progress and marked it BLOCKED.
+    store, tb = make(repo)
+    pb = Playbook("t", (Step("a", "", "devops", "git_status"), Step("b", "", "devops", "git_status")))
+    mid = orch.plan_steps(store, tb, "t", pb)
+    assert Worker(store, tb, playbook=None, every=3600).resumable() == []  # just created: someone is on it
+    store.move_mission(mid, State.RUNNING, "other process")
+    store.move_task(f"{mid}.a", State.RUNNING, "other process", lease_owner="other:1",
+                    lease_expires_at=store.clock() + 300)
+    wk = Worker(store, tb, playbook=None, every=3600, idle=0)
+    assert wk.resumable() == [] and wk.tick() == []  # live lease: hands off
+    # Even if a second runner gets in, it doesn't finalize a mission whose task another runner holds.
+    assert orch.Orchestrator(store, tb).run(mid) == "RUNNING"
+    assert store.task(f"{mid}.a")["state"] == "RUNNING"
 
 
 def test_old_database_is_migrated(tmp_path):
@@ -431,3 +447,25 @@ def test_provider_refuses_non_http_urls():
     from agency.providers import OpenAICompatible, ProviderUnavailable
     with pytest.raises(ProviderUnavailable, match="http"):
         OpenAICompatible("file:///etc", "k" * 10, "m")
+
+
+def test_live_script_starts_one_worker_and_stops_it(tmp_path):
+    script = Path(__file__).resolve().parents[1] / "scripts" / "agency-live.sh"
+    env = {"PATH": "/usr/bin:/bin", "AGENCY_LIVE_PYTHON": sys.executable, "AGENCY_LIVE_PLAYBOOK": "",
+           "AGENCY_LIVE_DB": str(tmp_path / "agency.db")}
+
+    def live(cmd):
+        return subprocess.run(["bash", str(script), cmd], env=env, capture_output=True, text=True, timeout=60)
+
+    try:
+        first = live("start")
+        assert first.returncode == 0, first.stderr
+        pid = (tmp_path / "worker.pid").read_text().strip()
+        assert f"running (pid {pid}" in first.stdout
+        assert live("start").returncode == 0 and (tmp_path / "worker.pid").read_text().strip() == pid  # no 2nd
+        assert live("status").returncode == 0
+    finally:
+        assert "stopped" in live("stop").stdout
+    status = live("status")
+    assert status.returncode == 1 and "not running" in status.stdout
+    assert "agency worker stopped" in (tmp_path / "worker.log").read_text()  # clean SIGTERM shutdown
