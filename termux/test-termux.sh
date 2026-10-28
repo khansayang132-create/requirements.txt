@@ -64,8 +64,30 @@ done
 bash termux/install.sh
 sv status lskhan-bot
 
+# Website publishing: refuses to go public by accident, then runs ngrok as a service.
+printf '#!%s/bin/sh\necho "FAKE NGROK $*"\nexec sleep 100000\n' "$PREFIX" > "$PREFIX/bin/ngrok"
+chmod +x "$PREFIX/bin/ngrok"
+printf 'TELEGRAM_BOT_TOKEN=123456:fake\nNGROK_AUTHTOKEN=tok123\nSITE_DOMAIN=https://demo.ngrok-free.app/\n' > .env
+if bash termux/install.sh site; then echo "site without SITE_AUTH must be refused"; exit 1; fi
+printf 'SITE_AUTH="owner:short"\n' >> .env
+if bash termux/install.sh site; then echo "short password must be refused"; exit 1; fi
+sed -i 's/^SITE_AUTH=.*/SITE_AUTH="owner:correct-horse-battery"/' .env
+bash termux/install.sh site
+conf=$HOME/.config/lskhan/ngrok.yml
+[[ $(stat -c %a "$conf") == 600 ]]
+grep -q 'url: https://demo.ngrok-free.app$' "$conf"
+grep -q 'url: 8080' "$conf"
+grep -q 'type: basic-auth' "$conf"
+grep -q '"owner:correct-horse-battery"' "$conf"
+grep -q 'dns_resolver_ips' "$conf"
+sv status lskhan-site | grep -q '^run:'
+for _ in $(seq 1 20); do grep -q 'FAKE NGROK start --config' "$PREFIX/var/log/sv/lskhan-site/current" 2>/dev/null && break; sleep 1; done
+grep -q "FAKE NGROK start --config $conf --log stdout lskhan-site" "$PREFIX/var/log/sv/lskhan-site/current"
+bash termux/install.sh status | grep -q lskhan-site
+
 bash termux/install.sh uninstall
 test ! -d "$PREFIX/var/service/lskhan-bot"
+test ! -d "$PREFIX/var/service/lskhan-site"
 test ! -d "$PREFIX/var/service/lskhan-omniroute"
 ! compgen -G "$PREFIX/var/service/.lskhan-*" >/dev/null   # no half-removed folders left
 bash termux/install.sh uninstall   # idempotent: a second run is a no-op

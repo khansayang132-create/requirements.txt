@@ -70,6 +70,27 @@ as your Termux, and some phones can't install it. It's not required.)
 - After editing `.env`: run `bash termux/install.sh` again
 - Stop for good: `bash termux/install.sh uninstall`
 
+## Publish the website on your phone (port 8080)
+
+This puts a website running on the phone (for example `http://localhost:8080`) at a fixed public
+address, password protected, running 24/7 next to the bot.
+
+1. Create a free account at [ngrok](https://dashboard.ngrok.com). Copy your **authtoken**, and under
+   **Domains** copy your free fixed domain (like `name.ngrok-free.app`).
+2. In `.env`:
+   ```
+   NGROK_AUTHTOKEN=your-token
+   SITE_DOMAIN=name.ngrok-free.app
+   SITE_PORT=8080
+   SITE_AUTH=you:a-long-password
+   ```
+3. Run `bash termux/install.sh site`. The site is now at `https://name.ngrok-free.app`, and the browser
+   asks for that username and password.
+
+To let Claude's cloud sessions use it: in the cloud environment's settings, add the domain under
+**Allowed domains**, and add `SITE_URL=https://name.ngrok-free.app` and `SITE_AUTH=you:a-long-password`
+as environment secrets. Every session can then run `scripts/site.sh check`.
+
 ## Run 24/7 (Linux)
 
 Make the bot start at boot, restart itself if it crashes, and keep running after you log out:

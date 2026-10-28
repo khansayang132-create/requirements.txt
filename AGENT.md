@@ -40,6 +40,7 @@
 | Topic | Source of Truth |
 |---|---|
 | **Android / Termux** (the real deployment) | [`termux/install.sh`](./termux/install.sh): termux-services (runit) services `lskhan-bot` and `lskhan-omniroute`, logs in `$PREFIX/var/log/sv/`, wake lock re-taken on every Termux open via `$PREFIX/etc/profile.d/lskhan-wakelock.sh`. Termux:Boot is **optional**. Many phones can't install it, and opening Termux once after a reboot is enough. Test: [`termux/test-termux.sh`](./termux/test-termux.sh). |
+| **Owner's website** (served by the phone on port 8080) | Phone: `bash termux/install.sh site` runs ngrok as runit service `lskhan-site` at the owner's fixed ngrok domain, with basic auth (`SITE_AUTH`, required unless `SITE_PUBLIC=yes`); config in `~/.config/lskhan/ngrok.yml` (mode 600). Cloud sessions: [`scripts/site.sh`](./scripts/site.sh) `check` / `get PATH` / `url`, using the `SITE_URL` and `SITE_AUTH` environment secrets; the domain must be in the environment's Allowed domains. When the owner mentions "my website" or `localhost:8080`, run `scripts/site.sh check` first. `localhost` in this container is NOT the phone. |
 | **Linux / systemd** | [`service/install.sh`](./service/install.sh): venv in `.venv/`, units `lskhan-bot` and optional `lskhan-omniroute`, run as the sudo user. Test: [`service/test-service.sh`](./service/test-service.sh). |
 
 ### APEX (video pipeline)
