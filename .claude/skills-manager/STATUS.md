@@ -82,11 +82,15 @@ Every check below was run again in this session against the real CLI and real Gi
 | `doctor --live` | PASS | 13/13, `claude -p` init lists 43 skills |
 | `audit` | PASS | high 0 · medium 7 · low 6 · none 16 |
 
-Update available: `anthropics-skills` HEAD moved to `ca45fc49` (no installed skill changes). Left for the first autopilot run to apply, which the owner approved.
+Update available: `anthropics-skills` HEAD moved to `ca45fc49` (no installed skill changes). Applied by autopilot run #1 (`c2b6a3b`).
 
 ## Autopilot runs
 
-NOT RUN yet on GitHub (added 2026-10-28; first run is triggered after merge).
+| Run | When | Result | What it did |
+|---|---|---|---|
+| [#1](https://github.com/khansayang132-create/requirements.txt/actions/runs/40766095228) (manual) | 2026-10-28 20:45 UTC | PASS, 26 s | `anthropics-skills` pin `dbd4588f` → `ca45fc49`, no installed skill changed; `frontend-design` verified; committed `c2b6a3b` to main as `github-actions[bot]` (so main accepts the workflow's push) |
+
+Scheduled runs: daily 04:41 UTC from 2026-10-29. Note: the runner has only the project skills, so a CI run rewrites `reports/skills-audit.json` with that smaller set (11 skills, not 29). A session `audit` restores the full view.
 
 ## Security and compatibility report
 
