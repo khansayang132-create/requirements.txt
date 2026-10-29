@@ -112,10 +112,28 @@ def test_rupiah_normalized_for_speech():
     ("Rp 2,25 miliar", "dua koma dua lima miliar rupiah"),
     ("Rp500 ribu", "lima ratus ribu rupiah"),
     ("Rp9 Juta", "sembilan juta rupiah"),
+    # Social-media shorthand: rb / k = ribu, jt = juta, written straight after the number.
+    ("kopi Rp10rb", "kopi sepuluh ribu rupiah"),
+    ("Rp 50k sehari", "lima puluh ribu rupiah sehari"),
+    ("Rp1,5jt", "satu koma lima juta rupiah"),
+    ("Rp5 kali lipat", "lima rupiah kali lipat"),
     ("bunga 2,5 persen", "bunga dua koma lima persen"),
     ("1.250,75 gram", "seribu dua ratus lima puluh koma tujuh lima gram"),
 ])
 def test_decimal_comma_normalized_for_speech(text, spoken):
+    assert normalize_for_speech(text, "id") == spoken
+
+
+@pytest.mark.parametrize("text, spoken", [
+    # "3x sehari" is how scripts write "three times a day"; the x is read as "kali".
+    ("minum 3x sehari", "minum tiga kali sehari"),
+    ("naik 2X lipat", "naik dua kali lipat"),
+    ("4x4 meter", "empat kali empat meter"),
+    ("2 x seminggu", "dua kali seminggu"),
+    # Not a multiplier: a size like 3xl is left exactly as it was.
+    ("ukuran 3xl", "ukuran 3xl"),
+])
+def test_multiplier_x_normalized_for_speech(text, spoken):
     assert normalize_for_speech(text, "id") == spoken
 
 

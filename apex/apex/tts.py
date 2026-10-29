@@ -65,11 +65,15 @@ def normalize_for_speech(text: str, language: str) -> str:
             words += " koma " + " ".join(id_number_words(int(d)) for d in m.group(2))
         return words
 
-    def rupiah(m: re.Match) -> str:  # "Rp1,5 juta" -> "satu koma lima juta rupiah"
-        return f"{spoken_number(m)}{(m.group(3) or '').lower()} rupiah"
+    shorthand = {"rb": "ribu", "k": "ribu", "jt": "juta"}  # social-media forms: Rp10rb, Rp50k, Rp1,5jt
 
-    text = re.sub(rf"Rp\.?\s?{number}(\s+(?i:ribu|juta|miliar|triliun)\b)?", rupiah, text)
+    def rupiah(m: re.Match) -> str:  # "Rp1,5 juta" -> "satu koma lima juta rupiah"
+        scale = (m.group(3) or "").lower()
+        return f"{spoken_number(m)}{' ' + shorthand.get(scale, scale) if scale else ''} rupiah"
+
+    text = re.sub(rf"Rp\.?\s?{number}(?:\s*((?i:ribu|juta|miliar|triliun|rb|jt|k))\b)?", rupiah, text)
     text = re.sub(rf"\b{number}\b", lambda m: spoken_number(m) if (m.group(2) or "." in m.group(1)) else m.group(0), text)
+    text = re.sub(r"\b(\d+)\s?[xX](?![A-Za-z])", r"\1 × ", text)  # "3x sehari" -> "tiga kali sehari"
     text = re.sub(r"\b(\d+)\b", lambda m: id_number_words(int(m.group(1))), text)
     text = re.sub(r"\s*×\s*", " kali ", text)
     return re.sub(r"\s+", " ", text).strip()
@@ -89,7 +93,8 @@ class EspeakProvider:
     def synthesize(self, text: str, language: str, out_wav: Path) -> Path:
         out_wav.parent.mkdir(parents=True, exist_ok=True)
         spoken = normalize_for_speech(text, language)
-        subprocess.run(["espeak-ng", "-v", language, "-s", str(self.speed), "-w", str(out_wav), spoken],
+        # "--" ends the options: narration starting with "-" was read as a flag and produced no audio.
+        subprocess.run(["espeak-ng", "-v", language, "-s", str(self.speed), "-w", str(out_wav), "--", spoken],
                        check=True, capture_output=True)
         if not out_wav.exists() or out_wav.stat().st_size < 1000 or probe_duration(out_wav) <= 0:
             raise RuntimeError(f"espeak-ng produced no usable audio for: {text[:40]!r}")
@@ -122,7 +127,8 @@ class ElevenLabsProvider:
             method="POST", headers={"xi-api-key": self.api_key, "content-type": "application/json",
                                     "accept": "audio/mpeg"})
         try:
-            with urllib.request.urlopen(req, timeout=120) as r:
+            # The ElevenLabs base URL comes from configuration.
+            with urllib.request.urlopen(req, timeout=120) as r:  # nosec B310
                 audio = r.read()
         except urllib.error.HTTPError as e:
             detail = e.read().decode(errors="replace")[:300]

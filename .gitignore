@@ -6,3 +6,6 @@ __pycache__/
 *.db-shm
 apex/out/
 .pytest_cache/
+.claude/skills-manager/backups/
+agency/out/
+.venv.lock

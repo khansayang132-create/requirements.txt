@@ -1,0 +1,28 @@
+{"action": "install", "backup": null, "commit": "dbd4588f9e1033efb41dad4bef2f7947c8993d44", "files": ["LICENSE.txt", "SKILL.md"], "name": "frontend-design", "reason": "Session MCP instructions route UI/web work to a frontend-design skill that wasn't installed; needed for LSKhan Studio / APEX dashboard UI work", "result": "PASS", "risk": "none", "ts": "2026-10-23T19:55:53+00:00"}
+{"action": "verify", "live": true, "load": true, "name": "frontend-design", "result": "PASS", "ts": "2026-10-23T19:57:18+00:00"}
+{"action": "remove", "backup": "/home/user/requirements.txt/.claude/skills-manager/backups/frontend-design/20261023T195727127459", "name": "frontend-design", "result": "PASS", "ts": "2026-10-23T19:57:27+00:00"}
+{"action": "rollback", "name": "frontend-design", "restored_from": "/home/user/requirements.txt/.claude/skills-manager/backups/frontend-design/20261023T195727127459", "result": "PASS", "ts": "2026-10-23T19:57:27+00:00"}
+{"action": "verify", "live": true, "load": false, "name": "frontend-design", "result": "PASS", "ts": "2026-10-23T19:57:36+00:00"}
+{"action": "usage", "name": "frontend-design", "outcome": "installed from anthropics/skills@dbd4588, discovered and loaded by claude -p; remove/rollback round-trip restored identical files", "result": "NOTE", "task": "E2E verification of skills-manager", "ts": "2026-10-23T19:57:37+00:00"}
+{"action": "verify", "live": true, "load": true, "name": "frontend-design", "result": "PASS", "ts": "2026-10-23T19:59:26+00:00"}
+{"action": "pin", "commit": "dbd4588f9e1033efb41dad4bef2f7947c8993d44", "name": "anthropics-skills", "result": "PASS", "ts": "2026-10-23T20:26:42+00:00"}
+{"action": "pin", "commit": "2ce8aa15d05bd57213e6f746f953aafb7ded7a8b", "name": "obra-superpowers", "result": "PASS", "ts": "2026-10-23T20:26:43+00:00"}
+{"action": "pin", "commit": "aeac41d4d005999432bb7312f7ff06383a91d59d", "name": "addyosmani-agent-skills", "result": "PASS", "ts": "2026-10-23T20:26:43+00:00"}
+{"action": "verify", "live": true, "load": false, "name": "frontend-design", "result": "PASS", "ts": "2026-10-23T20:26:53+00:00"}
+{"action": "pin", "commit": "9d630808e4add0a7146de4af9384155d5dee350a", "name": "anthropics-skills", "result": "PASS", "ts": "2026-10-23T20:27:05+00:00"}
+{"action": "pin", "commit": "dbd4588f9e1033efb41dad4bef2f7947c8993d44", "name": "anthropics-skills", "result": "PASS", "ts": "2026-10-23T20:27:06+00:00"}
+{"action": "upgrade", "name": "*", "result": "PASS", "sources": {"addyosmani-agent-skills": "up to date", "anthropics-skills": "up to date", "obra-superpowers": "up to date"}, "ts": "2026-10-23T20:42:49+00:00"}
+{"action": "disable", "name": "frontend-design", "parked": ".claude/skills-manager/disabled/frontend-design", "result": "PASS", "ts": "2026-10-28T20:31:21+00:00"}
+{"action": "verify", "live": true, "name": "frontend-design", "result": "DISABLED", "ts": "2026-10-28T20:31:26+00:00"}
+{"action": "enable", "name": "frontend-design", "result": "PASS", "ts": "2026-10-28T20:31:27+00:00"}
+{"action": "verify", "live": true, "load": true, "name": "frontend-design", "result": "PASS", "ts": "2026-10-28T20:31:58+00:00"}
+{"action": "install", "error": "/home/user/requirements.txt/.claude/skills/frontend-design already exists; pass --force to replace it (a backup is kept)", "name": "frontend-design", "reason": "dup test", "result": "FAIL", "ts": "2026-10-28T20:32:15+00:00"}
+{"action": "upgrade", "name": "*", "result": "PASS", "sources": {"addyosmani-agent-skills": "up to date", "anthropics-skills": "would upgrade", "obra-superpowers": "up to date"}, "ts": "2026-10-28T20:32:17+00:00"}
+{"action": "pin", "commit": "ca45fc496a3436251f191354091d557da31c15b5", "name": "anthropics-skills", "result": "PASS", "ts": "2026-10-28T20:45:40+00:00"}
+{"action": "upgrade", "name": "*", "result": "PASS", "sources": {"addyosmani-agent-skills": "up to date", "anthropics-skills": "upgraded", "obra-superpowers": "up to date"}, "ts": "2026-10-28T20:45:41+00:00"}
+{"action": "verify", "live": false, "load": false, "name": "frontend-design", "result": "PASS", "ts": "2026-10-28T20:45:41+00:00"}
+{"action": "autopilot", "attention": 0, "name": "*", "result": "PASS", "ts": "2026-10-28T20:45:41+00:00", "upgraded": []}
+{"action": "pin", "commit": "eb07f19f52c2669f2364897aaa293e2aaddd7b1c", "name": "addyosmani-agent-skills", "result": "PASS", "ts": "2026-10-29T11:04:19+00:00"}
+{"action": "upgrade", "name": "*", "result": "PASS", "sources": {"addyosmani-agent-skills": "upgraded", "anthropics-skills": "up to date", "obra-superpowers": "up to date"}, "ts": "2026-10-29T11:04:19+00:00"}
+{"action": "verify", "live": false, "load": false, "name": "frontend-design", "result": "PASS", "ts": "2026-10-29T11:04:19+00:00"}
+{"action": "autopilot", "attention": 0, "name": "*", "result": "PASS", "ts": "2026-10-29T11:04:19+00:00", "upgraded": []}

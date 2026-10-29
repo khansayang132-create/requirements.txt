@@ -1,0 +1,206 @@
+{
+  "duplicates": {},
+  "generated_at": "2026-10-29T11:04:19+00:00",
+  "skills": [
+    {
+      "allowed_tools": "",
+      "errors": [],
+      "findings": [],
+      "hash_drift": null,
+      "hosts": [
+        "open.spotify.com"
+      ],
+      "managed": false,
+      "name": "artist-profile",
+      "path": "/home/runner/work/requirements.txt/requirements.txt/.claude/skills/artist-profile",
+      "risk": "none",
+      "scope": "project",
+      "scripts": [],
+      "warnings": []
+    },
+    {
+      "allowed_tools": "",
+      "errors": [],
+      "findings": [],
+      "hash_drift": null,
+      "hosts": [
+        "explorer.solana.com"
+      ],
+      "managed": false,
+      "name": "done-protocol",
+      "path": "/home/runner/work/requirements.txt/requirements.txt/.claude/skills/done-protocol",
+      "risk": "low",
+      "scope": "project",
+      "scripts": [
+        "scripts/ui_lint.py"
+      ],
+      "warnings": []
+    },
+    {
+      "allowed_tools": "",
+      "errors": [],
+      "findings": [],
+      "hash_drift": [],
+      "hosts": [
+        "www.apache.org"
+      ],
+      "managed": true,
+      "name": "frontend-design",
+      "path": "/home/runner/work/requirements.txt/requirements.txt/.claude/skills/frontend-design",
+      "risk": "none",
+      "scope": "project",
+      "scripts": [],
+      "warnings": []
+    },
+    {
+      "allowed_tools": "",
+      "errors": [],
+      "findings": [
+        {
+          "file": "scripts/skills_manager.py",
+          "line": 0,
+          "message": "byte-identical to this scanner; its rule table isn't scanned against itself",
+          "rule": "SCANNER_ITSELF",
+          "severity": "info"
+        }
+      ],
+      "hash_drift": null,
+      "hosts": [],
+      "managed": false,
+      "name": "skills-manager",
+      "path": "/home/runner/work/requirements.txt/requirements.txt/.claude/skills/skills-manager",
+      "risk": "low",
+      "scope": "project",
+      "scripts": [
+        "scripts/skills_manager.py"
+      ],
+      "warnings": []
+    },
+    {
+      "allowed_tools": "",
+      "errors": [],
+      "findings": [],
+      "hash_drift": null,
+      "hosts": [
+        "explorer.solana.com"
+      ],
+      "managed": false,
+      "name": "done-protocol",
+      "path": "/home/runner/work/requirements.txt/requirements.txt/.agents/skills/done_protocol",
+      "risk": "low",
+      "scope": "codex",
+      "scripts": [
+        "scripts/ui_lint.py"
+      ],
+      "warnings": [
+        "name 'done-protocol' differs from folder 'done_protocol'; Claude Code uses the name"
+      ]
+    },
+    {
+      "allowed_tools": "",
+      "errors": [],
+      "findings": [],
+      "hash_drift": null,
+      "hosts": [
+        "agentskills.io",
+        "code.visualstudio.com",
+        "docs.github.com",
+        "git-scm.com",
+        "github.com",
+        "graphite.com"
+      ],
+      "managed": false,
+      "name": "breakdown-pr",
+      "path": "/home/runner/work/requirements.txt/requirements.txt/.github/HarnessFlow/skills/breakdown-pr",
+      "risk": "none",
+      "scope": "harnessflow",
+      "scripts": [],
+      "warnings": []
+    },
+    {
+      "allowed_tools": "",
+      "errors": [],
+      "findings": [],
+      "hash_drift": null,
+      "hosts": [],
+      "managed": false,
+      "name": "claude-native-skills-subagents",
+      "path": "/home/runner/work/requirements.txt/requirements.txt/.github/HarnessFlow/skills/claude-native-skills-subagents",
+      "risk": "none",
+      "scope": "harnessflow",
+      "scripts": [],
+      "warnings": [
+        "name contains a reserved word (anthropic/claude); the Claude API rejects it on upload"
+      ]
+    },
+    {
+      "allowed_tools": "",
+      "errors": [],
+      "findings": [],
+      "hash_drift": null,
+      "hosts": [],
+      "managed": false,
+      "name": "code-review-and-quality",
+      "path": "/home/runner/work/requirements.txt/requirements.txt/.github/HarnessFlow/skills/code-review-and-quality",
+      "risk": "none",
+      "scope": "harnessflow",
+      "scripts": [],
+      "warnings": []
+    },
+    {
+      "allowed_tools": "",
+      "errors": [],
+      "findings": [],
+      "hash_drift": null,
+      "hosts": [],
+      "managed": false,
+      "name": "code-simplification",
+      "path": "/home/runner/work/requirements.txt/requirements.txt/.github/HarnessFlow/skills/code-simplification",
+      "risk": "none",
+      "scope": "harnessflow",
+      "scripts": [],
+      "warnings": []
+    },
+    {
+      "allowed_tools": "",
+      "errors": [],
+      "findings": [],
+      "hash_drift": null,
+      "hosts": [
+        "github.com"
+      ],
+      "managed": false,
+      "name": "weekly-update-report",
+      "path": "/home/runner/work/requirements.txt/requirements.txt/.github/HarnessFlow/skills/weekly-update-report",
+      "risk": "none",
+      "scope": "harnessflow",
+      "scripts": [],
+      "warnings": []
+    },
+    {
+      "allowed_tools": "['Read', 'Glob', 'Grep', 'Write']",
+      "errors": [],
+      "findings": [],
+      "hash_drift": null,
+      "hosts": [
+        "github.com",
+        "mikulskibartosz.name",
+        "platform.claude.com"
+      ],
+      "managed": false,
+      "name": "write-readme",
+      "path": "/home/runner/work/requirements.txt/requirements.txt/.github/HarnessFlow/skills/write-readme",
+      "risk": "none",
+      "scope": "harnessflow",
+      "scripts": [],
+      "warnings": []
+    }
+  ],
+  "summary": {
+    "high": 0,
+    "info": 0,
+    "low": 3,
+    "medium": 0,
+    "none": 8
+  }
+}

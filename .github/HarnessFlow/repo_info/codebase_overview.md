@@ -63,6 +63,7 @@ Also tracked:
   - all exceptions logged, with an Indonesian apology sent to the user
 - **`/ping`** uses the same gate and reports which route answered and whether it fell back.
 - **Owner gate:** `is_admin` / `allowed` fail closed. With `TELEGRAM_ADMIN_ID` unset nobody passes, and the bot replies with the sender's ID to put in `.env`. Tested in `tests/test_bot.py`.
+- **Telegram connection:** `build_app()` uses 30 s timeouts and `main()` retries startup forever (`bootstrap_retries=-1`), so slow phone networks no longer crash it.
 - **Content rules:** live in `CINTA_PERSONA` (`bot.py`) and `RULES` in the external LSKhan Studio artifact. Change both or neither.
 
 ## Part 2: 24/7 runners
@@ -123,7 +124,7 @@ Also tracked:
 
 **CLI subcommands:** `run`, `enqueue`, `worker`, `status`, `plan`, `stop`, `resume`, `policy`, `dashboard`, `ideas`, `approve`, `backup`, `verify-backup`, `review`.
 
-**Tests** (`apex/tests/`, 7 files): 75 test functions, two of them parametrized (8 and 6 cases), 87 tests in total. `test_media.py` uses real ffmpeg, espeak-ng and Blender, and skips when a tool is missing. LLM, TTS and vision providers are tested against local stub servers.
+**Tests** (`apex/tests/`, 7 files): 77 test functions with parametrized cases, 98 tests collected. `test_media.py` uses real ffmpeg, espeak-ng and Blender, and skips when a tool is missing. LLM, TTS and vision providers are tested against local stub servers.
 
 **Acceptance sample:** `apex/samples/money-mistake/` has `spec.json`, `script.json` and a committed `output/` (mp4, SRTs, manifest, metadata, QA report, storyboard, sampled frames).
 

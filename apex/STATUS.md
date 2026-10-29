@@ -62,7 +62,7 @@ Categories follow the spec's completion gate. Nothing here is described as produ
 
 | Test | Result | Evidence |
 |---|---|---|
-| Unit + integration suite (87 tests) | PASS locally and in GitHub Actions (`apex` job) | schemas, timing, Indonesian numbers and decimal-comma amounts, review, revision limit, locking, mock-server provider call, queue state machine, backoff, dead letter, crash recovery, graceful release, restart, subtitles, publishing states, real ffmpeg edit + QA, QA failure detection, espeak, cache reuse, real Blender render |
+| Unit + integration suite (98 tests) | PASS locally and in GitHub Actions (`apex` job) | schemas, timing, Indonesian numbers, decimal-comma and shorthand (rb/jt/k) amounts, "3x" multipliers, review, revision limit, locking, mock-server provider call, queue state machine, backoff, dead letter, crash recovery, graceful release, restart, subtitles, publishing states, real ffmpeg edit + QA, QA failure detection, espeak (incl. dash-leading narration), cache reuse, real Blender render |
 | Acceptance sample, end to end (30 s, 9:16, Indonesian, money mistake) | PASS | `samples/money-mistake/output/final.mp4` — 30.83 s, 432×768, 24 fps, H.264 + AAC, SHA-256 `59506ae8…f3d832` |
 | Real 3D rendering | PASS | 740 frames, Blender 5.2.3 Cycles CPU, 8 samples + denoise, 36.3 min total (2.94 s/frame on 4 cores) |
 | Technical QA on the final file | 16/16 PASS | `output/qa_report.json`: -15.9 LUFS, true peak -1.2 dBFS, no black or silent gaps, valid SRT |

@@ -1,0 +1,53 @@
+name: agency-nightly
+
+# The engineering agency's health playbook on main, every day, plus on demand. Catches what a push can't:
+# newly published vulnerabilities (pip-audit) and drift in dependencies. The report is kept as an artifact.
+on:
+  schedule:
+    - cron: "17 3 * * *"  # 03:17 UTC daily
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  health:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - uses: actions/cache@v4
+        with:
+          path: ~/apt-cache
+          key: apt-${{ runner.os }}-noble-ffmpeg-espeak-ng-dejavu-v1
+      - run: |
+          printf 'http://archive.ubuntu.com/ubuntu/\tpriority:1\nhttp://azure.archive.ubuntu.com/ubuntu/\tpriority:2\n' \
+            | sudo tee /etc/apt/apt-mirrors.txt
+          mkdir -p ~/apt-cache/partial
+          apt_opts="-o Acquire::Retries=3 -o Acquire::http::Timeout=30 -o Dir::Cache::Archives=$HOME/apt-cache"
+          for i in 1 2 3; do
+            sudo timeout 150 apt-get $apt_opts update && \
+              sudo timeout 480 apt-get $apt_opts install -y --no-install-recommends ffmpeg espeak-ng fonts-dejavu-core && break
+            [ "$i" = 3 ] && exit 1
+            echo "apt attempt $i failed or hung; retrying"; sleep 10
+          done
+          sudo rm -rf ~/apt-cache/partial ~/apt-cache/lock
+          sudo chown -R "$USER" ~/apt-cache
+        timeout-minutes: 22
+      - run: AGENCY_PYTHON=python bash scripts/agency-setup.sh
+      - name: agency health
+        run: |
+          set +e
+          .venv/bin/python -m agency run health > agency-health.md
+          code=$?
+          cat agency-health.md
+          cat agency-health.md >> "$GITHUB_STEP_SUMMARY"
+          exit $code
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: agency-health
+          path: agency-health.md

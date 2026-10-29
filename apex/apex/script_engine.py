@@ -28,7 +28,8 @@ class LLMProvider(Protocol):
 def _post_json(url: str, payload: dict, headers: dict, timeout: float = 180) -> dict:
     req = urllib.request.Request(url, data=json.dumps(payload).encode(), method="POST",
                                  headers={"content-type": "application/json", **headers})
-    with urllib.request.urlopen(req, timeout=timeout) as r:
+    # The provider URL comes from the owner's own .env.
+    with urllib.request.urlopen(req, timeout=timeout) as r:  # nosec B310
         return json.loads(r.read().decode())
 
 

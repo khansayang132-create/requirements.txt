@@ -70,6 +70,36 @@ as your Termux, and some phones can't install it. It's not required.)
 - After editing `.env`: run `bash termux/install.sh` again
 - Stop for good: `bash termux/install.sh uninstall`
 
+## Keep OmniRoute connected and up to date (phone)
+
+```
+bash termux/install.sh check    # is OmniRoute answering with your key? is your model there?
+bash termux/install.sh update   # pull the latest bot, update OmniRoute, restart everything, check
+```
+`check` tells you exactly what's wrong: OmniRoute not running, key refused (copy a fresh key from the
+dashboard into `OMNIROUTE_API_KEY`), or `OMNIROUTE_MODEL` not in its model list.
+
+## Publish the website on your phone (port 8080)
+
+This puts a website running on the phone (for example `http://localhost:8080`) at a fixed public
+address, password protected, running 24/7 next to the bot.
+
+1. Create a free account at [ngrok](https://dashboard.ngrok.com). Copy your **authtoken**, and under
+   **Domains** copy your free fixed domain (like `name.ngrok-free.app`).
+2. In `.env`:
+   ```
+   NGROK_AUTHTOKEN=your-token
+   SITE_DOMAIN=name.ngrok-free.app
+   SITE_PORT=8080
+   SITE_AUTH=you:a-long-password
+   ```
+3. Run `bash termux/install.sh site`. The site is now at `https://name.ngrok-free.app`, and the browser
+   asks for that username and password.
+
+To let Claude's cloud sessions use it: in the cloud environment's settings, add the domain under
+**Allowed domains**, and add `SITE_URL=https://name.ngrok-free.app` and `SITE_AUTH=you:a-long-password`
+as environment secrets. Every session can then run `scripts/site.sh check`.
+
 ## Run 24/7 (Linux)
 
 Make the bot start at boot, restart itself if it crashes, and keep running after you log out:
@@ -95,3 +125,16 @@ so the service can use port 20128.
 - `/help` — list commands
 
 Never commit `.env`; it is ignored by git.
+
+## Engineering agency (checks for this repo)
+
+`agency/` runs the repo's own checks as a team of specialist roles: tests, lint, secret scan,
+dependency and vulnerability checks. It can also make code changes on a separate branch, test that
+branch and push it, always asking you first. Each result is checked by a second role, and the run
+ends with a report.
+```
+python -m agency run health      # needs: pip install -r requirements.txt -r apex/requirements.txt pytest
+python -m agency dashboard       # http://127.0.0.1:8790, read-only
+```
+See [`agency/README.md`](agency/README.md) for how it works and [`agency/STATUS.md`](agency/STATUS.md)
+for what has been verified.
