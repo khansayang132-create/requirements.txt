@@ -124,7 +124,7 @@ Also tracked:
 
 **CLI subcommands:** `run`, `enqueue`, `worker`, `status`, `plan`, `stop`, `resume`, `policy`, `dashboard`, `ideas`, `approve`, `backup`, `verify-backup`, `review`.
 
-**Tests** (`apex/tests/`, 7 files): 76 test functions with parametrized cases, 93 tests collected. `test_media.py` uses real ffmpeg, espeak-ng and Blender, and skips when a tool is missing. LLM, TTS and vision providers are tested against local stub servers.
+**Tests** (`apex/tests/`, 7 files): 77 test functions with parametrized cases, 98 tests collected. `test_media.py` uses real ffmpeg, espeak-ng and Blender, and skips when a tool is missing. LLM, TTS and vision providers are tested against local stub servers.
 
 **Acceptance sample:** `apex/samples/money-mistake/` has `spec.json`, `script.json` and a committed `output/` (mp4, SRTs, manifest, metadata, QA report, storyboard, sampled frames).
 
