@@ -22,7 +22,10 @@
       }
     ]
   },
-  "enabledMcpjsonServers": ["headroom", "21st"],
+  "enabledMcpjsonServers": ["headroom", "21st", "chromium"],
+  "permissions": {
+    "ask": ["mcp__chromium__browser_confirm_action"]
+  },
   "env": {
     "MCP_TIMEOUT": "300000"
   }

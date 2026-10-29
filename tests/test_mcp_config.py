@@ -26,3 +26,18 @@ def test_21st_server_reads_key_from_env():
 
 def test_project_servers_are_enabled():
     assert set(SETTINGS["enabledMcpjsonServers"]) == set(MCP["mcpServers"])
+
+
+def test_chromium_server_runs_the_commander_script():
+    server = MCP["mcpServers"]["chromium"]
+    assert server["command"] == "bash"
+    assert server["args"] == ["${CLAUDE_PROJECT_DIR:-.}/scripts/chromium.sh", "mcp"]
+    assert (ROOT / "scripts/chromium.sh").exists()
+
+
+def test_browser_confirm_action_always_asks_a_human():
+    """The approval gate's human step: Claude Code must prompt before running a parked sensitive action."""
+    permissions = SETTINGS.get("permissions", {})
+    tool = "mcp__chromium__browser_confirm_action"
+    assert tool in permissions.get("ask", [])
+    assert not any(rule.startswith("mcp__chromium") for rule in permissions.get("allow", []))

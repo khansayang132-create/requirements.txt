@@ -1,0 +1,18 @@
+{
+  "headless": true,
+  "executablePath": null,
+  "viewport": { "width": 1280, "height": 800 },
+  "timeouts": { "action": 8000, "navigation": 20000, "download": 30000 },
+  "maxRetries": 2,
+  "artifactsDir": "out/artifacts",
+  "downloadsDir": "out/downloads",
+  "uploadRoots": [],
+  "allowedHosts": [],
+  "blockedHosts": [],
+  "approval": "ask",
+  "approvalTtlSeconds": 300,
+  "persistentProfileDir": null,
+  "cdpEndpoint": null,
+  "maxTextChars": 6000,
+  "maxElements": 120
+}

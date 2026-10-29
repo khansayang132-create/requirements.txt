@@ -1,0 +1,10 @@
+{
+  "objective": "Fill in the fixture order form and submit it",
+  "steps": [
+    { "action": "open_url", "args": { "url": "http://127.0.0.1:47123/" }, "description": "open the fixture shop" },
+    { "action": "fill_input", "args": { "target": { "label": "Full name" }, "value": "Siti" }, "description": "enter the name" },
+    { "action": "capture_screenshot", "args": { "label": "before-submit" }, "description": "evidence before submitting" },
+    { "action": "click_element", "args": { "target": { "role": "button", "name": "Continue" }, "expect": { "text_visible": "Order received" } }, "description": "submit (sensitive)", "approve": true },
+    { "action": "verify_navigation_result", "args": { "text_visible": "Order received" }, "description": "confirm the order page" }
+  ]
+}

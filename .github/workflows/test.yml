@@ -22,7 +22,23 @@ jobs:
       - run: pip install -r requirements.txt pytest bandit==1.8.6
       - run: python -m pytest -q tests
       - run: pip install ruff==0.17.2 && ruff check agency
-      - run: shellcheck -S warning service/install.sh service/test-service.sh termux/install.sh termux/test-termux.sh scripts/agency-setup.sh scripts/site.sh
+      - run: shellcheck -S warning service/install.sh service/test-service.sh termux/install.sh termux/test-termux.sh scripts/agency-setup.sh scripts/site.sh scripts/chromium.sh
+
+  chromium:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: chromium-commander
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "22"
+      - run: npm ci --no-audit --no-fund
+      - run: npx playwright install --with-deps chromium
+      - run: node src/cli.js doctor
+      - run: npm test
 
   service:
     strategy:

@@ -8,6 +8,10 @@
       "type": "http",
       "url": "https://21st.dev/api/mcp",
       "headers": { "x-api-key": "${API_KEY_21ST:-}" }
+    },
+    "chromium": {
+      "command": "bash",
+      "args": ["${CLAUDE_PROJECT_DIR:-.}/scripts/chromium.sh", "mcp"]
     }
   }
 }

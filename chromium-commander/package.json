@@ -1,0 +1,17 @@
+{
+  "name": "chromium-commander",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Chromium browser agent for Claude: Playwright actions with verification, an approval gate and an MCP server.",
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "bin": { "chromium-commander": "src/cli.js" },
+  "scripts": {
+    "test": "node --test --test-concurrency=1 \"tests/*.test.js\"",
+    "mcp": "node src/mcp-server.js",
+    "doctor": "node src/cli.js doctor"
+  },
+  "dependencies": {
+    "playwright": "1.63.0"
+  }
+}
