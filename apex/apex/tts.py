@@ -73,6 +73,7 @@ def normalize_for_speech(text: str, language: str) -> str:
 
     text = re.sub(rf"Rp\.?\s?{number}(?:\s*((?i:ribu|juta|miliar|triliun|rb|jt|k))\b)?", rupiah, text)
     text = re.sub(rf"\b{number}\b", lambda m: spoken_number(m) if (m.group(2) or "." in m.group(1)) else m.group(0), text)
+    text = re.sub(r"\b(\d+)\s?[xX](?![A-Za-z])", r"\1 × ", text)  # "3x sehari" -> "tiga kali sehari"
     text = re.sub(r"\b(\d+)\b", lambda m: id_number_words(int(m.group(1))), text)
     text = re.sub(r"\s*×\s*", " kali ", text)
     return re.sub(r"\s+", " ", text).strip()

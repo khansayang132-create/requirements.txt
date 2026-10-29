@@ -42,3 +42,11 @@
 - apex/tests/test_core.py: 4 parametrized cases (3 fail before the fix; 'Rp5 kali lipat' guards against matching words that start with k).
 - Test count 88 -> 93 in AGENT.md, apex/README.md, apex/STATUS.md and the overviews (93 collected; one more test came from another session).
 - known_issues_auto_generated.md: new entry for forms still misread (time, date, 3x, English decimal point, %).
+
+{=====================Update Log=====================}
+{2026-10-29 09:05 · 7}
+{Request: scheduled autopilot run (dedicated session)}
+- apex/apex/tts.py normalize_for_speech: a multiplier written "3x" / "2X" / "2 x" is read as "kali" ("minum 3x sehari" -> "minum tiga kali sehari"; was "minum 3x sehari"). Words and sizes like "3xl" are left as they were.
+- apex/tests/test_core.py: test_multiplier_x_normalized_for_speech, 5 cases (4 fail before the fix; the 3xl case guards the edge).
+- Test count 93 -> 98 in AGENT.md, apex/README.md, apex/STATUS.md and the overviews. The sample script has no "Nx" form, so the committed sample output is unchanged.
+- known_issues_auto_generated.md: dropped the 3x line; time, date, English decimal point and % remain.

@@ -124,6 +124,19 @@ def test_decimal_comma_normalized_for_speech(text, spoken):
     assert normalize_for_speech(text, "id") == spoken
 
 
+@pytest.mark.parametrize("text, spoken", [
+    # "3x sehari" is how scripts write "three times a day"; the x is read as "kali".
+    ("minum 3x sehari", "minum tiga kali sehari"),
+    ("naik 2X lipat", "naik dua kali lipat"),
+    ("4x4 meter", "empat kali empat meter"),
+    ("2 x seminggu", "dua kali seminggu"),
+    # Not a multiplier: a size like 3xl is left exactly as it was.
+    ("ukuran 3xl", "ukuran 3xl"),
+])
+def test_multiplier_x_normalized_for_speech(text, spoken):
+    assert normalize_for_speech(text, "id") == spoken
+
+
 # ---------------------------------------------------------------- script engine
 
 def test_extract_json_variants():

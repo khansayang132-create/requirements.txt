@@ -1,6 +1,14 @@
 # Update Logs (complete history, newest first)
 
 {=====================Update Log=====================}
+{2026-10-29 09:05 · 7}
+{Request: scheduled autopilot run (dedicated session)}
+- apex/apex/tts.py normalize_for_speech: a multiplier written "3x" / "2X" / "2 x" is read as "kali" ("minum 3x sehari" -> "minum tiga kali sehari"; was "minum 3x sehari"). Words and sizes like "3xl" are left as they were.
+- apex/tests/test_core.py: test_multiplier_x_normalized_for_speech, 5 cases (4 fail before the fix; the 3xl case guards the edge).
+- Test count 93 -> 98 in AGENT.md, apex/README.md, apex/STATUS.md and the overviews. The sample script has no "Nx" form, so the committed sample output is unchanged.
+- known_issues_auto_generated.md: dropped the 3x line; time, date, English decimal point and % remain.
+
+{=====================Update Log=====================}
 {2026-10-24 16:50 · 6}
 {Request: scheduled repo-improver run #4 (covers the 12:47 and 16:47 UTC firings)}
 - apex/apex/tts.py normalize_for_speech: Rp amounts with social-media shorthand are read correctly. 'Rp10rb' -> 'sepuluh ribu rupiah' (was 'sepuluh rupiahrb'), 'Rp50k' -> 'lima puluh ribu rupiah', 'Rp1,5jt' -> 'satu koma lima juta rupiah'. The scale word may now follow the number without a space.
