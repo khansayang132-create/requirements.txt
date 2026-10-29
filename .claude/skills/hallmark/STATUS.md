@@ -10,7 +10,7 @@ Built and verified 2026-10-29 in a claude.ai cloud session: Claude Code 2.1.312,
 | Skill at `.claude/skills/hallmark/` | VERIFIED | `skills_manager.py list` → `hallmark [installed: project]`; `doctor --offline --brief` → all checks PASS |
 | Skill discovered by Claude Code | VERIFIED | Fresh `claude -p … --output-format stream-json --verbose` in the repo: the `system/init` event lists `hallmark` in `skills`. It also appeared live in the building session without a restart. |
 | Subagent `.claude/agents/hallmark.md` discovered | VERIFIED | Same init event lists `hallmark` in `agents` (23 agents). HarnessFlow's `cli_setup.sh` only writes its own files, so this hand-written file is left alone and the CI drift check stays clean. |
-| Subagent runs a real task end to end | PENDING | filled in below |
+| Subagent runs a real task end to end | VERIFIED | Headless `claude -p` asked for a wedding-RSVP page via the `hallmark` subagent (132 s). It read SKILL.md and the references, chose colors with `contrast`, built the page, ran `check --strict` (0/0) and `render` (first run FAILED: radio buttons had no focus ring; it fixed the CSS and re-ran to PASS), wrote and ran a 24-step keyboard/journey test, opened its screenshots, listed its assumptions, flagged that "sudah kami terima" overstates a page with no backend, and named the human-only checks as NOT RUN. Independent re-check of its page: `check` 0 errors, `render` PASS, overflow 0 at all widths. Repo `git status` clean afterwards. |
 | No secrets in new files | VERIFIED | Pattern scan of the skill, agent and test: 0 matches. No `.env` changes; none needed. |
 
 ## Checker (`scripts/hallmark_check.py`)
