@@ -1,6 +1,14 @@
 # Update Logs (complete history, newest first)
 
 {=====================Update Log=====================}
+{2026-10-29 16:55 · 8}
+{Request: scheduled autopilot run (covers the 12:53 and 16:50 UTC firings)}
+- apex/apex/tts.py normalize_for_speech: an English decimal point in an Rp amount before a scale word is read as a decimal ("Rp1.5 juta" -> "satu koma lima juta rupiah"; was "satu rupiah.lima juta"). Three digits after the dot stay a thousands separator; "Rp1.5" with no scale word is left as it was (ambiguous).
+- apex/tests/test_core.py: test_rupiah_decimal_point_normalized_for_speech, 4 cases (3 fail before the fix; "Rp1.500 juta" guards the thousands case).
+- Test count 98 -> 102 in AGENT.md, apex/README.md, apex/STATUS.md and the overviews.
+- known_issues_auto_generated.md: dropped the Rp1.5 line; time, date and % remain.
+
+{=====================Update Log=====================}
 {2026-10-29 09:05 · 7}
 {Request: scheduled autopilot run (dedicated session)}
 - apex/apex/tts.py normalize_for_speech: a multiplier written "3x" / "2X" / "2 x" is read as "kali" ("minum 3x sehari" -> "minum tiga kali sehari"; was "minum 3x sehari"). Words and sizes like "3xl" are left as they were.

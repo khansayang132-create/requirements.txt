@@ -137,6 +137,18 @@ def test_multiplier_x_normalized_for_speech(text, spoken):
     assert normalize_for_speech(text, "id") == spoken
 
 
+@pytest.mark.parametrize("text, spoken", [
+    # An English decimal point before a scale word ("Rp1.5 juta") is a decimal, read as "koma".
+    ("tabungan Rp1.5 juta", "tabungan satu koma lima juta rupiah"),
+    ("Rp 2.25 miliar", "dua koma dua lima miliar rupiah"),
+    ("Rp1.5jt", "satu koma lima juta rupiah"),
+    # Three digits after the dot stay a thousands separator.
+    ("Rp1.500 juta", "seribu lima ratus juta rupiah"),
+])
+def test_rupiah_decimal_point_normalized_for_speech(text, spoken):
+    assert normalize_for_speech(text, "id") == spoken
+
+
 # ---------------------------------------------------------------- script engine
 
 def test_extract_json_variants():

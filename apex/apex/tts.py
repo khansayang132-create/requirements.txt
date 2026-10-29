@@ -71,6 +71,8 @@ def normalize_for_speech(text: str, language: str) -> str:
         scale = (m.group(3) or "").lower()
         return f"{spoken_number(m)}{' ' + shorthand.get(scale, scale) if scale else ''} rupiah"
 
+    # "Rp1.5 juta": an English decimal point before a scale word becomes the Indonesian decimal comma.
+    text = re.sub(r"(Rp\.?\s?\d+)\.(\d{1,2})(?=\s*(?i:ribu|juta|miliar|triliun|rb|jt|k)\b)", r"\1,\2", text)
     text = re.sub(rf"Rp\.?\s?{number}(?:\s*((?i:ribu|juta|miliar|triliun|rb|jt|k))\b)?", rupiah, text)
     text = re.sub(rf"\b{number}\b", lambda m: spoken_number(m) if (m.group(2) or "." in m.group(1)) else m.group(0), text)
     text = re.sub(r"\b(\d+)\s?[xX](?![A-Za-z])", r"\1 × ", text)  # "3x sehari" -> "tiga kali sehari"
