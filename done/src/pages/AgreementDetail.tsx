@@ -62,7 +62,7 @@ export default function AgreementDetail() {
 
   return (
     <Layout wide={open !== null}>
-      <Link to="/agreements" className={cn("mb-4 inline-block rounded-lg text-sm text-neutral-400 hover:text-neutral-200", focusRing)}>← Agreements</Link>
+      <Link to="/agreements" className={cn("mb-2 inline-flex min-h-11 items-center rounded-lg text-sm text-neutral-400 hover:text-neutral-200", focusRing)}>← Agreements</Link>
       <Card className="mb-6">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="min-w-0">
@@ -96,7 +96,7 @@ export default function AgreementDetail() {
                   open === i ? "border-violet-500/50" : "border-line")}>
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div className="min-w-0">
-                    <h3 className="text-base font-semibold text-neutral-100">{m.title}</h3>
+                    <h2 className="text-base font-semibold text-neutral-100">{m.title}</h2>
                     <p className="mt-1 text-xs text-neutral-400">{m.verificationMode} · {m.dod.length} DoD items</p>
                   </div>
                   <div className="flex items-center gap-3">

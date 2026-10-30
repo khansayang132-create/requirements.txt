@@ -93,3 +93,13 @@ jobs:
       - run: npm test
       - run: npm run lint:ui
       - run: npx vite build
+
+  design:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: npm i -g playwright@1.49.1 && npx -y playwright@1.49.1 install --with-deps chromium
+      - run: node --test .claude/skills/design-check/scripts/check.test.mjs

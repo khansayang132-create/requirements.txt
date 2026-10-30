@@ -14,7 +14,7 @@ export function Key({ value, className, full }: { value: string; className?: str
     <span className={cn("inline-flex min-w-0 items-center gap-1 font-mono text-xs text-neutral-300", className)} title={value}>
       <span className={full ? "break-all" : "truncate"}>{full ? value : short(value)}</span>
       <button type="button" onClick={(e) => { e.preventDefault(); e.stopPropagation(); copy(); }} aria-label={copied ? "Copied" : "Copy"}
-        className={cn("shrink-0 rounded-lg p-1 text-neutral-500 hover:text-neutral-200", focusRing)}>
+        className={cn("-my-1 shrink-0 rounded-lg p-2 text-neutral-500 hover:text-neutral-200", focusRing)}>
         <Icon name={copied ? "check" : "copy"} className="size-3.5" />
       </button>
     </span>

@@ -44,11 +44,11 @@ function AmountField({ id, value, onChange, remaining }: { id: string; value: st
       <div className="mt-2 flex flex-wrap gap-1.5">
         {[10n, 100n, 1000n].map((n) => (
           <button key={String(n)} type="button" onClick={() => add(n * 1_000_000n)}
-            className={cn("min-h-8 rounded-lg border border-line px-2.5 font-mono text-xs text-neutral-300 hover:bg-surface-2", focusRing)}>+{String(n)}</button>
+            className={cn("min-h-11 min-w-11 rounded-lg border border-line px-2.5 font-mono text-xs text-neutral-300 hover:bg-surface-2", focusRing)}>+{String(n)}</button>
         ))}
         {remaining !== undefined && remaining > 0n && (
           <button type="button" onClick={() => add(remaining)}
-            className={cn("min-h-8 rounded-lg border border-violet-500/30 px-2.5 text-xs font-medium text-violet-300 hover:bg-violet-600/10", focusRing)}>Max remaining</button>
+            className={cn("min-h-11 rounded-lg border border-violet-500/30 px-2.5 text-xs font-medium text-violet-300 hover:bg-violet-600/10", focusRing)}>Max remaining</button>
         )}
       </div>
     </div>

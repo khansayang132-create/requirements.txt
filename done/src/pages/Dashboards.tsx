@@ -41,9 +41,11 @@ function Queue({ items, panel, cta, empty }: { items: Item[]; panel: string; cta
   );
 }
 
-const NeedWallet = ({ title }: { title: string }) => (
+/** Before a wallet connects: the same metric tiles with "—" (never made-up numbers) and one action. */
+const NeedWallet = ({ title, labels }: { title: string; labels: string[] }) => (
   <Layout>
     <PageHeader title={title} />
+    <div className="mb-8 grid gap-4 sm:grid-cols-3">{labels.map((l) => <Metric key={l} label={l} value={null} />)}</div>
     <Empty text="Connect a wallet to see your queue." action={<Button onClick={openWallet}>Connect wallet</Button>} />
   </Layout>
 );
@@ -51,7 +53,7 @@ const NeedWallet = ({ title }: { title: string }) => (
 export function Sponsor() {
   const wallet = useStore((s) => s.wallet);
   const all = useStore((s) => s.agreements);
-  if (!wallet) return <NeedWallet title="Sponsor" />;
+  if (!wallet) return <NeedWallet title="Sponsor" labels={["Locked", "Released", "Pending review"]} />;
   const mine = all.filter((a) => a.sponsor === wallet);
   const verifying = all.filter((a) => a.sponsor === wallet || a.verifier === wallet);
   const now = current(verifying);
@@ -86,7 +88,7 @@ export function Sponsor() {
 export function Worker() {
   const wallet = useStore((s) => s.wallet);
   const all = useStore((s) => s.agreements);
-  if (!wallet) return <NeedWallet title="Worker" />;
+  if (!wallet) return <NeedWallet title="Worker" labels={["Released", "Verified", "In progress"]} />;
   const mine = all.filter((a) => a.worker === wallet);
   const items = mine.flatMap((a) => a.milestones.map((m, i) => ({ a, m, i })));
   const of = (s: Milestone["status"]) => items.filter((x) => x.m.status === s);

@@ -32,7 +32,7 @@ function WalletButton() {
   return (
     <button type="button" onClick={openWallet}
       className={cn("inline-flex min-h-10 items-center gap-2 rounded-xl border px-3 text-sm", focusRing,
-        wallet ? "border-line font-mono text-neutral-200 hover:bg-surface-2" : "border-violet-500/40 bg-violet-600 font-semibold text-white hover:bg-violet-700")}>
+        wallet ? "border-line font-mono text-neutral-200 hover:bg-surface-2" : "border-violet-500/50 font-semibold text-violet-300 hover:bg-violet-600/10")}>
       <Icon name="wallet" className="size-4" />
       {wallet ? <>{name && <span className="font-sans text-neutral-400">{name}</span>}{short(wallet)}</> : "Connect"}
     </button>

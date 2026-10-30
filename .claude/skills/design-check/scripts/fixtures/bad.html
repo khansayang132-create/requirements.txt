@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  body { margin: 0; background: #ffffff; font-family: "Imaginary Grotesk", sans-serif; }
+  .faint { color: #b8b8b8; }
+  .wide { width: 900px; height: 20px; background: #eee; }
+  .tiny { width: 18px; height: 18px; padding: 0; border: 0; background: #333; color: #fff; outline: none; }
+</style>
+</head>
+<body>
+  <h2>Skipped the h1</h2>
+  <h4>And jumped a level</h4>
+  <p class="faint">This grey text is too light to read on white.</p>
+  <div class="wide"></div>
+  <img src="data:image/gif;base64,R0lGODlhAQABAAAAACw=">
+  <button class="tiny">x</button>
+  <script>window.addEventListener("load", () => { throw new Error("boom from fixture"); });</script>
+</body>
+</html>

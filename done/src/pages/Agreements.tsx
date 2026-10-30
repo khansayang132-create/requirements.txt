@@ -30,7 +30,7 @@ export function AgreementCard({ a }: { a: Agreement }) {
       <Card className="h-full transition-colors hover:border-violet-500/40">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
-            <h3 className="truncate text-base font-semibold text-neutral-100">{a.title}</h3>
+            <h2 className="truncate text-base font-semibold text-neutral-100">{a.title}</h2>
             <p className="mt-1 flex items-center gap-1 text-xs text-neutral-400">Worker <Key value={a.worker} /></p>
           </div>
           <StatusBadge status={agreementStatus(a)} />
