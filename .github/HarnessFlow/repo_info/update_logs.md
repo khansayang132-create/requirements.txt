@@ -50,3 +50,11 @@
 - apex/tests/test_core.py: test_multiplier_x_normalized_for_speech, 5 cases (4 fail before the fix; the 3xl case guards the edge).
 - Test count 93 -> 98 in AGENT.md, apex/README.md, apex/STATUS.md and the overviews. The sample script has no "Nx" form, so the committed sample output is unchanged.
 - known_issues_auto_generated.md: dropped the 3x line; time, date, English decimal point and % remain.
+
+{=====================Update Log=====================}
+{2026-10-29 16:55 · 8}
+{Request: scheduled autopilot run (covers the 12:53 and 16:50 UTC firings)}
+- apex/apex/tts.py normalize_for_speech: an English decimal point in an Rp amount before a scale word is read as a decimal ("Rp1.5 juta" -> "satu koma lima juta rupiah"; was "satu rupiah.lima juta"). Three digits after the dot stay a thousands separator; "Rp1.5" with no scale word is left as it was (ambiguous).
+- apex/tests/test_core.py: test_rupiah_decimal_point_normalized_for_speech, 4 cases (3 fail before the fix; "Rp1.500 juta" guards the thousands case).
+- Test count 98 -> 102 in AGENT.md, apex/README.md, apex/STATUS.md and the overviews.
+- known_issues_auto_generated.md: dropped the Rp1.5 line; time, date and % remain.

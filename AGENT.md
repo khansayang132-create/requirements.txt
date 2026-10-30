@@ -153,7 +153,7 @@ Edit `CINTA_PERSONA` in `bot.py` **and** `RULES` in the LSKhan Studio artifact. 
 ```
 cd apex
 python3.13 -m venv .venv && .venv/bin/pip install -r requirements.txt
-.venv/bin/python -m pytest -q                                   # 98 tests, ~17 s
+.venv/bin/python -m pytest -q                                   # 102 tests, ~17 s
 .venv/bin/python -m apex.cli run --spec samples/money-mistake/spec.json \
     --script samples/money-mistake/script.json --project out/draft --fps 6 --samples 2   # ~6 min draft
 ```
