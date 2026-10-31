@@ -1,6 +1,6 @@
 {
   "duplicates": {},
-  "generated_at": "2026-10-29T11:04:19+00:00",
+  "generated_at": "2026-10-31T10:34:59+00:00",
   "skills": [
     {
       "allowed_tools": "",
@@ -16,6 +16,47 @@
       "risk": "none",
       "scope": "project",
       "scripts": [],
+      "warnings": []
+    },
+    {
+      "allowed_tools": "",
+      "errors": [],
+      "findings": [
+        {
+          "file": "scripts/check.mjs",
+          "line": 11,
+          "message": "runs external commands",
+          "rule": "SHELL_EXEC",
+          "severity": "medium"
+        },
+        {
+          "file": "scripts/check.mjs",
+          "line": 22,
+          "message": "installs packages at runtime",
+          "rule": "RUNTIME_INSTALL",
+          "severity": "medium"
+        },
+        {
+          "file": "scripts/check.test.mjs",
+          "line": 5,
+          "message": "runs external commands",
+          "rule": "SHELL_EXEC",
+          "severity": "medium"
+        }
+      ],
+      "hash_drift": null,
+      "hosts": [
+        "127.0.0.1"
+      ],
+      "managed": false,
+      "name": "design-check",
+      "path": "/home/runner/work/requirements.txt/requirements.txt/.claude/skills/design-check",
+      "risk": "medium",
+      "scope": "project",
+      "scripts": [
+        "scripts/check.mjs",
+        "scripts/check.test.mjs"
+      ],
       "warnings": []
     },
     {
@@ -200,7 +241,7 @@
     "high": 0,
     "info": 0,
     "low": 3,
-    "medium": 0,
+    "medium": 1,
     "none": 8
   }
 }
