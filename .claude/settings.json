@@ -5,7 +5,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "[ \"$CLAUDE_CODE_REMOTE\" = true ] || exit 0; bash \"$CLAUDE_PROJECT_DIR\"/scripts/headroom.sh setup",
+            "command": "[ \"$CLAUDE_CODE_REMOTE\" = true ] || exit 0; echo '{\"async\": true, \"asyncTimeout\": 300000}'; bash \"$CLAUDE_PROJECT_DIR\"/scripts/headroom.sh setup",
             "timeout": 300
           },
           {
