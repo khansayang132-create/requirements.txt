@@ -6,8 +6,8 @@ Sources (each needs network access; keys where noted):
 - Reddit (REDDIT_CLIENT_ID, REDDIT_CLIENT_SECRET, REDDIT_USER_AGENT): application-only OAuth,
   /r/CryptoCurrency and /r/Bitcoin new posts.
 - Fear & Greed index (alternative.me, no key).
-Official exchange announcements: NOT IMPLEMENTED - none of the supported exchanges publishes a
-documented public announcements API; scraping their sites is not done.
+- Official exchange announcements: Bybit and OKX public announcement APIs (ExchangeAnnouncements).
+  Binance has no documented announcements API; its site is not scraped.
 
 Sentiment is a transparent lexicon score in [-1, 1] over the headline/title (word lists below),
 plus CryptoPanic's own bullish/bearish votes when present. It is a rough tag, not a forecast.
@@ -32,7 +32,7 @@ CATEGORIES = {
     "regulatory": {"sec", "cftc", "regulator", "regulation", "regulatory", "lawsuit", "court", "ban", "bill", "law", "license",
                    "mica", "fined", "fine", "sanction", "etf"},
     "exchange_incident": {"hack", "hacked", "exploit", "outage", "halt", "halts", "withdrawals", "suspend", "suspends", "breach",
-                          "insolvent", "delist", "delisting"},
+                          "insolvent", "delist", "delisting", "maintenance"},
     "token_event": {"listing", "lists", "unlock", "airdrop", "upgrade", "fork", "mainnet", "burn", "halving", "launch"},
 }
 ASSETS = {"BTC": {"bitcoin", "btc"}, "ETH": {"ethereum", "ether", "eth"}, "SOL": {"solana", "sol"}, "XRP": {"xrp", "ripple"},
@@ -208,7 +208,9 @@ def collect() -> dict:
             items += rss.fetch(src)
         except ProviderUnavailable as e:
             errors[src] = str(e)
-    for name, factory in (("cryptopanic", lambda: CryptoPanic().fetch()), ("reddit", lambda: Reddit().fetch())):
+    ann = ExchangeAnnouncements()
+    for name, factory in (("cryptopanic", lambda: CryptoPanic().fetch()), ("reddit", lambda: Reddit().fetch()),
+                          ("bybit_announcements", lambda: ann.fetch("bybit")), ("okx_announcements", lambda: ann.fetch("okx"))):
         try:
             items += factory()
         except ProviderUnavailable as e:
@@ -221,3 +223,53 @@ def collect() -> dict:
     items.sort(key=lambda i: i.published, reverse=True)
     return {"items": [i.as_dict() for i in items], "errors": errors, "fear_greed": fg, "sentiment": aggregate(items),
             "breaking": [i.as_dict() for i in items if set(i.sentiment["categories"]) & {"exchange_incident", "regulatory"}][:10]}
+
+
+class ExchangeAnnouncements:
+    """Official announcements from the exchanges that publish a documented public API:
+    Bybit  GET https://api.bybit.com/v5/announcements/index?locale=en-US
+    OKX    GET https://www.okx.com/api/v5/support/announcements
+    Binance publishes no documented announcements API, so it is not included."""
+
+    def __init__(self, http: httpx.Client | None = None):
+        self.http = http or httpx.Client(timeout=10, headers={"User-Agent": "promovent/2.5"})
+
+    @staticmethod
+    def _iso_ms(ms) -> str:
+        from datetime import datetime, timezone
+        return datetime.fromtimestamp(int(ms) / 1000, timezone.utc).isoformat()
+
+    @classmethod
+    def parse_bybit(cls, raw: dict) -> list[NewsItem]:
+        if raw.get("retCode") != 0:
+            raise ProviderUnavailable(f"bybit announcements: {raw.get('retMsg')}")
+        out = []
+        for a in raw["result"].get("list", []):
+            kind = (a.get("type") or {}).get("title", "")
+            s = analyze_text(f"{a['title']} {a.get('description', '')[:200]} {kind}")
+            out.append(NewsItem("Bybit announcement", a["title"], a.get("url", ""), cls._iso_ms(a["dateTimestamp"]),
+                                "exchange", s, {"type": kind, "tags": a.get("tags", [])}))
+        return out
+
+    @classmethod
+    def parse_okx(cls, raw: dict) -> list[NewsItem]:
+        if str(raw.get("code")) != "0":
+            raise ProviderUnavailable(f"okx announcements: {raw.get('msg')}")
+        out = []
+        for page in raw.get("data", []):
+            for a in page.get("details", []):
+                out.append(NewsItem("OKX announcement", a["title"], a.get("url", ""), cls._iso_ms(a["pTime"]), "exchange",
+                                    analyze_text(f"{a['title']} {a.get('annType', '')}"), {"type": a.get("annType")}))
+        return out
+
+    def fetch(self, exchange: str) -> list[NewsItem]:
+        url, params, parse = {
+            "bybit": ("https://api.bybit.com/v5/announcements/index", {"locale": "en-US", "limit": 20}, self.parse_bybit),
+            "okx": ("https://www.okx.com/api/v5/support/announcements", {}, self.parse_okx)}[exchange]
+        try:
+            r = self.http.get(url, params=params)
+        except httpx.HTTPError as e:
+            raise ProviderUnavailable(f"{exchange} announcements: {type(e).__name__}: {e}") from e
+        if r.status_code != 200:
+            raise ProviderUnavailable(f"{exchange} announcements: HTTP {r.status_code}")
+        return parse(r.json())

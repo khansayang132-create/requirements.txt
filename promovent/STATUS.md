@@ -7,7 +7,7 @@ Detailed classification: [`AUDIT_REPORT.md`](./AUDIT_REPORT.md). Actual results:
 | Analysis, strategies, scoring, risk, backtesting, paper trading | VERIFIED (tests) |
 | Live execution engine + Binance/Bybit/OKX signed clients | IMPLEMENTED, tested against fakes; **testnet/mainnet BLOCKED** (no network, no keys) |
 | WebSocket market data | VERIFIED against a local WebSocket server; **exchange connections BLOCKED** |
-| Whale intelligence, news, sentiment | IMPLEMENTED, fixture-tested; **live BLOCKED** (no keys, hosts blocked) |
+| Whale intelligence (Whale Alert, Etherscan, Blockchair), news, sentiment, Bybit/OKX announcements | IMPLEMENTED, fixture-tested; **live BLOCKED** (no keys, hosts blocked) |
 | Email alerts | VERIFIED (real local SMTP); Telegram IMPLEMENTED, live BLOCKED |
 | PostgreSQL, Alembic, Redis, backups | VERIFIED (real servers + Docker) |
 | ML engine | VERIFIED code and leakage controls; no model trained on live data |

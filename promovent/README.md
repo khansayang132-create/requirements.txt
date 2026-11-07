@@ -31,7 +31,7 @@ off, martingale rejected, emergency stop. **There is no withdrawal code**, and k
 | `promovent/ta/`, `strategies/`, `scoring.py`, `backtest.py`, `risk.py` | analysis, 9 strategies, scoring, backtester, risk engine (V2.0, unchanged in behaviour) |
 | `promovent/execution/` | signed Binance/Bybit/OKX spot clients and the live execution engine (modes 4 and 5) |
 | `promovent/market_data/` | WebSocket adapters, connection manager, validator, order books, candles, stream |
-| `promovent/intel/` | whale intelligence (Whale Alert, Etherscan), news and sentiment (CryptoPanic, RSS, Reddit, Fear & Greed) |
+| `promovent/intel/` | whale intelligence (Whale Alert, Etherscan, Blockchair), news and sentiment (CryptoPanic, RSS, Reddit, Fear & Greed, Bybit/OKX announcements) |
 | `promovent/notify.py` | Telegram and SMTP email with per-user preferences and delivery log |
 | `promovent/db/` + `alembic/` | SQLAlchemy models (15 tables) and migrations |
 | `promovent/cache.py` | Redis rate limiting, cache, locks, heartbeats (degrades to memory) |

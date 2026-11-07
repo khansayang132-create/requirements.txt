@@ -43,9 +43,10 @@ Environment facts that limit verification (checked 2026-11-07, not assumed):
 | Market data | Reconnect/backoff, heartbeat (protocol + app pings), stale detection, dedupe, timestamp checks, book sequencing, subscribe rate limit | **VERIFIED (local WebSocket server)** | `tests/test_market_data.py` drops connections, goes silent, refuses connections |
 | Market data | Live connection to exchanges | **BLOCKED** | In Docker the worker logs `gaierror: Name or service not known` and backs off (screenshot: dashboard stream panel shows BACKOFF, no price) |
 | Whale | Whale Alert + Etherscan clients, flow classification (inflow/outflow/internal/transfer; never buy/sell), clusters, unusual activity, explorer links | **IMPLEMENTED** | `tests/test_intel_notify.py`; live: **BLOCKED** (no `WHALE_ALERT_API_KEY`/`ETHERSCAN_API_KEY`, hosts blocked) |
-| Whale | Blockchain.com / Blockchair / RPC providers | **NOT IMPLEMENTED** | Whale Alert covers BTC; RPC tracing needs an address-labelling source this project does not have |
+| Whale | Blockchair large BTC/ETH transactions (no owner attribution, so always `transfer`) | **IMPLEMENTED** | fixture tests; live **BLOCKED** (host refused) |
+| Whale | Blockchain.com / raw RPC providers | **NOT IMPLEMENTED** | Blockchair covers the same chains; RPC tracing needs an address-labelling source this project does not have |
 | News | CryptoPanic, CoinDesk RSS, Cointelegraph RSS, Reddit OAuth, Fear & Greed; lexicon sentiment + categories with source and timestamp | **IMPLEMENTED** | tests with recorded-format fixtures; live: **BLOCKED** |
-| News | Official exchange announcements | **NOT IMPLEMENTED** | No documented public announcements API from Binance/Bybit/OKX; site scraping not done |
+| News | Official exchange announcements: Bybit and OKX public APIs; delistings/maintenance tagged as exchange incidents | **IMPLEMENTED** | fixture tests; live **BLOCKED**. Binance: **NOT IMPLEMENTED** (no documented announcements API; no scraping) |
 | Notifications | Telegram Bot API, SMTP email, templates, per-user preferences, delivery log with retries | **VERIFIED (email to a real local SMTP server)**; Telegram **IMPLEMENTED** | Telegram live **BLOCKED** (`api.telegram.org` refused, no bot token) |
 | Database | PostgreSQL via SQLAlchemy 2 + Alembic, 15 tables incl. all required entities, pooling, transactions, rollback (downgrade), backup/restore script | **VERIFIED** | Real PostgreSQL 16: upgrade/downgrade/upgrade, rollback of a failed unit of work, 8 concurrent writers; Docker Postgres: migrations at head, `pg_dump`/`pg_restore` round trip |
 | Database | SQLite for local development | **VERIFIED** | default for tests |
@@ -55,7 +56,7 @@ Environment facts that limit verification (checked 2026-11-07, not assumed):
 | Docker | backend, worker, frontend images; compose with Postgres, Redis, health checks, volumes, depends_on, restart policies, log rotation, graceful shutdown | **VERIFIED** | images built and stack started here; all 7 checks in TEST_REPORT.md §3 |
 | Deployment | Render blueprint `render.yaml` | **IMPLEMENTED (not applied)** | |
 | Deployment | Deployed URL on Railway/Render | **BLOCKED** | Hosts refused by the egress proxy; no account credentials. No URL exists, and none is claimed. |
-| Tests | 156 backend + 8 frontend tests, CI jobs with Postgres/Redis service containers, frontend and Docker build jobs | **VERIFIED locally** | CI has not run yet on this branch at the time of writing |
+| Tests | 158 backend + 8 frontend tests, CI jobs with Postgres/Redis service containers, frontend and Docker build jobs | **VERIFIED locally**; CI run on `131f28f`: 9 of 10 jobs passed, `promovent-docker` failed (smoke step imported the API in production mode without keys; fixed and reproduced locally) | |
 
 ## 3. What the owner must provide to finish the blocked items
 

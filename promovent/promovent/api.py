@@ -450,9 +450,11 @@ def create_app(state: App | None = None) -> FastAPI:
         if cached:
             return cached
         from .intel import ProviderUnavailable
-        from .intel.whale import Etherscan, WhaleAlert, WhaleSummary
+        from .intel.whale import Blockchair, Etherscan, WhaleAlert, WhaleSummary
         txs, errors = [], {}
-        for name, f in (("whale-alert", lambda: WhaleAlert().recent(min_usd)), ("etherscan", lambda: Etherscan().recent())):
+        bc = Blockchair()
+        for name, f in (("whale-alert", lambda: WhaleAlert().recent(min_usd)), ("etherscan", lambda: Etherscan().recent()),
+                        ("blockchair-btc", lambda: bc.recent("bitcoin", min_usd)), ("blockchair-eth", lambda: bc.recent("ethereum", min_usd))):
             try:
                 txs += f()
             except ProviderUnavailable as e:

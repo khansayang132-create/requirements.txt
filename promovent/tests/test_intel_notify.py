@@ -181,3 +181,30 @@ def test_email_failure_retried_and_recorded():
 def test_render_missing_fields_dont_crash():
     s, b = render("signal", {"symbol": "ETH/USDT"})
     assert s.startswith("Signal: ETH/USDT -") and "Entry -" in b
+
+
+def test_exchange_announcements_bybit_okx():
+    from promovent.intel.news import ExchangeAnnouncements
+    by = {"retCode": 0, "result": {"list": [{"title": "Delisting of XYZ/USDT", "description": "Bybit will delist XYZ",
+                                             "type": {"title": "Delistings", "key": "delistings"}, "tags": ["Spot"],
+                                             "url": "https://announcements.bybit.com/x", "dateTimestamp": 1794000000000}]}}
+    ok = {"code": "0", "data": [{"details": [{"annType": "announcements-new-listings", "title": "OKX to list ABC (ABC) for spot trading",
+                                              "url": "https://www.okx.com/help/x", "pTime": "1794000000000"}], "totalPage": "1"}]}
+    a = ExchangeAnnouncements(client(lambda r: httpx.Response(200, json=by if "bybit" in str(r.url) else ok)))
+    b = a.fetch("bybit")[0]
+    assert b.source == "Bybit announcement" and "exchange_incident" in b.sentiment["categories"] and b.published.startswith("2026-11-0")
+    o = a.fetch("okx")[0]
+    assert o.source == "OKX announcement" and o.url == "https://www.okx.com/help/x"
+    with pytest.raises(ProviderUnavailable):
+        ExchangeAnnouncements(client(lambda r: httpx.Response(200, json={"retCode": 10001, "retMsg": "bad"}))).fetch("bybit")
+
+
+def test_blockchair_large_transfers_are_plain_transfers():
+    from promovent.intel.whale import Blockchair
+    raw = {"data": [{"hash": "ab" * 32, "time": "2026-11-07 06:00:00", "output_total": 150_000_000_000, "output_total_usd": 9.6e7}],
+           "context": {"code": 200}}
+    t = Blockchair(client(lambda r: httpx.Response(200, json=raw)), api_key="").recent("bitcoin")[0]
+    assert t.amount == 1500 and t.asset == "BTC" and t.flow == "transfer" and t.from_type == t.to_type == "unknown"
+    assert t.reference.endswith("ab" * 32) and t.ts == 1794031200
+    with pytest.raises(ProviderUnavailable, match="rate limit"):
+        Blockchair(client(lambda r: httpx.Response(430, json={})), api_key="").recent("bitcoin")

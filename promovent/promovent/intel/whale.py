@@ -3,6 +3,9 @@
 Providers
 - Whale Alert  (GET https://api.whale-alert.io/v1/transactions, key WHALE_ALERT_API_KEY): multi-chain
   transfers with owner attribution (exchange / unknown).
+- Blockchair   (GET https://api.blockchair.com/{bitcoin|ethereum}/transactions, optional BLOCKCHAIR_API_KEY):
+  largest recent transactions by USD value. No owner attribution, so every Blockchair item is a
+  plain `transfer`; it is never reported as an exchange flow.
 - Etherscan    (GET https://api.etherscan.io/v2/api, key ETHERSCAN_API_KEY): large ETH / ERC-20 transfers
   for addresses YOU list in PROMOVENT_WATCH_ADDRESSES (label:chain:address,...). No exchange
   address list is built in: a wrong label would invent flows.
@@ -203,3 +206,42 @@ class WhaleSummary:
             if sd > 0 and (cur - h.mean()) / sd >= z:
                 out.append({"asset": asset, "current_usd": cur, "zscore": float((cur - h.mean()) / sd)})
         return out
+
+
+class Blockchair:
+    URL = "https://api.blockchair.com/{chain}/transactions"
+    CHAINS = {"bitcoin": "BTC", "ethereum": "ETH"}
+
+    def __init__(self, http: httpx.Client | None = None, api_key: str | None = None):
+        self.key = api_key if api_key is not None else os.getenv("BLOCKCHAIR_API_KEY", "")
+        self.http = http or httpx.Client(timeout=10)
+
+    @classmethod
+    def parse(cls, raw: dict, chain: str) -> list[WhaleTx]:
+        ctx = raw.get("context", {})
+        if ctx.get("code") != 200:
+            raise ProviderUnavailable(f"blockchair: {ctx.get('error') or ctx.get('code')}")
+        from datetime import datetime, timezone
+        out = []
+        for t in raw.get("data", []):
+            ts = int(datetime.strptime(t["time"], "%Y-%m-%d %H:%M:%S").replace(tzinfo=timezone.utc).timestamp())
+            raw_amount = float(t.get("output_total") if chain == "bitcoin" else t.get("value", 0))
+            amount = raw_amount / (1e8 if chain == "bitcoin" else 1e18)
+            usd = t.get("output_total_usd") if chain == "bitcoin" else t.get("value_usd")
+            tx = WhaleTx("blockchair", chain, t["hash"], ts, cls.CHAINS[chain], amount, float(usd) if usd is not None else None,
+                         "unknown", "unknown", "unknown", "unknown", flow="transfer", reference=EXPLORERS[chain] + t["hash"])
+            out.append(tx)
+        return out
+
+    def recent(self, chain: str = "bitcoin", min_usd: int = 1_000_000) -> list[WhaleTx]:
+        field = "output_total_usd" if chain == "bitcoin" else "value_usd"
+        params = {"q": f"{field}({min_usd}..)", "s": "id(desc)", "limit": 50}
+        if self.key:
+            params["key"] = self.key
+        try:
+            r = self.http.get(self.URL.format(chain=chain), params=params)
+        except httpx.HTTPError as e:
+            raise ProviderUnavailable(f"blockchair: {type(e).__name__}: {e}") from e
+        if r.status_code in (402, 429, 430):
+            raise ProviderUnavailable(f"blockchair: HTTP {r.status_code} (rate limit or plan; set BLOCKCHAIR_API_KEY)")
+        return self.parse(r.json(), chain)

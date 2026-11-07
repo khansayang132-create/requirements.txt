@@ -8,7 +8,7 @@ against a real exchange, testnet, data provider, Telegram or a hosting platform:
 ## 1. Backend (pytest)
 
 Command: `python -m pytest tests -rs` with `PROMOVENT_TEST_DATABASE_URL` (local PostgreSQL 16.x) and
-`PROMOVENT_TEST_REDIS_URL` (local Redis) set. Result: **156 passed, 0 failed, 0 skipped** (18.9 s).
+`PROMOVENT_TEST_REDIS_URL` (local Redis) set. Result: **158 passed, 0 failed, 0 skipped** (19.2 s).
 JUnit XML: `docs/test-report.xml`. Lint: `ruff check .` → All checks passed. Shell: `shellcheck -S warning` → clean.
 
 | File | Tests | Seconds | Covers |
@@ -19,7 +19,7 @@ JUnit XML: `docs/test-report.xml`. Lint: `ruff check .` → All checks passed. S
 | `test_execution.py` | 26 | 0.15 | signing (Binance official vector), signed clients vs fakes, engine preflight, modes 4/5, failure scenarios |
 | `test_indicators.py` | 6 | 0.01 | indicator math |
 | `test_integration_pg_redis.py` | 3 | 0.62 | **real PostgreSQL**: migrate down/up, transaction rollback, pooled concurrent writes; **real Redis**: shared rate limit, locks, cache, heartbeats |
-| `test_intel_notify.py` | 12 | 0.07 | Whale Alert/Etherscan/CryptoPanic/RSS/Reddit/Fear&Greed parsing and errors; **email delivered to a real local SMTP server**; Telegram via fake |
+| `test_intel_notify.py` | 14 | 0.08 | Whale Alert/Etherscan/Blockchair/CryptoPanic/RSS/Reddit/Fear&Greed/Bybit+OKX announcements parsing and errors; **email delivered to a real local SMTP server**; Telegram via fake |
 | `test_market_data.py` | 10 | 3.57 | **real local WebSocket server**: reconnect after drop, stale-feed detection, unreachable host backoff, Bybit app ping; validator, books, candles, parsers |
 | `test_ml.py` | 7 | 2.88 | causal features, label horizon, purged splits, LightGBM + RF train/version/predict/drift, ML isolated from risk |
 | `test_no_lookahead.py` | 17 | 0.56 | no repaint / no look-ahead in structure, regime and all 9 strategies |
@@ -91,3 +91,11 @@ Drills on the running stack:
 **BLOCKED.** `api.render.com` and `backboard.railway.app` are refused by the sandbox proxy and there are no account
 credentials. No deployed URL exists. `render.yaml` is ready to apply. No production screenshots exist; the
 screenshots in `docs/screenshots/` are labelled by where they came from (see `docs/screenshots/README.md`).
+
+## 5. CI (GitHub Actions)
+
+Run 195 on commit `131f28f`: 9 of 10 jobs passed (including `promovent` with Postgres/Redis service containers and
+`promovent-web`). `promovent-docker` failed: its smoke step imported the API inside the production image without
+API keys, and the production guard refused to start, as designed. Fixed by importing with `PROMOVENT_NO_AUTOAPP=1`
+and adding a real start-up check (container migrates SQLite and answers `/api/health`); both steps reproduced
+locally and passed before pushing.
