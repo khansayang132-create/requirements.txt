@@ -47,7 +47,7 @@
       "trust": "official",
       "url": "https://github.com/anthropics/skills",
       "verification": {
-        "at": "2026-11-04T12:29:20+00:00",
+        "at": "2026-11-07T11:17:31+00:00",
         "checks": [
           {
             "check": "files installed",
@@ -76,7 +76,7 @@
           },
           {
             "check": "source exists",
-            "detail": "https://github.com/anthropics/skills HEAD ca45fc496a34",
+            "detail": "https://github.com/anthropics/skills HEAD 2c5958ecac7c",
             "status": "PASS"
           },
           {
