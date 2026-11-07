@@ -5,7 +5,7 @@ from promovent.config import Mode, Settings
 from promovent.models import Signal
 from promovent.paper import ExecutionAgent, LiveTradingUnavailable, OrderRejected, PaperBroker
 from promovent.risk import RiskEngine
-from promovent.storage import Store
+from promovent.db import Store
 
 T = pd.Timestamp("2024-01-01", tz="UTC")
 
@@ -31,7 +31,7 @@ def test_live_refused_and_audited():
     a, store = agent(Mode.AUTONOMOUS_LIVE, live_trading_enabled=True)
     with pytest.raises(LiveTradingUnavailable):
         a.execute(sig(), 100)
-    assert store.query("SELECT action FROM audit_log")[0]["action"] == "live_order_refused"
+    assert store.audit_log()[0]["action"] == "live_order_refused"
 
 
 def test_unvalidated_strategy_refused():
@@ -48,8 +48,8 @@ def test_fill_duplicate_and_stop_close():
         a.execute(sig(), 100)
     closed = a.broker.on_price("BTC/USDT", 97.5)
     assert closed and closed[0]["reason"] == "stop" and closed[0]["pnl"] < 0
-    assert store.query("SELECT count(*) n FROM paper_trades")[0]["n"] == 1
-    actions = [x["action"] for x in store.query("SELECT action FROM audit_log ORDER BY id")]
+    assert len(store.positions("paper", closed=True)) == 1 and store.positions("paper") == []
+    actions = [x["action"] for x in reversed(store.audit_log())]
     assert actions == ["risk_decision", "paper_fill"]
 
 
@@ -64,10 +64,10 @@ def test_partial_fill_recorded():
     a, store = agent()
     r = a.execute(sig(), 100, fill_ratio=0.4)
     assert not r["complete"]
-    assert store.query("SELECT status FROM paper_orders")[0]["status"] == "partially_filled"
+    assert store.orders("paper")[0]["status"] == "partially_filled"
 
 
 def test_migrations_idempotent(tmp_path):
-    s = Store(tmp_path / "p.db")
-    assert s.migrate() == []
-    assert Store(tmp_path / "p.db").query("SELECT version FROM schema_version") == [{"version": 1}]
+    Store(str(tmp_path / "p.db"))
+    s = Store(str(tmp_path / "p.db"))  # second run: alembic already at head, no error
+    assert s.health()["ok"]

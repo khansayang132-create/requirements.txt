@@ -1,70 +1,106 @@
-# Promovent (Crypto Promovent AI v2.0)
+# Promovent (Crypto Promovent AI v2.5)
 
-Crypto market intelligence, research and **paper** trading. Python 3.12+, FastAPI, NumPy/pandas.
+Crypto market intelligence, research, paper trading and risk-gated live execution.
+Backend: Python 3.12, FastAPI, SQLAlchemy/Alembic on PostgreSQL, Redis, a background worker.
+Frontend: Next.js 15, TypeScript, Tailwind, TradingView Lightweight Charts.
 
-> This is not part of LSKhan. It lives in this repo the same way `done/` does.
-> **What is real and what isn't is in [`STATUS.md`](./STATUS.md). Read it before trusting anything here.**
+> Not part of LSKhan; it lives in this repo like `done/`.
+> **What is proven and what is not:** [`AUDIT_REPORT.md`](./AUDIT_REPORT.md) and [`TEST_REPORT.md`](./TEST_REPORT.md).
+> Short version: everything below is built and tested, but it has **never connected to a real exchange,
+> data provider or hosting platform** (the build sandbox blocks them), and **it is not deployed**.
 
-Capital preservation first: risk per trade 0.5 %, daily loss limit 2 %, weekly 4 %, max 3 positions,
-leverage off, martingale rejected by config validation, an emergency stop, and **no withdrawal code anywhere**.
-Live order execution is **not implemented**; live modes refuse every order.
+Capital preservation first: 0.5 % risk per trade, 2 % daily / 4 % weekly loss limits, max 3 positions, leverage
+off, martingale rejected, emergency stop. **There is no withdrawal code**, and keys that allow withdrawals are refused.
 
-## Install and run
+## Architecture
+
+```
+ browser ──► Next.js (web/, :3000) ──/api/* rewrite──► FastAPI (promovent/api.py, :8000) ──► PostgreSQL
+                                                          │   ▲                                 ▲
+                                                          ▼   │ snapshots, locks, rate limits   │
+                                                         Redis ◄──────── worker (promovent/worker.py)
+                                                                          ├─ WebSocket streams (market_data/)
+                                                                          ├─ scans → alerts → Telegram/email
+                                                                          ├─ live order reconciliation
+                                                                          └─ portfolio snapshots
+ Live orders: API → LiveExecutionEngine (execution/engine.py, 13 preflight checks) → signed client (execution/clients.py) → exchange
+```
+
+| Package | Purpose |
+|---|---|
+| `promovent/ta/`, `strategies/`, `scoring.py`, `backtest.py`, `risk.py` | analysis, 9 strategies, scoring, backtester, risk engine (V2.0, unchanged in behaviour) |
+| `promovent/execution/` | signed Binance/Bybit/OKX spot clients and the live execution engine (modes 4 and 5) |
+| `promovent/market_data/` | WebSocket adapters, connection manager, validator, order books, candles, stream |
+| `promovent/intel/` | whale intelligence (Whale Alert, Etherscan), news and sentiment (CryptoPanic, RSS, Reddit, Fear & Greed) |
+| `promovent/notify.py` | Telegram and SMTP email with per-user preferences and delivery log |
+| `promovent/db/` + `alembic/` | SQLAlchemy models (15 tables) and migrations |
+| `promovent/cache.py` | Redis rate limiting, cache, locks, heartbeats (degrades to memory) |
+| `promovent/ml/` | features, dataset, LightGBM/RandomForest training, registry, prediction, drift |
+| `promovent/worker.py` | background jobs |
+| `web/` | Next.js app: dashboard, markets, scanner, trading, portfolio, strategies, backtesting, whale-intelligence, news, analytics, risk-center, settings |
+
+## Run it
+
+### Full stack with Docker (recommended)
 
 ```bash
 cd promovent
-python3 -m venv .venv && . .venv/bin/activate
-pip install -r requirements.txt
-python -m pytest -q tests                      # 87 tests
-
-# Offline demo (labeled SYNTHETIC on every screen):
-PROMOVENT_SOURCE=synthetic PROMOVENT_DEV_NO_AUTH=yes uvicorn promovent.api:app --port 8000
-# open http://127.0.0.1:8000  ·  API docs at /api/docs
-
-# Real market data (needs network access to the exchange):
-cp .env.example .env   # set PROMOVENT_API_KEYS, keep DEV_NO_AUTH=no
-PROMOVENT_SOURCE=live PROMOVENT_API_KEYS="<32-char key>:admin" uvicorn promovent.api:app --port 8000
+cp .env.example .env
+#   set POSTGRES_PASSWORD and PROMOVENT_API_KEYS (python -c "import secrets;print(secrets.token_urlsafe(32))")
+docker compose up -d --build
+docker compose ps                  # all five services should become "healthy"
+curl http://127.0.0.1:8000/api/health
+open http://127.0.0.1:3000         # Settings → paste your API key
 ```
 
-Docker: `docker build -t promovent . && docker run -p 8000:8000 -e PROMOVENT_API_KEYS=... promovent`
-(Railway/Render: use the Dockerfile; they set `$PORT`.)
+Database: `scripts/db.sh backup|restore <file>|migrate|rollback <rev>`. Migrations also run on every backend start.
 
-## Layout
+### Local development
 
-| Module | What it does |
-|---|---|
-| `promovent/config.py` | Execution modes 1-5, `RiskConfig` with hard rules (rejects martingale, leverage, risk > 2 %) |
-| `promovent/models.py` | Symbols, timeframes, OHLCV validation (rejects bad candles, never repairs), `MarketMeta` provenance |
-| `promovent/data/exchanges.py` | Binance / Bybit / OKX / Coinbase public REST adapters: candles (closed only), book, trades, funding + OI; cross-exchange price monitor (strategy H) |
-| `promovent/data/synthetic.py` | Deterministic regime-switching data for tests and the labeled demo |
-| `promovent/ta/indicators.py` | EMA, SMA, RSI, MACD, ATR, VWAP (session + rolling), Bollinger, ADX, volume z-score, Fibonacci, volume profile |
-| `promovent/ta/structure.py` | Non-repainting swings, HH/HL/LH/LL, BOS, CHoCH, sweeps, equal highs/lows, FVG, order blocks, premium/discount (definitions in the docstring) |
-| `promovent/ta/regime.py` | 8 regimes + `tradeable` flag (stands aside in high-vol and transition) |
-| `promovent/ta/orderflow.py` | Book imbalance, spread, depth, visible-book slippage, CVD, aggressor ratio, large trades |
-| `promovent/scoring.py` | 100-point opportunity score with the spec's weights; missing data scores 0 and is listed |
-| `promovent/strategies/` | 9 backtestable engines (A, B, C, D, E, F, J, K, L) + G and I as analytics |
-| `promovent/risk.py` | Risk engine with veto power: sizing, heat, correlation, lockouts, kill switch, drawdown throttle |
-| `promovent/backtest.py` | Next-open fills, stop-first intrabar, gap fills, fees/spread/slippage/funding/partial fills, metrics, Monte Carlo, walk-forward, validation gate |
-| `promovent/paper.py` | Paper broker and `ExecutionAgent` (mode gate → validation gate → risk decision → duplicate check → fill) |
-| `promovent/service.py` | Market service, scanner, alerts, rule-based copilot |
-| `promovent/api.py` | FastAPI: API-key auth, viewer/trader/admin roles, rate limits, audit log |
-| `promovent/static/index.html` | Trading terminal (dashboard, chart, copilot, scanner, quant lab, risk center, positions, alerts) |
-| `migrations/` | SQLite schema (audit log, paper orders/trades, alerts) |
+```bash
+cd promovent
+python3 -m venv .venv && . .venv/bin/activate && pip install -r requirements-dev.txt
+python -m pytest -q tests                      # set PROMOVENT_TEST_DATABASE_URL / _REDIS_URL to include Postgres/Redis tests
+PROMOVENT_ENV=development PROMOVENT_SOURCE=synthetic PROMOVENT_DEV_NO_AUTH=yes uvicorn promovent.api:app --port 8000
+cd web && npm ci && npm run dev                 # http://127.0.0.1:3000 (proxies /api to :8000)
+```
 
-## API (all under `/api`, `X-API-Key` header)
+`PROMOVENT_SOURCE=synthetic` is a labelled demo mode (SIMULATED banner everywhere). `PROMOVENT_ENV=production`
+refuses to start with synthetic data or with auth disabled.
 
-| Method & path | Role | Purpose |
+## Turning on live trading (in this order)
+
+1. Paper trade first. Validate a strategy (`/strategies` → Validate, admin key). Only validated strategies can trade.
+2. Create a **trade-only** key on the exchange: spot trading on, **withdrawals off**, IP whitelist on.
+3. Testnet first: `PROMOVENT_LIVE_EXCHANGE=binance`, `PROMOVENT_EXCHANGE_TESTNET=yes`, keys from testnet.binance.vision.
+4. `PROMOVENT_MODE=assisted_live` and `PROMOVENT_ENABLE_LIVE=yes`. `/trading` → Live preflight shows every check;
+   Propose → Confirm sends one order and places its stop/take-profit.
+5. Mode 5 (`autonomous_live`) additionally needs an admin to POST `/api/live/autonomy` with allowed symbols,
+   strategies, a per-order notional cap, and `confirm_phrase: "I ACCEPT AUTONOMOUS LIVE TRADING"`.
+
+v2.5 trades **spot, long only**. Short signals are refused rather than sent to a margin account.
+
+## API
+
+Interactive docs at `/api/docs`. Header `X-API-Key`; roles viewer < trader < admin.
+
+| Endpoint | Role | Purpose |
 |---|---|---|
-| `GET /health` | none | liveness |
-| `GET /status` | viewer | mode, source, risk limits, validated strategies |
-| `GET /exchanges/health` | viewer | reachability of each exchange |
-| `GET /ohlcv?symbol&timeframe&limit` | viewer | closed candles + structure breaks + provenance |
-| `GET /analysis?symbol&timeframe` | viewer | copilot: bias, regime, score, supporting/conflicting evidence, entry, invalidation, timestamp |
-| `GET /regime` · `GET /scan` · `GET /alerts` | viewer | regime, scanner across 10 assets, alert feed |
-| `GET /strategies` | viewer | rules, stops, failure conditions per strategy |
-| `POST /backtest` | viewer | metrics, equity, trades, Monte Carlo |
-| `POST /validate` | admin | walk-forward + Monte Carlo + gate; passing unlocks paper trading for that strategy |
-| `GET /portfolio` · `POST /paper/order` | viewer · trader | paper portfolio; place the latest signal through the risk engine |
-| `POST /kill` · `POST /kill/release` · `GET /audit` | trader · admin · admin | emergency stop and audit trail |
+| `GET /api/health` | none | DB, Redis, worker heartbeats, notification channels (503 if DB down) |
+| `GET /api/status`, `/api/ohlcv`, `/api/analysis`, `/api/regime`, `/api/scan`, `/api/alerts`, `/api/strategies` | viewer | market and analysis data, every payload with exchange/symbol/timestamp/source |
+| `GET /api/stream` | viewer | WebSocket snapshot from the worker (price, timestamp, connection state) |
+| `POST /api/backtest` · `POST /api/validate` | viewer · admin | research; validation persists in `strategies` |
+| `GET /api/portfolio` · `POST /api/paper/order` | viewer · trader | paper trading |
+| `GET /api/live/status` · `POST /api/live/preflight` · `POST /api/live/propose` · `POST /api/live/confirm` | viewer · trader | live execution (mode 4) |
+| `POST /api/live/autonomy` · `POST /api/live/reconcile` · `GET /api/live/orders` | admin · admin · viewer | mode 5 activation, reconciliation, live order log |
+| `GET /api/whales`, `GET /api/news` | viewer | on-chain flows, news and sentiment (errors listed per provider) |
+| `GET /api/ml/models`, `POST /api/ml/train`, `GET /api/ml/predict` | viewer · admin · viewer | ML registry, training, prediction with drift |
+| `GET/PUT /api/settings/alerts`, `POST /api/settings/alerts/test`, `GET /api/notifications` | viewer | alert preferences and delivery log |
+| `GET /api/risk/events`, `POST /api/kill`, `POST /api/kill/release`, `GET /api/audit` | viewer · trader · admin · admin | risk |
 
-Interactive docs: `/api/docs`.
+## Deploy
+
+`render.yaml` is a Render Blueprint (Postgres, Key Value/Redis, backend, worker, frontend). In Render: New →
+Blueprint → this repo → path `promovent/render.yaml`, then enter the `sync: false` secrets. Set
+`PROMOVENT_BACKEND_URL` on the frontend to the backend's URL **before** its first build (Next.js rewrites are fixed at
+build time). Not yet applied: see TEST_REPORT.md §4.

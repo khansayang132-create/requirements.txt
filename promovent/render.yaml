@@ -1,0 +1,80 @@
+# Render Blueprint (https://render.com/docs/blueprint-spec). Deploy: Render dashboard -> New -> Blueprint -> this repo,
+# blueprint path promovent/render.yaml. Secrets marked sync:false are entered in the dashboard, never committed.
+databases:
+  - name: promovent-db
+    databaseName: promovent
+    user: promovent
+    plan: basic-256mb
+    postgresMajorVersion: "16"
+
+services:
+  - type: keyvalue
+    name: promovent-redis
+    plan: starter
+    ipAllowList: []           # private network only
+    maxmemoryPolicy: allkeys-lru
+
+  - type: web
+    name: promovent-backend
+    runtime: docker
+    rootDir: promovent
+    dockerfilePath: ./Dockerfile
+    dockerCommand: /entrypoint.sh api
+    plan: starter
+    healthCheckPath: /api/health
+    envVars: &backendEnv
+      - key: PROMOVENT_ENV
+        value: production
+      - key: PROMOVENT_SOURCE
+        value: live
+      - key: PROMOVENT_MODE
+        value: paper
+      - key: PROMOVENT_ENABLE_LIVE
+        value: "no"
+      - key: PROMOVENT_EXCHANGE_TESTNET
+        value: "yes"
+      - key: PROMOVENT_DATABASE_URL
+        fromDatabase: { name: promovent-db, property: connectionString }
+      - key: PROMOVENT_REDIS_URL
+        fromService: { type: keyvalue, name: promovent-redis, property: connectionString }
+      - key: PROMOVENT_API_KEYS
+        sync: false
+      - key: PROMOVENT_BINANCE_API_KEY
+        sync: false
+      - key: PROMOVENT_BINANCE_API_SECRET
+        sync: false
+      - key: WHALE_ALERT_API_KEY
+        sync: false
+      - key: CRYPTOPANIC_API_KEY
+        sync: false
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: SMTP_HOST
+        sync: false
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASSWORD
+        sync: false
+      - key: SMTP_FROM
+        sync: false
+
+  - type: worker
+    name: promovent-worker
+    runtime: docker
+    rootDir: promovent
+    dockerfilePath: ./Dockerfile
+    dockerCommand: /entrypoint.sh worker
+    plan: starter
+    envVars: *backendEnv
+
+  - type: web
+    name: promovent-frontend
+    runtime: docker
+    rootDir: promovent/web
+    dockerfilePath: ./Dockerfile
+    plan: starter
+    healthCheckPath: /dashboard
+    envVars:
+      # Next.js rewrites are fixed at build time: set this to the backend's URL before the first deploy.
+      - key: PROMOVENT_BACKEND_URL
+        sync: false

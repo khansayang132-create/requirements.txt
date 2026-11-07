@@ -89,7 +89,7 @@ def test_key_format_enforced():
     assert _parse_keys(("x" * 30) + ":viewer") == {"x" * 30: "viewer"}
 
 
-def test_dashboard_served(client):
+def test_root_points_to_docs(client):
     c, _ = client
-    r = c.get("/")
-    assert r.status_code == 200 and "Promovent" in r.text
+    r = c.get("/").json()
+    assert r["docs"] == "/api/docs" and r["service"] == "promovent-api"

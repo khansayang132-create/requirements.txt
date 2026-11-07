@@ -16,7 +16,7 @@ from .backtest import Costs
 from .config import Mode, Settings
 from .models import Position, Signal
 from .risk import Decision, RiskEngine, RiskState
-from .storage import Store, utcnow
+from .db import Store
 
 
 class OrderRejected(RuntimeError):
@@ -29,7 +29,8 @@ class LiveTradingUnavailable(OrderRejected):
 
 def client_order_id(sig: Signal) -> str:
     raw = f"{sig.strategy}|{sig.symbol}|{sig.side}|{sig.bar_time}"
-    return "pv-" + hashlib.sha256(raw.encode()).hexdigest()[:20]
+    # letters and digits only: valid as Binance newClientOrderId, Bybit orderLinkId and OKX clOrdId
+    return "pv" + hashlib.sha256(raw.encode()).hexdigest()[:24]
 
 
 @dataclass
@@ -57,12 +58,14 @@ class PaperBroker:
         fee = px * qty * self.costs.fee_bps / 1e4
         self.cash -= fee
         pos = Position(sig.symbol, sig.side, qty, px, sig.stop, sig.target, sig.strategy)
-        pos.opened_at = utcnow()  # type: ignore[assignment]
         pos._coid, pos._fees = coid, fee  # type: ignore[attr-defined]
         self.state.positions.append(pos)
-        self.store.execute("INSERT INTO paper_orders VALUES (?,?,?,?,?,?,?,?,?,?,?)",
-                           (coid, utcnow(), sig.symbol, sig.side, qty, px, sig.stop, sig.target, sig.strategy,
-                            "filled" if fill_ratio >= 1 else "partially_filled", json.dumps(dec.as_dict())))
+        self.store.save_order(client_order_id=coid, venue="paper", symbol=sig.symbol, side=sig.side, order_type="market",
+                              qty=dec.qty, price=px, stop=sig.stop, target=sig.target, strategy=sig.strategy,
+                              status="filled" if fill_ratio >= 1 else "partially_filled", filled_qty=qty, avg_price=px,
+                              decision=json.loads(json.dumps(dec.as_dict())))
+        self.store.open_position(venue="paper", symbol=sig.symbol, side=sig.side, qty=qty, entry=px, stop=sig.stop,
+                                 target=sig.target, strategy=sig.strategy, entry_order_id=coid, fees=fee)
         return Fill(coid, qty, px, fill_ratio >= 1)
 
     def on_price(self, symbol: str, price: float) -> list[dict]:
@@ -91,10 +94,7 @@ class PaperBroker:
         pnl = gross - fee - p._fees  # type: ignore[attr-defined]
         self.realized += pnl
         self.state.positions.remove(p)
-        self.store.execute("INSERT INTO paper_trades (client_order_id, symbol, side, qty, entry, exit, reason, pnl, fees,"
-                           " opened_at, closed_at) VALUES (?,?,?,?,?,?,?,?,?,?,?)",
-                           (p._coid, p.symbol, p.side, p.qty, p.entry, px, reason, pnl, fee + p._fees,  # type: ignore[attr-defined]
-                            str(p.opened_at), utcnow()))
+        self.store.close_position(p._coid, px, reason, pnl, fee + p._fees)  # type: ignore[attr-defined]
         return {"symbol": p.symbol, "reason": reason, "exit": px, "pnl": pnl}
 
     def snapshot(self, prices: dict[str, float] | None = None) -> dict:
@@ -126,11 +126,11 @@ class ExecutionAgent:
         if not mode.may_place_orders:
             raise OrderRejected(f"mode {mode.value} does not place orders")
         if mode.is_live:
-            self.store.audit(actor, "live_order_refused", {"coid": coid})
-            raise LiveTradingUnavailable("live execution is not implemented in this build; use paper mode")
+            self.store.audit(actor, "live_order_refused", {"coid": coid, "reason": "paper agent in live mode"})
+            raise LiveTradingUnavailable("live modes use LiveExecutionEngine (promovent.execution), not the paper agent")
         if sig.strategy not in self.validated:
             raise OrderRejected(f"strategy {sig.strategy} has not passed the validation gate")
-        if self.store.query("SELECT 1 FROM paper_orders WHERE client_order_id = ?", (coid,)):
+        if self.store.order_exists(coid):
             raise OrderRejected(f"duplicate order {coid}")
         self.broker.state.equity = self.broker.equity({sig.symbol: market_price})
         dec = self.risk.evaluate(sig, self.broker.state, correlations)
