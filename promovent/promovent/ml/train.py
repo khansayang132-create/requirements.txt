@@ -26,7 +26,21 @@ def make(kind: str, seed: int = 7):
                                   subsample=0.8, subsample_freq=1, colsample_bytree=0.8, reg_lambda=1.0, random_state=seed, verbose=-1)
     if kind == "random_forest":
         return RandomForestClassifier(n_estimators=300, max_depth=6, min_samples_leaf=50, n_jobs=-1, random_state=seed)
+    if kind == "xgboost":
+        from xgboost import XGBClassifier
+        return XGBClassifier(n_estimators=300, learning_rate=0.03, max_depth=4, min_child_weight=20, subsample=0.8,
+                             colsample_bytree=0.8, reg_lambda=1.0, random_state=seed, n_jobs=2, eval_metric="logloss")
+    if kind == "statistical":
+        # Statistical forecasting baseline: regularised logistic regression on standardised lagged returns,
+        # volatility and RSI (a linear AR-style model). Trees must beat this to be worth their complexity.
+        from sklearn.linear_model import LogisticRegression
+        from sklearn.pipeline import make_pipeline
+        from sklearn.preprocessing import StandardScaler
+        return make_pipeline(StandardScaler(), LogisticRegression(C=0.1, max_iter=500))
     raise ValueError(kind)
+
+
+KINDS = ("lightgbm", "xgboost", "random_forest", "statistical")
 
 
 def _metrics(y, p) -> dict:
@@ -59,7 +73,10 @@ def train(ds: Dataset, kind: str = "lightgbm", model_dir: Path | None = None, n_
     model_dir = Path(model_dir or MODEL_DIR)
     ev = evaluate(ds, kind, n_folds)
     model = make(kind).fit(ds.X, ds.y)
-    imp = getattr(model, "feature_importances_", np.zeros(len(FEATURES)))
+    imp = getattr(model, "feature_importances_", None)
+    if imp is None and hasattr(model, "steps"):
+        imp = np.abs(model.steps[-1][1].coef_[0])
+    imp = imp if imp is not None else np.zeros(len(FEATURES))
     version = f"{kind[:3]}-{ds.fingerprint()}-{int(time.time())}"
     meta = {"version": version, "kind": kind, "trained_at": datetime.now(timezone.utc).isoformat(), "dataset": ds.doc,
             "dataset_fingerprint": ds.fingerprint(), "validation": ev,

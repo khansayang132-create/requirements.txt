@@ -29,7 +29,8 @@ class OKXWS(WSAdapter):
         ids = [s.replace("/", "-") for s in self.symbols]
         pub = [{"op": "subscribe", "args": [a for i in ids for a in (
             {"channel": "trades", "instId": i}, {"channel": "books", "instId": i}, {"channel": "tickers", "instId": i},
-            {"channel": "funding-rate", "instId": i + "-SWAP"}, {"channel": "open-interest", "instId": i + "-SWAP"})]}]
+            {"channel": "funding-rate", "instId": i + "-SWAP"}, {"channel": "open-interest", "instId": i + "-SWAP"})]
+            + [{"channel": "liquidation-orders", "instType": "SWAP"}]}]
         biz = [{"op": "subscribe", "args": [{"channel": f"candle{TF[self.timeframe]}", "instId": i} for i in ids]}]
         if self.url_override:
             return [(self.url_override, pub)]
@@ -52,6 +53,17 @@ class OKXWS(WSAdapter):
         arg, data = m.get("arg"), m.get("data")
         if not arg or not data:
             return []
+        if arg["channel"] == "liquidation-orders":
+            out = []
+            for g in data:
+                sym = self.sym(g["instId"])
+                if sym not in self.symbols:
+                    continue
+                for x in g.get("details", []):
+                    out.append(MarketEvent("liquidation", self.name, sym, int(x["ts"]), {
+                        "side": x["side"], "pos_side": x.get("posSide"), "price": float(x["bkPx"]), "size_contracts": float(x["sz"])},
+                        f"l{x['ts']}-{x['bkPx']}-{x['sz']}"))
+            return out
         ch, sym = arg["channel"], self.sym(arg["instId"])
         out = []
         if ch == "trades":

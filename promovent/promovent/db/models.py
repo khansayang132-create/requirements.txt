@@ -223,3 +223,139 @@ class MLModel(Base):
     kind: Mapped[str] = mapped_column(String(32))
     data_source: Mapped[str] = mapped_column(String(12))
     metadata_: Mapped[dict] = mapped_column("metadata", JSON, default=dict)
+
+
+# ---------------------------------------------------------------- V3.0: autonomous operation
+class KV(Base):
+    """Small persistent operating state (paper account, autopilot cursors, mission progress)."""
+    __tablename__ = "kv_state"
+    key: Mapped[str] = mapped_column(String(128), primary_key=True)
+    value: Mapped[dict] = mapped_column(JSON, default=dict)
+    updated_at: Mapped[datetime] = mapped_column(TS, default=utcnow, onupdate=utcnow)
+
+
+class ResearchFinding(Base):
+    __tablename__ = "research_findings"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    ts: Mapped[datetime] = mapped_column(TS, default=utcnow)            # research date
+    area: Mapped[str] = mapped_column(String(2))                       # A..L
+    title: Mapped[str] = mapped_column(String(200))
+    hypothesis: Mapped[str] = mapped_column(Text)
+    source: Mapped[str] = mapped_column(Text)                          # endpoint / dataset reference
+    data_window: Mapped[str] = mapped_column(String(120))
+    methodology: Mapped[str] = mapped_column(Text)
+    result: Mapped[dict] = mapped_column(JSON, default=dict)            # numbers
+    conclusion: Mapped[str] = mapped_column(String(24))                # supported | not_supported | inconclusive | not_tested
+    summary: Mapped[str] = mapped_column(Text)
+    limitations: Mapped[str] = mapped_column(Text)
+    data_source: Mapped[str] = mapped_column(String(12))               # live | synthetic | none
+    mission_id: Mapped[str | None] = mapped_column(String(40))
+
+
+class StrategyResearch(Base):
+    __tablename__ = "strategy_research"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    ts: Mapped[datetime] = mapped_column(TS, default=utcnow)
+    strategy: Mapped[str] = mapped_column(String(64))
+    exchange: Mapped[str] = mapped_column(String(16))
+    symbol: Mapped[str] = mapped_column(String(24))
+    timeframe: Mapped[str] = mapped_column(String(4))
+    params: Mapped[dict] = mapped_column(JSON, default=dict)
+    data_start: Mapped[datetime] = mapped_column(TS)
+    data_end: Mapped[datetime] = mapped_column(TS)
+    bars: Mapped[int] = mapped_column(Integer)
+    source: Mapped[str] = mapped_column(String(12))
+    metrics: Mapped[dict] = mapped_column(JSON, default=dict)
+    walk_forward: Mapped[dict] = mapped_column(JSON, default=dict)
+    monte_carlo: Mapped[dict] = mapped_column(JSON, default=dict)
+    passed: Mapped[bool] = mapped_column(Boolean, default=False)
+    failures: Mapped[list] = mapped_column(JSON, default=list)
+    __table_args__ = (Index("ix_sr_combo", "strategy", "symbol", "timeframe", "ts"),)
+
+
+class Opportunity(Base):
+    __tablename__ = "opportunities"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    ts: Mapped[datetime] = mapped_column(TS, default=utcnow)
+    strategy: Mapped[str] = mapped_column(String(64))
+    exchange: Mapped[str] = mapped_column(String(16))
+    symbol: Mapped[str] = mapped_column(String(24))
+    timeframe: Mapped[str] = mapped_column(String(4))
+    bar_time: Mapped[datetime] = mapped_column(TS)
+    side: Mapped[int] = mapped_column(Integer)
+    entry: Mapped[float] = mapped_column(Float)
+    stop: Mapped[float] = mapped_column(Float)
+    target: Mapped[float] = mapped_column(Float)
+    qty: Mapped[float] = mapped_column(Float, default=0.0)
+    reward_risk: Mapped[float] = mapped_column(Float)
+    net_reward_risk: Mapped[float] = mapped_column(Float)              # after expected costs
+    expected_cost_bps: Mapped[float] = mapped_column(Float)
+    regime: Mapped[str] = mapped_column(String(32))
+    score: Mapped[float] = mapped_column(Float)
+    supporting: Mapped[list] = mapped_column(JSON, default=list)
+    conflicting: Mapped[list] = mapped_column(JSON, default=list)
+    expires_at: Mapped[datetime] = mapped_column(TS)
+    decision: Mapped[str] = mapped_column(String(16))                  # taken | rejected | proposed | expired
+    reason: Mapped[str] = mapped_column(Text, default="")
+    client_order_id: Mapped[str | None] = mapped_column(String(40))
+    venue: Mapped[str] = mapped_column(String(16), default="paper")
+    __table_args__ = (UniqueConstraint("strategy", "symbol", "timeframe", "bar_time", "venue"),)
+
+
+class TradeReview(Base):
+    __tablename__ = "trade_reviews"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    ts: Mapped[datetime] = mapped_column(TS, default=utcnow)
+    venue: Mapped[str] = mapped_column(String(16))
+    client_order_id: Mapped[str] = mapped_column(String(40), unique=True)
+    strategy: Mapped[str] = mapped_column(String(64))
+    symbol: Mapped[str] = mapped_column(String(24))
+    timeframe: Mapped[str | None] = mapped_column(String(4))
+    side: Mapped[int] = mapped_column(Integer)
+    qty: Mapped[float] = mapped_column(Float)
+    signal_price: Mapped[float | None] = mapped_column(Float)
+    entry: Mapped[float] = mapped_column(Float)
+    exit: Mapped[float] = mapped_column(Float)
+    stop: Mapped[float] = mapped_column(Float)
+    target: Mapped[float] = mapped_column(Float)
+    exit_reason: Mapped[str] = mapped_column(String(24))
+    fees: Mapped[float] = mapped_column(Float)
+    funding: Mapped[float] = mapped_column(Float, default=0.0)
+    slippage_bps: Mapped[float | None] = mapped_column(Float)
+    gross_pnl: Mapped[float] = mapped_column(Float)
+    net_pnl: Mapped[float] = mapped_column(Float)
+    r_multiple: Mapped[float] = mapped_column(Float)
+    holding_hours: Mapped[float] = mapped_column(Float)
+    signal_score: Mapped[float | None] = mapped_column(Float)
+    regime_entry: Mapped[str | None] = mapped_column(String(32))
+    regime_exit: Mapped[str | None] = mapped_column(String(32))
+    evaluation: Mapped[dict] = mapped_column(JSON, default=dict)
+
+
+class Report(Base):
+    __tablename__ = "reports"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    ts: Mapped[datetime] = mapped_column(TS, default=utcnow)
+    period: Mapped[str] = mapped_column(String(8))      # hourly | daily | weekly | monthly
+    start: Mapped[datetime] = mapped_column(TS)
+    end: Mapped[datetime] = mapped_column(TS)
+    content: Mapped[dict] = mapped_column(JSON, default=dict)
+    markdown: Mapped[str] = mapped_column(Text)
+    __table_args__ = (UniqueConstraint("period", "start"),)
+
+
+class Prediction(Base):
+    __tablename__ = "predictions"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    ts: Mapped[datetime] = mapped_column(TS, default=utcnow)
+    model_version: Mapped[str] = mapped_column(String(48))
+    symbol: Mapped[str] = mapped_column(String(24))
+    timeframe: Mapped[str] = mapped_column(String(4))
+    bar_time: Mapped[datetime] = mapped_column(TS)
+    horizon_bars: Mapped[int] = mapped_column(Integer)
+    probability_up: Mapped[float] = mapped_column(Float)
+    price_at_bar: Mapped[float] = mapped_column(Float)
+    resolve_after: Mapped[datetime] = mapped_column(TS)
+    outcome_up: Mapped[bool | None] = mapped_column(Boolean)
+    resolved_at: Mapped[datetime | None] = mapped_column(TS)
+    __table_args__ = (UniqueConstraint("model_version", "symbol", "timeframe", "bar_time"),)

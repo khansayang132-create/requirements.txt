@@ -31,10 +31,11 @@ class Mode(str, Enum):
 
 
 class RiskConfig(BaseModel):
-    risk_per_trade: float = Field(0.005, gt=0)
-    daily_loss_limit: float = Field(0.02, gt=0, le=0.5)
-    weekly_loss_limit: float = Field(0.04, gt=0, le=0.5)
-    max_drawdown: float = Field(0.15, gt=0, le=0.9)
+    risk_per_trade: float = Field(0.0025, gt=0)
+    daily_loss_limit: float = Field(0.02, gt=0, le=0.5)     # of start-of-day equity
+    weekly_loss_limit: float = Field(0.03, gt=0, le=0.5)
+    max_drawdown: float = Field(0.02, gt=0, le=0.9)          # total drawdown; see drawdown_basis
+    drawdown_basis: str = Field("high_water", pattern="^(high_water|initial)$")
     max_concurrent_positions: int = Field(3, ge=1, le=50)
     max_portfolio_heat: float = Field(0.015, gt=0, le=0.2)  # sum of open risk / equity
     min_reward_risk: float = Field(1.5, gt=0)
@@ -57,6 +58,12 @@ class RiskConfig(BaseModel):
         return self
 
 
+def research_risk() -> "RiskConfig":
+    """Risk settings for research backtests: same per-trade sizing as the account, but account-level lockouts
+    are widened so a strategy is measured over the whole history instead of stopping at the first -2 %."""
+    return RiskConfig(daily_loss_limit=0.5, weekly_loss_limit=0.5, max_drawdown=0.9)
+
+
 class Settings(BaseModel):
     mode: Mode = Mode.OBSERVATION
     risk: RiskConfig = RiskConfig()
@@ -72,5 +79,5 @@ class Settings(BaseModel):
     def from_env(cls) -> "Settings":
         mode = Mode(os.getenv("PROMOVENT_MODE", Mode.OBSERVATION.value))
         live = os.getenv("PROMOVENT_ENABLE_LIVE", "").lower() == "yes"
-        risk = RiskConfig(risk_per_trade=float(os.getenv("PROMOVENT_RISK_PER_TRADE", "0.005")))
+        risk = RiskConfig(risk_per_trade=float(os.getenv("PROMOVENT_RISK_PER_TRADE", "0.0025")))
         return cls(mode=mode, risk=risk, live_trading_enabled=live)

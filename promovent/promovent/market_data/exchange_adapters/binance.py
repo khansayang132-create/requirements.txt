@@ -1,12 +1,15 @@
 """Binance spot + USD-M futures public streams (combined-stream format).
-Spot:    wss://stream.binance.com:9443/stream?streams=btcusdt@trade/btcusdt@kline_1m/btcusdt@depth@100ms/btcusdt@ticker
-Futures: wss://fstream.binance.com/stream?streams=btcusdt@markPrice@1s   (funding rate, mark price)
+Spot:    wss://data-stream.binance.vision/stream?streams=...  (Binance's market-data-only stream host; works where
+         stream.binance.com is geo-blocked). Override with PROMOVENT_BINANCE_WS_URL (e.g. wss://stream.binance.com:9443/stream?streams=).
+Futures: wss://fstream.binance.com/stream?streams=btcusdt@markPrice@1s (funding rate). Off unless PROMOVENT_BINANCE_FUNDING_STREAM=yes:
+         Promovent V3.1 trades spot only, and futures endpoints are blocked in some regions.
 Binance sends protocol pings; the websockets library answers them. Open interest has no
 public stream on Binance; it comes from REST (data/exchanges.py).
 """
 from __future__ import annotations
 
 import json
+import os
 
 from ..events import MarketEvent
 from .base import WSAdapter
@@ -24,7 +27,7 @@ def to_symbol(s: str) -> str:
 
 class BinanceWS(WSAdapter):
     name = "binance"
-    SPOT = "wss://stream.binance.com:9443/stream?streams="
+    SPOT = os.getenv("PROMOVENT_BINANCE_WS_URL", "wss://data-stream.binance.vision/stream?streams=")
     FUT = "wss://fstream.binance.com/stream?streams="
 
     def connections(self):
@@ -33,7 +36,10 @@ class BinanceWS(WSAdapter):
         fut = "/".join(f"{i}@markPrice@1s" for i in ids)
         if self.url_override:
             return [(self.url_override, [])]
-        return [(self.SPOT + spot, []), (self.FUT + fut, [])]
+        conns = [(self.SPOT + spot, [])]
+        if os.getenv("PROMOVENT_BINANCE_FUNDING_STREAM", "no") == "yes":
+            conns.append((self.FUT + fut, []))
+        return conns
 
     def parse(self, raw):
         m = json.loads(raw)

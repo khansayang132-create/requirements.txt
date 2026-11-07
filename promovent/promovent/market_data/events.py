@@ -4,7 +4,7 @@ import time
 from dataclasses import dataclass, field
 from typing import Literal
 
-Kind = Literal["trade", "candle", "book_snapshot", "book_delta", "ticker", "funding", "open_interest"]
+Kind = Literal["trade", "candle", "book_snapshot", "book_delta", "ticker", "funding", "open_interest", "liquidation"]
 
 
 @dataclass

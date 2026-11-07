@@ -18,7 +18,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.pool import StaticPool
 
-from .models import (Alert, AuditLog, Base, Notification, Order, PositionRow, RiskEvent, utcnow)
+from .models import (KV, Alert, AuditLog, Base, Notification, Order, PositionRow, RiskEvent, utcnow)
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -198,6 +198,21 @@ class Store:
     def notifications(self, limit: int = 100) -> list[dict]:
         with self.session() as s:
             return [_row(r) for r in s.scalars(select(Notification).order_by(Notification.id.desc()).limit(limit))]
+
+    # --- persistent operating state ----------------------------------------------
+    def kv_get(self, key: str, default=None):
+        with self.session() as s:
+            row = s.get(KV, key)
+            return row.value if row is not None else default
+
+    def kv_set(self, key: str, value) -> None:
+        with self.session() as s:
+            row = s.get(KV, key)
+            v = json.loads(json.dumps(value, default=str))
+            if row is None:
+                s.add(KV(key=key, value=v))
+            else:
+                row.value = v
 
     def add(self, obj) -> None:
         with self.session() as s:

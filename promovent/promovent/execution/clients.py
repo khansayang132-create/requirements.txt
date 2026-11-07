@@ -178,25 +178,56 @@ class BinanceTrading(TradingClient):
     def sym(symbol: str) -> str:
         return symbol.replace("/", "")
 
-    def _req(self, method: str, path: str, params: dict | None = None, signed: bool = True):
+    time_offset_ms = 0
+    used_weight = 0
+    WEIGHT_LIMIT = 6000          # REQUEST_WEIGHT per minute (exchangeInfo rateLimits); we stop at 90 %
+
+    def sync_time(self) -> int:
+        """Binance rejects requests whose timestamp is outside recvWindow (-1021). Measure the offset to server time."""
+        t0 = int(time.time() * 1000)
+        r = self._send("GET", f"{self.base}/api/v3/time")
+        t1 = int(time.time() * 1000)
+        self.time_offset_ms = int(r.json()["serverTime"]) - (t0 + t1) // 2
+        return self.time_offset_ms
+
+    def _req(self, method: str, path: str, params: dict | None = None, signed: bool = True, _retry: bool = True):
+        if self.used_weight >= 0.9 * self.WEIGHT_LIMIT:
+            raise ExchangeUnavailable(f"binance: request weight {self.used_weight}/{self.WEIGHT_LIMIT} this minute; backing off")
         params = {k: v for k, v in (params or {}).items() if v is not None}
         headers = {}
         if signed:
             params["recvWindow"] = self.recv
-            params["timestamp"] = int(time.time() * 1000)
+            params["timestamp"] = int(time.time() * 1000) + self.time_offset_ms
             q = urlencode(params)
             q += "&signature=" + signing.binance(self.creds.secret, q)
             headers["X-MBX-APIKEY"] = self.creds.api_key
         else:
             q = urlencode(params)
         r = self._send(method, f"{self.base}{path}?{q}" if q else f"{self.base}{path}", headers=headers)
+        w = r.headers.get("x-mbx-used-weight-1m")
+        if w and w.isdigit():
+            self.used_weight = int(w)
+        if r.status_code in (429, 418):
+            ra = r.headers.get("retry-after", "?")
+            raise ExchangeUnavailable(f"binance: HTTP {r.status_code} {'IP banned' if r.status_code == 418 else 'rate limited'}; "
+                                      f"retry after {ra}s")
         try:
             body = r.json()
         except ValueError:
             raise ExchangeUnavailable(f"binance: non-JSON HTTP {r.status_code}") from None
+        if isinstance(body, dict) and body.get("code") == -1021 and signed and _retry:
+            self.sync_time()
+            params.pop("signature", None)
+            return self._req(method, path, {k: v for k, v in params.items() if k not in ("timestamp", "recvWindow")}, signed, False)
         if r.status_code != 200 or (isinstance(body, dict) and "code" in body and body.get("code", 0) < 0):
             self._raise(body if isinstance(body, dict) else {}, r.status_code)
         return body
+
+    def fills(self, symbol: str, order_id: str) -> list[dict]:
+        """Execution report per fill (price, qty, commission and its asset) from /api/v3/myTrades."""
+        return [{"price": float(t["price"]), "qty": float(t["qty"]), "fee": float(t["commission"]), "fee_asset": t["commissionAsset"],
+                 "trade_id": str(t["id"]), "maker": bool(t["isMaker"]), "ts": int(t["time"])}
+                for t in self._req("GET", "/api/v3/myTrades", {"symbol": self.sym(symbol), "orderId": order_id})]
 
     def _raise(self, body: dict, status: int):
         code, msg = body.get("code"), body.get("msg", "")

@@ -27,6 +27,11 @@ class FakeBinance:
         self.orders: dict[str, dict] = {}
         self.requests: list[httpx.Request] = []
         self.next_id = 1
+        self.clock_skew_ms = 0
+
+    def server_time(self):
+        import time as _t
+        return int(_t.time() * 1000) + self.clock_skew_ms
 
     def transport(self):
         return httpx.MockTransport(self.handle)
@@ -39,6 +44,8 @@ class FakeBinance:
         u = urlsplit(str(req.url))
         path, query = u.path, u.query
         params = dict(parse_qsl(query, keep_blank_values=True))
+        if path == "/api/v3/time":
+            return httpx.Response(200, json={"serverTime": self.server_time()})
         if path == "/api/v3/exchangeInfo":
             return httpx.Response(200, json={"symbols": [{"symbol": params["symbol"], "filters": [
                 {"filterType": "PRICE_FILTER", "tickSize": "0.01"},
@@ -50,6 +57,15 @@ class FakeBinance:
         unsigned, _, sig = query.rpartition("&signature=")
         if hmac.new(SECRET.encode(), unsigned.encode(), hashlib.sha256).hexdigest() != sig:
             return self.err(-1022, "Signature for this request is not valid.", 400)
+        if abs(int(params["timestamp"]) - self.server_time()) > int(params.get("recvWindow", 5000)):
+            return self.err(-1021, "Timestamp for this request is outside of the recvWindow.")
+        if path == "/api/v3/myTrades":
+            o = next((o for o in self.orders.values() if str(o["orderId"]) == params["orderId"]), None)
+            if not o or float(o["executedQty"]) == 0:
+                return httpx.Response(200, json=[])
+            return httpx.Response(200, json=[{"id": 1, "price": str(self.price), "qty": o["executedQty"],
+                                              "commission": str(float(o["executedQty"]) * 0.001), "commissionAsset": "BTC",
+                                              "time": self.server_time(), "isMaker": False}])
         if path == "/api/v3/account":
             return httpx.Response(200, json={"canTrade": self.can_trade, "permissions": ["SPOT"],
                                              "balances": [{"asset": a, "free": str(f), "locked": str(lk)} for a, (f, lk) in self.bal.items()]})

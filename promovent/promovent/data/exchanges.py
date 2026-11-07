@@ -15,6 +15,7 @@ Failures raise ExchangeError; nothing is filled in or guessed.
 """
 from __future__ import annotations
 
+import os
 import time
 from dataclasses import dataclass
 
@@ -99,8 +100,10 @@ class Adapter:
 
 
 class Binance(Adapter):
+    """Public data defaults to data-api.binance.vision, Binance's official market-data-only host
+    (works from regions where api.binance.com answers HTTP 451). Override with PROMOVENT_BINANCE_PUBLIC_URL."""
     name = "binance"
-    base_url = "https://api.binance.com"
+    base_url = os.getenv("PROMOVENT_BINANCE_PUBLIC_URL", "https://data-api.binance.vision")
     futures_url = "https://fapi.binance.com"
 
     def market_id(self, symbol: str) -> str:
@@ -112,15 +115,39 @@ class Binance(Adapter):
                       tf, now_ms)
 
     def ohlcv(self, symbol, tf, limit=500, now_ms=None):
+        """Up to 1000 candles per request; older pages via endTime until `limit` closed candles are collected."""
         validate_timeframe(tf)
-        raw = self._get("/api/v3/klines", {"symbol": self.market_id(symbol), "interval": tf, "limit": min(limit, 1000)})
+        mid = self.market_id(symbol)
+        raw = list(self._get("/api/v3/klines", {"symbol": mid, "interval": tf, "limit": min(limit + 1, 1000)}))
+        while len(raw) < limit + 1 and raw:
+            oldest = int(raw[0][0])
+            page = [k for k in self._get("/api/v3/klines", {"symbol": mid, "interval": tf, "limit": min(limit + 1 - len(raw), 1000),
+                                                            "endTime": oldest - 1}) if int(k[0]) < oldest]
+            if not page:  # history exhausted (or the server ignored endTime): stop, never duplicate
+                break
+            raw = page + raw
         now = now_ms or _now_ms()
-        df = self.parse_klines(raw, tf, now)
+        df = self.parse_klines(raw, tf, now).iloc[-limit:]
         return OHLCVResult(df, MarketMeta(self.name, symbol, int(df.index[-1].value // 10**6) + TF_SECONDS[tf] * 1000, now))
 
     @staticmethod
     def parse_book(raw: dict) -> Book:
         return Book([(float(p), float(q)) for p, q in raw["bids"]], [(float(p), float(q)) for p, q in raw["asks"]]).validate()
+
+    def depth_snapshot(self, symbol: str, depth: int = 1000) -> tuple[list, list, int]:
+        """REST snapshot with lastUpdateId, required to sync the WebSocket diff-depth stream."""
+        raw = self._get("/api/v3/depth", {"symbol": self.market_id(symbol), "limit": depth})
+        return ([(float(p), float(q)) for p, q in raw["bids"]], [(float(p), float(q)) for p, q in raw["asks"]], int(raw["lastUpdateId"]))
+
+    def filters(self, symbol: str) -> dict:
+        """Exchange filters (LOT_SIZE, PRICE_FILTER, NOTIONAL) from /api/v3/exchangeInfo."""
+        info = self._get("/api/v3/exchangeInfo", {"symbol": self.market_id(symbol)})
+        s = info["symbols"][0]
+        f = {x["filterType"]: x for x in s["filters"]}
+        n = f.get("NOTIONAL", f.get("MIN_NOTIONAL", {}))
+        return {"status": s["status"], "step": float(f["LOT_SIZE"]["stepSize"]), "min_qty": float(f["LOT_SIZE"]["minQty"]),
+                "tick": float(f["PRICE_FILTER"]["tickSize"]), "min_notional": float(n.get("minNotional", 0)),
+                "permissions": s.get("permissionSets") or s.get("permissions")}
 
     def book(self, symbol, depth=50):
         raw = self._get("/api/v3/depth", {"symbol": self.market_id(symbol), "limit": depth})

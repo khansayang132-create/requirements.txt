@@ -141,6 +141,9 @@ class LiveExecutionEngine:
                 return pf.fail("autonomy", f"{len(today)} live entries today = max {a.max_orders_per_day}")
             pf.passed("autonomy")
         lock = self.risk.lockouts(self.state)
+        glock = self.store.kv_get("guardian_lock")
+        if glock:
+            lock.append("risk guardian locked until authorized: " + glock.get("reason", ""))
         if lock:
             return pf.fail("kill_switch", "; ".join(lock))
         pf.passed("kill_switch")
@@ -273,6 +276,15 @@ class LiveExecutionEngine:
         if st.filled_qty <= 0:
             self.store.audit(actor, "live_entry_unfilled", result)
             return result
+        if hasattr(self.client, "fills") and st.exchange_id:
+            try:
+                from ..db.models import Execution
+                fl = self.client.fills(sig.symbol, st.exchange_id)
+                for f in fl:
+                    self.store.add(Execution(client_order_id=coid, qty=f["qty"], price=f["price"], fee=f["fee"], trade_id=f["trade_id"]))
+                result["fills"] = fl
+            except ExecError as e:
+                self.store.risk_event("fills_unavailable", "warn", {"coid": coid, "error": str(e)})
         result["protection"] = self._protect(sig, coid, st, actor)
         self.store.audit(actor, "live_entry_filled", result)
         return result

@@ -20,8 +20,8 @@ def state(eq=10_000.0, **kw):
 def test_fixed_fraction_sizing():
     d = RiskEngine().evaluate(sig(), state())
     assert d.approved
-    assert d.qty == pytest.approx(10_000 * 0.005 / 2)  # 25 units, $50 risk
-    assert d.risk_amount == pytest.approx(50)
+    assert d.qty == pytest.approx(10_000 * 0.0025 / 2)  # 12.5 units, $25 risk (0.25 %)
+    assert d.risk_amount == pytest.approx(25)
 
 
 def test_notional_cap_means_no_leverage():
@@ -100,7 +100,7 @@ def test_config_hard_rules(kw):
 def test_defaults_match_spec():
     c = RiskConfig()
     assert (c.risk_per_trade, c.daily_loss_limit, c.weekly_loss_limit, c.max_concurrent_positions, c.leverage) == \
-        (0.005, 0.02, 0.04, 3, 1.0)
+        (0.0025, 0.02, 0.03, 3, 1.0)
 
 
 def test_live_mode_needs_explicit_switch():

@@ -12,3 +12,4 @@ websockets>=13.0,<18
 scikit-learn>=1.5,<2
 lightgbm>=4.3,<5
 joblib>=1.4,<2
+xgboost>=2.1,<4

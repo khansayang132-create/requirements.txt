@@ -37,6 +37,7 @@ class RiskState:
     positions: list[Position] = field(default_factory=list)
     kill_switch: bool = False
     kill_reason: str = ""
+    initial_equity: float | None = None
 
 
 class RiskEngine:
@@ -48,7 +49,9 @@ class RiskEngine:
         return sum(p.open_risk for p in st.positions) / st.equity if st.equity > 0 else float("inf")
 
     def drawdown(self, st: RiskState) -> float:
-        return 1 - st.equity / st.peak_equity if st.peak_equity > 0 else 0.0
+        """Total drawdown vs the high-water mark, or vs initial equity when drawdown_basis='initial'."""
+        base = st.initial_equity if self.cfg.drawdown_basis == "initial" and st.initial_equity else st.peak_equity
+        return max(0.0, 1 - st.equity / base) if base and base > 0 else 0.0
 
     def daily_loss(self, st: RiskState) -> float:
         return max(0.0, 1 - st.equity / st.day_start_equity)

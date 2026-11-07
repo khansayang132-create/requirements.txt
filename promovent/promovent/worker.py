@@ -6,6 +6,12 @@ Jobs (each guarded by a Redis lock so several worker replicas never double-run t
   reconcile   live orders vs exchange every 60 s (live modes only)
   snapshot    paper portfolio snapshot every 5 min
   heartbeat   worker status to Redis every 15 s (read by /api/health)
+  autopilot   every 60 s: gates -> manage positions -> search approved combos -> execute (autopilot/engine.py)
+  consistency every 60 s in live modes: reconcile; a mismatch halts new entries until it clears
+  universe    every 6 h: core list + most liquid USDT pairs on the exchange
+  research    every 10 min: runs a research-mission cycle when due (72 h mission, then daily)
+  learning    every 10 min: resolve predictions, log new ones, monitor model health
+  reports     every 5 min: generates any hourly/daily/weekly/monthly report whose period has closed
 SIGTERM/SIGINT stop new work, close sockets and exit within ~5 s (Docker's default grace is 10 s).
 """
 from __future__ import annotations
@@ -38,9 +44,9 @@ class Worker:
     def _mark(self, job: str, ok: bool, detail: str = ""):
         self.jobs[job] = {"ok": ok, "at": time.time(), "detail": detail[:300]}
 
-    async def _every(self, seconds: float, job: str, fn, lock: bool = True):
+    async def _every(self, seconds: float, job: str, fn, lock: bool = True, lock_ttl: float | None = None):
         while not self.stop.is_set():
-            token = self.app.coord.acquire_lock(job, ttl=max(seconds, 30)) if lock else "nolock"
+            token = self.app.coord.acquire_lock(job, ttl=lock_ttl or max(seconds, 30)) if lock else "nolock"
             if token or not self.app.coord.r:  # no Redis configured at all: single-instance mode
                 try:
                     detail = await asyncio.to_thread(fn)
@@ -93,6 +99,58 @@ class Worker:
         ok = self.app.coord.heartbeat(self.name, info)
         return "ok" if ok else "redis unavailable"
 
+    # ---- V3 autonomous jobs ----------------------------------------------------
+    def universe(self):
+        from .autopilot.universe import okx_universe
+        if self.app.market.exchange != "okx" or self.app.source != "live":
+            return "universe refresh needs PROMOVENT_EXCHANGE=okx and live data"
+        u = okx_universe()
+        self.app.store.kv_set("universe", u)
+        return f"{len(u['symbols'])} symbols (+{len(u['added_by_liquidity'])} by liquidity)"
+
+    def symbols(self) -> list[str]:
+        u = self.app.store.kv_get("universe") or {}
+        return u.get("symbols") or ["BTC/USDT", "ETH/USDT", "SOL/USDT", "XRP/USDT", "DOGE/USDT", "ADA/USDT", "LINK/USDT", "AVAX/USDT"]
+
+    def autopilot(self):
+        r = self.pilot.step()
+        return r.decision
+
+    def consistency(self):
+        return str(self.pilot.check_consistency()["ok"])
+
+    def research(self):
+        from .ml.learner import retrain
+        from .research import mission
+        if self.app.source != "live":
+            return "research runs on live data only"
+        st = mission.state(self.app) or mission.start(self.app, float(os.getenv("PROMOVENT_MISSION_HOURS", "72")))
+        if not mission.due(st, __import__("pandas").Timestamp.now(tz="UTC")):
+            return f"mission {st['id']} {st['status']}: cycle {st['cycles']}, next not due"
+        tfs = os.getenv("PROMOVENT_RESEARCH_TFS", "1h,4h").split(",")
+        syms = self.symbols()
+        r = mission.cycle(self.app, syms, tfs, retrain=lambda: retrain(self.app, syms[:4]))
+        return f"cycle {r['mission']['cycles']}: {r['passed']} combos passed of {r['strategy_results']}"
+
+    def learning(self):
+        from .ml import learner
+        n = learner.resolve(self.app)
+        p = learner.predict(self.app, self.symbols()[:6])
+        return f"resolved {n}, new predictions {len(p)}, {learner.monitor(self.app).get('status')}"
+
+    def reports(self):
+        from .reports import generate, window
+        done = []
+        for period in ("hourly", "daily", "weekly", "monthly"):
+            start, _ = window(period)
+            key = f"report_last:{period}"
+            if self.app.store.kv_get(key) == str(start):
+                continue
+            generate(self.app, period)
+            self.app.store.kv_set(key, str(start))
+            done.append(period)
+        return "generated " + (", ".join(done) or "nothing new")
+
     def publish_stream(self):
         if self.stream:
             self.app.coord.set("stream_snapshot", self.stream.snapshot() | {"published_at": time.time()}, 10)
@@ -105,13 +163,28 @@ class Worker:
                 loop.add_signal_handler(sig, self.stop.set)
             except (NotImplementedError, RuntimeError):
                 pass
+        from .autopilot.engine import Autopilot
+        self.pilot = Autopilot(self.app)
         tasks = [asyncio.create_task(self._every(15, "heartbeat", self.heartbeat, lock=False)),
                  asyncio.create_task(self._every(float(os.getenv("PROMOVENT_SCAN_MINUTES", "5")) * 60, "scan", self.scan)),
                  asyncio.create_task(self._every(60, "reconcile", self.reconcile)),
-                 asyncio.create_task(self._every(300, "snapshot", self.snapshot))]
+                 asyncio.create_task(self._every(300, "snapshot", self.snapshot)),
+                 asyncio.create_task(self._every(21600, "universe", self.universe)),
+                 asyncio.create_task(self._every(60, "autopilot", self.autopilot)),
+                 asyncio.create_task(self._every(60, "consistency", self.consistency)),
+                 asyncio.create_task(self._every(600, "research", self.research, lock_ttl=4 * 3600)),
+                 asyncio.create_task(self._every(600, "learning", self.learning, lock_ttl=1800)),
+                 asyncio.create_task(self._every(300, "reports", self.reports))]
+        if os.getenv("PROMOVENT_AUTOPILOT", "yes") != "yes":
+            tasks[5].cancel()
         if self.app.source == "live" and os.getenv("PROMOVENT_STREAM", "yes") == "yes":
-            syms = os.getenv("PROMOVENT_STREAM_SYMBOLS", "BTC/USDT,ETH/USDT").split(",")
-            self.stream = MarketStream(os.getenv("PROMOVENT_EXCHANGE", "binance"), syms)
+            syms = os.getenv("PROMOVENT_STREAM_SYMBOLS", "BTC/USDT,ETH/USDT,SOL/USDT,XRP/USDT,DOGE/USDT,ADA/USDT,LINK/USDT,AVAX/USDT").split(",")
+            ex = os.getenv("PROMOVENT_EXCHANGE", "binance")
+            fetch = None
+            if ex == "binance":
+                from .data.exchanges import Binance
+                fetch = Binance().depth_snapshot
+            self.stream = MarketStream(ex, syms, snapshot_fetcher=fetch)
             tasks.append(asyncio.create_task(self.stream.run()))
             tasks.append(asyncio.create_task(self._every(2, "stream_publish", self.publish_stream, lock=False)))
         log.info("worker %s started (%d jobs)", self.name, len(tasks))

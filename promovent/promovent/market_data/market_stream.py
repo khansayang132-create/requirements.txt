@@ -33,6 +33,7 @@ class MarketStream:
         self.last: dict[str, dict] = {}
         self.funding: dict[str, dict] = {}
         self.open_interest: dict[str, dict] = {}
+        self.liquidations: list[dict] = []
         self.subscribers: list[Callable[[MarketEvent], None]] = []
         self.rejected: dict[str, int] = {}
         self.snapshot_fetcher = snapshot_fetcher
@@ -71,6 +72,9 @@ class MarketStream:
             self.funding[s] = {**ev.data, "ts_ms": ev.ts_ms}
         elif ev.kind == "open_interest":
             self.open_interest[s] = {**ev.data, "ts_ms": ev.ts_ms}
+        elif ev.kind == "liquidation":
+            self.liquidations.append({"symbol": s, **ev.data, "ts_ms": ev.ts_ms})
+            del self.liquidations[:-200]
         elif ev.kind in ("book_snapshot", "book_delta") and s in self.books:
             self._book(ev)
         for cb in self.subscribers:
@@ -121,7 +125,19 @@ class MarketStream:
                       "best_bid": bb, "best_ask": ba, "book_ok": not self.books[s].needs_resync,
                       "funding": self.funding.get(s), "open_interest": self.open_interest.get(s)}
         return {"exchange": self.exchange, "connections": [c.status.as_dict() for c in self.conns], "symbols": out,
-                "validator": self.validator.stats.as_dict(), "rejected": self.rejected}
+                "validator": self.validator.stats.as_dict(), "rejected": self.rejected,
+                "liquidations": self.liquidations[-50:], "correlations_1m": self.correlations()}
+
+    def correlations(self) -> dict:
+        """Correlation of 1m close-to-close returns between streamed symbols (closed candles only)."""
+        import numpy as np
+        import pandas as pd
+        rets = {s: self.candles.frame(self.exchange, s)["close"].pipe(np.log).diff() for s in self.symbols}
+        df = pd.DataFrame({k: v for k, v in rets.items() if len(v) > 20}).dropna()
+        if df.shape[1] < 2 or len(df) < 20:
+            return {"available": False, "reason": "needs >= 20 closed 1m candles per symbol"}
+        c = df.corr().round(3)
+        return {"available": True, "n": len(df), "matrix": {a: c[a].to_dict() for a in c.columns}}
 
     async def run(self):
         await asyncio.gather(*(c.run() for c in self.conns))

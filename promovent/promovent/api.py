@@ -23,7 +23,7 @@ from pydantic import BaseModel, Field
 
 from . import __version__
 from .backtest import Costs, ValidationGate, monte_carlo, run, walk_forward
-from .config import Mode, Settings
+from .config import Mode, Settings, research_risk
 from .data.exchanges import ADAPTERS, get_adapter
 from .models import DataValidationError, Signal, TIMEFRAMES, validate_symbol
 from .paper import ExecutionAgent, OrderRejected, PaperBroker
@@ -94,7 +94,7 @@ class App:
         self.store = Store(db or os.getenv("PROMOVENT_DATABASE_URL") or os.getenv("PROMOVENT_DB", ":memory:"))
         self.coord = Coord(redis_url if redis_url is not None else os.getenv("PROMOVENT_REDIS_URL", ""))
         self.risk = RiskEngine(self.settings.risk)
-        self.broker = PaperBroker(self.store)
+        self.broker = PaperBroker(self.store, float(os.getenv("PROMOVENT_INITIAL_CAPITAL", "10000")))
         try:
             validated = {r["name"] for r in self.store.list(StrategyRow, 500) if r["validated"]}
         except Exception:
@@ -272,7 +272,7 @@ def create_app(state: App | None = None) -> FastAPI:
         strat = _strategy(req.strategy, req.params)
         df, meta = st.market.ohlcv(req.symbol, req.timeframe, req.bars)
         costs = Costs(req.fee_bps, req.spread_bps, req.slippage_bps, req.funding_rate_8h)
-        res = run(df, strat, validate_symbol(req.symbol), req.initial, costs, st.settings.risk, req.timeframe)
+        res = run(df, strat, validate_symbol(req.symbol), req.initial, costs, research_risk(), req.timeframe)
         st.store.add(BacktestResult(strategy=strat.name, symbol=req.symbol, timeframe=req.timeframe, source=meta.source,
                                     params=strat.params, metrics=_clean(res.metrics)))
         eq = res.equity.iloc[:: max(1, len(res.equity) // 400)]
@@ -286,13 +286,13 @@ def create_app(state: App | None = None) -> FastAPI:
         strat = _strategy(req.strategy, req.params)
         df, meta = st.market.ohlcv(req.symbol, req.timeframe, req.bars)
         costs = Costs(req.fee_bps, req.spread_bps, req.slippage_bps, req.funding_rate_8h)
-        res = run(df, strat, validate_symbol(req.symbol), req.initial, costs, st.settings.risk, req.timeframe)
+        res = run(df, strat, validate_symbol(req.symbol), req.initial, costs, research_risk(), req.timeframe)
         base = strat.params
         grid = [base] + [{**base, k: v * f} for k, v in base.items() for f in (0.8, 1.25)
                          if isinstance(v, (int, float)) and not isinstance(v, bool)][:8]
         grid = [{k: (int(round(v)) if isinstance(base[k], int) else v) for k, v in g.items()} for g in grid]
         wf = walk_forward(df, lambda p: get_strategy(req.strategy, p), grid, n_folds=3,
-                          costs=costs, risk=st.settings.risk, tf=req.timeframe)
+                          costs=costs, risk=research_risk(), tf=req.timeframe)
         mc = monte_carlo(res.trades, req.initial, 500)
         gate = ValidationGate().check(res.metrics, wf, mc)
         if gate["passed"]:
@@ -335,7 +335,7 @@ def create_app(state: App | None = None) -> FastAPI:
 
     @api.post("/api/kill/release")
     def release(actor=Depends(auth("admin"))):
-        st.broker.state.kill_switch = False
+        st.broker.set_kill(False, "")
         st.store.audit(str(actor), "kill_switch_released", {})
         return {"kill_switch": False}
 

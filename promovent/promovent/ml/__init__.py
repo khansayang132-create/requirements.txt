@@ -11,7 +11,10 @@ Leakage controls:
   so no training label overlaps a test feature window;
 - no shuffling anywhere.
 
-Models: LightGBM (gradient boosting) and RandomForest, compared with a base-rate baseline.
-An LSTM is NOT included: on OHLCV-only features with a few thousand samples per symbol it has
-no evidence of beating trees here, and it would add a heavy dependency (torch) for marketing value.
+Models: LightGBM, XGBoost, RandomForest and a statistical baseline (regularised logistic regression),
+each compared with the base rate. An LSTM is NOT included: on live OKX data (2026-11-07) the tree models
+reached AUC 0.55-0.58 with worse-than-base-rate calibration on ~8,400 samples. A sequence model needs far
+more data to be justified, and adding torch for it would be marketing, not evidence.
+learner.py logs live predictions, resolves them against actual prices, detects deterioration and only
+promotes a model that beats the base rate out of sample.
 """
