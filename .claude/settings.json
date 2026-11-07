@@ -10,7 +10,7 @@
           },
           {
             "type": "command",
-            "command": "[ \"$CLAUDE_CODE_REMOTE\" = true ] || exit 0; bash \"$CLAUDE_PROJECT_DIR\"/scripts/agency-setup.sh",
+            "command": "[ \"$CLAUDE_CODE_REMOTE\" = true ] || exit 0; echo '{\"async\": true, \"asyncTimeout\": 600000}'; bash \"$CLAUDE_PROJECT_DIR\"/scripts/agency-setup.sh",
             "timeout": 600
           },
           {
