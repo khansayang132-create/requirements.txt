@@ -1,0 +1,7 @@
+__pycache__/
+*.db
+.env
+models/
+web/node_modules
+web/.next
+backups/

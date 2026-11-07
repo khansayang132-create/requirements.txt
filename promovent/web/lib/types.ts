@@ -1,0 +1,16 @@
+import type { Meta } from "./api";
+export type Status = { mode: string; source: string; exchange: string; auth: string; live_trading: string; risk: Risk; validated_strategies: string[] };
+export type Risk = { risk_per_trade: number; daily_loss_limit: number; weekly_loss_limit: number; max_drawdown: number; max_concurrent_positions: number;
+  max_portfolio_heat: number; min_reward_risk: number; leverage: number; allow_leverage: boolean };
+export type Position = { symbol: string; side: number; qty: number; entry: number; stop: number; target: number; strategy: string; unrealized?: number };
+export type Portfolio = { equity: number; cash: number; realized_pnl: number; positions: Position[]; heat: number; drawdown: number; kill_switch: boolean;
+  trades: { symbol: string; side: number; qty: number; entry: number; exit: number; exit_reason: string; pnl: number; closed_at: string }[];
+  limits: { daily_loss: number; weekly_loss: number; lockouts: string[] } };
+export type Analysis = { symbol: string; meta: Meta; price: number; regime: string; tradeable: boolean; bias: string; zone: string;
+  score: { score: number; grade: string; unavailable: string[] }; supporting: string[]; conflicting: string[]; potential_entry: number | null;
+  invalidation: number | null; target_2r: number | null; suggested_action: string; rsi: number; atr: number };
+export type ScanRow = { symbol: string; price: number; score: number; grade: string; direction: number; regime: string; volume_z: number | null;
+  break: string | null; sweep: number; signals: Record<string, { side: number; stop: number; target: number }>; meta: Meta };
+export type Scan = { results: ScanRow[]; errors: Record<string, string> };
+export type Ohlcv = { meta: Meta; candles: { time: number; open: number; high: number; low: number; close: number; volume: number }[];
+  breaks: { time: number; kind: string }[]; last_swing_high: number | null; last_swing_low: number | null };

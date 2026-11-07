@@ -1,0 +1,118 @@
+# Full stack: docker compose up -d --build   (needs a .env next to this file; see .env.example)
+name: promovent
+
+x-logging: &logging
+  driver: json-file
+  options: { max-size: "10m", max-file: "5" }
+
+x-backend-env: &backend-env
+  PROMOVENT_ENV: ${PROMOVENT_ENV:-production}
+  PROMOVENT_DATABASE_URL: postgresql+psycopg://promovent:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}@postgres:5432/promovent
+  PROMOVENT_REDIS_URL: redis://redis:6379/0
+  PROMOVENT_API_KEYS: ${PROMOVENT_API_KEYS:?set PROMOVENT_API_KEYS in .env}
+  PROMOVENT_MODE: ${PROMOVENT_MODE:-paper}
+  PROMOVENT_ENABLE_LIVE: ${PROMOVENT_ENABLE_LIVE:-no}
+  PROMOVENT_SOURCE: ${PROMOVENT_SOURCE:-live}
+  PROMOVENT_DEV_NO_AUTH: ${PROMOVENT_DEV_NO_AUTH:-no}
+  PROMOVENT_EXCHANGE: ${PROMOVENT_EXCHANGE:-binance}
+  PROMOVENT_LIVE_EXCHANGE: ${PROMOVENT_LIVE_EXCHANGE:-binance}
+  PROMOVENT_EXCHANGE_TESTNET: ${PROMOVENT_EXCHANGE_TESTNET:-yes}
+  PROMOVENT_BINANCE_API_KEY: ${PROMOVENT_BINANCE_API_KEY:-}
+  PROMOVENT_BINANCE_API_SECRET: ${PROMOVENT_BINANCE_API_SECRET:-}
+  PROMOVENT_BYBIT_API_KEY: ${PROMOVENT_BYBIT_API_KEY:-}
+  PROMOVENT_BYBIT_API_SECRET: ${PROMOVENT_BYBIT_API_SECRET:-}
+  PROMOVENT_OKX_API_KEY: ${PROMOVENT_OKX_API_KEY:-}
+  PROMOVENT_OKX_API_SECRET: ${PROMOVENT_OKX_API_SECRET:-}
+  PROMOVENT_OKX_API_PASSPHRASE: ${PROMOVENT_OKX_API_PASSPHRASE:-}
+  PROMOVENT_STREAM_SYMBOLS: ${PROMOVENT_STREAM_SYMBOLS:-BTC/USDT,ETH/USDT}
+  WHALE_ALERT_API_KEY: ${WHALE_ALERT_API_KEY:-}
+  ETHERSCAN_API_KEY: ${ETHERSCAN_API_KEY:-}
+  PROMOVENT_WATCH_ADDRESSES: ${PROMOVENT_WATCH_ADDRESSES:-}
+  CRYPTOPANIC_API_KEY: ${CRYPTOPANIC_API_KEY:-}
+  REDDIT_CLIENT_ID: ${REDDIT_CLIENT_ID:-}
+  REDDIT_CLIENT_SECRET: ${REDDIT_CLIENT_SECRET:-}
+  REDDIT_USER_AGENT: ${REDDIT_USER_AGENT:-}
+  TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
+  SMTP_HOST: ${SMTP_HOST:-}
+  SMTP_PORT: ${SMTP_PORT:-587}
+  SMTP_USER: ${SMTP_USER:-}
+  SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+  SMTP_FROM: ${SMTP_FROM:-}
+  SMTP_SECURITY: ${SMTP_SECURITY:-starttls}
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: promovent
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: promovent
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U promovent -d promovent"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+    stop_grace_period: 30s
+    logging: *logging
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes", "--maxmemory", "256mb", "--maxmemory-policy", "allkeys-lru"]
+    volumes: [redisdata:/data]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+    logging: *logging
+
+  backend:
+    image: promovent-backend:2.5
+    build: .
+    command: ["api"]
+    environment: *backend-env
+    volumes: [models:/data/models]
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_healthy }
+    ports: ["${BACKEND_PORT:-8000}:8000"]
+    restart: unless-stopped
+    stop_grace_period: 15s
+    logging: *logging
+
+  worker:
+    image: promovent-backend:2.5
+    command: ["worker"]
+    environment: *backend-env
+    volumes: [models:/data/models]
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import redis,os,sys; r=redis.Redis.from_url(os.environ['PROMOVENT_REDIS_URL']); sys.exit(0 if list(r.scan_iter('pv:hb:*')) else 1)\""]
+      interval: 20s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    depends_on:
+      backend: { condition: service_healthy }
+    restart: unless-stopped
+    stop_grace_period: 15s
+    logging: *logging
+
+  frontend:
+    image: promovent-frontend:2.5
+    build:
+      context: ./web
+      args: { PROMOVENT_BACKEND_URL: "http://backend:8000" }
+    depends_on:
+      backend: { condition: service_healthy }
+    ports: ["${FRONTEND_PORT:-3000}:3000"]
+    restart: unless-stopped
+    stop_grace_period: 10s
+    logging: *logging
+
+volumes:
+  pgdata:
+  redisdata:
+  models:
