@@ -1,20 +1,24 @@
-# Promovent STATUS (v2.5, 2026-11-07)
+# Promovent STATUS (v3.1, 2026-11-07)
 
-Detailed classification: [`AUDIT_REPORT.md`](./AUDIT_REPORT.md). Actual results: [`TEST_REPORT.md`](./TEST_REPORT.md).
+Evidence: [`docs/v3.1-evidence-2026-11-07.md`](./docs/v3.1-evidence-2026-11-07.md). Earlier: AUDIT_REPORT.md, TEST_REPORT.md.
 
-| Area | State |
-|---|---|
-| Analysis, strategies, scoring, risk, backtesting, paper trading | VERIFIED (tests) |
-| Live execution engine + Binance/Bybit/OKX signed clients | IMPLEMENTED, tested against fakes; **testnet/mainnet BLOCKED** (no network, no keys) |
-| Live market data | **VERIFIED on OKX** (REST + WebSocket, in Docker). Binance/Bybit refuse the sandbox's country (451/403) |
-| Strategy validation on real data | **0 of 21 pass**: nothing may trade yet (`docs/live-results-2026-11-07.md`) |
-| Whale intelligence (Whale Alert, Etherscan, Blockchair), news, sentiment, Bybit/OKX announcements | IMPLEMENTED, fixture-tested; **live BLOCKED** (no keys, hosts blocked) |
-| Email alerts | VERIFIED (real local SMTP); Telegram IMPLEMENTED, live BLOCKED |
-| PostgreSQL, Alembic, Redis, backups | VERIFIED (real servers + Docker) |
-| ML engine | VERIFIED code and leakage controls; no model trained on live data |
-| Next.js frontend (12 pages) | VERIFIED (typecheck, tests, build, design check, running in Docker) |
-| Docker build + compose stack | VERIFIED in the sandbox (all 7 checks, outage drills) |
-| Deployment (Render/Railway) | **BLOCKED**: no network to the platforms, no credentials. No URL. |
+## V3.1 acceptance criteria
 
-Do not trade real money: no strategy passes validation on real history (2026-11-07), and live execution has not
-run on a testnet yet.
+| # | Criterion | State |
+|---|---|---|
+| 1 | Binance market data works | **VERIFIED** via `data-api.binance.vision` (api.binance.com is geo-blocked here: 451) |
+| 2 | WebSocket connections work | **VERIFIED** via `data-stream.binance.vision`, books synced; reconnect/stale tested locally |
+| 3 | Technical analysis works | **VERIFIED** (tests + live) |
+| 4 | Opportunity scanner works | **VERIFIED** on live Binance data |
+| 5 | Risk Guardian works | **VERIFIED** (tests: breach protocol, authorization to resume; Docker: armed on $30) |
+| 6 | Backtesting works | **VERIFIED**; 98 live-data combos tested, **0 pass validation** |
+| 7 | Paper trading works | **VERIFIED** running on live Binance prices; no trades taken because nothing is validated |
+| 8 | Exchange filters respected | **VERIFIED** (real Binance filters; reject, never enlarge) |
+| 9 | Trading execution tested | **Against a signature-verifying fake only.** Binance testnet is geo-blocked here |
+| 10 | Withdrawal functionality absent | **VERIFIED** (tests + code scan) |
+| 11 | Security tests pass | **VERIFIED** (185 backend tests) |
+| 12 | Docker builds | **VERIFIED** (sandbox; CI builds the real Dockerfile from scratch) |
+| 13 | VPS deployment verified | **NOT DONE**: no VPS available. Guide: DEPLOY_VPS.md |
+| 14 | Restart recovery tested | **VERIFIED** (`kill -9` drill in Docker; state persisted) |
+
+**Do not trade real money.** No strategy passes validation on live data, and no real order has been tested.

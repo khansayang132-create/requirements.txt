@@ -109,3 +109,17 @@ service containers) and `promovent-web`.
 OKX REST and WebSocket verified live, including inside the Docker stack; all 12 pages screenshotted on live data
 (`docs/screenshots/v2.5-docker-live-okx/`). Binance: HTTP 451 restricted location; Bybit: HTTP 403 country block.
 Strategy validation on real data: 0 of 21 pass. Details: `docs/live-results-2026-11-07.md`.
+
+## 7. V3.0 / V3.1 (2026-11-07)
+
+- Backend: **185 passed, 0 skipped** (real PostgreSQL 16 + Redis), incl. `test_v3.py` (26): state survives restart,
+  daily baseline roll, V3.1 limits on $30, drawdown basis, Risk Guardian protocol (close and protect policies,
+  authorization to resume), filters reject without enlarging, opportunity costs/expiry, autopilot waits / blocks on
+  exchange failure and stale data / trades only live-validated combos / never reprocesses a bar, trade review
+  luck-vs-prediction, paper/live report separation, research and mission records, learning loop never promotes on
+  synthetic data, Binance -1021 clock resync, 429/418/weight back-off, per-fill fees, guardian blocks live preflight,
+  universe, liquidations parsing, Binance history paging, V3 API endpoints and metrics.
+- Frontend: typecheck, 8 vitest tests, `next build`; design check 0 errors on dashboard, learning, risk-center (390/1440).
+- Docker (sandbox): migration 0001 → 0002 on the existing database; stack healthy on live Binance data; crash drill
+  passed (details: `docs/v3.1-evidence-2026-11-07.md`). Docker Hub rate-limited the from-scratch rebuild here; the
+  sandbox used an incremental image on the previous build. CI builds the real Dockerfile from scratch.

@@ -172,7 +172,7 @@ def g_fear_greed(fg: pd.Series, daily: pd.DataFrame, source: str, horizon_d: int
     fg.index = fg.index.floor("D")
     j = pd.concat([fg.rename("fg"), (np.log(c).shift(-horizon_d) - np.log(c)).rename("fwd")], axis=1).dropna()
     fear, greed = j[j.fg < 25].fwd, j[j.fg > 75].fwd
-    if len(fear) < 15 or len(greed) < 15:
+    if len(fear) < 15:  # the fear-side hypothesis needs only fear days; greed is reported for context
         return F("G", f"Fear & Greed extremes vs next {horizon_d}d BTC return", "Extreme fear precedes above-average returns.",
                  source, _win(j.index) if len(j) else "n/a", "Bucket days by index value; compare forward return means.",
                  {"n": len(j), "fear_days": len(fear), "greed_days": len(greed)}, "inconclusive",

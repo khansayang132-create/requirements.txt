@@ -336,3 +336,22 @@ def test_binance_history_paging():
     r = Binance(httpx.Client(transport=httpx.MockTransport(h))).ohlcv("BTC/USDT", "1h", limit=15, now_ms=T0 + 20 * H + 10)
     assert len(r.df) == 15 and r.df.index.is_unique and len(calls) >= 1
     assert (r.df.index.to_series().diff().dropna() == pd.Timedelta(hours=1)).all()
+
+
+def test_v3_api_endpoints(tmp_path):
+    from fastapi.testclient import TestClient
+    from promovent.api import create_app
+    a = App(Settings(mode=Mode.PAPER), source="synthetic", db=f"sqlite:///{tmp_path}/x.db", keys={"a" * 24: "admin", "v" * 24: "viewer"},
+            no_auth=False, redis_url="")
+    c = TestClient(create_app(a))
+    H = {"X-API-Key": "v" * 24}
+    for path in ("/api/autopilot", "/api/guardian", "/api/opportunities", "/api/trade-reviews", "/api/research/findings",
+                 "/api/research/strategies", "/api/reports", "/api/learning"):
+        assert c.get(path, headers=H).status_code == 200, path
+    m = c.get("/api/metrics").text
+    assert "promovent_guardian_locked 0" in m and "promovent_db_ok 1" in m
+    assert c.post("/api/guardian/resume", json={"confirm_phrase": RESUME_PHRASE}, headers=H).status_code == 403
+    a.store.kv_set("guardian_lock", {"reason": "test"})
+    a.broker.set_kill(True, "guardian: test")
+    r = c.post("/api/guardian/resume", json={"confirm_phrase": RESUME_PHRASE}, headers={"X-API-Key": "a" * 24})
+    assert r.status_code == 200 and not a.broker.state.kill_switch

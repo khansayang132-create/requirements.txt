@@ -161,6 +161,11 @@ class TrainReq(BaseModel):
     horizon: int = Field(12, ge=1, le=96)
 
 
+class ResumeReq(BaseModel):
+    confirm_phrase: str = Field(max_length=64)
+    reset_baseline: bool = False
+
+
 class PrefsReq(BaseModel):
     telegram_chat_id: str | None = Field(None, max_length=64, pattern=r"^-?[0-9]+$")
     email: str | None = Field(None, max_length=254, pattern=r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
@@ -549,6 +554,79 @@ def create_app(state: App | None = None) -> FastAPI:
     @api.get("/api/notifications")
     def notifications(_=Depends(auth("viewer"))):
         return st.store.notifications()
+
+    # ------------------------------------------------------------------ V3: autopilot, guardian, research, learning
+    from .db.models import Opportunity as OppRow, Report as ReportRow, ResearchFinding, StrategyResearch, TradeReview
+    from .guardian import RiskGuardian
+    guardian = RiskGuardian(st)
+
+    def _rows(model, limit, order):
+        return _clean(st.store.list(model, limit, order=order))
+
+    @api.get("/api/autopilot")
+    def autopilot(_=Depends(auth("viewer"))):
+        step = st.coord.get("autopilot_last_step") or st.store.kv_get("autopilot_last_step")
+        return _clean({"last_step": step, "guardian": guardian.status(), "universe": st.store.kv_get("universe"),
+                       "mission": st.store.kv_get("research_mission"), "ml_promoted": st.store.kv_get("ml_promoted"),
+                       "mode": st.settings.mode.value, "data_source": st.source, "exchange": st.market.exchange})
+
+    @api.get("/api/guardian")
+    def guardian_status(_=Depends(auth("viewer"))):
+        return _clean(guardian.status())
+
+    @api.post("/api/guardian/resume")
+    def guardian_resume(req: ResumeReq, actor=Depends(auth("admin"))):
+        try:
+            return guardian.resume(str(actor), req.confirm_phrase, req.reset_baseline)
+        except PermissionError as e:
+            raise HTTPException(409, str(e)) from e
+
+    @api.get("/api/opportunities")
+    def opportunities(limit: int = Query(100, ge=1, le=500), _=Depends(auth("viewer"))):
+        return _rows(OppRow, limit, OppRow.id.desc())
+
+    @api.get("/api/trade-reviews")
+    def trade_reviews(limit: int = Query(100, ge=1, le=500), _=Depends(auth("viewer"))):
+        return _rows(TradeReview, limit, TradeReview.id.desc())
+
+    @api.get("/api/research/findings")
+    def findings(limit: int = Query(200, ge=1, le=1000), _=Depends(auth("viewer"))):
+        return _rows(ResearchFinding, limit, ResearchFinding.id.desc())
+
+    @api.get("/api/research/strategies")
+    def strategy_research(limit: int = Query(300, ge=1, le=2000), _=Depends(auth("viewer"))):
+        rows = st.store.list(StrategyResearch, limit, order=StrategyResearch.id.desc())
+        return _clean([{k: r[k] for k in ("id", "ts", "strategy", "exchange", "symbol", "timeframe", "bars", "data_start", "data_end",
+                                          "source", "passed", "failures")} | {"metrics": {k: r["metrics"].get(k) for k in (
+                                              "trades", "net_return", "win_rate", "profit_factor", "sharpe", "sortino", "max_drawdown",
+                                              "expectancy_r", "avg_holding_hours", "total_fees", "trades_per_month")},
+                                              "oos_sharpe": (r["walk_forward"] or {}).get("mean_out_of_sample")} for r in rows])
+
+    @api.get("/api/reports")
+    def reports(period: str | None = None, limit: int = Query(30, ge=1, le=200), _=Depends(auth("viewer"))):
+        rows = st.store.list(ReportRow, 1000, order=ReportRow.id.desc())
+        return _clean([r for r in rows if not period or r["period"] == period][:limit])
+
+    @api.get("/api/learning")
+    def learning(_=Depends(auth("viewer"))):
+        from .db.models import Prediction
+        from .ml.learner import monitor
+        preds = st.store.list(Prediction, 100, order=Prediction.id.desc())
+        return _clean({"monitor": monitor(st), "recent_predictions": preds})
+
+    @api.get("/api/metrics", include_in_schema=False)
+    def metrics():
+        """Prometheus text format: health, risk and autopilot gauges (no secrets, no positions detail)."""
+        from fastapi.responses import PlainTextResponse
+        g = guardian.status()
+        step = st.coord.get("autopilot_last_step") or {}
+        db, rd = st.store.health(), st.coord.health()
+        lines = ["promovent_up 1", f"promovent_db_ok {int(db['ok'])}", f"promovent_redis_ok {int(rd['ok'])}",
+                 f"promovent_workers {len(st.coord.heartbeats())}", f"promovent_guardian_locked {int(g['locked'])}",
+                 f"promovent_daily_loss_ratio {g['daily_loss']:.6f}", f"promovent_drawdown_ratio {g['drawdown']:.6f}",
+                 f"promovent_paper_equity {st.broker.equity():.6f}", f"promovent_open_positions {len(st.broker.state.positions)}",
+                 f"promovent_autopilot_entries_allowed {int(bool(step.get('entries_allowed')))}"]
+        return PlainTextResponse("\n".join(lines) + "\n")
 
     return api
 

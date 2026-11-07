@@ -17,8 +17,11 @@ services:
       HTTPS_PROXY: ${HTTPS_PROXY}
       NO_PROXY: localhost,127.0.0.1
       SSL_CERT_FILE: /etc/sandbox-ca.crt
-      PROMOVENT_EXCHANGE: okx
-      PROMOVENT_STREAM_SYMBOLS: BTC/USDT,ETH/USDT,SOL/USDT
+      PROMOVENT_EXCHANGE: ${PROMOVENT_EXCHANGE:-binance}
+      PROMOVENT_WATCHLIST: BTC/USDT,ETH/USDT,BNB/USDT,SOL/USDT,XRP/USDT,ADA/USDT,DOGE/USDT
+      PROMOVENT_INITIAL_CAPITAL: "30"
+      PROMOVENT_MODE: paper
+      PROMOVENT_ENABLE_LIVE: "no"
     volumes: ["/root/.ccr/ca-bundle.crt:/etc/sandbox-ca.crt:ro", "models:/data/models"]
   worker:
     <<: *hostnet

@@ -18,7 +18,7 @@ COPY alembic ./alembic
 COPY promovent ./promovent
 COPY docker/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh && useradd -m -u 10001 app && mkdir -p /data/models && chown -R app /data \
- && python -c "import lightgbm, sklearn, promovent.api"
+ && PROMOVENT_NO_AUTOAPP=1 python -c "import lightgbm, xgboost, sklearn, promovent.api"
 USER app
 ENV PROMOVENT_MODEL_DIR=/data/models PROMOVENT_ENV=production
 EXPOSE 8000

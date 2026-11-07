@@ -5,12 +5,17 @@ import { label, pct } from "@/lib/format";
 import type { Portfolio, Status } from "@/lib/types";
 import { Dl, ErrorBox, Meter, Panel, StateView, Table } from "@/components/ui";
 
+type G = { locked: boolean; lock: { reason: string; steps: Record<string, unknown> } | null; breaches_now: string[]; daily_loss: number; daily_limit: number;
+  drawdown: number; drawdown_limit: number; drawdown_basis: string; risk_per_trade: number; equity: number; risk_budget_per_trade: number; emergency_policy: string };
 type Ev = { id: number; ts: string; kind: string; severity: string; detail: Record<string, unknown> };
 
 export default function RiskCenter() {
   const st = useApi<Status>("/api/status", 30000);
   const p = useApi<Portfolio>("/api/portfolio", 15000);
   const ev = useApi<Ev[]>("/api/risk/events", 30000);
+  const g = useApi<G>("/api/guardian", 15000);
+  const [phrase, setPhrase] = useState("");
+  const [reset, setReset] = useState(false);
   const [err, setErr] = useState<ApiError | null>(null);
   const act = async (path: string, body?: unknown) => { setErr(null); try { await post(path, body ?? {}); p.reload(); } catch (e) { setErr(e as ApiError); } };
   return (
@@ -39,6 +44,20 @@ export default function RiskCenter() {
             ["Min reward/risk", st.data.risk.min_reward_risk], ["Leverage", st.data.risk.allow_leverage ? `${st.data.risk.leverage}x` : "off"], ["Martingale", "prohibited"]]} /></div> : null}
         </Panel>
       </div>
+      <Panel title="Risk guardian">
+        <StateView load={g}>{(x) => <>
+          <p className={`mb-3 font-semibold ${x.locked ? "text-down" : "text-up"}`}>{x.locked ? `LOCKED: ${x.lock?.reason}` : "Armed: no breach"}</p>
+          <Dl items={[["Daily loss", `${pct(x.daily_loss)} of ${pct(x.daily_limit)} limit`], ["Total drawdown", `${pct(x.drawdown)} of ${pct(x.drawdown_limit)} (${x.drawdown_basis})`],
+            ["Risk per trade", `${pct(x.risk_per_trade)} = ${x.risk_budget_per_trade.toFixed(3)} on equity ${x.equity.toFixed(2)}`], ["Emergency policy", x.emergency_policy],
+            ["Breaches now", x.breaches_now.join("; ") || "none"]]} />
+          {x.locked ? <form className="mt-3 grid gap-2" onSubmit={(e) => { e.preventDefault(); act("/api/guardian/resume", { confirm_phrase: phrase, reset_baseline: reset }); g.reload(); }}>
+            <label className="grid gap-1 text-xs text-muted">Type exactly: I AUTHORIZE RESUMING TRADING<input className="input" value={phrase} onChange={(e) => setPhrase(e.target.value)} /></label>
+            <label className="inline-flex min-h-[44px] items-center gap-2 text-sm"><input type="checkbox" className="h-6 w-6" checked={reset} onChange={(e) => setReset(e.target.checked)} />
+              Reset baseline to current equity (accepts the loss; required while limits are still breached)</label>
+            <button className="btn-primary w-fit" type="submit">Authorize resume (admin)</button>
+          </form> : null}
+        </>}</StateView>
+      </Panel>
       <Panel title="Risk events">
         <StateView load={ev} isEmpty={(e) => e.length === 0} empty="No risk events recorded.">
           {(e) => <Table head={["Time", "Severity", "Kind", "Detail"]} rows={e.map((x) => [x.ts.slice(0, 19).replace("T", " "),

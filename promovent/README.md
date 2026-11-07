@@ -1,4 +1,4 @@
-# Promovent (Crypto Promovent AI v2.5)
+# Promovent (Crypto Promovent AI v3.1)
 
 Crypto market intelligence, research, paper trading and risk-gated live execution.
 Backend: Python 3.12, FastAPI, SQLAlchemy/Alembic on PostgreSQL, Redis, a background worker.
@@ -6,11 +6,12 @@ Frontend: Next.js 15, TypeScript, Tailwind, TradingView Lightweight Charts.
 
 > Not part of LSKhan; it lives in this repo like `done/`.
 > **What is proven and what is not:** [`AUDIT_REPORT.md`](./AUDIT_REPORT.md) and [`TEST_REPORT.md`](./TEST_REPORT.md).
-> Short version: live market data is verified on OKX; **no strategy passes validation on real data yet**,
-> live order execution has only been tested against fakes, and **it is not deployed**.
+> Short version: live Binance and OKX market data verified; autopilot, Risk Guardian, research and learning run 24/7 in
+> Docker on paper; **no strategy passes validation on live data**, real execution is tested only against fakes, and
+> **it is not deployed**. Status: [`STATUS.md`](./STATUS.md). Deploy: [`DEPLOY_VPS.md`](./DEPLOY_VPS.md).
 
-Capital preservation first: 0.5 % risk per trade, 2 % daily / 4 % weekly loss limits, max 3 positions, leverage
-off, martingale rejected, emergency stop. **There is no withdrawal code**, and keys that allow withdrawals are refused.
+Capital preservation first (V3.1 defaults): 0.25 % risk per trade, 2 % daily loss, 2 % total drawdown (high-water mark),
+max 3 positions, leverage and margin off, martingale rejected, Risk Guardian lock that needs authorization to lift. **There is no withdrawal code**, and keys that allow withdrawals are refused.
 
 ## Architecture
 
@@ -36,7 +37,11 @@ off, martingale rejected, emergency stop. **There is no withdrawal code**, and k
 | `promovent/db/` + `alembic/` | SQLAlchemy models (15 tables) and migrations |
 | `promovent/cache.py` | Redis rate limiting, cache, locks, heartbeats (degrades to memory) |
 | `promovent/ml/` | features, dataset, LightGBM/RandomForest training, registry, prediction, drift |
-| `promovent/worker.py` | background jobs |
+| `promovent/worker.py` | background jobs: stream, autopilot, guardian, research mission, learning, reports |
+| `promovent/autopilot/` | universe, opportunity engine, autopilot loop, trade reviews |
+| `promovent/guardian.py` | Risk Guardian breach protocol |
+| `promovent/research/` | strategy researcher, hypothesis tests A-L, 72-hour mission |
+| `promovent/reports.py` | hourly/daily/weekly/monthly reports (paper and live separate) |
 | `web/` | Next.js app: dashboard, markets, scanner, trading, portfolio, strategies, backtesting, whale-intelligence, news, analytics, risk-center, settings |
 
 ## Run it

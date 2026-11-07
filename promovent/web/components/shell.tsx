@@ -6,7 +6,7 @@ import { post, useApi } from "@/lib/api";
 
 const NAV: [string, string][] = [
   ["/dashboard", "Dashboard"], ["/markets", "Markets"], ["/scanner", "Scanner"], ["/trading", "Trading"], ["/portfolio", "Portfolio"],
-  ["/strategies", "Strategies"], ["/backtesting", "Backtesting"], ["/whale-intelligence", "Whale intel"], ["/news", "News"],
+  ["/strategies", "Strategies"], ["/backtesting", "Backtesting"], ["/learning", "Learning"], ["/whale-intelligence", "Whale intel"], ["/news", "News"],
   ["/analytics", "Analytics"], ["/risk-center", "Risk center"], ["/settings", "Settings"],
 ];
 

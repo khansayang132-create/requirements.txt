@@ -110,7 +110,9 @@ class Worker:
 
     def symbols(self) -> list[str]:
         u = self.app.store.kv_get("universe") or {}
-        return u.get("symbols") or ["BTC/USDT", "ETH/USDT", "SOL/USDT", "XRP/USDT", "DOGE/USDT", "ADA/USDT", "LINK/USDT", "AVAX/USDT"]
+        if u.get("symbols"):
+            return u["symbols"]
+        return os.getenv("PROMOVENT_WATCHLIST", "BTC/USDT,ETH/USDT,BNB/USDT,SOL/USDT,XRP/USDT,ADA/USDT,DOGE/USDT").split(",")
 
     def autopilot(self):
         r = self.pilot.step()
@@ -178,7 +180,8 @@ class Worker:
         if os.getenv("PROMOVENT_AUTOPILOT", "yes") != "yes":
             tasks[5].cancel()
         if self.app.source == "live" and os.getenv("PROMOVENT_STREAM", "yes") == "yes":
-            syms = os.getenv("PROMOVENT_STREAM_SYMBOLS", "BTC/USDT,ETH/USDT,SOL/USDT,XRP/USDT,DOGE/USDT,ADA/USDT,LINK/USDT,AVAX/USDT").split(",")
+            syms = os.getenv("PROMOVENT_STREAM_SYMBOLS", os.getenv("PROMOVENT_WATCHLIST",
+                                                                  "BTC/USDT,ETH/USDT,BNB/USDT,SOL/USDT,XRP/USDT,ADA/USDT,DOGE/USDT")).split(",")
             ex = os.getenv("PROMOVENT_EXCHANGE", "binance")
             fetch = None
             if ex == "binance":
