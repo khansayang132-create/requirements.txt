@@ -99,3 +99,7 @@ Run 195 on commit `131f28f`: 9 of 10 jobs passed (including `promovent` with Pos
 API keys, and the production guard refused to start, as designed. Fixed by importing with `PROMOVENT_NO_AUTOAPP=1`
 and adding a real start-up check (container migrates SQLite and answers `/api/health`); both steps reproduced
 locally and passed before pushing.
+
+Run 202 on commit `545285c` (after the fix): **success, all jobs passed**, including `promovent-docker`
+(image builds, API imports, container migrates and answers `/api/health`), `promovent` (with Postgres/Redis
+service containers) and `promovent-web`.
