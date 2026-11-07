@@ -94,6 +94,20 @@ jobs:
       - run: npm run lint:ui
       - run: npx vite build
 
+  promovent:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: promovent
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt ruff==0.17.2
+      - run: ruff check .
+      - run: python -m pytest -q tests
+
   design:
     runs-on: ubuntu-latest
     steps:
