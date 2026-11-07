@@ -22,6 +22,9 @@ bash scripts/agency-setup.sh                   # same pinned tools the cloud hoo
 .venv/bin/python -m agency dashboard           # http://127.0.0.1:8790 (add --actions for buttons)
 ```
 
+The `review`, `change` and `ask` commands need an LLM: set `AGENCY_LLM_API_KEY`, `AGENCY_LLM_BASE_URL` and
+`AGENCY_LLM_MODEL` in `.env`, or leave them empty to reuse the `OMNIROUTE_*` settings. With no key, those steps are BLOCKED.
+
 | Command | What it does |
 |---|---|
 | `run health` | Dependencies, compile, bot + agency tests, APEX tests, ruff, shellcheck, secret scan, pip-audit (bot + APEX), bandit |
@@ -53,7 +56,7 @@ a price, reports show provider-reported tokens and "cost unknown". `.github/work
 | Part | File | Rule it enforces |
 |---|---|---|
 | Roles | `roles.py` | 20 roles; each has its own tool list and file ownership (`owns` globs). Every task is verified by a different role (QA verifies everyone, code review verifies QA). |
-| Tools | `tools.py` | Each tool has an input schema, a permission class (read / execute / write / network), a timeout and an approval flag. `apply_patch` only commits to a new `agency/<branch>` worktree, only for files the role owns, never for `.github/`, `.claude/`, `.env*`, `agency/roles.py`, `agency/tools.py`, `agency/agency.json`. Subprocesses run in their own process group, killed on timeout or cancel. Commands are fixed argv lists, never a shell. Paths must stay inside the repo; `.env` and `.git/` can't be read. Child processes get no `*KEY/*TOKEN/*SECRET/*PASSWORD` variables. Output is truncated and secrets are redacted before storage. A missing program or credential gives BLOCKED. |
+| Tools | `tools.py` | Each tool has an input schema, a permission class (read / execute / write / network), a timeout and an approval flag. `apply_patch` only commits to a new `agency/<branch>` worktree, only for files the role owns, never for `.github/`, `.claude/`, `.env*`, `agency/roles.py`, `agency/tools.py`, `agency/agency.json`. Subprocesses run in their own process group, killed on timeout or cancel. Commands are fixed argv lists, never a shell. Paths must stay inside the repo; `.env` and `.git/` can't be read. Child processes get no `*KEY/*TOKEN/*SECRET/*PASSWORD/*AUTH` or `API_KEY_*` variables. Output is truncated and secrets are redacted before storage. A missing program or credential gives BLOCKED. |
 | Store | `store.py` | Lifecycle CREATED → ANALYZING → PLANNED → READY → RUNNING → REVIEWING → VERIFYING → COMPLETED, plus BLOCKED, FAILED, CANCELLED, NEEDS_APPROVAL. Every transition is checked and written to `events`; every tool call to `tool_calls`. |
 | Orchestrator | `orchestrator.py` | Plans are rejected before running if a role lacks permission, a step is unknown or the graph has a cycle. Independent tasks run in parallel (`--concurrency`). A task never runs after a dependency failed. ERROR (timeout or crash) retries up to `max_attempts`, while FAIL and BLOCKED don't retry. Each mission has a tool-call budget. Leases let a restarted run pick up tasks a crashed run left RUNNING. `{param}` placeholders are filled at plan time. Verification re-reads the audit log and, for branches, asks git. |
 | Planner | `planner.py` | The LLM sees only the role/tool catalog and must return JSON steps; the plan goes through the same validation, gets one re-ask on rejection, and is stored needing `approve-plan`. |

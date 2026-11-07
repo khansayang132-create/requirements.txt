@@ -141,6 +141,11 @@ def test_output_is_redacted_and_child_env_has_no_secrets(repo):
     out = tb.call(ROLES["qa"], "read_file", {"path": "leak.py"}).output
     assert FAKE_KEY not in out and "plain-secret-value-123" not in out and "[REDACTED" in out
     assert "OMNIROUTE_API_KEY" not in tb._child_env()
+    # Secrets whose names don't end in KEY/TOKEN (both are documented session secrets).
+    odd = {"PATH": "/usr/bin:/bin", "API_KEY_21ST": "magic-secret-value-1", "SITE_AUTH": "me:site-password-1"}
+    _, tb2 = make(repo, env=odd)
+    assert redact("magic-secret-value-1 me:site-password-1", odd) == "[REDACTED:API_KEY_21ST] [REDACTED:SITE_AUTH]"
+    assert set(tb2._child_env()) == {"PATH"}
     assert redact("token 1234567890:" + "A" * 35) == "token [REDACTED:telegram-token]"
 
 

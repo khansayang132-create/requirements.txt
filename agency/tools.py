@@ -48,7 +48,7 @@ SECRET_PATTERNS = [
     ("github-token", re.compile(r"\bgh[pousr]_[A-Za-z0-9]{36,}\b")),
     ("private-key", re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----")),
 ]
-SECRET_ENV = re.compile(r"(KEY|TOKEN|SECRET|PASSWORD)$")
+SECRET_ENV = re.compile(r"(KEY|TOKEN|SECRET|PASSWORD|AUTH)$|^API_KEY_")
 
 
 def redact(text: str, env=None) -> str:

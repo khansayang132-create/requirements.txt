@@ -25,6 +25,7 @@ or directly to OpenAI if no OmniRoute key is set.
    - `OMNIROUTE_API_KEY` — your OmniRoute key
    - `OMNIROUTE_BASE_URL` — leave as `http://127.0.0.1:20128/v1` unless OmniRoute runs elsewhere
    - `OMNIROUTE_MODEL` — `auto` lets OmniRoute pick; or set a specific model
+   - `OPENAI_API_KEY` / `OPENAI_MODEL` — optional: used only when `OMNIROUTE_API_KEY` is empty (model defaults to `gpt-4.1-mini`)
 4. Run the bot:
    ```
    python bot.py

@@ -7,6 +7,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 logging.basicConfig(level=logging.INFO)
+# httpx logs every request URL at INFO, and Telegram API URLs contain the bot token.
+logging.getLogger("httpx").setLevel(logging.WARNING)
 
 TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "")
 OPENAI_KEY = os.getenv("OPENAI_API_KEY", "")

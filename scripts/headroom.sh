@@ -5,6 +5,7 @@
 #   scripts/headroom.sh mcp     same, then serve Headroom's MCP tools over stdio
 #   scripts/headroom.sh status  is the proxy up?
 #
+# HEADROOM_PORT (default 8765) and HEADROOM_VENV (default ~/.cache/lskhan-headroom) override the defaults.
 # The upload beacon is always off. The proxy binds to 127.0.0.1 only.
 set -euo pipefail
 

@@ -121,3 +121,12 @@ def test_startup_retries_until_telegram_is_reachable(load_bot, monkeypatch):
     monkeypatch.setattr(bot.Application, "run_polling", lambda self, **kwargs: seen.update(kwargs))
     bot.main()
     assert seen["bootstrap_retries"] == -1
+
+
+def test_httpx_request_urls_are_not_logged(load_bot):
+    """Telegram request URLs contain the bot token; httpx logs them at INFO. Keep httpx at WARNING."""
+    import logging
+    load_bot()
+    # Check the level bot.py sets on the httpx logger itself: under pytest, basicConfig is a no-op,
+    # so the effective level alone would pass even without the fix.
+    assert logging.getLogger("httpx").level == logging.WARNING
