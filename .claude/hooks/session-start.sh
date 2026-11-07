@@ -7,6 +7,9 @@ if [ "${CLAUDE_CODE_REMOTE:-}" != "true" ]; then
   exit 0
 fi
 
+# Run in the background so the session starts without waiting for npm.
+echo '{"async": true, "asyncTimeout": 300000}'
+
 cd "${CLAUDE_PROJECT_DIR:-.}/done"
 
 # Run the install only if a listed file has changed since the install last succeeded.
