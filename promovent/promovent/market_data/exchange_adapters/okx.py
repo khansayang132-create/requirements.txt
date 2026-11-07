@@ -1,11 +1,14 @@
 """OKX v5 public streams.
-Public:   wss://ws.okx.com:8443/ws/v5/public    trades, books, tickers, funding-rate, open-interest
-Business: wss://ws.okx.com:8443/ws/v5/business  candle{tf}
+Public:   wss://ws.okx.com/ws/v5/public    trades, books, tickers, funding-rate, open-interest
+Business: wss://ws.okx.com/ws/v5/business  candle{tf}
+Port 443 by default (OKX also serves 8443; many firewalls and proxies only pass 443).
+Set PROMOVENT_OKX_WS_PORT=8443 to use OKX's documented port.
 App-level ping: text "ping" every 25 s (OKX closes idle sockets after 30 s).
 """
 from __future__ import annotations
 
 import json
+import os
 
 from ..events import MarketEvent
 from .base import WSAdapter
@@ -17,8 +20,10 @@ TF = {"1m": "1m", "3m": "3m", "5m": "5m", "15m": "15m", "30m": "30m", "1h": "1H"
 class OKXWS(WSAdapter):
     name = "okx"
     ping_interval = 25.0
-    PUBLIC = "wss://ws.okx.com:8443/ws/v5/public"
-    BUSINESS = "wss://ws.okx.com:8443/ws/v5/business"
+    _PORT = os.getenv("PROMOVENT_OKX_WS_PORT", "443")
+    _HOST = "wss://ws.okx.com" + ("" if _PORT == "443" else f":{_PORT}")
+    PUBLIC = _HOST + "/ws/v5/public"
+    BUSINESS = _HOST + "/ws/v5/business"
 
     def connections(self):
         ids = [s.replace("/", "-") for s in self.symbols]

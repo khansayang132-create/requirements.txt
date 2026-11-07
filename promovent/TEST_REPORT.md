@@ -103,3 +103,9 @@ locally and passed before pushing.
 Run 202 on commit `545285c` (after the fix): **success, all jobs passed**, including `promovent-docker`
 (image builds, API imports, container migrates and answers `/api/health`), `promovent` (with Postgres/Redis
 service containers) and `promovent-web`.
+
+## 6. Live data (2026-11-07, after the network allow-list was approved)
+
+OKX REST and WebSocket verified live, including inside the Docker stack; all 12 pages screenshotted on live data
+(`docs/screenshots/v2.5-docker-live-okx/`). Binance: HTTP 451 restricted location; Bybit: HTTP 403 country block.
+Strategy validation on real data: 0 of 21 pass. Details: `docs/live-results-2026-11-07.md`.

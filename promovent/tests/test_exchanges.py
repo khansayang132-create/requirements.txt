@@ -105,3 +105,21 @@ def test_unknown_exchange_and_symbol():
         get_adapter("ftx")
     with pytest.raises(DataValidationError):
         Binance().market_id("BTCUSDT; DROP")
+
+
+def test_okx_paginates_history_and_dedupes():
+    pages = []
+
+    def handler(req):
+        p = req.url.path
+        if p.endswith("/market/candles"):
+            return httpx.Response(200, json={"code": "0", "data": [[str(T0 + i * H), "1", "2", "0.5", "1.5", "3", "4", "4", "1"]
+                                                                   for i in range(10, 13)]})
+        after = int(req.url.params["after"])
+        pages.append(after)
+        start = (after - T0) // H
+        data = [[str(T0 + i * H), "1", "2", "0.5", "1.5", "3", "4", "4", "1"] for i in range(max(0, start - 4), start + 1)]
+        return httpx.Response(200, json={"code": "0", "data": list(reversed(data))})
+    r = OKX(httpx.Client(transport=httpx.MockTransport(handler))).ohlcv("BTC/USDT", "1h", limit=8, now_ms=T0 + 20 * H)
+    assert len(r.df) == 8 and r.df.index.is_unique and r.df.index.is_monotonic_increasing
+    assert pages and pages[0] == T0 + 10 * H

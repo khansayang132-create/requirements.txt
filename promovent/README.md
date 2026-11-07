@@ -6,8 +6,8 @@ Frontend: Next.js 15, TypeScript, Tailwind, TradingView Lightweight Charts.
 
 > Not part of LSKhan; it lives in this repo like `done/`.
 > **What is proven and what is not:** [`AUDIT_REPORT.md`](./AUDIT_REPORT.md) and [`TEST_REPORT.md`](./TEST_REPORT.md).
-> Short version: everything below is built and tested, but it has **never connected to a real exchange,
-> data provider or hosting platform** (the build sandbox blocks them), and **it is not deployed**.
+> Short version: live market data is verified on OKX; **no strategy passes validation on real data yet**,
+> live order execution has only been tested against fakes, and **it is not deployed**.
 
 Capital preservation first: 0.5 % risk per trade, 2 % daily / 4 % weekly loss limits, max 3 positions, leverage
 off, martingale rejected, emergency stop. **There is no withdrawal code**, and keys that allow withdrawals are refused.
@@ -52,6 +52,9 @@ docker compose ps                  # all five services should become "healthy"
 curl http://127.0.0.1:8000/api/health
 open http://127.0.0.1:3000         # Settings → paste your API key
 ```
+
+**Exchange location rules:** Binance and Bybit refuse API traffic from some countries/cloud regions (HTTP 451 / 403).
+After deploying, check `/api/exchanges/health`; set `PROMOVENT_EXCHANGE` to one that answers (OKX worked from the build sandbox).
 
 Database: `scripts/db.sh backup|restore <file>|migrate|rollback <rev>`. Migrations also run on every backend start.
 

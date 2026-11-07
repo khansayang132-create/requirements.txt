@@ -229,11 +229,27 @@ class OKX(Adapter):
                       tf, now_ms)
 
     def ohlcv(self, symbol, tf, limit=300, now_ms=None):
+        """Recent candles (300 max per call), then older pages from /history-candles (100 per call)
+        until `limit` closed candles are collected or history runs out."""
         validate_timeframe(tf)
-        raw = self._get("/api/v5/market/candles", {"instId": self.market_id(symbol), "bar": self.TF[tf],
-                                                    "limit": min(limit, 300)})
+        inst = self.market_id(symbol)
+        raw = self._get("/api/v5/market/candles", {"instId": inst, "bar": self.TF[tf], "limit": min(limit, 300)})
+        rows = list(self._check(raw))
+        while len(rows) < limit + 1 and rows:
+            oldest = min(int(k[0]) for k in rows)
+            page = self._check(self._get("/api/v5/market/history-candles",
+                                         {"instId": inst, "bar": self.TF[tf], "after": oldest, "limit": 100}))
+            if not page:
+                break
+            rows += page
+            time.sleep(0.11)  # history-candles: 10 requests / 2 s per IP
         now = now_ms or _now_ms()
-        df = self.parse_klines(raw, tf, now)
+        seen, uniq = set(), []
+        for k in rows:
+            if k[0] not in seen:
+                seen.add(k[0])
+                uniq.append(k)
+        df = self.parse_klines({"code": "0", "data": uniq}, tf, now).iloc[-limit:]
         return OHLCVResult(df, MarketMeta(self.name, symbol, int(df.index[-1].value // 10**6) + TF_SECONDS[tf] * 1000, now))
 
     @classmethod

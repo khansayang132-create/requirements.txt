@@ -1,0 +1,31 @@
+# SANDBOX ONLY: lets containers reach the internet through the Claude Code cloud sandbox's egress proxy,
+# which listens on the host's 127.0.0.1 and intercepts TLS. Not for production; on a normal server use
+# docker-compose.yml alone.
+#   docker compose -f docker-compose.yml -f docker-compose.sandbox.yml up -d
+services:
+  postgres:
+    ports: ["127.0.0.1:5432:5432"]
+  redis:
+    ports: ["127.0.0.1:6379:6379"]
+  backend: &hostnet
+    network_mode: host
+    ports: !reset []
+    depends_on: !reset []
+    environment: &sbenv
+      PROMOVENT_DATABASE_URL: postgresql+psycopg://promovent:${POSTGRES_PASSWORD}@127.0.0.1:5432/promovent
+      PROMOVENT_REDIS_URL: redis://127.0.0.1:6379/0
+      HTTPS_PROXY: ${HTTPS_PROXY}
+      NO_PROXY: localhost,127.0.0.1
+      SSL_CERT_FILE: /etc/sandbox-ca.crt
+      PROMOVENT_EXCHANGE: okx
+      PROMOVENT_STREAM_SYMBOLS: BTC/USDT,ETH/USDT,SOL/USDT
+    volumes: ["/root/.ccr/ca-bundle.crt:/etc/sandbox-ca.crt:ro", "models:/data/models"]
+  worker:
+    <<: *hostnet
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import redis,sys; r=redis.Redis.from_url('redis://127.0.0.1:6379/0'); sys.exit(0 if list(r.scan_iter('pv:hb:*')) else 1)\""]
+  frontend:
+    image: promovent-frontend:2.5-sandbox
+    network_mode: host
+    ports: !reset []
+    depends_on: !reset []
