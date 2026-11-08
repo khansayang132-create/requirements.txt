@@ -123,3 +123,17 @@ Strategy validation on real data: 0 of 21 pass. Details: `docs/live-results-2026
 - Docker (sandbox): migration 0001 → 0002 on the existing database; stack healthy on live Binance data; crash drill
   passed (details: `docs/v3.1-evidence-2026-11-07.md`). Docker Hub rate-limited the from-scratch rebuild here; the
   sandbox used an incremental image on the previous build. CI builds the real Dockerfile from scratch.
+
+## 8. Bug found by a full host restart (2026-11-08)
+
+The sandbox host was shut down overnight. After restarting Docker, every container and the stored state came back
+(volumes intact; 98 strategy-research rows, 15 findings, reports, research mission m-8fdf4e8e at cycle 1). But the paper
+kill switch was **engaged**, although it had been released through the API the day before.
+
+Cause: the API and the worker are separate processes, each with its own in-memory paper account. The worker still held
+"engaged" from before the release and wrote its whole account back to the database on its next periodic save.
+
+Fix (`paper.py`): every change reloads the account from the database first and saves straight after; the kill switch
+has its own record that only engage/release writes; the autopilot, portfolio and guardian read fresh state.
+Regression test: `test_two_processes_never_overwrite_kill_switch_or_cash`. Verified on the running stack: released,
+two worker cycles later still released, all autopilot gates OK. Suite: **186 passed, 0 skipped**.

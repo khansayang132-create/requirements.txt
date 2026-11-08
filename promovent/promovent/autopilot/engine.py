@@ -137,6 +137,7 @@ class Autopilot:
     # ---------------------------------------------------------------- step
     def step(self) -> StepResult:
         res = StepResult()
+        self.app.broker.reload()  # the API process may have traded, killed or released since the last step
         approved = self.approved()
         symbols = sorted({p.symbol for p in self.app.broker.state.positions} | {a["symbol"] for a in approved}) or ["BTC/USDT"]
         res.gates, prices = self.gates(symbols)

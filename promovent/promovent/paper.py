@@ -56,16 +56,29 @@ class PaperBroker:
             self._load(initial)
 
     def _load(self, initial: float) -> None:
+        if not self.store.kv_get("paper_account"):
+            self.save()
+            return
+        self.reload()
+
+    def reload(self) -> None:
+        """Re-read the account from the database. Called before every change, because the API and the worker are
+        separate processes, each with its own broker object; the database is the only source of truth."""
+        if not self.persist:
+            return
         acct = self.store.kv_get("paper_account")
         if not acct:
-            self.save()
             return
         self.cash, self.realized = acct["cash"], acct["realized"]
         self.state.peak_equity = acct["peak_equity"]
         self.state.day_start_equity, self.state.week_start_equity = acct["day_start_equity"], acct["week_start_equity"]
         self.day, self.week = acct.get("day"), acct.get("week")
-        self.state.kill_switch, self.state.kill_reason = acct.get("kill_switch", False), acct.get("kill_reason", "")
-        self.state.initial_equity = acct.get("initial_equity", initial)
+        self.state.initial_equity = acct.get("initial_equity", self.state.initial_equity)
+        kill = self.store.kv_get("kill_switch")
+        if kill is None:  # databases written before the kill switch had its own record
+            kill = {"on": acct.get("kill_switch", False), "reason": acct.get("kill_reason", "")}
+        self.state.kill_switch, self.state.kill_reason = bool(kill["on"]), kill.get("reason", "")
+        self.state.positions = []
         for row in self.store.positions("paper"):
             pos = Position(row["symbol"], row["side"], row["qty"], row["entry"], row["stop"], row["target"], row["strategy"],
                            pd.Timestamp(row["opened_at"]))
@@ -74,16 +87,18 @@ class PaperBroker:
         self.state.equity = self.equity()
 
     def save(self) -> None:
+        """Account fields only. The kill switch is written exclusively by set_kill(), so a process holding a stale
+        copy can never re-engage or release it."""
         if not self.persist:
             return
         self.store.kv_set("paper_account", {
             "cash": self.cash, "realized": self.realized, "peak_equity": self.state.peak_equity,
             "day_start_equity": self.state.day_start_equity, "week_start_equity": self.state.week_start_equity,
-            "day": self.day, "week": self.week, "kill_switch": self.state.kill_switch, "kill_reason": self.state.kill_reason,
-            "initial_equity": self.state.initial_equity})
+            "day": self.day, "week": self.week, "initial_equity": self.state.initial_equity})
 
     def roll(self, now, prices: dict[str, float] | None = None) -> None:
         """Reset daily / weekly loss baselines at the UTC day / ISO-week boundary."""
+        self.reload()
         eq = self.equity(prices)
         d, w = str(now.date()), "%d-W%02d" % now.isocalendar()[:2]
         if d != self.day:
@@ -96,7 +111,8 @@ class PaperBroker:
 
     def set_kill(self, on: bool, reason: str = "") -> None:
         self.state.kill_switch, self.state.kill_reason = on, reason
-        self.save()
+        if self.persist:
+            self.store.kv_set("kill_switch", {"on": on, "reason": reason})
 
     def equity(self, prices: dict[str, float] | None = None) -> float:
         prices = prices or {}
@@ -123,6 +139,7 @@ class PaperBroker:
 
     def on_price(self, symbol: str, price: float) -> list[dict]:
         """Mark-to-market; close positions whose stop or target is crossed."""
+        self.reload()
         closed = []
         for p in list(self.state.positions):
             if p.symbol != symbol:
@@ -191,6 +208,7 @@ class ExecutionAgent:
             raise OrderRejected(f"strategy {sig.strategy} has not passed the validation gate")
         if self.store.order_exists(coid):
             raise OrderRejected(f"duplicate order {coid}")
+        self.broker.reload()
         self.broker.state.equity = self.broker.equity({sig.symbol: market_price})
         dec = self.risk.evaluate(sig, self.broker.state, correlations)
         self.store.audit(actor, "risk_decision", {"coid": coid, **dec.as_dict()})

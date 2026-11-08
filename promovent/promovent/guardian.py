@@ -42,6 +42,7 @@ class RiskGuardian:
         return out
 
     def status(self) -> dict:
+        self.app.broker.reload()
         lock = self.app.store.kv_get("guardian_lock")
         st, eng = self.app.broker.state, self.app.risk
         return {"locked": bool(lock), "lock": lock, "breaches_now": self.breaches(),
@@ -100,6 +101,7 @@ class RiskGuardian:
         return {"breach": True, "acted": True, **lock}
 
     def resume(self, actor: str, phrase: str, reset_baseline: bool = False) -> dict:               # 6
+        self.app.broker.reload()
         if phrase != RESUME_PHRASE:
             raise PermissionError(f"confirmation phrase must be exactly: {RESUME_PHRASE}")
         still = self.breaches()
@@ -110,6 +112,7 @@ class RiskGuardian:
         if reset_baseline:
             st.peak_equity = st.day_start_equity = st.week_start_equity = st.equity
             st.initial_equity = st.equity
+            self.app.broker.save()
         self.app.store.kv_set("guardian_lock", None)
         self.app.broker.set_kill(False, "")
         self.app.store.audit(actor, "guardian_resume", {"reset_baseline": reset_baseline, "equity": st.equity, "was": still})

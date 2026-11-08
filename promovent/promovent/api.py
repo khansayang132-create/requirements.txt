@@ -312,6 +312,7 @@ def create_app(state: App | None = None) -> FastAPI:
 
     @api.get("/api/portfolio")
     def portfolio(_=Depends(auth("viewer"))):
+        st.broker.reload()
         snap = st.broker.snapshot()
         snap["trades"] = st.store.positions("paper", closed=True)
         snap["limits"] = {"daily_loss": st.risk.daily_loss(st.broker.state), "weekly_loss": st.risk.weekly_loss(st.broker.state),

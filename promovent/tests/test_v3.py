@@ -50,6 +50,7 @@ def test_daily_baseline_rolls_and_persists(tmp_path):
     a = app(tmp_path)
     a.broker.roll(pd.Timestamp("2026-03-02 10:00", tz="UTC"))
     a.broker.cash = 9_900
+    a.broker.save()  # changes reach other processes only through the database
     a.broker.roll(pd.Timestamp("2026-03-02 20:00", tz="UTC"))
     assert a.broker.state.day_start_equity == 10_000
     a.broker.roll(pd.Timestamp("2026-03-03 00:01", tz="UTC"))
@@ -355,3 +356,19 @@ def test_v3_api_endpoints(tmp_path):
     a.broker.set_kill(True, "guardian: test")
     r = c.post("/api/guardian/resume", json={"confirm_phrase": RESUME_PHRASE}, headers={"X-API-Key": "a" * 24})
     assert r.status_code == 200 and not a.broker.state.kill_switch
+
+
+def test_two_processes_never_overwrite_kill_switch_or_cash(tmp_path):
+    """API and worker each hold a PaperBroker on the same database (regression: worker re-engaged a released stop)."""
+    api, worker = app(tmp_path), app(tmp_path)
+    api.broker.set_kill(True, "drill")
+    worker.broker.reload()
+    assert worker.broker.state.kill_switch
+    api.broker.set_kill(False, "")                       # operator releases via the API
+    worker.broker.roll(pd.Timestamp.now(tz="UTC"))        # worker's periodic save must not resurrect the stop
+    assert app(tmp_path).broker.state.kill_switch is False
+    api.agent.validated.add("t")
+    api.agent.execute(Signal("t", "BTC/USDT", 1, 100, 98, 106, T), 100)   # trade through the API process
+    worker.broker.roll(pd.Timestamp.now(tz="UTC"))        # stale worker copy must not erase cash or the position
+    fresh = app(tmp_path).broker
+    assert len(fresh.state.positions) == 1 and fresh.cash == pytest.approx(api.broker.cash)
