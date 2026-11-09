@@ -34,9 +34,9 @@ req_hash() { cat "$ROOT/requirements.txt" "$0" | sha256sum | cut -d' ' -f1; }
 
 install_deps() {
     if is_termux; then
-        # No prebuilt wheels on Android: take Pillow (needs libjpeg/zlib) from Termux's own package,
+        # No prebuilt wheels on Android: take Pillow (libjpeg/zlib) and cryptography (Rust) from Termux's own packages,
         # and a compiler for the few pip packages that build C code.
-        local pkgs=(python python-pip python-pillow clang) missing=() p
+        local pkgs=(python python-pip python-pillow python-cryptography clang) missing=() p
         for p in "${pkgs[@]}"; do dpkg -s "$p" >/dev/null 2>&1 || missing+=("$p"); done
         if (( ${#missing[@]} )); then
             ok "Termux: installing ${missing[*]}…"

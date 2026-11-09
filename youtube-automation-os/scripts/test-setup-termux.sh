@@ -5,7 +5,7 @@ set -euxo pipefail
 
 echo "deb https://packages-cf.termux.dev/apt/termux-main stable main" > "$PREFIX/etc/apt/sources.list"
 for attempt in 1 2 3; do
-    apt-get update -q >/dev/null && apt-get install -y -q python python-pip python-pillow clang >/dev/null && break
+    apt-get update -q >/dev/null && apt-get install -y -q python python-pip python-pillow python-cryptography clang >/dev/null && break
     [[ $attempt == 3 ]] && exit 1
     sleep 10
 done
