@@ -147,7 +147,9 @@ jobs:
       - uses: actions/checkout@v5
       - run: docker build -t promovent-backend:ci .
       - run: docker build -t promovent-frontend:ci web
-      - run: docker run --rm --entrypoint python promovent-backend:ci -c "import lightgbm, promovent.api; print('ok')"
+      # Import check only: skip building the app, so the production key guard (which needs real
+      # PROMOVENT_API_KEYS) is not triggered in CI. The guard itself stays on in the image.
+      - run: docker run --rm -e PROMOVENT_NO_AUTOAPP=1 --entrypoint python promovent-backend:ci -c "import lightgbm, promovent.api; print('ok')"
 
   design:
     runs-on: ubuntu-latest
