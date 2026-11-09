@@ -11,6 +11,7 @@ Build date: 2026-11-09. Python 3.13.18. All results below come from runs in this
 | 1 Static | `ruff check .` clean; `python -m compileall src skills tests` OK |
 | 2 Unit | part of the 168-test pytest suite, run on Python 3.13.18 and 3.11.18 (validators, retry, quota, state, redaction, captions, metadata) |
 | 3 Integration | in the same suite: the real `google-api-python-client` + `google-auth` with scripted HTTP (resumable protocol, multipart media, OAuth token refresh, analytics) and subprocess runs of the CLIs |
+| CI (GitHub Actions) | `youtube (3.11)` and `youtube (3.13)` jobs green on commit 02f653c (run 42611062419) |
 | 4 Real Google API | **BLOCKED**: no Google Cloud credentials in the build environment, and its network policy denies `developers.google.com` (and Google APIs were not attempted). Nothing was uploaded to YouTube. |
 
 ## Capabilities
@@ -41,7 +42,7 @@ Build date: 2026-11-09. Python 3.13.18. All results below come from runs in this
 | videos.update merge (nothing silently cleared) | VERIFIED (L2) | `test_merge_keeps_existing_fields` |
 | Delete (`--confirm` + repeated ID) | VERIFIED gate (L2); remote delete IMPLEMENTED | `test_delete_requires_repeating_the_id` |
 | Schedule computation and rules | VERIFIED (L2) | `test_schedule_tomorrow_computation`, `test_schedule_cli_rejects_past_time` |
-| Claude Code skill discovery via `.claude/skills/` links | IMPLEMENTED | Frontmatter checked by `test_skills_docs.py`; folder-scoped discovery depends on the Claude Code version and was not observed in a fresh session |
+| Claude Code skill discovery via `.claude/skills/` links | VERIFIED | A resumed Claude Code session listed all seven `youtube-*` skills as folder-scoped skills ("from youtube-automation-os/.claude/skills — applies when working on files under youtube-automation-os/"); frontmatter also checked by `test_skills_docs.py` |
 
 ## Remaining manual steps (owner)
 

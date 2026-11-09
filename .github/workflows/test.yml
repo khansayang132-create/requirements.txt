@@ -147,7 +147,13 @@ jobs:
       - uses: actions/checkout@v5
       - run: docker build -t promovent-backend:ci .
       - run: docker build -t promovent-frontend:ci web
-      - run: docker run --rm --entrypoint python promovent-backend:ci -c "import lightgbm, promovent.api; print('ok')"
+      # Import check without auto-creating the app (the image runs PROMOVENT_ENV=production, which
+      # correctly refuses to start without PROMOVENT_API_KEYS) ...
+      - run: docker run --rm -e PROMOVENT_NO_AUTOAPP=1 --entrypoint python promovent-backend:ci -c "import lightgbm, promovent.api; print('ok')"
+      # ... and prove that production guard still fails closed.
+      - run: |
+          out=$(docker run --rm --entrypoint python promovent-backend:ci -c "import promovent.api" 2>&1) && { echo "production started without API keys"; exit 1; }
+          echo "$out" | grep -q "requires PROMOVENT_API_KEYS" && echo "guard ok"
 
   design:
     runs-on: ubuntu-latest
