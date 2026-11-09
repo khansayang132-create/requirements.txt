@@ -1,0 +1,29 @@
+# Topic file for generate_metadata.py. Write the creative parts yourself (or ask Claude);
+# the generator only assembles them within YouTube's limits. Keep it true: no invented events.
+topic: "3 hal yang harus disiapkan sebelum menikah beda negara"
+hook: "Kalau kamu mau nikah beda negara… dengarkan ini dulu"
+summary: |
+  Kami pasangan Indonesia × Pakistan. Ini tiga hal yang kami siapkan sebelum menikah,
+  dari pengalaman kami sendiri.
+points:
+  - "Dokumen pernikahan dari dua negara butuh waktu, mulai lebih awal"
+  - "Bicarakan dari awal: setelah menikah tinggal di negara siapa"
+  - "Kenali budaya keluarga pasangan sebelum hari pernikahan"
+keywords:
+  - nikah beda negara
+  - indonesia pakistan
+  - mixed marriage
+  - pernikahan internasional
+  - tips menikah
+  - Nikah Beda Negara      # duplicate on purpose: the generator removes it
+hashtags:
+  - NikahBedaNegara
+  - IndonesiaPakistan
+  - MixedMarriage
+cta: "Menurut kamu, mana yang paling sulit dari tiga hal ini? Tulis di komentar."
+language: id
+chapters:
+  - {time: "0:00", label: "Pembuka"}
+  - {time: "0:05", label: "Dokumen"}
+  - {time: "0:12", label: "Tinggal di mana"}
+  - {time: "0:20", label: "Budaya keluarga"}

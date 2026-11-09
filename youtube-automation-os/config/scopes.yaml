@@ -1,0 +1,61 @@
+# OAuth scope profiles and the scopes each API operation accepts.
+# Source: YouTube Data API v3 / Analytics API reference pages ("Authorization" section of each method).
+# Request the smallest profile set you need: authenticate.py --scopes upload,manage
+
+profiles:
+  # Upload videos and set thumbnails only.
+  upload:
+    - https://www.googleapis.com/auth/youtube.upload
+  # Read, update, delete videos; list channel uploads (needed for verification and duplicate checks).
+  manage:
+    - https://www.googleapis.com/auth/youtube
+  # Captions (list / download / insert / update) require the force-ssl scope.
+  captions:
+    - https://www.googleapis.com/auth/youtube.force-ssl
+  # Read-only channel data.
+  readonly:
+    - https://www.googleapis.com/auth/youtube.readonly
+  # YouTube Analytics reports (views, watch time, retention, traffic sources).
+  analytics:
+    - https://www.googleapis.com/auth/yt-analytics.readonly
+    - https://www.googleapis.com/auth/youtube.readonly
+
+# For each operation, the token must hold AT LEAST ONE of the listed scopes.
+operations:
+  videos.insert:
+    - https://www.googleapis.com/auth/youtube.upload
+    - https://www.googleapis.com/auth/youtube
+    - https://www.googleapis.com/auth/youtube.force-ssl
+  videos.list:
+    - https://www.googleapis.com/auth/youtube
+    - https://www.googleapis.com/auth/youtube.force-ssl
+    - https://www.googleapis.com/auth/youtube.readonly
+  videos.update:
+    - https://www.googleapis.com/auth/youtube
+    - https://www.googleapis.com/auth/youtube.force-ssl
+  videos.delete:
+    - https://www.googleapis.com/auth/youtube
+    - https://www.googleapis.com/auth/youtube.force-ssl
+  thumbnails.set:
+    - https://www.googleapis.com/auth/youtube.upload
+    - https://www.googleapis.com/auth/youtube
+    - https://www.googleapis.com/auth/youtube.force-ssl
+  channels.list:
+    - https://www.googleapis.com/auth/youtube
+    - https://www.googleapis.com/auth/youtube.force-ssl
+    - https://www.googleapis.com/auth/youtube.readonly
+  playlistItems.list:
+    - https://www.googleapis.com/auth/youtube
+    - https://www.googleapis.com/auth/youtube.force-ssl
+    - https://www.googleapis.com/auth/youtube.readonly
+  captions.list:
+    - https://www.googleapis.com/auth/youtube.force-ssl
+  captions.download:
+    - https://www.googleapis.com/auth/youtube.force-ssl
+  captions.insert:
+    - https://www.googleapis.com/auth/youtube.force-ssl
+  captions.update:
+    - https://www.googleapis.com/auth/youtube.force-ssl
+  analytics.reports.query:
+    - https://www.googleapis.com/auth/yt-analytics.readonly
+    - https://www.googleapis.com/auth/yt-analytics-monetary.readonly

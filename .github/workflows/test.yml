@@ -158,3 +158,21 @@ jobs:
           node-version: "22"
       - run: npm i -g playwright@1.49.1 && npx -y playwright@1.49.1 install --with-deps chromium
       - run: node --test .claude/skills/design-check/scripts/check.test.mjs
+
+  youtube:
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.13"]
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: youtube-automation-os
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: pip install -r requirements-dev.txt && pip check
+      - run: ruff check .
+      - run: python -m pytest -q

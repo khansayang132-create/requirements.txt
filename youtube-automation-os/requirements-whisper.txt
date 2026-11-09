@@ -1,0 +1,4 @@
+# OPTIONAL: local Whisper transcription (large: pulls in PyTorch, ~2 GB). Also needs the ffmpeg binary.
+# The publishing system works without this file.
+-r requirements.txt
+openai-whisper==20250625

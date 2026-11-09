@@ -79,6 +79,7 @@
 | **Design agent** (any UI Claude makes) | [`.claude/agents/design-director.md`](./.claude/agents/design-director.md) runs the [`design-check`](./.claude/skills/design-check/SKILL.md) loop: direction (project system, else `frontend-design`), build, `scripts/check.mjs` renders at 390/1440 × light/dark and measures contrast, overflow, tap targets, fonts, focus, headings, JS errors; look at screenshots; fix; log in [`.claude/design-log.md`](./.claude/design-log.md). Tests: `node --test .claude/skills/design-check/scripts/check.test.mjs` (CI job `design`). |
 | **API key agent** (credentials and secrets) | [`.claude/agents/api-key-commander.md`](./.claude/agents/api-key-commander.md): finds API integrations and missing or exposed keys, checks connectivity with low-impact requests, audits permissions, plans rotation. Never prints secret values (masked only); revoking, rotating production keys, raising permissions or enabling financial operations need the owner's OK. Secrets in cloud sessions belong in the environment's secrets, never in a file. |
 | **Spotify artist profiles** (not LSKhan) | [`.claude/skills/artist-profile/`](./.claude/skills/artist-profile/SKILL.md): `SKILL.md` (steps) + `template.md`. Profiles go in `profiles/<artist-slug>.md`; unknown fields stay `TBD`. |
+| **YouTube Automation OS** (official YouTube Data/Analytics API toolkit) | [`youtube-automation-os/CLAUDE.md`](./youtube-automation-os/CLAUDE.md) (request → skill → command, safety rules, recovery), [`README.md`](./youtube-automation-os/README.md) (Google Cloud setup, quota table), [`STATUS.md`](./youtube-automation-os/STATUS.md) (VERIFIED / IMPLEMENTED / BLOCKED). Seven skills in `youtube-automation-os/skills/*/SKILL.md`, linked into `youtube-automation-os/.claude/skills/`; shared code in `youtube-automation-os/src/`. Own venv and `requirements.txt`. Hard rules: writes need `--confirm` (`--dry-run` wins; `YOUTUBE_DRY_RUN=true` blocks all writes); all API traffic through `src/youtube_client.py` (quota ledger, bounded retries, redacted logs); a timed-out upload is resumed or checked remotely, never re-uploaded blindly. Quota costs verified 2026-11-09: `videos.insert` has its own 100 calls/day bucket (not 1,600 units). Real uploads are NOT VERIFIED (no Google credentials in the sandbox). CI job `youtube` (3.11 + 3.13). |
 
 ---
 
@@ -103,7 +104,7 @@ Violating any of these is a bug, not a preference.
 | **Job states** | Change state only through `JobQueue` methods (they call `_move`, which enforces `ALLOWED_TRANSITIONS` and writes the audit log). Never `UPDATE jobs SET state=` directly. |
 | **Facts in scripts** | No invented statistics, quotes or sources. Illustrative arithmetic is fine. `review_script` rejects unsourced percentages. |
 | **Agency tools** | No general shell tool. New tools take fixed argv, a schema, a timeout and an approval flag, and return BLOCKED (not PASS) when their program or credential is missing. Anything that sends code off the machine, edits files, deploys or spends money sets `requires_approval=True`. Task states change only through `Store.move_task` / `move_mission`. |
-| **Merging** | CI green on the branch head first: `check`, `service` ×2, `termux`, `apex`, `done`, `design`. |
+| **Merging** | CI green on the branch head first: `check`, `service` ×2, `termux`, `apex`, `done`, `design`, `youtube` ×2. |
 
 ---
 
