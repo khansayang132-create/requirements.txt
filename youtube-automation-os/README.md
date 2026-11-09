@@ -18,7 +18,7 @@ Every write is gated behind `--confirm`. Every API call is quota-tracked, retrie
 ## Contents
 1. [Architecture](#architecture)
 2. [Requirements](#requirements)
-3. [Installation](#installation)
+3. [Installation](#installation) · [Go live on your phone (Termux)](#go-live-on-your-phone-termux)
 4. [Google Cloud configuration](#google-cloud-configuration) (OAuth setup, API enablement, credentials)
 5. [Authentication](#authentication)
 6. [Dry run](#dry-run-example) · [Real upload](#real-upload-example) · [Scheduling](#scheduling)
@@ -37,6 +37,7 @@ youtube-automation-os/
 ├── README.md  STATUS.md      docs / what is verified
 ├── requirements.txt          runtime (pinned)   requirements-dev.txt (pytest, ruff)   requirements-whisper.txt (optional)
 ├── .env.example  .gitignore
+├── scripts/                setup.sh (install/check, Termux + Linux)   test-setup-termux.sh (CI)
 ├── config/
 │   ├── settings.yaml         defaults, retry policy, VERIFIED quota costs, metadata templates
 │   └── scopes.yaml           OAuth scope profiles + scopes accepted per operation
@@ -77,6 +78,12 @@ CLI script ──► src/safety (gate) ──► src/validators ──► src/yo
 
 ## Installation
 
+One command on Linux, macOS or Android/Termux. It creates `.venv`, installs the pinned dependencies and creates `.env` (mode 600, safety lock on). It then runs a full pipeline dry run on the bundled sample. It is safe to re-run.
+```bash
+bash youtube-automation-os/scripts/setup.sh          # from the repo root
+bash youtube-automation-os/scripts/setup.sh check    # what is ready, what is still missing
+```
+Manual alternative:
 ```bash
 cd youtube-automation-os
 python -m venv .venv
@@ -85,6 +92,37 @@ pip install -r requirements.txt
 pip install -r requirements-dev.txt   # tests + lint (optional)
 cp .env.example .env
 ```
+
+## Go live on your phone (Termux)
+
+The toolkit runs on the same phone as the LSKhan bot. Google only lets the one-time sign-in finish in a browser on the device that runs the tool, so the phone is where it goes live.
+
+1. **Install** (one paste in Termux, after this branch is merged into `main`):
+   ```bash
+   cd ~/lskhan-bot && git pull --ff-only && bash youtube-automation-os/scripts/setup.sh
+   ```
+2. **Google Cloud** (in the phone's browser, once): follow [Google Cloud configuration](#google-cloud-configuration) below. Create an OAuth client of type **Desktop app**.
+3. **Put the client into `.env` on the phone.** Never paste it into a chat.
+   ```bash
+   pkg install -y nano && nano ~/lskhan-bot/youtube-automation-os/.env    # fill GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET, save with Ctrl+O, exit with Ctrl+X
+   ```
+4. **Sign in once.** The consent page opens in your phone's browser. After *Allow* it shows "YouTube Automation OS is authorized".
+   ```bash
+   cd ~/lskhan-bot/youtube-automation-os && .venv/bin/python skills/youtube-auth/scripts/authenticate.py --scopes upload,manage,captions,analytics
+   .venv/bin/python skills/youtube-auth/scripts/validate_auth.py --live
+   ```
+   If the browser does not open, add `--no-browser`, long-press the printed link, and open it on the same phone.
+5. **Your video.** Run `termux-setup-storage` once. Then copy `examples/sample_pipeline.yaml` to `my_video.yaml` and set `video.file`, for example `/data/data/com.termux/files/home/storage/dcim/Camera/clip.mp4`. Set the title or topic file and the thumbnail too.
+6. **Publish privately first.**
+   ```bash
+   .venv/bin/python skills/youtube-pipeline/scripts/pipeline.py --config my_video.yaml --dry-run
+   sed -i 's/^YOUTUBE_DRY_RUN=true/YOUTUBE_DRY_RUN=false/' .env       # lift the safety lock
+   .venv/bin/python skills/youtube-pipeline/scripts/pipeline.py --config my_video.yaml --confirm
+   bash scripts/setup.sh check
+   ```
+   Check the video in YouTube Studio, then change it to public with `update_video.py --privacy public --confirm` (or set `privacy: public` in the config). An API project that has not passed Google's audit keeps uploads private; see step 5 of Google Cloud configuration.
+
+The sign-in uses `http://127.0.0.1:8091/` on the phone, not 8080, because the website already uses 8080.
 
 ## Google Cloud configuration
 
@@ -115,7 +153,7 @@ python skills/youtube-auth/scripts/authenticate.py --scopes upload,manage
 python skills/youtube-auth/scripts/authenticate.py --scopes upload,manage,captions,analytics --force
 python skills/youtube-auth/scripts/validate_auth.py --require upload,manage --live
 ```
-A browser opens the Google consent page and redirects to `http://localhost:8080/`. The token is saved to `token.json` with mode 600. It is never printed. Use `--no-browser` to print the URL instead, and open it **on the same device**.
+A browser opens the Google consent page and redirects to `http://127.0.0.1:8091/` (on this device). The token is saved to `token.json` with mode 600. It is never printed. Use `--no-browser` to print the URL instead, and open it **on the same device**.
 
 ## Dry run example
 

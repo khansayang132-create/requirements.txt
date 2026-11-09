@@ -68,7 +68,7 @@ def test_client_config_from_env(monkeypatch):
     cfg = oauth_manager.client_config()
     assert cfg["installed"]["client_id"] == "abc.apps.googleusercontent.com"
     assert cfg["installed"]["token_uri"] == "https://oauth2.googleapis.com/token"
-    assert cfg["installed"]["redirect_uris"] == ["http://localhost:8080/"]
+    assert cfg["installed"]["redirect_uris"] == ["http://127.0.0.1:8091/"]
 
 
 def test_client_config_missing_names_the_variables():
@@ -194,7 +194,7 @@ def test_authenticate_runs_flow_and_saves_token(tmp_path, monkeypatch):
 
     result = oauth_manager.authenticate([UPLOAD, YT], open_browser=False, flow_factory=factory)
     assert seen["access_type"] == "offline" and seen["prompt"] == "consent"
-    assert seen["host"] == "localhost" and seen["port"] == 8080 and seen["open_browser"] is False
+    assert seen["host"] == "127.0.0.1" and seen["port"] == 8091 and seen["open_browser"] is False
     assert result["state"] == "AUTHENTICATED" and result["has_refresh_token"]
     assert oct((tmp_path / "token.json").stat().st_mode & 0o777) == "0o600"
 
@@ -229,3 +229,24 @@ def test_gitignore_protects_secrets():
     text = (ROOT / ".gitignore").read_text().splitlines()
     for entry in (".env", "*.token", "token.json", "credentials.json", "__pycache__/", ".pytest_cache/", "logs/*", "state/*.json"):
         assert entry in text, entry
+
+
+def test_termux_opens_consent_page_with_phone_browser(tmp_path, monkeypatch):
+    monkeypatch.setenv("GOOGLE_CLIENT_ID", "abc.apps.googleusercontent.com")
+    monkeypatch.setenv("GOOGLE_CLIENT_SECRET", FAKE_SECRET)
+    monkeypatch.setenv("PREFIX", "/data/data/com.termux/files/usr")
+    monkeypatch.delenv("BROWSER", raising=False)
+    monkeypatch.setattr(oauth_manager.shutil, "which", lambda name: "/data/data/com.termux/files/usr/bin/" + name)
+    seen = {}
+
+    class FakeFlow:
+        def run_local_server(self, **kw):
+            import os
+
+            seen["browser"] = os.environ.get("BROWSER")
+            return Credentials(token=FAKE_ACCESS, refresh_token=FAKE_REFRESH, token_uri="https://oauth2.googleapis.com/token",
+                               client_id="abc", client_secret=FAKE_SECRET, scopes=[UPLOAD],
+                               expiry=datetime.now(timezone.utc).replace(tzinfo=None) + timedelta(hours=1))
+
+    oauth_manager.authenticate([UPLOAD], flow_factory=lambda config, scopes: FakeFlow())
+    assert seen["browser"] == "termux-open-url %s"

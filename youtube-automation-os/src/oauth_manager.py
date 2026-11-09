@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import json
 import os
+import shutil
 import tempfile
 from collections.abc import Callable
 from datetime import datetime, timezone
@@ -30,7 +31,11 @@ from .logger import get_logger
 
 AUTH_URI = "https://accounts.google.com/o/oauth2/auth"
 TOKEN_URI = "https://oauth2.googleapis.com/token"
-DEFAULT_REDIRECT = "http://localhost:8080/"
+DEFAULT_REDIRECT = "http://127.0.0.1:8091/"  # not 8080: the owner's website uses 8080 on the phone
+
+
+def is_termux() -> bool:
+    return "com.termux" in os.getenv("PREFIX", "")
 
 
 def token_path() -> Path:
@@ -74,8 +79,8 @@ def client_config() -> dict:
 def redirect_host_port() -> tuple[str, int]:
     uri = urlparse(os.getenv("GOOGLE_REDIRECT_URI") or DEFAULT_REDIRECT)
     if uri.scheme != "http" or uri.hostname not in {"localhost", "127.0.0.1"}:
-        raise ConfigError("GOOGLE_REDIRECT_URI must be a loopback URL such as http://localhost:8080/ for a desktop OAuth client")
-    return uri.hostname, uri.port or 8080
+        raise ConfigError("GOOGLE_REDIRECT_URI must be a loopback URL such as http://127.0.0.1:8091/ for a desktop OAuth client")
+    return uri.hostname, uri.port or 8091
 
 
 # ------------------------------------------------------------------ scopes ------
@@ -277,6 +282,9 @@ def authenticate(
 
         flow_factory = InstalledAppFlow.from_client_config
     host, port = redirect_host_port()
+    if open_browser and is_termux() and shutil.which("termux-open-url"):
+        # Python's webbrowser finds no browser on Android; Termux's opener hands the URL to the phone's browser.
+        os.environ.setdefault("BROWSER", "termux-open-url %s")
     flow = flow_factory(client_config(), scopes=scopes)
     creds = flow.run_local_server(
         host=host,

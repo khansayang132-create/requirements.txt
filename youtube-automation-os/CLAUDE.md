@@ -18,12 +18,10 @@ You are operating a YouTube publishing toolkit. This file tells you which skill 
 ## Setup (once)
 
 ```bash
-python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt            # add -r requirements-dev.txt for tests
-cp .env.example .env                       # fill GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET; keep YOUTUBE_DRY_RUN=true until ready
-python skills/youtube-auth/scripts/authenticate.py --scopes upload,manage,captions,analytics
+bash youtube-automation-os/scripts/setup.sh          # venv + pinned deps + .env (lock on) + offline self-test; idempotent
+bash youtube-automation-os/scripts/setup.sh check    # lists exactly what is still missing before going live
 ```
-The full Google Cloud setup is in `README.md` → "Google Cloud configuration".
+**Where it goes live:** the owner's phone (Termux), next to the bot. Google's sign-in has to finish in a browser on the device that runs the tool, and this cloud sandbox cannot reach Google's APIs. Give the owner the steps in README → "Go live on your phone (Termux)". Never ask for the client secret or the token in chat; they go into `.env` on the phone. The sign-in port is `127.0.0.1:8091` (8080 is the phone's website).
 
 ## Skill discovery
 

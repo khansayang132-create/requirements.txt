@@ -22,7 +22,7 @@ jobs:
       - run: pip install -r requirements.txt pytest bandit==1.8.6
       - run: python -m pytest -q tests
       - run: pip install ruff==0.17.2 && ruff check agency
-      - run: shellcheck -S warning service/install.sh service/test-service.sh termux/install.sh termux/test-termux.sh scripts/agency-setup.sh scripts/site.sh
+      - run: shellcheck -S warning service/install.sh service/test-service.sh termux/install.sh termux/test-termux.sh scripts/agency-setup.sh scripts/site.sh youtube-automation-os/scripts/setup.sh youtube-automation-os/scripts/test-setup-termux.sh
 
   service:
     strategy:
@@ -182,3 +182,15 @@ jobs:
       - run: pip install -r requirements-dev.txt && pip check
       - run: ruff check .
       - run: python -m pytest -q
+      - name: setup.sh installs, self-tests and is idempotent
+        run: |
+          rm -rf .venv .env
+          bash scripts/setup.sh
+          test "$(stat -c %a .env)" = 600
+          bash scripts/setup.sh | grep -q "Dependencies already installed"
+
+  youtube-termux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - run: docker run --rm --privileged -v "$PWD":/mnt/repo:ro termux/termux-docker:x86_64 bash /mnt/repo/youtube-automation-os/scripts/test-setup-termux.sh

@@ -9,7 +9,7 @@ Build date: 2026-11-09. Python 3.13.18. All results below come from runs in this
 | Level | Result |
 |---|---|
 | 1 Static | `ruff check .` clean; `python -m compileall src skills tests` OK |
-| 2 Unit | part of the 168-test pytest suite, run on Python 3.13.18 and 3.11.18 (validators, retry, quota, state, redaction, captions, metadata) |
+| 2 Unit | part of the 169-test pytest suite, run on Python 3.13.18 and 3.11.18 (validators, retry, quota, state, redaction, captions, metadata) |
 | 3 Integration | in the same suite: the real `google-api-python-client` + `google-auth` with scripted HTTP (resumable protocol, multipart media, OAuth token refresh, analytics) and subprocess runs of the CLIs |
 | CI (GitHub Actions) | `youtube (3.11)` and `youtube (3.13)` jobs green on commit 02f653c (run 42611062419) |
 | 4 Real Google API | **BLOCKED**: no Google Cloud credentials in the build environment, and its network policy denies `developers.google.com` (and Google APIs were not attempted). Nothing was uploaded to YouTube. |
@@ -42,10 +42,15 @@ Build date: 2026-11-09. Python 3.13.18. All results below come from runs in this
 | videos.update merge (nothing silently cleared) | VERIFIED (L2) | `test_merge_keeps_existing_fields` |
 | Delete (`--confirm` + repeated ID) | VERIFIED gate (L2); remote delete IMPLEMENTED | `test_delete_requires_repeating_the_id` |
 | Schedule computation and rules | VERIFIED (L2) | `test_schedule_tomorrow_computation`, `test_schedule_cli_rejects_past_time` |
+| One-command install (`scripts/setup.sh`): venv, deps, `.env` 0600, offline self-test, idempotent re-run | VERIFIED on Linux here (first run ~110 s, re-run 0.6 s); Termux path tested by CI job `youtube-termux` | `youtube` and `youtube-termux` CI jobs |
+| Consent page opens in the phone browser (`termux-open-url`), loopback on 127.0.0.1:8091 (8080 is the phone's website) | VERIFIED (L2) | `test_termux_opens_consent_page_with_phone_browser` |
 | Claude Code skill discovery via `.claude/skills/` links | VERIFIED | A resumed Claude Code session listed all seven `youtube-*` skills as folder-scoped skills ("from youtube-automation-os/.claude/skills — applies when working on files under youtube-automation-os/"); frontmatter also checked by `test_skills_docs.py` |
 
 ## Remaining manual steps (owner)
 
+All of these happen on the phone; README → "Go live on your phone (Termux)" has the exact pastes.
+
+0. Merge the PR, then on the phone: `cd ~/lskhan-bot && git pull --ff-only && bash youtube-automation-os/scripts/setup.sh`.
 1. Create the Google Cloud project, enable both APIs, configure the consent screen and create a **Desktop app** OAuth client (README → Google Cloud configuration).
 2. Fill `.env`, run `authenticate.py --scopes upload,manage,captions,analytics`, then `validate_auth.py --live`.
 3. Run the pipeline with `--dry-run` on a real video, set `YOUTUBE_DRY_RUN=false`, then run `--confirm` with `privacy: private`.

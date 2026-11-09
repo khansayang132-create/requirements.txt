@@ -25,7 +25,7 @@ Every other YouTube skill needs a valid token with the right scopes. This skill 
 - A browser on the **same device** for the one-time consent screen.
 
 ## 6. Optional inputs
-- `GOOGLE_REDIRECT_URI` (default `http://localhost:8080/`; must be a loopback URL).
+- `GOOGLE_REDIRECT_URI` (default `http://127.0.0.1:8091/`; must be a loopback URL. Not 8080: the phone website uses it).
 - `GOOGLE_TOKEN_PATH` (default `token.json` in the toolkit root).
 - `--scopes` profiles from `config/scopes.yaml`: `upload`, `manage`, `captions`, `readonly`, `analytics`.
 
