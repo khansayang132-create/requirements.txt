@@ -13,15 +13,15 @@ done
 rm -rf "$HOME/yt"; cp -r /mnt/repo/youtube-automation-os "$HOME/yt"; cd "$HOME/yt"
 rm -rf .venv .env token.json
 
-bash scripts/setup.sh | tee /tmp/first.log
-grep -q "Self-test passed" /tmp/first.log
+bash scripts/setup.sh | tee "$HOME/first.log"
+grep -q "Self-test passed" "$HOME/first.log"
 test "$(stat -c %a .env)" = 600
 grep -q '^YOUTUBE_DRY_RUN=true$' .env
 
 # Idempotent: second run installs nothing and keeps .env.
 echo "# keep me" >> .env
-bash scripts/setup.sh | tee /tmp/second.log
-grep -q "Dependencies already installed" /tmp/second.log
+bash scripts/setup.sh | tee "$HOME/second.log"
+grep -q "Dependencies already installed" "$HOME/second.log"
 grep -q "# keep me" .env
 
 bash scripts/setup.sh check | grep -q "Authorize once"
