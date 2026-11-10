@@ -1,0 +1,34 @@
+# Pipeline config for skills/youtube-pipeline/scripts/pipeline.py
+# Relative paths are relative to THIS file's folder.
+
+video:
+  file: ../data/videos/sample.mp4        # replace with your video
+  idempotency_key: null                  # optional; the job ID is derived from the file hash
+
+metadata:
+  topic_file: ../data/topics/sample_topic.yaml   # generate title/description/tags from this
+  # Explicit values below override generated ones (leave null to keep generated):
+  title: null
+  description: null
+  tags: []
+  category_id: null
+
+publish:
+  privacy: private                       # private | unlisted | public
+  publish_at: null                       # e.g. "2026-11-10T19:00:00+07:00" (requires privacy: private)
+  made_for_kids: false                   # must be explicit (COPPA)
+  notify_subscribers: true
+  default_language: id
+
+thumbnail:
+  file: ../data/thumbnails/sample.jpg    # JPEG/PNG, <= 2 MB, 1280x720 recommended
+  strict: false
+
+transcript:
+  enabled: true
+  source: file                           # file | whisper (whisper needs requirements-whisper.txt + ffmpeg)
+  file: ../data/transcripts/sample.srt
+  language: id
+  name: "Bahasa Indonesia"
+  upload: true                           # upload as a caption track after the video (captions.insert, 400 units)
+  draft: false

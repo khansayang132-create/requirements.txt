@@ -22,7 +22,7 @@ jobs:
       - run: pip install -r requirements.txt pytest bandit==1.8.6
       - run: python -m pytest -q tests
       - run: pip install ruff==0.17.2 && ruff check agency
-      - run: shellcheck -S warning service/install.sh service/test-service.sh termux/install.sh termux/test-termux.sh scripts/agency-setup.sh scripts/site.sh
+      - run: shellcheck -S warning service/install.sh service/test-service.sh termux/install.sh termux/test-termux.sh scripts/agency-setup.sh scripts/site.sh youtube-automation-os/scripts/setup.sh youtube-automation-os/scripts/test-setup-termux.sh
 
   service:
     strategy:
@@ -147,7 +147,13 @@ jobs:
       - uses: actions/checkout@v5
       - run: docker build -t promovent-backend:ci .
       - run: docker build -t promovent-frontend:ci web
-      - run: docker run --rm --entrypoint python promovent-backend:ci -c "import lightgbm, promovent.api; print('ok')"
+      # Import check without auto-creating the app (the image runs PROMOVENT_ENV=production, which
+      # correctly refuses to start without PROMOVENT_API_KEYS) ...
+      - run: docker run --rm -e PROMOVENT_NO_AUTOAPP=1 --entrypoint python promovent-backend:ci -c "import lightgbm, promovent.api; print('ok')"
+      # ... and prove that production guard still fails closed.
+      - run: |
+          out=$(docker run --rm --entrypoint python promovent-backend:ci -c "import promovent.api" 2>&1) && { echo "production started without API keys"; exit 1; }
+          echo "$out" | grep -q "requires PROMOVENT_API_KEYS" && echo "guard ok"
 
   design:
     runs-on: ubuntu-latest
@@ -158,3 +164,33 @@ jobs:
           node-version: "22"
       - run: npm i -g playwright@1.49.1 && npx -y playwright@1.49.1 install --with-deps chromium
       - run: node --test .claude/skills/design-check/scripts/check.test.mjs
+
+  youtube:
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.13"]
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: youtube-automation-os
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: pip install -r requirements-dev.txt && pip check
+      - run: ruff check .
+      - run: python -m pytest -q
+      - name: setup.sh installs, self-tests and is idempotent
+        run: |
+          rm -rf .venv .env
+          bash scripts/setup.sh
+          test "$(stat -c %a .env)" = 600
+          bash scripts/setup.sh | grep -q "Dependencies already installed"
+
+  youtube-termux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - run: docker run --rm --privileged -v "$PWD":/mnt/repo:ro termux/termux-docker:x86_64 bash /mnt/repo/youtube-automation-os/scripts/test-setup-termux.sh

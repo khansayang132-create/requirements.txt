@@ -1,0 +1,21 @@
+# Secrets — never commit
+.env
+*.token
+token.json
+credentials.json
+client_secret*.json
+
+# Python
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.venv/
+
+# Runtime output
+logs/*
+!logs/.gitkeep
+state/*.json
+state/jobs/
+state/reports/
+!state/.gitkeep
+data/topics/out/

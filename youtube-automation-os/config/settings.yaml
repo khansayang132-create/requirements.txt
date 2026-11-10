@@ -1,0 +1,91 @@
+# YouTube Automation OS settings. No secrets here: credentials live in .env / token.json.
+
+paths:
+  state_dir: state          # job state, quota ledger, duplicate index, reports
+  log_dir: logs             # logs/ytaos.jsonl (structured, redacted)
+  data_dir: data
+
+defaults:
+  privacy: private          # overridden by YOUTUBE_DEFAULT_PRIVACY
+  category_id: "22"         # People & Blogs; overridden by YOUTUBE_DEFAULT_CATEGORY
+  made_for_kids: false      # must be an explicit true/false on every upload
+  default_language: null    # e.g. "id" or "en"
+  notify_subscribers: true
+
+upload:
+  chunk_size_mb: 8          # resumable chunk size; Google requires multiples of 256 KiB
+  verify_after_upload: true
+
+retry:
+  max_attempts: 5           # total attempts per call, including the first
+  base_delay_seconds: 1.0   # full-jitter backoff: random(0, min(max, base * 2^n))
+  max_delay_seconds: 64.0
+
+thumbnail:
+  strict: false             # true = non-16:9 / non-1280x720 become errors instead of warnings
+
+# Quota costs: VERIFIED against https://developers.google.com/youtube/v3/determine_quota_cost
+# ("Last updated 2026-11-03 UTC", checked 2026-11-09). Update these when Google changes them.
+# videos.insert and search.list now have their OWN buckets: 100 calls/day, 1 per call.
+# The historic "1,600 units per upload" no longer applies.
+quota:
+  warn_ratio: 0.2           # warn when a run would leave < 20 % of a bucket
+  buckets:
+    data_api:     {daily_limit: 10000, unit: units}   # override with YOUTUBE_DAILY_QUOTA
+    videos_insert: {daily_limit: 100, unit: calls}
+    search_list:  {daily_limit: 100, unit: calls}
+    analytics:    {daily_limit: null, unit: queries}  # Analytics API quota is separate; tracked, not capped
+  costs:
+    videos.insert:      {cost: 1, bucket: videos_insert}
+    search.list:        {cost: 1, bucket: search_list}
+    videos.list:        {cost: 1, bucket: data_api}
+    videos.update:      {cost: 50, bucket: data_api}
+    videos.delete:      {cost: 50, bucket: data_api}
+    thumbnails.set:     {cost: 50, bucket: data_api}
+    channels.list:      {cost: 1, bucket: data_api}
+    playlistItems.list: {cost: 1, bucket: data_api}
+    captions.list:      {cost: 50, bucket: data_api}
+    captions.insert:    {cost: 400, bucket: data_api}
+    captions.update:    {cost: 450, bucket: data_api}
+    captions.delete:    {cost: 50, bucket: data_api}
+    # Not listed on the current quota page; 200 is the long-standing documented value. Unverified.
+    captions.download:  {cost: 200, bucket: data_api, verified: false}
+    analytics.reports.query: {cost: 1, bucket: analytics}
+
+metadata:
+  default_language: id
+  max_tags: 15
+  max_hashtags: 5
+  # First template whose result fits in 100 characters wins.
+  title_templates:
+    - "{hook}"
+    - "{topic}"
+  description_template: |
+    {hook}
+
+    {summary}
+
+    {points_block}
+
+    {chapters_block}
+
+    {cta}
+
+    {links_block}
+
+    {disclosure}
+
+    {hashtags_line}
+  default_cta:
+    id: "Kalau kamu di posisi kami, kamu pilih apa? Tulis di komentar ya."
+    en: "What would you do in our place? Tell us in the comments."
+  # Category suggestion: category ID -> keywords (case-insensitive, whole words).
+  category_rules:
+    "27": [tips, tutorial, cara, belajar, panduan, guide, how to, explained, edukasi, persiapan, dokumen]
+    "22": [vlog, kisah, cerita, keluarga, family, story, pernikahan, nikah, marriage, life, daily]
+    "24": [reaction, reaksi, challenge, entertainment, hiburan]
+    "23": [lucu, funny, comedy, kocak, prank]
+    "19": [travel, wisata, trip, jalan-jalan, airport, bandara]
+    "26": [howto, diy, resep, recipe, makeup, fashion]
+    "25": [news, berita, politik, politics]
+    "28": [technology, teknologi, ai, coding, gadget]

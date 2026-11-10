@@ -1,0 +1,17 @@
+# Metadata file for upload.py --metadata (same shape generate_metadata.py writes).
+# Paths are relative to the toolkit root when used with upload.py.
+title: "Aku kira menikah beda negara cuma soal cinta… ternyata aku salah"
+description: |
+  Cerita nyata pasangan Indonesia × Pakistan tentang hal yang tidak terlihat di foto pernikahan.
+
+  Kalau kamu di posisi aku, kamu tetap lanjut atau mundur?
+
+  #NikahBedaNegara #IndonesiaPakistan
+tags:
+  - nikah beda negara
+  - indonesia pakistan
+  - mixed marriage
+category_id: "22"
+privacy: private
+made_for_kids: false
+default_language: id
