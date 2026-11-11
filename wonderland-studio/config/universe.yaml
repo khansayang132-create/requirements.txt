@@ -1,0 +1,152 @@
+# WONDER MEADOW — the original cartoon universe (character bible, environments, voices).
+# The renderer, the voice department and the story engine all read THIS file, so a
+# character looks, sounds and behaves the same in every episode. Change a colour here
+# and every future episode changes with it; nothing is hardcoded elsewhere.
+#
+# Originality: every design below is built from basic shapes by wonderland/render/characters.py.
+# No character, name, logo, song or story from an existing show is used. Names are WORKING
+# names: the owner should run a trademark / YouTube search before launch (see README).
+
+brand:
+  universe: "Wonder Meadow"
+  channel_name: "Wonder Meadow Friends"          # working title; pick the final name in YouTube Studio
+  handle_candidates: ["@WonderMeadowFriends", "@WonderMeadowKids", "@WonderMeadowTV"]
+  tagline: "Gentle little stories for little learners."
+  promise: "Calm, kind, original cartoons for ages 2-5: one small idea per video."
+  language: en
+  palette:
+    sky: "#BFE6FF"
+    meadow: "#8FD67A"
+    meadow_dark: "#6FBF63"
+    sun: "#FFD95A"
+    cream: "#FFF6E3"
+    ink: "#3B3355"           # text and outlines: a soft indigo, never pure black
+    accent: "#FF8FAB"
+  typography: "Fredoka (SIL Open Font License 1.1), bundled in assets/fonts"
+  end_card: "See you next time in Wonder Meadow!"
+
+story_world: >
+  Wonder Meadow is a sunny green meadow with a little pond, a flower garden, a climbing
+  tree and a cozy burrow-house. Five small friends live there. Every day one of them
+  notices one small thing — a colour, a number, a sound, a feeling — and they find out
+  about it together. Nobody is ever in danger, nobody is ever mean, and every problem is
+  the size a preschooler can solve: sharing, waiting, trying again, saying sorry.
+
+narrator:
+  id: narrator
+  name: "Storyteller"
+  description: "Warm, unhurried adult voice. Speaks in short sentences and leaves little pauses."
+  voice:
+    kokoro: {voice: af_heart, speed: 0.90, pitch: 1.0}
+    espeak: {voice: "en-us+f2", rate: 132, pitch: 48}
+    elevenlabs: {voice_id: "", stability: 0.6}
+
+characters:
+  - id: bobo
+    name: Bobo
+    species: bunny
+    role: main
+    age_representation: "about 4 — the curious one who asks 'what is that?'"
+    proportions: {head_ratio: 0.52, height_px: 440, build: "round body, very long upright ears"}
+    colors: {body: "#B9A7F2", belly: "#FFF6E3", inner_ear: "#FFB3C7", accent: "#FFD95A", nose: "#FF8FAB"}
+    facial_features: "Big round eyes set low and wide, tiny pink nose, two small front teeth, pink cheeks."
+    clothing: {accessory: scarf, color: "#FFD95A", note: "a sunny yellow scarf, always"}
+    personality: ["curious", "gentle", "brave in small steps", "loves to count things"]
+    catchphrase: "Ooh! What is that?"
+    signature_moves: ["ear wiggle when thinking", "double hop when happy"]
+    voice:
+      kokoro: {voice: af_nova, speed: 0.95, pitch: 1.14}
+      espeak: {voice: "en-us+f3", rate: 140, pitch: 72}
+      elevenlabs: {voice_id: "", stability: 0.5}
+
+  - id: mimi
+    name: Mimi
+    species: cat
+    role: main
+    age_representation: "about 5 — the careful one who likes things neat"
+    proportions: {head_ratio: 0.52, height_px: 430, build: "round body, pointed ears, long striped tail"}
+    colors: {body: "#FFA95E", belly: "#FFF1DA", inner_ear: "#FFC9D6", accent: "#34C6B5", nose: "#F2708F", stripe: "#E8873A"}
+    facial_features: "Almond-round eyes, pink triangle nose, three whiskers each side, forehead stripes."
+    clothing: {accessory: bow, color: "#34C6B5", note: "a teal bow by her left ear"}
+    personality: ["thoughtful", "tidy", "kind helper", "loves colors and painting"]
+    catchphrase: "Let's look closely."
+    signature_moves: ["tail swish", "little clap when something fits"]
+    voice:
+      kokoro: {voice: af_bella, speed: 0.95, pitch: 1.18}
+      espeak: {voice: "en-us+f4", rate: 142, pitch: 78}
+      elevenlabs: {voice_id: "", stability: 0.5}
+
+  - id: toto
+    name: Toto
+    species: elephant
+    role: main
+    age_representation: "about 5 — the big gentle one who is learning to share"
+    proportions: {head_ratio: 0.5, height_px: 460, build: "sturdy round body, big soft ears, short curly trunk"}
+    colors: {body: "#7EC8F2", belly: "#DDF2FF", inner_ear: "#FFC2D1", accent: "#F26B5E", nose: "#5FAEDB"}
+    facial_features: "Small bright eyes, big round ears with pink insides, short trunk that curls up when happy."
+    clothing: {accessory: bandana, color: "#F26B5E", note: "a red neckerchief"}
+    personality: ["gentle", "strong", "a little shy", "learning to share and take turns"]
+    catchphrase: "We can do it together."
+    signature_moves: ["ear flap", "trunk curl"]
+    voice:
+      kokoro: {voice: am_puck, speed: 0.92, pitch: 1.08}
+      espeak: {voice: "en-us+m3", rate: 132, pitch: 42}
+      elevenlabs: {voice_id: "", stability: 0.55}
+
+  - id: zuzu
+    name: Zuzu
+    species: duck
+    role: supporting
+    age_representation: "about 3 — the littlest, full of bounce and songs"
+    proportions: {head_ratio: 0.55, height_px: 380, build: "small egg-shaped body, little wings, big boots"}
+    colors: {body: "#FFD84A", belly: "#FFF0A8", inner_ear: "#FFD84A", accent: "#4D9DE0", nose: "#FF9A3D"}
+    facial_features: "Round eyes, wide orange beak, three-feather tuft on top."
+    clothing: {accessory: boots, color: "#4D9DE0", note: "blue rain boots for puddles"}
+    personality: ["bouncy", "musical", "giggly", "loves puddles and rhymes"]
+    catchphrase: "Quack-quack, hooray!"
+    signature_moves: ["wing flap", "boot stomp"]
+    voice:
+      kokoro: {voice: af_sky, speed: 1.0, pitch: 1.24}
+      espeak: {voice: "en-us+f5", rate: 148, pitch: 88}
+      elevenlabs: {voice_id: "", stability: 0.45}
+
+  - id: lolo
+    name: Lolo
+    species: bear
+    role: supporting
+    age_representation: "about 4 — the sleepy, cuddly one who loves bedtime and snacks"
+    proportions: {head_ratio: 0.5, height_px: 450, build: "soft round body, round ears, cream muzzle"}
+    colors: {body: "#C98B5B", belly: "#F3D9B5", inner_ear: "#E9B98B", accent: "#5DBB63", nose: "#5A3A2A"}
+    facial_features: "Sleepy round eyes, cream muzzle, dark oval nose, round ears."
+    clothing: {accessory: overalls, color: "#5DBB63", note: "leaf-green overalls"}
+    personality: ["cuddly", "patient", "sleepy", "loves bedtime stories and honey toast"]
+    catchphrase: "Mmm, cozy."
+    signature_moves: ["big stretch", "slow happy sway"]
+    voice:
+      kokoro: {voice: am_michael, speed: 0.9, pitch: 1.1}
+      espeak: {voice: "en-us+m2", rate: 128, pitch: 50}
+      elevenlabs: {voice_id: "", stability: 0.6}
+
+environments:
+  meadow:     {name: "Sunny Meadow",   mood: bright, time: day}
+  garden:     {name: "Flower Garden",  mood: bright, time: day}
+  pond:       {name: "Little Pond",    mood: bright, time: day}
+  hilltop:    {name: "Breezy Hilltop", mood: bright, time: day}
+  forest:     {name: "Friendly Woods", mood: soft,   time: day}
+  rainy:      {name: "Rainy Meadow",   mood: soft,   time: day}
+  playroom:   {name: "Playroom",       mood: warm,   time: day}
+  bathroom:   {name: "Washroom",       mood: warm,   time: day}
+  bedroom:    {name: "Cozy Bedroom",   mood: calm,   time: night}
+  night:      {name: "Starry Meadow",  mood: calm,   time: night}
+
+recurring_series:
+  - {id: colour_walk,   title: "Bobo's Color Walk",      category: A}
+  - {id: count_with_me, title: "Count With Me",           category: A}
+  - {id: shape_spotters, title: "Shape Spotters",         category: A}
+  - {id: meadow_explorers, title: "Meadow Explorers",     category: B}
+  - {id: kind_friends,  title: "Kind Friends",            category: C}
+  - {id: little_habits, title: "Little Habits",           category: D}
+  - {id: sing_along,    title: "Meadow Sing-Along",       category: E}
+  - {id: sleepy_time,   title: "Sleepy Time in the Meadow", category: F}
+  - {id: letter_day,    title: "Letter of the Day",       category: G}
+  - {id: i_wonder,      title: "I Wonder...",             category: H}

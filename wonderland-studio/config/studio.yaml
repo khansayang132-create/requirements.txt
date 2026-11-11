@@ -1,0 +1,98 @@
+# WONDERLAND AI STUDIO — operating configuration. No secrets in this file.
+# Every value here can be changed without touching code.
+
+timezone: Asia/Karachi
+
+# Four publishing slots per day (local time). Each slot draws from its categories,
+# so one day never has two videos of the same kind.
+#   A colors/shapes/numbers  B animal adventures  C friendship  D good habits
+#   E rhymes                 F bedtime            G alphabet    H everyday discoveries
+slots:
+  - {id: 1, time: "09:00", kind: learn,     categories: [A, G]}
+  - {id: 2, time: "13:00", kind: adventure, categories: [B, H]}
+  - {id: 3, time: "17:00", kind: friends,   categories: [C, D]}
+  - {id: 4, time: "21:00", kind: sing_sleep, categories: [E, F]}
+
+# Keep this many days ahead scheduled on YouTube (the production buffer). If a daily
+# run fails, already-scheduled videos still go out on time.
+buffer_days: 2
+# Never hold more than this many finished-but-unpublished videos (stops the factory
+# from piling up episodes while publishing is off or blocked).
+max_unpublished: 12
+
+# Daily operating cycle (local time). In daemon mode a stage does not start before its
+# time; `run-cycle --catch-up` (used by the scheduled workflow) ignores the clock.
+# Voice is recorded at the start of the animation stage because lip-sync needs it.
+cycle:
+  research:   "01:00"
+  script:     "02:00"
+  storyboard: "03:00"
+  voice:      "04:00"
+  animation:  "04:00"
+  sound:      "05:00"
+  edit:       "06:00"
+  qa:         "07:00"
+  seo:        "07:00"
+  compliance: "07:00"
+  publish:    "08:00"
+
+video:
+  width: 1080
+  height: 1920
+  fps: 24
+  crf: 19
+  preset: medium
+  min_seconds: 20
+  max_seconds: 60
+
+audio:
+  # First available provider wins. kokoro = free neural voice (production default),
+  # espeak = free fallback (robotic), elevenlabs = paid (needs authorization below).
+  voice_providers: [kokoro, espeak, elevenlabs]
+  music: true
+  loudness_lufs: -14
+
+story:
+  candidates: 6          # drafts scored per slot
+  format_gap: 6          # a format may not repeat within this many episodes
+  max_similarity: 0.62   # word 3-gram similarity limit against earlier scripts
+  max_regenerations: 2   # new story attempts when quality control fails
+  runway_alert_days: 14  # warn when a slot has fewer unique stories left than this
+
+publishing:
+  # off    = produce only; nothing is uploaded (default until the owner activates)
+  # review = upload only episodes the owner approved (python -m wonderland approve …)
+  # auto   = upload every episode that passed quality control and compliance
+  mode: "off"
+  made_for_kids: true
+  # null = follow YouTube's rule (animation needs no altered/synthetic label). true/false forces it.
+  contains_synthetic_media: null
+  privacy_until_publish: private
+  lead_minutes: 20            # a slot closer than this is moved to the next free day
+  notify_subscribers: true
+  add_to_playlists: true
+  default_language: en
+  youtube_category: {A: "27", G: "27", H: "27", D: "27", B: "1", C: "1", E: "10", F: "1"}
+
+budget:
+  # Paid providers are never used unless this is true AND the limits allow it.
+  paid_providers_authorized: false
+  daily_usd_limit: 0.0
+  monthly_usd_limit: 0.0
+  # Estimated compute cost of the free pipeline (GitHub-hosted runner minutes are free
+  # for public repositories; set your real rate if the repository is private).
+  runner_usd_per_minute: 0.0
+  storage_usd_per_gb_month: 0.0
+
+retry:
+  max_attempts: 4
+  base_delay_seconds: 30
+  max_delay_seconds: 1800
+
+notifications:
+  # Failures are always written to the database and the log. Telegram is optional:
+  # set WONDERLAND_TELEGRAM_TOKEN and WONDERLAND_TELEGRAM_CHAT in the environment.
+  telegram: true
+
+paths:
+  state_dir: state
