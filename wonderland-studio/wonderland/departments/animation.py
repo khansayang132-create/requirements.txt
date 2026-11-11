@@ -65,8 +65,12 @@ def _render_segment(job: tuple) -> dict:
 
 
 def render_video(shots: list[Shot], universe: dict, out_path: Path, work_dir: Path, *, width: int = 1080, height: int = 1920,
-                 fps: int = 24, crf: int = 19, preset: str = "medium", workers: int | None = None) -> dict:
-    """Render all shots and join them. Returns {"frames","seconds","segments","render_seconds","workers"}."""
+                 fps: int = 24, crf: int = 19, preset: str = "medium", workers: int | None = None, backend: str = "auto") -> dict:
+    """Render all shots and join them. Returns {"frames","seconds","segments","render_seconds","workers","backend"}.
+
+    ``backend``: "flat" = the built-in 2D renderer; "three" = real-3D characters; "auto" = three when it is
+    available on this machine, else flat. (Only "flat" exists until the 3D backend lands.)
+    """
     t0 = time.time()
     work_dir.mkdir(parents=True, exist_ok=True)
     starts, t = [], 0.0
@@ -92,7 +96,7 @@ def render_video(shots: list[Shot], universe: dict, out_path: Path, work_dir: Pa
     listing.unlink(missing_ok=True)
     frames = sum(r["frames"] for r in results)
     return {"frames": frames, "seconds": round(frames / fps, 3), "segments": len(results), "workers": workers,
-            "render_seconds": round(time.time() - t0, 1), "width": width, "height": height, "fps": fps}
+            "render_seconds": round(time.time() - t0, 1), "width": width, "height": height, "fps": fps, "backend": "flat"}
 
 
 def character_sheet(universe: dict, out_path: Path, width: int = 1080) -> Path:

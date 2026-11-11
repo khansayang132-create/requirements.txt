@@ -44,7 +44,8 @@ def attach_voices(shots: list[Shot], voices: list[dict], fps: int) -> None:
         shot.voice = Voice(path=v["path"], start=v["start"], duration=v["duration"], envelope=loudness_envelope(x, fps))
 
 
-def build_soundtrack(shots: list[Shot], voices: list[dict], story: dict, seed: int, out_wav: Path, music: bool = True) -> dict:
+def build_soundtrack(shots: list[Shot], voices: list[dict], story: dict, seed: int, out_wav: Path, music: bool = True, *,
+                     universe: dict | None = None, fps: int = 24, report_path: Path | None = None) -> dict:
     total = sum(s.duration for s in shots)
     placed = []
     for v in voices:
