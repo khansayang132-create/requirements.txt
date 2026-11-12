@@ -3,10 +3,11 @@
 A video is uploaded only if every check passes. The checks measure the actual MP4
 with ffprobe/ffmpeg — nothing is assumed from how it was made:
 
-  container/codecs   MP4, H.264 (yuv420p), AAC stereo 44.1 kHz, moov atom first (faststart)
+  container/codecs   MP4, H.264 (yuv420p), AAC stereo 48 kHz at a high bit rate, moov atom first (faststart)
   picture            exact resolution, 9:16, frame rate, no black frames, no blank
                      (single-colour) frames, no long freezes, first frame is a real picture
-  sound              audible throughout (no long silence), loudness near target, no clipping
+  sound              audible throughout (no long silence), integrated loudness within 1 LU of the
+                     target (-14 LUFS), true peak at or below -1.5 dBTP (BS.1770, ffmpeg ebur128)
   timing             duration inside the Shorts window; audio and video the same length
 
 "Looks good / is a nice story" is NOT decided here: content review is the compliance
@@ -78,7 +79,7 @@ def frame_stats(video: Path, times: list[float]) -> list[float]:
 
 
 def technical_qa(video: Path, *, width: int, height: int, fps: int, min_seconds: float, max_seconds: float,
-                 loudness: float = -14.0) -> dict:
+                 loudness: float = -14.0, true_peak: float = -1.5, loudness_tolerance: float = 1.0) -> dict:
     checks: list[dict] = []
 
     def check(name: str, passed: bool, detail: str) -> None:
@@ -103,7 +104,11 @@ def technical_qa(video: Path, *, width: int, height: int, fps: int, min_seconds:
         metrics["fps"] = round(f, 3)
     if a:
         check("audio_codec_aac", a.get("codec_name") == "aac", a.get("codec_name", "?"))
-        check("audio_44100_stereo", a.get("sample_rate") == "44100" and a.get("channels") == 2, f"{a.get('sample_rate')} Hz, {a.get('channels')} ch")
+        check("audio_48000_stereo", a.get("sample_rate") == "48000" and a.get("channels") == 2, f"{a.get('sample_rate')} Hz, {a.get('channels')} ch")
+        br = int(a.get("bit_rate") or 0)
+        metrics["audio_kbps"] = round(br / 1000)
+        # requested 320 kbps; the native AAC encoder spends less on sparse, quiet material, so the floor is 192
+        check("audio_bitrate_high", br >= 192000, f"{br / 1000:.0f} kbps (requested 320, floor 192)")
     check("duration_window", min_seconds <= dur <= max_seconds, f"{dur:.2f}s (want {min_seconds:g}-{max_seconds:g}s)")
     if v and a:
         dv, da = float(v.get("duration", dur)), float(a.get("duration", dur))
@@ -131,8 +136,9 @@ def technical_qa(video: Path, *, width: int, height: int, fps: int, min_seconds:
         lufs = float(m.group(1)) if m else None
         peak = float(pk.group(1)) if pk else None
         metrics.update({"lufs": lufs, "true_peak_dbfs": peak})
-        check("loudness_near_target", lufs is not None and abs(lufs - loudness) <= 2.5, f"{lufs} LUFS (target {loudness:g} ±2.5)")
-        check("no_clipping", peak is not None and peak <= -0.3, f"true peak {peak} dBFS")
+        check("loudness_on_target", lufs is not None and abs(lufs - loudness) <= loudness_tolerance,
+              f"{lufs} LUFS (target {loudness:g} ±{loudness_tolerance:g})")
+        check("true_peak_ceiling", peak is not None and peak <= true_peak, f"true peak {peak} dBTP (ceiling {true_peak:g})")
     return {"ok": all(c["passed"] for c in checks), "checks": checks, "metrics": metrics,
             "failed": [c["name"] for c in checks if not c["passed"]], "scope": "technical only; content review is separate"}
 
