@@ -1,0 +1,9 @@
+{
+  "_comment": "Owner-confirmed prices from each provider's pricing page. null = unknown, and a paid step with an unknown price is refused. Units: voice = characters, avatar/video = seconds, image = images.",
+  "elevenlabs": {"voice": {"usd_per_unit": null, "unit": "character"}},
+  "heygen": {"avatar": {"usd_per_unit": null, "unit": "second"}},
+  "did": {"avatar": {"usd_per_unit": null, "unit": "second"}},
+  "synthesia": {"avatar": {"usd_per_unit": null, "unit": "second"}},
+  "runway": {"image": {"usd_per_unit": null, "unit": "image"}, "video": {"usd_per_unit": null, "unit": "second"}},
+  "higgsfield": {"image": {"usd_per_unit": null, "unit": "image"}, "video": {"usd_per_unit": null, "unit": "second"}}
+}

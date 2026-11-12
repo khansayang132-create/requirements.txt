@@ -208,6 +208,27 @@ jobs:
           path: wl-sample/
           if-no-files-found: warn
 
+  digital-human-factory:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: digital-human-factory
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - run: sudo apt-get update -q && sudo apt-get install -y -q ffmpeg
+      - run: pip install -e ".[all,dev]" && pip check
+      - run: ruff check src tests
+      - run: python -m pytest -q
+      - name: Dry run end to end (mock provider, no credentials, no spend)
+        run: |
+          dhfactory doctor > doctor.json
+          dhfactory init-job --script scripts/demo-presenter.txt --job ci-demo
+          dhfactory run --job ci-demo
+          dhfactory qc --video rendered-videos/ci-demo/final.mp4 --duration 10
+
   youtube:
     strategy:
       fail-fast: false

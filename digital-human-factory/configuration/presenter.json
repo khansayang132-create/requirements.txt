@@ -1,0 +1,9 @@
+{
+  "_comment": "Provider-specific ids for the presenter. No secrets here. Fill in the provider you use; the pipeline reports exactly what is missing.",
+  "character": {"character_id": "amara-lin", "fictional": true},
+  "elevenlabs": {"voice_id": "", "model_id": "eleven_multilingual_v2"},
+  "heygen": {"avatar_id": "", "voice_id": "", "background": "#e9e9ec"},
+  "did": {"source_url": "", "voice_id": "en-US-JennyNeural"},
+  "synthesia": {"avatar": "", "background": "off_white", "test": true},
+  "music": null
+}

@@ -1,6 +1,6 @@
 {
   "duplicates": {},
-  "generated_at": "2026-11-12T14:34:01+00:00",
+  "generated_at": "2026-11-12T20:19:24+00:00",
   "skills": [
     {
       "allowed_tools": "",
@@ -73,6 +73,20 @@
         "scripts/check.mjs",
         "scripts/check.test.mjs"
       ],
+      "warnings": []
+    },
+    {
+      "allowed_tools": "",
+      "errors": [],
+      "findings": [],
+      "hash_drift": null,
+      "hosts": [],
+      "managed": false,
+      "name": "digital-human-factory",
+      "path": "/home/user/requirements.txt/.claude/skills/digital-human-factory",
+      "risk": "none",
+      "scope": "project",
+      "scripts": [],
       "warnings": []
     },
     {
@@ -924,6 +938,6 @@
     "info": 0,
     "low": 7,
     "medium": 10,
-    "none": 18
+    "none": 19
   }
 }
