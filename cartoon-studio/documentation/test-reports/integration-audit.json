@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "host": {
+    "os": "Linux",
+    "python": "3.13.5"
+  },
+  "integrations": [
+    {
+      "name": "Codex CLI",
+      "status": "BLOCKED",
+      "detail": "codex not found on PATH"
+    },
+    {
+      "name": "Claude Code CLI",
+      "status": "BLOCKED",
+      "detail": "claude not found on PATH"
+    },
+    {
+      "name": "Codex Dev Workflows project contract",
+      "status": "PASS",
+      "detail": "AGENTS.md and .codex/agents found"
+    },
+    {
+      "name": "Voice Notify for Codex",
+      "status": "BLOCKED",
+      "detail": "Linux: Voice Notify setup skill documents macOS/Windows only"
+    },
+    {
+      "name": "Empire LLM for Codex",
+      "status": "NOT_TESTED",
+      "detail": "Local Empire runner/keyring not probed; no credential values inspected and no model request sent"
+    }
+  ],
+  "safety": {
+    "credentials_read": false,
+    "external_model_calls": 0,
+    "paid_calls": 0,
+    "settings_mutated": false
+  }
+}

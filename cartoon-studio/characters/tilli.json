@@ -1,0 +1,94 @@
+{
+  "character_id": "tilli",
+  "name": "Tilli",
+  "role": "friend",
+  "identity": {
+    "species": "sun-moth",
+    "age_category": "young adventurer",
+    "personality": [
+      "optimistic",
+      "bold",
+      "forgetful"
+    ],
+    "background": "A night flier who reads patterns in the stars.",
+    "strengths": [
+      "optimistic",
+      "teamwork"
+    ],
+    "weaknesses": [
+      "forgetful"
+    ],
+    "emotions": "shows feelings openly",
+    "catchphrase": ""
+  },
+  "visual": {
+    "face": "soft rounded muzzle, large readable eyes",
+    "eyes": "large readable eyes",
+    "proportions": "compact stylized proportions",
+    "surface": "velvety matte fur or shell",
+    "clothing": "boots in accent colour #6B8F58",
+    "accessory": "boots",
+    "palette": {
+      "body": "#E7C84F",
+      "belly": "#F2E6C8",
+      "inner_ear": "#F6EABC",
+      "accent": "#6B8F58",
+      "nose": "#9D8115"
+    },
+    "distinctive": "silhouette and markings unique to Tilli",
+    "engine_body": "duck"
+  },
+  "animation": {
+    "walk": "waddle with a little side-to-side tilt",
+    "run": "fast waddle with flapping wings",
+    "talk": "clear mouth shapes and head beats",
+    "expressions": [
+      "happy",
+      "wow",
+      "sad",
+      "thinking"
+    ],
+    "reactions": "small gasp when surprised",
+    "idle": "subtle breathing and blink",
+    "signature_moves": [
+      "one recognizable gesture"
+    ]
+  },
+  "voice": {
+    "kokoro": {
+      "voice": "bf_emma",
+      "speed": 0.92,
+      "pitch": 1.0
+    },
+    "espeak": {
+      "voice": "en-us+m1",
+      "rate": 144,
+      "pitch": 67
+    },
+    "elevenlabs": {
+      "voice_id": "",
+      "stability": 0.5
+    }
+  },
+  "relationships": {
+    "pipkin": "friend",
+    "brindle": "friend",
+    "morrow": "friend",
+    "oakley": "friend"
+  },
+  "reference_sha256": {
+    "reference_front.png": "8415395cd2714f25a8424ee6a755c1d468ef950cdd237bd2e52a9a082617f789",
+    "reference_side.png": "768cbd625963aca7d2c01a5f1e8c902a7ea09451b4f66ea06d8dce1c11e2d248",
+    "reference_back.png": "25278b2bfe1a4683e66790504c6ac4849af7f265f56120c7460a496422fcbd7f",
+    "expression_sheet.png": "36677a16ca4f8e53fbc42af3583de316032d4e9a44bd4fbf0f9683968ebdcb89",
+    "pose_sheet.png": "25bd62139516ad902f4c3e4a91195ee3093f5ccca4ccb4c8561b82ed5df4341d",
+    "color_reference.png": "60e2b47836f5150e954c3d367f830891a55ecc4bba23ab978e890db1647f70e0"
+  },
+  "source": {
+    "format": "cartoon-studio v0.3",
+    "character_json": "character-bibles/tilli/character.json",
+    "character_json_sha256": "6b33712fcd0d4895a20ae840b32ed1585e19cc97b97f38610557efa6feadceda",
+    "v0_3_reference_hash": "8c6e39aa67b38418113a3501359ab1093de97dd361bee205f32d33c30119eb78",
+    "engine_note": "drawn with the engine's duck body: it has no sun-moth model"
+  }
+}

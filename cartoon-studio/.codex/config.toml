@@ -1,0 +1,4 @@
+# Project-local Codex defaults. No model, provider, or paid fallback is pinned.
+# Agent roles live in .codex/agents/*.toml.
+[agents]
+max_threads = 4

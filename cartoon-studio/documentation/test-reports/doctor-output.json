@@ -1,0 +1,62 @@
+[
+  {
+    "component": "blender",
+    "status": "BLOCKED",
+    "detail": "blender is not configured: Blender is not installed (needs `blender` on PATH; a GPU for Eevee at useful speed)"
+  },
+  {
+    "component": "comfyui",
+    "status": "BLOCKED",
+    "detail": "comfyui is not configured: set COMFY_API_KEY in the environment or .env"
+  },
+  {
+    "component": "elevenlabs",
+    "status": "BLOCKED",
+    "detail": "elevenlabs is not configured: set ELEVENLABS_API_KEY in the environment or .env"
+  },
+  {
+    "component": "flux",
+    "status": "BLOCKED",
+    "detail": "flux is not configured: set BFL_API_KEY in the environment or .env"
+  },
+  {
+    "component": "higgsfield",
+    "status": "BLOCKED",
+    "detail": "higgsfield is not configured: set HF_KEY (or HF_API_KEY + HF_API_SECRET)"
+  },
+  {
+    "component": "kling",
+    "status": "BLOCKED",
+    "detail": "kling is not configured: set KLING_ACCESS_KEY + KLING_SECRET_KEY"
+  },
+  {
+    "component": "local",
+    "status": "PASS",
+    "detail": "engine at /home/user/requirements.txt/wonderland-studio; 3D toon renderer ready"
+  },
+  {
+    "component": "runway",
+    "status": "BLOCKED",
+    "detail": "runway is not configured: set RUNWAYML_API_SECRET in the environment or .env"
+  },
+  {
+    "component": "ffmpeg",
+    "status": "PASS",
+    "detail": "/usr/bin/ffmpeg"
+  },
+  {
+    "component": "ffprobe",
+    "status": "PASS",
+    "detail": "/usr/bin/ffprobe"
+  },
+  {
+    "component": "python",
+    "status": "PASS",
+    "detail": "3.13.18"
+  },
+  {
+    "component": "agents",
+    "status": "PASS",
+    "detail": "10 agent classes"
+  }
+]

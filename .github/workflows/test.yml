@@ -229,6 +229,38 @@ jobs:
           dhfactory run --job ci-demo
           dhfactory qc --video rendered-videos/ci-demo/final.mp4 --duration 10
 
+  cartoon-studio:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: cartoon-studio
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - run: sudo apt-get update -q && sudo apt-get install -y -q ffmpeg espeak-ng
+      - run: pip install -e ".[test,voice]" && pip check
+      - run: ruff check src/cartoon_studio/agents src/cartoon_studio/cli.py src/cartoon_studio/generators src/cartoon_studio/providers src/cartoon_studio/bible.py tests/test_v3.py
+      - run: python -m pytest -q
+      - name: Real episode with the local engine (2D, 30 s, no keys, no spend)
+        run: |
+          cartoon-studio doctor
+          cartoon-studio import-universe --id mosslight-valley
+          git diff --exit-code -- universes character-bibles/*/character.json   # owner files untouched
+          cartoon-studio init-characters --universe mosslight-valley --backend flat
+          cartoon-studio write-episode --universe mosslight-valley --plot seed-glow --seconds 30
+          cartoon-studio run --job ci --universe mosslight-valley --episode mosslight-valley-seed-glow-1 --seconds 30 --backend flat --width 540 --height 960
+          cartoon-studio qc --video rendered-videos/ci/final.mp4
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cartoon-studio-ci-episode
+          path: |
+            cartoon-studio/rendered-videos/ci/
+            cartoon-studio/jobs/ci/production_report.json
+          if-no-files-found: warn
+
   youtube:
     strategy:
       fail-fast: false

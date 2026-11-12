@@ -1,0 +1,15 @@
+[hook] Narrator: The storm cloud drifts away. The glow seeds start to shine.
+[hook] Pipkin: The last seed isn't glowing!
+[hook] Tilli: Maybe it needs a little sunshine.
+[introduction] Narrator: Brindle builds a shiny leaf to catch the light.
+[introduction] Brindle: Oops! My brilliant invention has become a boat.
+[development] Oakley: Look! The seed is stuck under a tangled root.
+[development] Morrow: Let's listen before we pull.
+[conflict] Oakley: I can loosen the soil, very gently.
+[conflict] Narrator: Light from Brindle's leaf. Soft soil from Oakley.
+[climax] Narrator: The little seed begins to glow!
+[climax] Pipkin: Together did it!
+[resolution] Tilli: And nobody had to be a superhero.
+[resolution] Narrator: A new sprout opens. Fireflies make a tiny crown.
+[ending] Morrow: Every little light belongs.
+[ending] Tilli: What small thing could you do to help a friend?

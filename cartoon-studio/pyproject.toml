@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+[project]
+name = "cartoon-studio"
+version = "3.0.0"
+description = "Modular original-cartoon production pipeline with explicit provider gates"
+requires-python = ">=3.11"
+dependencies = ["pydantic>=2.7", "pydantic-settings>=2.2", "httpx>=0.27", "python-dotenv>=1.0", "typer>=0.12", "rich>=13.7",
+                "numpy>=1.26", "Pillow>=10", "PyYAML>=6"]   # numpy/Pillow/PyYAML: the local engine (../wonderland-studio)
+[project.optional-dependencies]
+test = ["pytest>=8", "pytest-asyncio>=0.23", "ruff>=0.5"]
+providers = ["runwayml>=5.27", "elevenlabs>=2.78", "comfy-sdk>=0.5", "higgsfield-client>=0.2"]   # official SDKs, only for paid providers
+voice = ["espeakng-loader>=0.2"]
+[project.scripts]
+cartoon-studio = "cartoon_studio.cli:app"
+[tool.setuptools.packages.find]
+where = ["src"]
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+asyncio_default_fixture_loop_scope = "function"
+[tool.ruff]
+line-length = 160
+[tool.ruff.lint.per-file-ignores]
+"src/cartoon_studio/cli.py" = ["B008"]   # typer declares options as defaults

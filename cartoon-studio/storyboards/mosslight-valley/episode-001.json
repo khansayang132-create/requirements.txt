@@ -1,0 +1,45 @@
+{
+  "episode": "The Seed That Wouldn't Shine",
+  "shots": [
+    {
+      "scene": 1,
+      "duration": 8,
+      "camera": "wide establishing \u2192 medium action \u2192 emotional close-up",
+      "lighting": "soft volumetric forest light",
+      "transition": "match cut or gentle dissolve",
+      "sound": "forest ambience + action-specific foley"
+    },
+    {
+      "scene": 2,
+      "duration": 12,
+      "camera": "wide establishing \u2192 medium action \u2192 emotional close-up",
+      "lighting": "soft volumetric forest light",
+      "transition": "match cut or gentle dissolve",
+      "sound": "forest ambience + action-specific foley"
+    },
+    {
+      "scene": 3,
+      "duration": 14,
+      "camera": "wide establishing \u2192 medium action \u2192 emotional close-up",
+      "lighting": "soft volumetric forest light",
+      "transition": "match cut or gentle dissolve",
+      "sound": "forest ambience + action-specific foley"
+    },
+    {
+      "scene": 4,
+      "duration": 16,
+      "camera": "wide establishing \u2192 medium action \u2192 emotional close-up",
+      "lighting": "soft volumetric forest light",
+      "transition": "match cut or gentle dissolve",
+      "sound": "forest ambience + action-specific foley"
+    },
+    {
+      "scene": 5,
+      "duration": 10,
+      "camera": "wide establishing \u2192 medium action \u2192 emotional close-up",
+      "lighting": "soft volumetric forest light",
+      "transition": "match cut or gentle dissolve",
+      "sound": "forest ambience + action-specific foley"
+    }
+  ]
+}

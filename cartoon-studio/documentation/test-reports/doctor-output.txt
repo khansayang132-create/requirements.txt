@@ -1,0 +1,15 @@
+┏━━━━━━━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Component     ┃ Status  ┃ Detail                          ┃
+┡━━━━━━━━━━━━━━━╇━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ Runway        │ BLOCKED │ Missing RUNWAYML_API_SECRET     │
+│ FLUX (BFL)    │ BLOCKED │ Missing BFL_API_KEY             │
+│ ElevenLabs    │ BLOCKED │ Missing ELEVENLABS_API_KEY      │
+│ Kling         │ BLOCKED │ Missing KLING_API_KEY           │
+│ Higgsfield    │ BLOCKED │ Missing HIGGSFIELD_API_KEY      │
+│ ffmpeg        │ PASS    │ /usr/bin/ffmpeg                 │
+│ ffprobe       │ PASS    │ /usr/bin/ffprobe                │
+│ blender       │ BLOCKED │ blender not found on PATH       │
+│ ComfyUI       │ BLOCKED │ COMFYUI_BASE_URL not configured │
+│ Python        │ PASS    │ 3.13.5                          │
+│ Agent classes │ PASS    │ 10 importable classes           │
+└───────────────┴─────────┴─────────────────────────────────┘

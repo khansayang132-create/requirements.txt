@@ -1,0 +1,197 @@
+[
+  {
+    "id": "pipkin",
+    "name": "Pipkin",
+    "species": "moss rabbit",
+    "age_category": "young adventurer",
+    "personality": [
+      "curious",
+      "brave",
+      "impatient"
+    ],
+    "backstory": "A young burrow scout who maps safe paths.",
+    "strengths": [
+      "curious",
+      "teamwork"
+    ],
+    "weaknesses": [
+      "impatient"
+    ],
+    "visual_design": {
+      "face": "soft rounded muzzle, large readable eyes",
+      "body": "compact stylized proportions",
+      "surface": "velvety matte fur or shell",
+      "clothing": "one practical signature accessory",
+      "distinctive_feature": "silhouette and markings unique to Pipkin"
+    },
+    "animation_design": {
+      "walk": "species-specific bouncy gait",
+      "run": "short energetic stride",
+      "idle": "subtle breathing and blink",
+      "talk": "clear mouth shapes and head beats",
+      "signature": "one recognizable gesture"
+    },
+    "palette": {
+      "primary": "#A98AD8",
+      "secondary": "#F2E6C8",
+      "accent": "#6B8F58"
+    },
+    "reference_hash": "f64fa9680d810c1c7dd33efa0fb31ea81e433950d5533aafa19c5be1b67b7df1"
+  },
+  {
+    "id": "brindle",
+    "name": "Brindle",
+    "species": "mushroom fox",
+    "age_category": "young adventurer",
+    "personality": [
+      "inventive",
+      "witty",
+      "restless"
+    ],
+    "backstory": "A tinkerer who builds tools from fallen twigs.",
+    "strengths": [
+      "inventive",
+      "teamwork"
+    ],
+    "weaknesses": [
+      "restless"
+    ],
+    "visual_design": {
+      "face": "soft rounded muzzle, large readable eyes",
+      "body": "compact stylized proportions",
+      "surface": "velvety matte fur or shell",
+      "clothing": "one practical signature accessory",
+      "distinctive_feature": "silhouette and markings unique to Brindle"
+    },
+    "animation_design": {
+      "walk": "species-specific bouncy gait",
+      "run": "short energetic stride",
+      "idle": "subtle breathing and blink",
+      "talk": "clear mouth shapes and head beats",
+      "signature": "one recognizable gesture"
+    },
+    "palette": {
+      "primary": "#D98255",
+      "secondary": "#F2E6C8",
+      "accent": "#6B8F58"
+    },
+    "reference_hash": "b6e34a20499315f93d48deb8a21bae070d75dfeeaa6a333eb65318ef97735e07"
+  },
+  {
+    "id": "morrow",
+    "name": "Morrow",
+    "species": "pond turtle",
+    "age_category": "young adventurer",
+    "personality": [
+      "patient",
+      "thoughtful",
+      "gentle"
+    ],
+    "backstory": "A keeper of old forest stories.",
+    "strengths": [
+      "patient",
+      "teamwork"
+    ],
+    "weaknesses": [
+      "gentle"
+    ],
+    "visual_design": {
+      "face": "soft rounded muzzle, large readable eyes",
+      "body": "compact stylized proportions",
+      "surface": "velvety matte fur or shell",
+      "clothing": "one practical signature accessory",
+      "distinctive_feature": "silhouette and markings unique to Morrow"
+    },
+    "animation_design": {
+      "walk": "species-specific bouncy gait",
+      "run": "short energetic stride",
+      "idle": "subtle breathing and blink",
+      "talk": "clear mouth shapes and head beats",
+      "signature": "one recognizable gesture"
+    },
+    "palette": {
+      "primary": "#4C9DB0",
+      "secondary": "#F2E6C8",
+      "accent": "#6B8F58"
+    },
+    "reference_hash": "6a844e04e850f4bc591ab554ad6ffab5ec9a5698a8e5ccc7e4df2f8d36ae47ac"
+  },
+  {
+    "id": "tilli",
+    "name": "Tilli",
+    "species": "sun-moth",
+    "age_category": "young adventurer",
+    "personality": [
+      "optimistic",
+      "bold",
+      "forgetful"
+    ],
+    "backstory": "A night flier who reads patterns in the stars.",
+    "strengths": [
+      "optimistic",
+      "teamwork"
+    ],
+    "weaknesses": [
+      "forgetful"
+    ],
+    "visual_design": {
+      "face": "soft rounded muzzle, large readable eyes",
+      "body": "compact stylized proportions",
+      "surface": "velvety matte fur or shell",
+      "clothing": "one practical signature accessory",
+      "distinctive_feature": "silhouette and markings unique to Tilli"
+    },
+    "animation_design": {
+      "walk": "species-specific bouncy gait",
+      "run": "short energetic stride",
+      "idle": "subtle breathing and blink",
+      "talk": "clear mouth shapes and head beats",
+      "signature": "one recognizable gesture"
+    },
+    "palette": {
+      "primary": "#E7C84F",
+      "secondary": "#F2E6C8",
+      "accent": "#6B8F58"
+    },
+    "reference_hash": "8c6e39aa67b38418113a3501359ab1093de97dd361bee205f32d33c30119eb78"
+  },
+  {
+    "id": "oakley",
+    "name": "Oakley",
+    "species": "acorn badger",
+    "age_category": "young adventurer",
+    "personality": [
+      "loyal",
+      "careful",
+      "shy"
+    ],
+    "backstory": "A gardener who knows every root in the valley.",
+    "strengths": [
+      "loyal",
+      "teamwork"
+    ],
+    "weaknesses": [
+      "shy"
+    ],
+    "visual_design": {
+      "face": "soft rounded muzzle, large readable eyes",
+      "body": "compact stylized proportions",
+      "surface": "velvety matte fur or shell",
+      "clothing": "one practical signature accessory",
+      "distinctive_feature": "silhouette and markings unique to Oakley"
+    },
+    "animation_design": {
+      "walk": "species-specific bouncy gait",
+      "run": "short energetic stride",
+      "idle": "subtle breathing and blink",
+      "talk": "clear mouth shapes and head beats",
+      "signature": "one recognizable gesture"
+    },
+    "palette": {
+      "primary": "#8A654B",
+      "secondary": "#F2E6C8",
+      "accent": "#6B8F58"
+    },
+    "reference_hash": "27bf9a83aff3426e6ec866a66aa9aee7c306a1898b6b4b115c4cc12a222545af"
+  }
+]

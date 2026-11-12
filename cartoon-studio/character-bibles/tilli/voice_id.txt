@@ -1,0 +1,16 @@
+{
+  "kokoro": {
+    "voice": "bf_emma",
+    "speed": 0.92,
+    "pitch": 1.0
+  },
+  "espeak": {
+    "voice": "en-us+m1",
+    "rate": 144,
+    "pitch": 67
+  },
+  "elevenlabs": {
+    "voice_id": "",
+    "stability": 0.5
+  }
+}

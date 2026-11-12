@@ -1,0 +1,97 @@
+{
+  "character_id": "pipkin",
+  "name": "Pipkin",
+  "role": "lead",
+  "identity": {
+    "species": "moss rabbit",
+    "age_category": "young adventurer",
+    "personality": [
+      "curious",
+      "brave",
+      "impatient"
+    ],
+    "background": "A young burrow scout who maps safe paths.",
+    "strengths": [
+      "curious",
+      "teamwork"
+    ],
+    "weaknesses": [
+      "impatient"
+    ],
+    "emotions": "shows feelings openly",
+    "catchphrase": ""
+  },
+  "visual": {
+    "face": "soft rounded muzzle, large readable eyes",
+    "eyes": "large readable eyes",
+    "proportions": "compact stylized proportions",
+    "surface": "velvety matte fur or shell",
+    "clothing": "scarf in accent colour #6B8F58",
+    "accessory": "scarf",
+    "palette": {
+      "body": "#A98AD8",
+      "belly": "#F2E6C8",
+      "inner_ear": "#D5C6EC",
+      "accent": "#6B8F58",
+      "nose": "#502D86"
+    },
+    "distinctive": "silhouette and markings unique to Pipkin",
+    "engine_body": "bunny"
+  },
+  "animation": {
+    "walk": "springy toe-steps with an ear bounce",
+    "run": "bounding hops",
+    "talk": "clear mouth shapes and head beats",
+    "expressions": [
+      "happy",
+      "wow",
+      "sad",
+      "thinking"
+    ],
+    "reactions": "small gasp when surprised",
+    "idle": "subtle breathing and blink",
+    "signature_moves": [
+      "one recognizable gesture"
+    ]
+  },
+  "voice": {
+    "kokoro": {
+      "voice": "af_bella",
+      "speed": 0.92,
+      "pitch": 1.0
+    },
+    "espeak": {
+      "voice": "en-us+f1",
+      "rate": 135,
+      "pitch": 40
+    },
+    "elevenlabs": {
+      "voice_id": "",
+      "stability": 0.5
+    }
+  },
+  "relationships": {
+    "brindle": "friend",
+    "morrow": "friend",
+    "tilli": "friend",
+    "oakley": "friend"
+  },
+  "reference_sha256": {
+    "reference_front.png": "014da24b322b2365c137e59652c70123480d733cca05602943e5aa0aa03b5dda",
+    "reference_side.png": "6ddee086d045e72e64df3a54bc05ddb06db7368a40cc5b6c46c0f67c0bea7f5a",
+    "reference_back.png": "b963fe83aeac1158c45c579a1df21aa42bbeed080cf56bb00b29da1823c90f72",
+    "expression_sheet.png": "cb0aacb294560c3a417e82ebd5c828937ef154c303f401caf7228fecd7c4090c",
+    "pose_sheet.png": "103909bbb6d3ce82aa725e31664a344fc29dd02cab1eebb15bfe6b7e45f4c583",
+    "color_reference.png": "7e00875e7a61014b7cd12d111798096b5feb439d323cfd58b212f04dd9e24861"
+  },
+  "source": {
+    "format": "cartoon-studio v0.3",
+    "character_json": "character-bibles/pipkin/character.json",
+    "character_json_sha256": "a4d6e506f0fc44dc4dc6838c191343002405e316d887f3c74e5796c99b16daba",
+    "v0_3_reference_hash": "f64fa9680d810c1c7dd33efa0fb31ea81e433950d5533aafa19c5be1b67b7df1",
+    "engine_note": "drawn with the engine's bunny body: it has no moss rabbit model"
+  },
+  "universe_id": "mosslight-valley",
+  "rendered_with": "three",
+  "character_json_sha256": "a4d6e506f0fc44dc4dc6838c191343002405e316d887f3c74e5796c99b16daba"
+}

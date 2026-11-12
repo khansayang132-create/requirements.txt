@@ -1,0 +1,94 @@
+{
+  "character_id": "brindle",
+  "name": "Brindle",
+  "role": "friend",
+  "identity": {
+    "species": "mushroom fox",
+    "age_category": "young adventurer",
+    "personality": [
+      "inventive",
+      "witty",
+      "restless"
+    ],
+    "background": "A tinkerer who builds tools from fallen twigs.",
+    "strengths": [
+      "inventive",
+      "teamwork"
+    ],
+    "weaknesses": [
+      "restless"
+    ],
+    "emotions": "shows feelings openly",
+    "catchphrase": ""
+  },
+  "visual": {
+    "face": "soft rounded muzzle, large readable eyes",
+    "eyes": "large readable eyes",
+    "proportions": "compact stylized proportions",
+    "surface": "velvety matte fur or shell",
+    "clothing": "bow in accent colour #6B8F58",
+    "accessory": "bow",
+    "palette": {
+      "body": "#D98255",
+      "belly": "#F2E6C8",
+      "inner_ear": "#F1D1C0",
+      "accent": "#6B8F58",
+      "nose": "#924721"
+    },
+    "distinctive": "silhouette and markings unique to Brindle",
+    "engine_body": "cat"
+  },
+  "animation": {
+    "walk": "light, careful paws and a swishing tail",
+    "run": "quick scamper, tail up",
+    "talk": "clear mouth shapes and head beats",
+    "expressions": [
+      "happy",
+      "wow",
+      "sad",
+      "thinking"
+    ],
+    "reactions": "small gasp when surprised",
+    "idle": "subtle breathing and blink",
+    "signature_moves": [
+      "one recognizable gesture"
+    ]
+  },
+  "voice": {
+    "kokoro": {
+      "voice": "af_sky",
+      "speed": 0.92,
+      "pitch": 1.0
+    },
+    "espeak": {
+      "voice": "en-us+m3",
+      "rate": 138,
+      "pitch": 49
+    },
+    "elevenlabs": {
+      "voice_id": "",
+      "stability": 0.5
+    }
+  },
+  "relationships": {
+    "pipkin": "friend",
+    "morrow": "friend",
+    "tilli": "friend",
+    "oakley": "friend"
+  },
+  "reference_sha256": {
+    "reference_front.png": "3e418c1c73447152f17cd0966d54bb0be1c2efbe8d07221284aed27d9d4e0998",
+    "reference_side.png": "5645a61643765a4bfa4856b1ac13d9d4e267c5314ac6f7cedd4947eeb98e5f7d",
+    "reference_back.png": "403417a16a0694558412e7b37dfe108046d2087002e371de2db804210350d5c0",
+    "expression_sheet.png": "462a90823fc4d5269c85858da4c1019c6b5e1262d4652822a1023ee0169eba8e",
+    "pose_sheet.png": "7128b627d2cf24966509676b551d4d20ad22f45480041a0937c4cfe2b06dde43",
+    "color_reference.png": "ebecb9e68485f070aaa82536a0eecd43e370acaf3335ac3808b9cf601efc2683"
+  },
+  "source": {
+    "format": "cartoon-studio v0.3",
+    "character_json": "character-bibles/brindle/character.json",
+    "character_json_sha256": "72c5a27236f0a9963ba58d2971392269094254819056552f65c3a1d2d6919abb",
+    "v0_3_reference_hash": "b6e34a20499315f93d48deb8a21bae070d75dfeeaa6a333eb65318ef97735e07",
+    "engine_note": "drawn with the engine's cat body: it has no mushroom fox model"
+  }
+}

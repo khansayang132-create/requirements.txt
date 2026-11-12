@@ -1,0 +1,80 @@
+{
+  "title": "The Seed That Wouldn't Shine",
+  "duration_seconds": 60,
+  "age_range": "5\u20139",
+  "moral": "A small contribution can matter when everyone works together.",
+  "scenes": [
+    {
+      "number": 1,
+      "duration": 8,
+      "location": "Fernbridge clearing",
+      "action": "A storm cloud passes; one glow-seed remains dark.",
+      "dialogue": [
+        [
+          "Pipkin",
+          "The last seed isn't glowing!"
+        ],
+        [
+          "Tilli",
+          "Maybe it needs a little sunshine."
+        ]
+      ]
+    },
+    {
+      "number": 2,
+      "duration": 12,
+      "location": "Mossy creek",
+      "action": "Brindle builds a leaf reflector, but it slips into the water.",
+      "dialogue": [
+        [
+          "Brindle",
+          "My brilliant invention has become a boat."
+        ]
+      ]
+    },
+    {
+      "number": 3,
+      "duration": 14,
+      "location": "Root garden",
+      "action": "Oakley finds the seed is buried under a tangled root; Morrow suggests asking the roots gently.",
+      "dialogue": [
+        [
+          "Morrow",
+          "Let's listen before we pull."
+        ],
+        [
+          "Oakley",
+          "I can loosen the soil."
+        ]
+      ]
+    },
+    {
+      "number": 4,
+      "duration": 16,
+      "location": "Fernbridge clearing",
+      "action": "The friends combine reflected light, careful digging, and Tilli's wingbeat; the seed glows.",
+      "dialogue": [
+        [
+          "Pipkin",
+          "Together did it!"
+        ],
+        [
+          "Tilli",
+          "And nobody had to be a superhero."
+        ]
+      ]
+    },
+    {
+      "number": 5,
+      "duration": 10,
+      "location": "Valley panorama",
+      "action": "A new sprout unfurls; the friends celebrate as fireflies form a tiny crown.",
+      "dialogue": [
+        [
+          "Morrow",
+          "Every little light belongs."
+        ]
+      ]
+    }
+  ]
+}

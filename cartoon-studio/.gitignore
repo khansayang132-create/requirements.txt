@@ -1,0 +1,9 @@
+.venv/
+.env
+jobs/
+scenes/
+animations/
+voices/
+**/__pycache__/
+*.egg-info/
+rendered-videos/*/final.mp4

@@ -1,0 +1,97 @@
+{
+  "character_id": "morrow",
+  "name": "Morrow",
+  "role": "friend",
+  "identity": {
+    "species": "pond turtle",
+    "age_category": "young adventurer",
+    "personality": [
+      "patient",
+      "thoughtful",
+      "gentle"
+    ],
+    "background": "A keeper of old forest stories.",
+    "strengths": [
+      "patient",
+      "teamwork"
+    ],
+    "weaknesses": [
+      "gentle"
+    ],
+    "emotions": "shows feelings openly",
+    "catchphrase": ""
+  },
+  "visual": {
+    "face": "soft rounded muzzle, large readable eyes",
+    "eyes": "large readable eyes",
+    "proportions": "compact stylized proportions",
+    "surface": "velvety matte fur or shell",
+    "clothing": "bandana in accent colour #6B8F58",
+    "accessory": "bandana",
+    "palette": {
+      "body": "#4C9DB0",
+      "belly": "#F2E6C8",
+      "inner_ear": "#CAE2E8",
+      "accent": "#6B8F58",
+      "nose": "#366F7D"
+    },
+    "distinctive": "silhouette and markings unique to Morrow",
+    "engine_body": "elephant"
+  },
+  "animation": {
+    "walk": "slow, heavy-but-soft steps, trunk swaying",
+    "run": "lumbering jog, ears flapping",
+    "talk": "clear mouth shapes and head beats",
+    "expressions": [
+      "happy",
+      "wow",
+      "sad",
+      "thinking"
+    ],
+    "reactions": "small gasp when surprised",
+    "idle": "subtle breathing and blink",
+    "signature_moves": [
+      "one recognizable gesture"
+    ]
+  },
+  "voice": {
+    "kokoro": {
+      "voice": "am_adam",
+      "speed": 0.92,
+      "pitch": 1.0
+    },
+    "espeak": {
+      "voice": "en-us+f4",
+      "rate": 141,
+      "pitch": 58
+    },
+    "elevenlabs": {
+      "voice_id": "",
+      "stability": 0.5
+    }
+  },
+  "relationships": {
+    "pipkin": "friend",
+    "brindle": "friend",
+    "tilli": "friend",
+    "oakley": "friend"
+  },
+  "reference_sha256": {
+    "reference_front.png": "e5e46e70c2649e69101b0299ed99f63422cfec381509ece2b0d430519f37ba65",
+    "reference_side.png": "3df1f93ce5c789104546362dfc3ee5382041cd3cd3c95a97ef4cf4d2e3e65296",
+    "reference_back.png": "6a1bb0b2ca6d1d2c0028100306a3fee940ce03372d017e4e0e3f9a806843677d",
+    "expression_sheet.png": "30f492c0e86eeecf5cee5f82497d4640896edbe1be60fa1b02b311067e8e64e7",
+    "pose_sheet.png": "23513e42c2805f67a9f1ea8fabb192bf5d346c7da75356f915781e1a36de520a",
+    "color_reference.png": "877c6fb69f3e0d9e6ebaa7bb3ae884d400c1ce4dd593805724a7eab40207eec5"
+  },
+  "source": {
+    "format": "cartoon-studio v0.3",
+    "character_json": "character-bibles/morrow/character.json",
+    "character_json_sha256": "62fdaa9b3e2348f8e86f675c723d3bbf937a9585f902ded5f1f63e270713406b",
+    "v0_3_reference_hash": "6a844e04e850f4bc591ab554ad6ffab5ec9a5698a8e5ccc7e4df2f8d36ae47ac",
+    "engine_note": "drawn with the engine's elephant body: it has no pond turtle model"
+  },
+  "universe_id": "mosslight-valley",
+  "rendered_with": "three",
+  "character_json_sha256": "62fdaa9b3e2348f8e86f675c723d3bbf937a9585f902ded5f1f63e270713406b"
+}

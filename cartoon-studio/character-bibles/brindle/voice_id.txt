@@ -1,0 +1,16 @@
+{
+  "kokoro": {
+    "voice": "af_sky",
+    "speed": 0.92,
+    "pitch": 1.0
+  },
+  "espeak": {
+    "voice": "en-us+m3",
+    "rate": 138,
+    "pitch": 49
+  },
+  "elevenlabs": {
+    "voice_id": "",
+    "stability": 0.5
+  }
+}

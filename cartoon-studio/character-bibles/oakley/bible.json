@@ -1,0 +1,97 @@
+{
+  "character_id": "oakley",
+  "name": "Oakley",
+  "role": "friend",
+  "identity": {
+    "species": "acorn badger",
+    "age_category": "young adventurer",
+    "personality": [
+      "loyal",
+      "careful",
+      "shy"
+    ],
+    "background": "A gardener who knows every root in the valley.",
+    "strengths": [
+      "loyal",
+      "teamwork"
+    ],
+    "weaknesses": [
+      "shy"
+    ],
+    "emotions": "shows feelings openly",
+    "catchphrase": ""
+  },
+  "visual": {
+    "face": "soft rounded muzzle, large readable eyes",
+    "eyes": "large readable eyes",
+    "proportions": "compact stylized proportions",
+    "surface": "velvety matte fur or shell",
+    "clothing": "overalls in accent colour #6B8F58",
+    "accessory": "overalls",
+    "palette": {
+      "body": "#8A654B",
+      "belly": "#F2E6C8",
+      "inner_ear": "#E4D7CD",
+      "accent": "#6B8F58",
+      "nose": "#74553F"
+    },
+    "distinctive": "silhouette and markings unique to Oakley",
+    "engine_body": "bear"
+  },
+  "animation": {
+    "walk": "rolling steps, big friendly arm swings",
+    "run": "galumphing run",
+    "talk": "clear mouth shapes and head beats",
+    "expressions": [
+      "happy",
+      "wow",
+      "sad",
+      "thinking"
+    ],
+    "reactions": "small gasp when surprised",
+    "idle": "subtle breathing and blink",
+    "signature_moves": [
+      "one recognizable gesture"
+    ]
+  },
+  "voice": {
+    "kokoro": {
+      "voice": "am_michael",
+      "speed": 0.92,
+      "pitch": 1.0
+    },
+    "espeak": {
+      "voice": "en-us+f5",
+      "rate": 147,
+      "pitch": 76
+    },
+    "elevenlabs": {
+      "voice_id": "",
+      "stability": 0.5
+    }
+  },
+  "relationships": {
+    "pipkin": "friend",
+    "brindle": "friend",
+    "morrow": "friend",
+    "tilli": "friend"
+  },
+  "reference_sha256": {
+    "reference_front.png": "213b39d0d05189204b58aada2ca468234092a4b759e1c941aa13c541c8541044",
+    "reference_side.png": "f94af29034015bf69adb781a8a71868b8fb1e39797926b0de84b7706bb30b649",
+    "reference_back.png": "7ff2a77ce7e8364bc12fc8f27c02526481fbd6ebf274ab25a85f01afc999847a",
+    "expression_sheet.png": "511647b87defacbfce16ba5e52e5927e06bf502889164fca697f3c01f8b0df21",
+    "pose_sheet.png": "73a355406c17aef536b76a1f1072c12c14aecbc8dbae06228a2cdfe116f4f8f8",
+    "color_reference.png": "e3e692d521386cb6c87a622c36832b55b11973147732020eaf90e0fc7c2262b6"
+  },
+  "source": {
+    "format": "cartoon-studio v0.3",
+    "character_json": "character-bibles/oakley/character.json",
+    "character_json_sha256": "2d30cebb1aeca3b51c6e59af584cb29f99928ba3a4e6c33eb74c18e05617c770",
+    "v0_3_reference_hash": "27bf9a83aff3426e6ec866a66aa9aee7c306a1898b6b4b115c4cc12a222545af",
+    "engine_note": "drawn with the engine's bear body: it has no acorn badger model"
+  },
+  "universe_id": "mosslight-valley",
+  "rendered_with": "three",
+  "character_json_sha256": "2d30cebb1aeca3b51c6e59af584cb29f99928ba3a4e6c33eb74c18e05617c770"
+}

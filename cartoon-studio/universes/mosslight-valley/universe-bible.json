@@ -1,0 +1,505 @@
+{
+  "universe_id": "mosslight-valley",
+  "title": "Mosslight Valley",
+  "concept": "Five tiny keepers protect the glowing seeds that help their forest recover after storms.",
+  "world": "Five tiny keepers protect the glowing seeds that help their forest recover after storms.",
+  "tone": "gentle adventure, humor, curiosity",
+  "audience": "ages 4-8",
+  "world_rules": [
+    "glow-seeds respond to teamwork",
+    "each habitat has its own weather rhythm",
+    "problems are solved without cruelty"
+  ],
+  "places": {
+    "meadow": "Fernbridge clearing",
+    "pond": "Mossy creek",
+    "garden": "Root garden",
+    "hilltop": "Valley panorama"
+  },
+  "recurring_storylines": [],
+  "episode_concepts": [],
+  "characters": [
+    {
+      "character_id": "pipkin",
+      "name": "Pipkin",
+      "role": "lead",
+      "identity": {
+        "species": "moss rabbit",
+        "age_category": "young adventurer",
+        "personality": [
+          "curious",
+          "brave",
+          "impatient"
+        ],
+        "background": "A young burrow scout who maps safe paths.",
+        "strengths": [
+          "curious",
+          "teamwork"
+        ],
+        "weaknesses": [
+          "impatient"
+        ],
+        "emotions": "shows feelings openly",
+        "catchphrase": ""
+      },
+      "visual": {
+        "face": "soft rounded muzzle, large readable eyes",
+        "eyes": "large readable eyes",
+        "proportions": "compact stylized proportions",
+        "surface": "velvety matte fur or shell",
+        "clothing": "scarf in accent colour #6B8F58",
+        "accessory": "scarf",
+        "palette": {
+          "body": "#A98AD8",
+          "belly": "#F2E6C8",
+          "inner_ear": "#D5C6EC",
+          "accent": "#6B8F58",
+          "nose": "#502D86"
+        },
+        "distinctive": "silhouette and markings unique to Pipkin",
+        "engine_body": "bunny"
+      },
+      "animation": {
+        "walk": "springy toe-steps with an ear bounce",
+        "run": "bounding hops",
+        "talk": "clear mouth shapes and head beats",
+        "expressions": [
+          "happy",
+          "wow",
+          "sad",
+          "thinking"
+        ],
+        "reactions": "small gasp when surprised",
+        "idle": "subtle breathing and blink",
+        "signature_moves": [
+          "one recognizable gesture"
+        ]
+      },
+      "voice": {
+        "kokoro": {
+          "voice": "af_bella",
+          "speed": 0.92,
+          "pitch": 1.0
+        },
+        "espeak": {
+          "voice": "en-us+f1",
+          "rate": 135,
+          "pitch": 40
+        },
+        "elevenlabs": {
+          "voice_id": "",
+          "stability": 0.5
+        }
+      },
+      "relationships": {
+        "brindle": "friend",
+        "morrow": "friend",
+        "tilli": "friend",
+        "oakley": "friend"
+      },
+      "reference_sha256": {
+        "reference_front.png": "014da24b322b2365c137e59652c70123480d733cca05602943e5aa0aa03b5dda",
+        "reference_side.png": "6ddee086d045e72e64df3a54bc05ddb06db7368a40cc5b6c46c0f67c0bea7f5a",
+        "reference_back.png": "b963fe83aeac1158c45c579a1df21aa42bbeed080cf56bb00b29da1823c90f72",
+        "expression_sheet.png": "cb0aacb294560c3a417e82ebd5c828937ef154c303f401caf7228fecd7c4090c",
+        "pose_sheet.png": "103909bbb6d3ce82aa725e31664a344fc29dd02cab1eebb15bfe6b7e45f4c583",
+        "color_reference.png": "7e00875e7a61014b7cd12d111798096b5feb439d323cfd58b212f04dd9e24861"
+      },
+      "source": {
+        "format": "cartoon-studio v0.3",
+        "character_json": "character-bibles/pipkin/character.json",
+        "character_json_sha256": "a4d6e506f0fc44dc4dc6838c191343002405e316d887f3c74e5796c99b16daba",
+        "v0_3_reference_hash": "f64fa9680d810c1c7dd33efa0fb31ea81e433950d5533aafa19c5be1b67b7df1",
+        "engine_note": "drawn with the engine's bunny body: it has no moss rabbit model"
+      }
+    },
+    {
+      "character_id": "brindle",
+      "name": "Brindle",
+      "role": "friend",
+      "identity": {
+        "species": "mushroom fox",
+        "age_category": "young adventurer",
+        "personality": [
+          "inventive",
+          "witty",
+          "restless"
+        ],
+        "background": "A tinkerer who builds tools from fallen twigs.",
+        "strengths": [
+          "inventive",
+          "teamwork"
+        ],
+        "weaknesses": [
+          "restless"
+        ],
+        "emotions": "shows feelings openly",
+        "catchphrase": ""
+      },
+      "visual": {
+        "face": "soft rounded muzzle, large readable eyes",
+        "eyes": "large readable eyes",
+        "proportions": "compact stylized proportions",
+        "surface": "velvety matte fur or shell",
+        "clothing": "bow in accent colour #6B8F58",
+        "accessory": "bow",
+        "palette": {
+          "body": "#D98255",
+          "belly": "#F2E6C8",
+          "inner_ear": "#F1D1C0",
+          "accent": "#6B8F58",
+          "nose": "#924721"
+        },
+        "distinctive": "silhouette and markings unique to Brindle",
+        "engine_body": "cat"
+      },
+      "animation": {
+        "walk": "light, careful paws and a swishing tail",
+        "run": "quick scamper, tail up",
+        "talk": "clear mouth shapes and head beats",
+        "expressions": [
+          "happy",
+          "wow",
+          "sad",
+          "thinking"
+        ],
+        "reactions": "small gasp when surprised",
+        "idle": "subtle breathing and blink",
+        "signature_moves": [
+          "one recognizable gesture"
+        ]
+      },
+      "voice": {
+        "kokoro": {
+          "voice": "af_sky",
+          "speed": 0.92,
+          "pitch": 1.0
+        },
+        "espeak": {
+          "voice": "en-us+m3",
+          "rate": 138,
+          "pitch": 49
+        },
+        "elevenlabs": {
+          "voice_id": "",
+          "stability": 0.5
+        }
+      },
+      "relationships": {
+        "pipkin": "friend",
+        "morrow": "friend",
+        "tilli": "friend",
+        "oakley": "friend"
+      },
+      "reference_sha256": {
+        "reference_front.png": "3e418c1c73447152f17cd0966d54bb0be1c2efbe8d07221284aed27d9d4e0998",
+        "reference_side.png": "5645a61643765a4bfa4856b1ac13d9d4e267c5314ac6f7cedd4947eeb98e5f7d",
+        "reference_back.png": "403417a16a0694558412e7b37dfe108046d2087002e371de2db804210350d5c0",
+        "expression_sheet.png": "462a90823fc4d5269c85858da4c1019c6b5e1262d4652822a1023ee0169eba8e",
+        "pose_sheet.png": "7128b627d2cf24966509676b551d4d20ad22f45480041a0937c4cfe2b06dde43",
+        "color_reference.png": "ebecb9e68485f070aaa82536a0eecd43e370acaf3335ac3808b9cf601efc2683"
+      },
+      "source": {
+        "format": "cartoon-studio v0.3",
+        "character_json": "character-bibles/brindle/character.json",
+        "character_json_sha256": "72c5a27236f0a9963ba58d2971392269094254819056552f65c3a1d2d6919abb",
+        "v0_3_reference_hash": "b6e34a20499315f93d48deb8a21bae070d75dfeeaa6a333eb65318ef97735e07",
+        "engine_note": "drawn with the engine's cat body: it has no mushroom fox model"
+      }
+    },
+    {
+      "character_id": "morrow",
+      "name": "Morrow",
+      "role": "friend",
+      "identity": {
+        "species": "pond turtle",
+        "age_category": "young adventurer",
+        "personality": [
+          "patient",
+          "thoughtful",
+          "gentle"
+        ],
+        "background": "A keeper of old forest stories.",
+        "strengths": [
+          "patient",
+          "teamwork"
+        ],
+        "weaknesses": [
+          "gentle"
+        ],
+        "emotions": "shows feelings openly",
+        "catchphrase": ""
+      },
+      "visual": {
+        "face": "soft rounded muzzle, large readable eyes",
+        "eyes": "large readable eyes",
+        "proportions": "compact stylized proportions",
+        "surface": "velvety matte fur or shell",
+        "clothing": "bandana in accent colour #6B8F58",
+        "accessory": "bandana",
+        "palette": {
+          "body": "#4C9DB0",
+          "belly": "#F2E6C8",
+          "inner_ear": "#CAE2E8",
+          "accent": "#6B8F58",
+          "nose": "#366F7D"
+        },
+        "distinctive": "silhouette and markings unique to Morrow",
+        "engine_body": "elephant"
+      },
+      "animation": {
+        "walk": "slow, heavy-but-soft steps, trunk swaying",
+        "run": "lumbering jog, ears flapping",
+        "talk": "clear mouth shapes and head beats",
+        "expressions": [
+          "happy",
+          "wow",
+          "sad",
+          "thinking"
+        ],
+        "reactions": "small gasp when surprised",
+        "idle": "subtle breathing and blink",
+        "signature_moves": [
+          "one recognizable gesture"
+        ]
+      },
+      "voice": {
+        "kokoro": {
+          "voice": "am_adam",
+          "speed": 0.92,
+          "pitch": 1.0
+        },
+        "espeak": {
+          "voice": "en-us+f4",
+          "rate": 141,
+          "pitch": 58
+        },
+        "elevenlabs": {
+          "voice_id": "",
+          "stability": 0.5
+        }
+      },
+      "relationships": {
+        "pipkin": "friend",
+        "brindle": "friend",
+        "tilli": "friend",
+        "oakley": "friend"
+      },
+      "reference_sha256": {
+        "reference_front.png": "e5e46e70c2649e69101b0299ed99f63422cfec381509ece2b0d430519f37ba65",
+        "reference_side.png": "3df1f93ce5c789104546362dfc3ee5382041cd3cd3c95a97ef4cf4d2e3e65296",
+        "reference_back.png": "6a1bb0b2ca6d1d2c0028100306a3fee940ce03372d017e4e0e3f9a806843677d",
+        "expression_sheet.png": "30f492c0e86eeecf5cee5f82497d4640896edbe1be60fa1b02b311067e8e64e7",
+        "pose_sheet.png": "23513e42c2805f67a9f1ea8fabb192bf5d346c7da75356f915781e1a36de520a",
+        "color_reference.png": "877c6fb69f3e0d9e6ebaa7bb3ae884d400c1ce4dd593805724a7eab40207eec5"
+      },
+      "source": {
+        "format": "cartoon-studio v0.3",
+        "character_json": "character-bibles/morrow/character.json",
+        "character_json_sha256": "62fdaa9b3e2348f8e86f675c723d3bbf937a9585f902ded5f1f63e270713406b",
+        "v0_3_reference_hash": "6a844e04e850f4bc591ab554ad6ffab5ec9a5698a8e5ccc7e4df2f8d36ae47ac",
+        "engine_note": "drawn with the engine's elephant body: it has no pond turtle model"
+      }
+    },
+    {
+      "character_id": "tilli",
+      "name": "Tilli",
+      "role": "friend",
+      "identity": {
+        "species": "sun-moth",
+        "age_category": "young adventurer",
+        "personality": [
+          "optimistic",
+          "bold",
+          "forgetful"
+        ],
+        "background": "A night flier who reads patterns in the stars.",
+        "strengths": [
+          "optimistic",
+          "teamwork"
+        ],
+        "weaknesses": [
+          "forgetful"
+        ],
+        "emotions": "shows feelings openly",
+        "catchphrase": ""
+      },
+      "visual": {
+        "face": "soft rounded muzzle, large readable eyes",
+        "eyes": "large readable eyes",
+        "proportions": "compact stylized proportions",
+        "surface": "velvety matte fur or shell",
+        "clothing": "boots in accent colour #6B8F58",
+        "accessory": "boots",
+        "palette": {
+          "body": "#E7C84F",
+          "belly": "#F2E6C8",
+          "inner_ear": "#F6EABC",
+          "accent": "#6B8F58",
+          "nose": "#9D8115"
+        },
+        "distinctive": "silhouette and markings unique to Tilli",
+        "engine_body": "duck"
+      },
+      "animation": {
+        "walk": "waddle with a little side-to-side tilt",
+        "run": "fast waddle with flapping wings",
+        "talk": "clear mouth shapes and head beats",
+        "expressions": [
+          "happy",
+          "wow",
+          "sad",
+          "thinking"
+        ],
+        "reactions": "small gasp when surprised",
+        "idle": "subtle breathing and blink",
+        "signature_moves": [
+          "one recognizable gesture"
+        ]
+      },
+      "voice": {
+        "kokoro": {
+          "voice": "bf_emma",
+          "speed": 0.92,
+          "pitch": 1.0
+        },
+        "espeak": {
+          "voice": "en-us+m1",
+          "rate": 144,
+          "pitch": 67
+        },
+        "elevenlabs": {
+          "voice_id": "",
+          "stability": 0.5
+        }
+      },
+      "relationships": {
+        "pipkin": "friend",
+        "brindle": "friend",
+        "morrow": "friend",
+        "oakley": "friend"
+      },
+      "reference_sha256": {
+        "reference_front.png": "8415395cd2714f25a8424ee6a755c1d468ef950cdd237bd2e52a9a082617f789",
+        "reference_side.png": "768cbd625963aca7d2c01a5f1e8c902a7ea09451b4f66ea06d8dce1c11e2d248",
+        "reference_back.png": "25278b2bfe1a4683e66790504c6ac4849af7f265f56120c7460a496422fcbd7f",
+        "expression_sheet.png": "36677a16ca4f8e53fbc42af3583de316032d4e9a44bd4fbf0f9683968ebdcb89",
+        "pose_sheet.png": "25bd62139516ad902f4c3e4a91195ee3093f5ccca4ccb4c8561b82ed5df4341d",
+        "color_reference.png": "60e2b47836f5150e954c3d367f830891a55ecc4bba23ab978e890db1647f70e0"
+      },
+      "source": {
+        "format": "cartoon-studio v0.3",
+        "character_json": "character-bibles/tilli/character.json",
+        "character_json_sha256": "6b33712fcd0d4895a20ae840b32ed1585e19cc97b97f38610557efa6feadceda",
+        "v0_3_reference_hash": "8c6e39aa67b38418113a3501359ab1093de97dd361bee205f32d33c30119eb78",
+        "engine_note": "drawn with the engine's duck body: it has no sun-moth model"
+      }
+    },
+    {
+      "character_id": "oakley",
+      "name": "Oakley",
+      "role": "friend",
+      "identity": {
+        "species": "acorn badger",
+        "age_category": "young adventurer",
+        "personality": [
+          "loyal",
+          "careful",
+          "shy"
+        ],
+        "background": "A gardener who knows every root in the valley.",
+        "strengths": [
+          "loyal",
+          "teamwork"
+        ],
+        "weaknesses": [
+          "shy"
+        ],
+        "emotions": "shows feelings openly",
+        "catchphrase": ""
+      },
+      "visual": {
+        "face": "soft rounded muzzle, large readable eyes",
+        "eyes": "large readable eyes",
+        "proportions": "compact stylized proportions",
+        "surface": "velvety matte fur or shell",
+        "clothing": "overalls in accent colour #6B8F58",
+        "accessory": "overalls",
+        "palette": {
+          "body": "#8A654B",
+          "belly": "#F2E6C8",
+          "inner_ear": "#E4D7CD",
+          "accent": "#6B8F58",
+          "nose": "#74553F"
+        },
+        "distinctive": "silhouette and markings unique to Oakley",
+        "engine_body": "bear"
+      },
+      "animation": {
+        "walk": "rolling steps, big friendly arm swings",
+        "run": "galumphing run",
+        "talk": "clear mouth shapes and head beats",
+        "expressions": [
+          "happy",
+          "wow",
+          "sad",
+          "thinking"
+        ],
+        "reactions": "small gasp when surprised",
+        "idle": "subtle breathing and blink",
+        "signature_moves": [
+          "one recognizable gesture"
+        ]
+      },
+      "voice": {
+        "kokoro": {
+          "voice": "am_michael",
+          "speed": 0.92,
+          "pitch": 1.0
+        },
+        "espeak": {
+          "voice": "en-us+f5",
+          "rate": 147,
+          "pitch": 76
+        },
+        "elevenlabs": {
+          "voice_id": "",
+          "stability": 0.5
+        }
+      },
+      "relationships": {
+        "pipkin": "friend",
+        "brindle": "friend",
+        "morrow": "friend",
+        "tilli": "friend"
+      },
+      "reference_sha256": {
+        "reference_front.png": "213b39d0d05189204b58aada2ca468234092a4b759e1c941aa13c541c8541044",
+        "reference_side.png": "f94af29034015bf69adb781a8a71868b8fb1e39797926b0de84b7706bb30b649",
+        "reference_back.png": "7ff2a77ce7e8364bc12fc8f27c02526481fbd6ebf274ab25a85f01afc999847a",
+        "expression_sheet.png": "511647b87defacbfce16ba5e52e5927e06bf502889164fca697f3c01f8b0df21",
+        "pose_sheet.png": "73a355406c17aef536b76a1f1072c12c14aecbc8dbae06228a2cdfe116f4f8f8",
+        "color_reference.png": "e3e692d521386cb6c87a622c36832b55b11973147732020eaf90e0fc7c2262b6"
+      },
+      "source": {
+        "format": "cartoon-studio v0.3",
+        "character_json": "character-bibles/oakley/character.json",
+        "character_json_sha256": "2d30cebb1aeca3b51c6e59af584cb29f99928ba3a4e6c33eb74c18e05617c770",
+        "v0_3_reference_hash": "27bf9a83aff3426e6ec866a66aa9aee7c306a1898b6b4b115c4cc12a222545af",
+        "engine_note": "drawn with the engine's bear body: it has no acorn badger model"
+      }
+    }
+  ],
+  "originality": {
+    "source": "owner's v0.3 universe",
+    "note": "Created for this demo; no intentional use of existing franchise characters.",
+    "issues": [],
+    "warnings": [
+      "Pipkin: drawn with the engine's bunny body: it has no moss rabbit model",
+      "Brindle: drawn with the engine's cat body: it has no mushroom fox model",
+      "Morrow: drawn with the engine's elephant body: it has no pond turtle model",
+      "Tilli: drawn with the engine's duck body: it has no sun-moth model",
+      "Oakley: drawn with the engine's bear body: it has no acorn badger model"
+    ]
+  }
+}

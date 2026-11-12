@@ -1,0 +1,12 @@
+{
+  "id": "mosslight-valley",
+  "title": "Mosslight Valley",
+  "premise": "Five tiny keepers protect the glowing seeds that help their forest recover after storms.",
+  "tone": "gentle adventure, humor, curiosity",
+  "world_rules": [
+    "glow-seeds respond to teamwork",
+    "each habitat has its own weather rhythm",
+    "problems are solved without cruelty"
+  ],
+  "originality_note": "Created for this demo; no intentional use of existing franchise characters."
+}

@@ -1,0 +1,16 @@
+{
+  "kokoro": {
+    "voice": "am_michael",
+    "speed": 0.92,
+    "pitch": 1.0
+  },
+  "espeak": {
+    "voice": "en-us+f5",
+    "rate": 147,
+    "pitch": 76
+  },
+  "elevenlabs": {
+    "voice_id": "",
+    "stability": 0.5
+  }
+}

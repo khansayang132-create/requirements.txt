@@ -1,0 +1,16 @@
+{
+  "kokoro": {
+    "voice": "af_bella",
+    "speed": 0.92,
+    "pitch": 1.0
+  },
+  "espeak": {
+    "voice": "en-us+f1",
+    "rate": 135,
+    "pitch": 40
+  },
+  "elevenlabs": {
+    "voice_id": "",
+    "stability": 0.5
+  }
+}

@@ -1,0 +1,136 @@
+{
+  "job_id": "ep001",
+  "final_video": "/home/user/requirements.txt/cartoon-studio/rendered-videos/ep001/final.mp4",
+  "qc": "PASS",
+  "spent_usd": 0.0,
+  "steps": {
+    "01_universe": {
+      "status": "success",
+      "agent": "creative-director",
+      "detail": "{'title': 'Mosslight Valley', 'characters': ['Pipkin', 'Brindle', 'Morrow', 'Tilli', 'Oakley']}",
+      "artifacts": [
+        "/home/user/requirements.txt/cartoon-studio/universes/mosslight-valley/universe-bible.json"
+      ],
+      "cost_usd": 0.0,
+      "finished_at": "2026-11-12T20:47:53Z"
+    },
+    "02_character_bibles": {
+      "status": "success",
+      "agent": "character-designer",
+      "detail": "{'bibles_verified': 5}",
+      "artifacts": [],
+      "cost_usd": 0.0,
+      "finished_at": "2026-11-12T20:47:53Z"
+    },
+    "03_episode_script": {
+      "status": "success",
+      "agent": "story-writer",
+      "detail": "{'title': \"The Seed That Wouldn't Shine\", 'acts': ['climax', 'conflict', 'development', 'ending', 'hook', 'introduction', 'resolution'], 'scenes': 15}",
+      "artifacts": [],
+      "cost_usd": 0.0,
+      "finished_at": "2026-11-12T20:47:53Z"
+    },
+    "04_analyze_script": {
+      "status": "success",
+      "agent": "production-manager",
+      "detail": "{'scenes': 15, 'acts': ['hook', 'hook', 'hook', 'introduction', 'introduction', 'development', 'development', 'conflict', 'conflict', 'climax', 'climax', 'resolution', 'resolution', 'ending', 'ending']}",
+      "artifacts": [],
+      "cost_usd": 0.0,
+      "finished_at": "2026-11-12T20:47:53Z"
+    },
+    "05_storyboard": {
+      "status": "success",
+      "agent": "storyboard-artist",
+      "detail": "{'shots': 15}",
+      "artifacts": [
+        "/home/user/requirements.txt/cartoon-studio/storyboards/mosslight-valley-seed-glow-1.json"
+      ],
+      "cost_usd": 0.0,
+      "finished_at": "2026-11-12T20:47:53Z"
+    },
+    "06_backgrounds": {
+      "status": "success",
+      "agent": "animation-engineer",
+      "detail": "{}",
+      "artifacts": [
+        "/home/user/requirements.txt/cartoon-studio/scenes/ep001/backgrounds/garden.png",
+        "/home/user/requirements.txt/cartoon-studio/scenes/ep001/backgrounds/hilltop.png",
+        "/home/user/requirements.txt/cartoon-studio/scenes/ep001/backgrounds/meadow.png",
+        "/home/user/requirements.txt/cartoon-studio/scenes/ep001/backgrounds/pond.png"
+      ],
+      "cost_usd": 0.0,
+      "finished_at": "2026-11-12T20:47:53Z"
+    },
+    "07_voices": {
+      "status": "success",
+      "agent": "voice-sound-engineer",
+      "detail": "{'providers': ['espeak'], 'lines': 15, 'seconds': 55.0}",
+      "artifacts": [
+        "/home/user/requirements.txt/cartoon-studio/scenes/ep001/storyboard.json"
+      ],
+      "cost_usd": 0.0,
+      "finished_at": "2026-11-12T20:47:54Z"
+    },
+    "08_animation": {
+      "status": "success",
+      "agent": "animation-engineer",
+      "detail": "{'frames': 1320, 'render_seconds': 185.2, 'backend': 'three', 'backend_reason': '3D renderer available: three.js r170 on ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0'}",
+      "artifacts": [
+        "/home/user/requirements.txt/cartoon-studio/animations/ep001-silent.mp4"
+      ],
+      "cost_usd": 0.0,
+      "finished_at": "2026-11-12T20:50:59Z"
+    },
+    "09_external_video_scenes": {
+      "status": "skipped",
+      "agent": "video-generation-engineer",
+      "detail": "{'reason': 'no external video provider selected; the episode is rendered by the local engine'}",
+      "artifacts": [],
+      "cost_usd": 0.0,
+      "finished_at": "2026-11-12T20:50:59Z"
+    },
+    "10_sound_mix": {
+      "status": "success",
+      "agent": "voice-sound-engineer",
+      "detail": "{'seconds': 55.0, 'voice_providers': ['espeak'], 'voice_to_bed_db': 17.33, 'foley_events': 54}",
+      "artifacts": [
+        "/home/user/requirements.txt/cartoon-studio/scenes/ep001/sound.wav",
+        "/home/user/requirements.txt/cartoon-studio/sound-effects/ep001-foley.json"
+      ],
+      "cost_usd": 0.0,
+      "finished_at": "2026-11-12T20:51:03Z"
+    },
+    "11_assembly": {
+      "status": "success",
+      "agent": "cinematic-editor",
+      "detail": "{}",
+      "artifacts": [
+        "/home/user/requirements.txt/cartoon-studio/rendered-videos/ep001/final.mp4",
+        "/home/user/requirements.txt/cartoon-studio/rendered-videos/ep001/final.srt",
+        "/home/user/requirements.txt/cartoon-studio/rendered-videos/ep001/sheet.png"
+      ],
+      "cost_usd": 0.0,
+      "finished_at": "2026-11-12T20:51:12Z"
+    },
+    "12_quality_control": {
+      "status": "success",
+      "agent": "quality-control",
+      "detail": "{'overall': 'PASS'}",
+      "artifacts": [
+        "/home/user/requirements.txt/cartoon-studio/rendered-videos/ep001/qc_report.json"
+      ],
+      "cost_usd": 0.0,
+      "finished_at": "2026-11-12T20:51:17Z"
+    },
+    "13_export": {
+      "status": "success",
+      "agent": "production-manager",
+      "detail": "{'final_video': '/home/user/requirements.txt/cartoon-studio/rendered-videos/ep001/final.mp4', 'qc': 'PASS'}",
+      "artifacts": [
+        "/home/user/requirements.txt/cartoon-studio/rendered-videos/ep001/final.mp4"
+      ],
+      "cost_usd": 0.0,
+      "finished_at": "2026-11-12T20:51:17Z"
+    }
+  }
+}

@@ -1,0 +1,401 @@
+{
+  "episode": "mosslight-valley-seed-glow-1",
+  "scenes": [
+    {
+      "number": 1,
+      "act": "hook",
+      "duration": 0.0,
+      "location": "Fernbridge clearing",
+      "environment": "meadow",
+      "characters": [
+        "Pipkin",
+        "Tilli"
+      ],
+      "actions": {
+        "Pipkin": "nod",
+        "Tilli": "idle"
+      },
+      "dialogue": {
+        "speaker": "Narrator",
+        "text": "The storm cloud drifts away. The glow seeds start to shine."
+      },
+      "camera_angle": "wide establishing",
+      "camera_movement": "slow push-in",
+      "lighting": "warm key 45°, cool fill, teal/orange rims",
+      "background": "painted meadow set",
+      "sound_effects": [
+        "whoosh"
+      ],
+      "music": "bright motif, light",
+      "transition": "cut"
+    },
+    {
+      "number": 2,
+      "act": "hook",
+      "duration": 0.0,
+      "location": "Fernbridge clearing",
+      "environment": "meadow",
+      "characters": [
+        "Pipkin",
+        "Tilli"
+      ],
+      "actions": {
+        "Pipkin": "point",
+        "Tilli": "nod"
+      },
+      "dialogue": {
+        "speaker": "Pipkin",
+        "text": "The last seed isn't glowing!"
+      },
+      "camera_angle": "wide establishing",
+      "camera_movement": "slow push-in",
+      "lighting": "warm key 45°, cool fill, teal/orange rims",
+      "background": "painted meadow set",
+      "sound_effects": [],
+      "music": "bright motif, light",
+      "transition": "cut"
+    },
+    {
+      "number": 3,
+      "act": "hook",
+      "duration": 0.0,
+      "location": "Fernbridge clearing",
+      "environment": "meadow",
+      "characters": [
+        "Pipkin",
+        "Tilli"
+      ],
+      "actions": {
+        "Pipkin": "nod",
+        "Tilli": "look_up"
+      },
+      "dialogue": {
+        "speaker": "Tilli",
+        "text": "Maybe it needs a little sunshine."
+      },
+      "camera_angle": "wide establishing",
+      "camera_movement": "slow push-in",
+      "lighting": "warm key 45°, cool fill, teal/orange rims",
+      "background": "painted meadow set",
+      "sound_effects": [],
+      "music": "bright motif, light",
+      "transition": "cut"
+    },
+    {
+      "number": 4,
+      "act": "introduction",
+      "duration": 0.0,
+      "location": "Mossy creek",
+      "environment": "pond",
+      "characters": [
+        "Brindle",
+        "Pipkin"
+      ],
+      "actions": {
+        "Brindle": "hold_up",
+        "Pipkin": "nod"
+      },
+      "dialogue": {
+        "speaker": "Narrator",
+        "text": "Brindle builds a shiny leaf to catch the light."
+      },
+      "camera_angle": "medium two-shot",
+      "camera_movement": "gentle pan",
+      "lighting": "warm key 45°, cool fill, teal/orange rims",
+      "background": "painted pond set",
+      "sound_effects": [],
+      "music": "theme, bouncy",
+      "transition": "cross-dissolve"
+    },
+    {
+      "number": 5,
+      "act": "introduction",
+      "duration": 0.0,
+      "location": "Mossy creek",
+      "environment": "pond",
+      "characters": [
+        "Brindle",
+        "Pipkin"
+      ],
+      "actions": {
+        "Brindle": "wow",
+        "Pipkin": "clap"
+      },
+      "dialogue": {
+        "speaker": "Brindle",
+        "text": "Oops! My brilliant invention has become a boat."
+      },
+      "camera_angle": "medium two-shot",
+      "camera_movement": "gentle pan",
+      "lighting": "warm key 45°, cool fill, teal/orange rims",
+      "background": "painted pond set",
+      "sound_effects": [
+        "splash"
+      ],
+      "music": "theme, bouncy",
+      "transition": "cut"
+    },
+    {
+      "number": 6,
+      "act": "development",
+      "duration": 0.0,
+      "location": "Root garden",
+      "environment": "garden",
+      "characters": [
+        "Oakley",
+        "Morrow"
+      ],
+      "actions": {
+        "Oakley": "point",
+        "Morrow": "nod"
+      },
+      "dialogue": {
+        "speaker": "Oakley",
+        "text": "Look! The seed is stuck under a tangled root."
+      },
+      "camera_angle": "medium",
+      "camera_movement": "follow",
+      "lighting": "warm key 45°, cool fill, teal/orange rims",
+      "background": "painted garden set",
+      "sound_effects": [],
+      "music": "curious pizzicato",
+      "transition": "cross-dissolve"
+    },
+    {
+      "number": 7,
+      "act": "development",
+      "duration": 0.0,
+      "location": "Root garden",
+      "environment": "garden",
+      "characters": [
+        "Oakley",
+        "Morrow"
+      ],
+      "actions": {
+        "Oakley": "nod",
+        "Morrow": "think"
+      },
+      "dialogue": {
+        "speaker": "Morrow",
+        "text": "Let's listen before we pull."
+      },
+      "camera_angle": "medium",
+      "camera_movement": "follow",
+      "lighting": "warm key 45°, cool fill, teal/orange rims",
+      "background": "painted garden set",
+      "sound_effects": [],
+      "music": "curious pizzicato",
+      "transition": "cut"
+    },
+    {
+      "number": 8,
+      "act": "conflict",
+      "duration": 0.0,
+      "location": "Root garden",
+      "environment": "garden",
+      "characters": [
+        "Oakley",
+        "Morrow"
+      ],
+      "actions": {
+        "Oakley": "tiptoe",
+        "Morrow": "nod"
+      },
+      "dialogue": {
+        "speaker": "Oakley",
+        "text": "I can loosen the soil, very gently."
+      },
+      "camera_angle": "close-up",
+      "camera_movement": "slight dolly-in",
+      "lighting": "warm key 45°, cool fill, teal/orange rims",
+      "background": "painted garden set",
+      "sound_effects": [],
+      "music": "soft minor, slower",
+      "transition": "cut"
+    },
+    {
+      "number": 9,
+      "act": "conflict",
+      "duration": 0.0,
+      "location": "Fernbridge clearing",
+      "environment": "meadow",
+      "characters": [
+        "Brindle",
+        "Oakley"
+      ],
+      "actions": {
+        "Brindle": "hold_up",
+        "Oakley": "nod"
+      },
+      "dialogue": {
+        "speaker": "Narrator",
+        "text": "Light from Brindle's leaf. Soft soil from Oakley."
+      },
+      "camera_angle": "close-up",
+      "camera_movement": "slight dolly-in",
+      "lighting": "warm key 45°, cool fill, teal/orange rims",
+      "background": "painted meadow set",
+      "sound_effects": [],
+      "music": "soft minor, slower",
+      "transition": "cross-dissolve"
+    },
+    {
+      "number": 10,
+      "act": "climax",
+      "duration": 0.0,
+      "location": "Fernbridge clearing",
+      "environment": "meadow",
+      "characters": [
+        "Brindle",
+        "Oakley"
+      ],
+      "actions": {
+        "Brindle": "cheer",
+        "Oakley": "cheer"
+      },
+      "dialogue": {
+        "speaker": "Narrator",
+        "text": "The little seed begins to glow!"
+      },
+      "camera_angle": "low-angle hero",
+      "camera_movement": "quick push-in",
+      "lighting": "warm key 45°, cool fill, teal/orange rims",
+      "background": "painted meadow set",
+      "sound_effects": [
+        "ding"
+      ],
+      "music": "build, drums",
+      "transition": "cut"
+    },
+    {
+      "number": 11,
+      "act": "climax",
+      "duration": 0.0,
+      "location": "Fernbridge clearing",
+      "environment": "meadow",
+      "characters": [
+        "Pipkin",
+        "Tilli"
+      ],
+      "actions": {
+        "Pipkin": "hop",
+        "Tilli": "cheer"
+      },
+      "dialogue": {
+        "speaker": "Pipkin",
+        "text": "Together did it!"
+      },
+      "camera_angle": "low-angle hero",
+      "camera_movement": "quick push-in",
+      "lighting": "warm key 45°, cool fill, teal/orange rims",
+      "background": "painted meadow set",
+      "sound_effects": [],
+      "music": "build, drums",
+      "transition": "cut"
+    },
+    {
+      "number": 12,
+      "act": "resolution",
+      "duration": 0.0,
+      "location": "Fernbridge clearing",
+      "environment": "meadow",
+      "characters": [
+        "Pipkin",
+        "Tilli"
+      ],
+      "actions": {
+        "Pipkin": "idle",
+        "Tilli": "dance"
+      },
+      "dialogue": {
+        "speaker": "Tilli",
+        "text": "And nobody had to be a superhero."
+      },
+      "camera_angle": "medium wide",
+      "camera_movement": "slow pull-back",
+      "lighting": "warm key 45°, cool fill, teal/orange rims",
+      "background": "painted meadow set",
+      "sound_effects": [],
+      "music": "warm theme returns",
+      "transition": "cut"
+    },
+    {
+      "number": 13,
+      "act": "resolution",
+      "duration": 0.0,
+      "location": "Valley panorama",
+      "environment": "hilltop",
+      "characters": [
+        "Morrow",
+        "Tilli"
+      ],
+      "actions": {
+        "Morrow": "nod",
+        "Tilli": "wow"
+      },
+      "dialogue": {
+        "speaker": "Narrator",
+        "text": "A new sprout opens. Fireflies make a tiny crown."
+      },
+      "camera_angle": "medium wide",
+      "camera_movement": "slow pull-back",
+      "lighting": "warm key 45°, cool fill, teal/orange rims",
+      "background": "painted hilltop set",
+      "sound_effects": [],
+      "music": "warm theme returns",
+      "transition": "cross-dissolve"
+    },
+    {
+      "number": 14,
+      "act": "ending",
+      "duration": 0.0,
+      "location": "Valley panorama",
+      "environment": "hilltop",
+      "characters": [
+        "Morrow",
+        "Tilli"
+      ],
+      "actions": {
+        "Morrow": "nod",
+        "Tilli": "hop"
+      },
+      "dialogue": {
+        "speaker": "Morrow",
+        "text": "Every little light belongs."
+      },
+      "camera_angle": "wide",
+      "camera_movement": "crane up",
+      "lighting": "warm key 45°, cool fill, teal/orange rims",
+      "background": "painted hilltop set",
+      "sound_effects": [],
+      "music": "sting + end theme",
+      "transition": "cut"
+    },
+    {
+      "number": 15,
+      "act": "ending",
+      "duration": 0.0,
+      "location": "Valley panorama",
+      "environment": "hilltop",
+      "characters": [
+        "Morrow",
+        "Tilli"
+      ],
+      "actions": {
+        "Morrow": "nod",
+        "Tilli": "wave"
+      },
+      "dialogue": {
+        "speaker": "Tilli",
+        "text": "What small thing could you do to help a friend?"
+      },
+      "camera_angle": "wide",
+      "camera_movement": "crane up",
+      "lighting": "warm key 45°, cool fill, teal/orange rims",
+      "background": "painted hilltop set",
+      "sound_effects": [],
+      "music": "sting + end theme",
+      "transition": "cut"
+    }
+  ]
+}
