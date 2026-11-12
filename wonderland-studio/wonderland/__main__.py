@@ -86,8 +86,11 @@ def main(argv: list[str] | None = None) -> int:
     elif args.cmd == "run-cycle":
         kinds = args.only.split(",") if args.only else None
         res = studio.run_cycle(catch_up=not args.wait, max_seconds=args.max_minutes * 60 if args.max_minutes else None, kinds=kinds, log=print)
+        # A failed attempt that was retried or replaced by a new story is not a failure of the cycle;
+        # only work that ended failed is.
+        res["ended_failed"] = [t["key"] for t in studio.db.tasks("status='failed'")]
         _print({k: v for k, v in res.items() if k != "steps"})
-        return 1 if res["by_status"].get("failed") else 0
+        return 1 if res["ended_failed"] else 0
     elif args.cmd == "daemon":
         while True:
             try:

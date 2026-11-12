@@ -190,14 +190,17 @@ jobs:
         run: |
           python -m wonderland voices install
           python -m wonderland voices doctor | tee voices.json
-          grep -q '"provider": "kokoro"' voices.json
+          python -c "import json,sys; r={x['provider']: x for x in json.load(open('voices.json'))}; sys.exit(0 if r['kokoro']['available'] else 1)"
       - name: Whole company cycle (publishing off; Kokoro voice from the step above)
         run: |
           python -m wonderland run-cycle --max-minutes 25 --only research,health,script,storyboard,animation,sound,edit,qa,seo,compliance
           python -m wonderland status | tee status.json
           python -c "import json,sys; s=json.load(open('status.json')); sys.exit(0 if s['episodes'].get('produced',0)>=1 else 1)"
+      - name: Collect sample episodes
+        if: always()
+        run: |
           mkdir -p ../wl-sample
-          for f in "$WONDERLAND_STATE_DIR"/episodes/*/final.mp4; do d=$(basename "$(dirname "$f")"); cp "$f" ../wl-sample/$d.mp4; cp "$(dirname "$f")/sheet.png" ../wl-sample/$d.png; done
+          for f in "$WONDERLAND_STATE_DIR"/episodes/*/final.mp4; do [ -f "$f" ] || continue; d=$(basename "$(dirname "$f")"); cp "$f" ../wl-sample/$d.mp4; cp "$(dirname "$f")/sheet.png" ../wl-sample/$d.png; done
       - uses: actions/upload-artifact@v4
         if: always()
         with:
