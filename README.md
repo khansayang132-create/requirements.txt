@@ -100,6 +100,19 @@ To let Claude's cloud sessions use it: in the cloud environment's settings, add 
 **Allowed domains**, and add `SITE_URL=https://name.ngrok-free.app` and `SITE_AUTH=you:a-long-password`
 as environment secrets. Every session can then run `scripts/site.sh check`.
 
+### Also let Claude's cloud sessions use OmniRoute
+
+Add `OMNIROUTE_PUBLIC=yes` to `.env` and run `bash termux/install.sh site` again. OmniRoute's API is then
+at `https://name.ngrok-free.app/v1`, and it answers only requests carrying your `OMNIROUTE_API_KEY`
+(the phone checks it before anything reaches OmniRoute). The OmniRoute dashboard stays private.
+
+In the cloud environment's settings, add `OMNIROUTE_API_KEY` as a secret (same value as on the phone),
+next to `SITE_URL`. Every session can then run `scripts/site.sh omniroute`, and use OmniRoute with
+`OMNIROUTE_BASE_URL=https://name.ngrok-free.app/v1`.
+
+Anyone with your OmniRoute key can use your AI accounts through this address, so keep the key secret
+and rotate it in the OmniRoute dashboard if it ever leaks.
+
 ## Run 24/7 (Linux)
 
 Make the bot start at boot, restart itself if it crashes, and keep running after you log out:
