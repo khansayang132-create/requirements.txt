@@ -44,6 +44,9 @@ quota:
     thumbnails.set:     {cost: 50, bucket: data_api}
     channels.list:      {cost: 1, bucket: data_api}
     playlistItems.list: {cost: 1, bucket: data_api}
+    playlistItems.insert: {cost: 50, bucket: data_api}
+    playlists.list:     {cost: 1, bucket: data_api}
+    playlists.insert:   {cost: 50, bucket: data_api}
     captions.list:      {cost: 50, bucket: data_api}
     captions.insert:    {cost: 400, bucket: data_api}
     captions.update:    {cost: 450, bucket: data_api}

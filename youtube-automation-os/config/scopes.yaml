@@ -48,6 +48,16 @@ operations:
     - https://www.googleapis.com/auth/youtube
     - https://www.googleapis.com/auth/youtube.force-ssl
     - https://www.googleapis.com/auth/youtube.readonly
+  playlistItems.insert:
+    - https://www.googleapis.com/auth/youtube
+    - https://www.googleapis.com/auth/youtube.force-ssl
+  playlists.list:
+    - https://www.googleapis.com/auth/youtube
+    - https://www.googleapis.com/auth/youtube.force-ssl
+    - https://www.googleapis.com/auth/youtube.readonly
+  playlists.insert:
+    - https://www.googleapis.com/auth/youtube
+    - https://www.googleapis.com/auth/youtube.force-ssl
   captions.list:
     - https://www.googleapis.com/auth/youtube.force-ssl
   captions.download:

@@ -247,6 +247,28 @@ class YouTubeClient:
         items = resp.get("items", [])
         return items[0] if items else None
 
+    def channel_statistics(self) -> dict | None:
+        """The authenticated channel with its public counters (subscribers, views, videos). 1 unit."""
+        resp = self.call("channels.list", lambda: self.youtube.channels().list(part="snippet,statistics,status", mine=True), endpoint="channels.list")
+        items = resp.get("items", [])
+        return items[0] if items else None
+
+    # --------------------------------------------------------------- playlists ----
+    def list_playlists(self, max_results: int = 50) -> list[dict]:
+        resp = self.call("playlists.list", lambda: self.youtube.playlists().list(part="snippet,status", mine=True, maxResults=max_results),
+                         endpoint="playlists.list")
+        return resp.get("items", [])
+
+    def create_playlist(self, title: str, description: str = "", privacy: str = "public") -> dict:
+        body = {"snippet": {"title": title, "description": description}, "status": {"privacyStatus": privacy}}
+        return self.call("playlists.insert", lambda: self.youtube.playlists().insert(part="snippet,status", body=body),
+                         endpoint="playlists.insert", idempotent=False)
+
+    def add_to_playlist(self, playlist_id: str, video_id: str) -> dict:
+        body = {"snippet": {"playlistId": playlist_id, "resourceId": {"kind": "youtube#video", "videoId": video_id}}}
+        return self.call("playlistItems.insert", lambda: self.youtube.playlistItems().insert(part="snippet", body=body),
+                         endpoint="playlistItems.insert", idempotent=False)
+
     def recent_uploads(self, max_results: int = 25) -> list[dict]:
         """Most recent videos on the authenticated channel, with snippet/status/fileDetails.
 

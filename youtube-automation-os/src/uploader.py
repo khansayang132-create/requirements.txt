@@ -42,6 +42,8 @@ class UploadSpec:
     notify_subscribers: bool | None = None
     thumbnail: Path | None = None
     idempotency_key: str | None = None
+    # status.containsSyntheticMedia: None = do not send (YouTube's default applies), True/False = declare it.
+    contains_synthetic_media: bool | None = None
 
     def metadata(self) -> dict:
         return {
@@ -52,6 +54,7 @@ class UploadSpec:
             "privacy": self.privacy,
             "made_for_kids": self.made_for_kids,
             "publish_at": self.publish_at,
+            "contains_synthetic_media": self.contains_synthetic_media,
         }
 
     def body(self) -> dict:
@@ -69,6 +72,8 @@ class UploadSpec:
         status: dict[str, Any] = {"privacyStatus": self.privacy, "selfDeclaredMadeForKids": bool(self.made_for_kids)}
         if self.publish_at:
             status["publishAt"] = to_rfc3339_utc(parse_publish_at(self.publish_at))
+        if self.contains_synthetic_media is not None:
+            status["containsSyntheticMedia"] = bool(self.contains_synthetic_media)
         return {"snippet": snippet, "status": status}
 
 
@@ -205,6 +210,8 @@ def verify_video(client: Any, video_id: str, spec: UploadSpec | None = None) -> 
             check("publishAt", to_rfc3339_utc(parse_publish_at(spec.publish_at)), _norm_ts(status.get("publishAt")))
         if spec.made_for_kids is not None and "selfDeclaredMadeForKids" in status:
             check("selfDeclaredMadeForKids", bool(spec.made_for_kids), status.get("selfDeclaredMadeForKids"))
+        if spec.contains_synthetic_media is not None and "containsSyntheticMedia" in status:
+            check("containsSyntheticMedia", bool(spec.contains_synthetic_media), status.get("containsSyntheticMedia"))
         if spec.privacy != "private" and status.get("privacyStatus") == "private":
             notes.append(UNVERIFIED_PROJECT_NOTE)
     processing = video.get("processingDetails", {}).get("processingStatus")
