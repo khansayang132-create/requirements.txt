@@ -1,0 +1,15 @@
+{
+  "name": "wonderland-render3d",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Three.js toon character renderer for Wonderland Studio (driven by wonderland/render/three_backend.py)",
+  "type": "module",
+  "main": "driver.mjs",
+  "scripts": {
+    "smoke": "node driver.mjs --smoke"
+  },
+  "dependencies": {
+    "playwright": "1.63.0",
+    "three": "0.170.0"
+  }
+}

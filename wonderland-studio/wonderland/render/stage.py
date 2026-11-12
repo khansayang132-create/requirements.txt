@@ -21,15 +21,14 @@ from dataclasses import dataclass, field
 
 from PIL import Image, ImageDraw
 
-from .canvas import Canvas, clamp, darken, ease_in_out, ease_out, ease_out_back, font, hex_rgb, lighten
+from .canvas import Canvas, Grade, clamp, darken, ease_in_out, ease_out, ease_out_back, font, hex_rgb, lighten
 from .characters import Pose, draw_character, hand_pos, head_top
-from .environments import ENVS, GROUND_Y, H, W, background
+from .environments import ENVS, GROUND_Y, H, W, background, background_plate
 from .props import COLORS, draw_prop, heart_points, star_points
 
 INK = (59, 51, 85)
 CREAM = (255, 246, 227)
 CAPTION_CX, CAPTION_Y, CAPTION_MAXW = 500, 1540, 800
-
 
 @dataclass
 class Actor:
@@ -41,7 +40,6 @@ class Actor:
     enter: str | None = None      # walk | hop | None (already on stage)
     scale: float = 0.9
     hold: dict | None = None      # {"name", "color", "side", "size"}
-
 
 @dataclass
 class Item:
@@ -58,7 +56,6 @@ class Item:
     label: str | None = None      # text drawn on the item (e.g. a letter on a block)
     front: bool = False
 
-
 @dataclass
 class Overlay:
     text: str
@@ -66,14 +63,12 @@ class Overlay:
     color: str = "#F2545B"
     sub: str | None = None
 
-
 @dataclass
 class Voice:
     path: str
     start: float                  # seconds into the shot where the line begins
     duration: float
     envelope: list[float] = field(default_factory=list)   # loudness 0..1 per video frame
-
 
 @dataclass
 class Shot:
@@ -89,10 +84,8 @@ class Shot:
     fx: str | None = None         # sparkle | hearts | notes | zzz
     sfx: list[dict] = field(default_factory=list)   # [{"name","at"}] consumed by the audio department
 
-
 def _phase(key: str) -> float:
     return int(hashlib.md5(key.encode()).hexdigest()[:6], 16) / 0xFFFFFF * 6.283
-
 
 def show_layout(n: int) -> list[tuple[float, float, float]]:
     """Positions (x, y, size) for n showcase props."""
@@ -112,7 +105,6 @@ def show_layout(n: int) -> list[tuple[float, float, float]]:
             out.append((540 - span / 2 + 190 * i, 520 + row * 190, 70))
     return out
 
-
 def wrap_text(text: str, size: int, max_w: float, weight: int = 600) -> list[str]:
     f = font(size, weight)
     words, lines, cur = text.split(), [], ""
@@ -127,9 +119,8 @@ def wrap_text(text: str, size: int, max_w: float, weight: int = 600) -> list[str
         lines.append(cur)
     return lines
 
-
 class Renderer:
-    def __init__(self, universe: dict, width: int = 1080, height: int = 1920, fps: int = 24):
+    def __init__(self, universe: dict, width: int = 1080, height: int = 1920, fps: int = 24, grade: bool = True):
         if abs(width / height - W / H) > 0.01:
             raise ValueError("output must be 9:16")
         self.specs = {c["id"]: c for c in universe["characters"]}
@@ -137,6 +128,85 @@ class Renderer:
         self.k = 2
         self.ss = self.k * width / W           # internal pixels per design pixel
         self.os = width / W                    # output pixels per design pixel
+        self.grade = Grade(width, height) if grade else None
+        self.three = None                      # a three_backend.Session: characters come from the 3D renderer
+        self._anchors: dict | None = None
+
+    # ------------------------------------------------------------------ 3D layer -----
+    def facing_side(self, a: Actor, shot: Shot, t: float, tg: float) -> float:
+        """-1 (faces left) .. +1 (faces right), eased over ~0.25 s when ``Pose.flip`` changes, so the
+        3D character turns instead of snapping. Uses only the pure ``pose`` function (deterministic)."""
+        acc = wsum = 0.0
+        for i in range(7):
+            ti = max(0.0, t - i * 0.04)
+            w = 1.0 - i / 7
+            acc += w * (-1.0 if self.pose(a, shot, ti, tg - (t - ti), 0.0).flip else 1.0)
+            wsum += w
+        return acc / wsum
+
+    def three_records(self, shot: Shot, t: float, tg: float, poses: dict[str, Pose]) -> list[dict]:
+        from .three_backend import pose_record
+
+        out = []
+        for a in shot.actors:
+            side = self.facing_side(a, shot, t, tg)
+            walking = clamp((0.95 - t) / 0.2) if a.enter == "walk" else 0.0
+            out.append(pose_record(a.id, poses[a.id], side, side * (26 + 26 * walking)))
+        return out
+
+    def character_layer(self, shot: Shot, t: float, tg: float, poses: dict[str, Pose] | None = None):
+        """Render this frame's characters with the 3D backend (``self.three`` must be a Session)."""
+        self.submit_layer(shot, t, tg, poses)
+        return self.three.collect()
+
+    def submit_layer(self, shot: Shot, t: float, tg: float, poses: dict[str, Pose] | None = None) -> None:
+        """Start the 3D render of a frame (collect with ``self.three.collect()``)."""
+        from .three_backend import light_preset
+
+        if poses is None:
+            poses = self.poses(shot, t, tg)
+        self.three.set_lights(shot.env, light_preset(shot.env))
+        self.three.submit(self.three_records(shot, t, tg, poses))
+
+    def poses(self, shot: Shot, t: float, tg: float) -> dict[str, Pose]:
+        talk = self.talk(shot, t)
+        return {a.id: self.pose(a, shot, t, tg, talk if a.id == shot.speaker else 0.0) for a in shot.actors}
+
+    def talk(self, shot: Shot, t: float) -> float:
+        fi = int(t * self.fps)
+        if shot.voice and shot.voice.envelope:
+            j = fi - int(shot.voice.start * self.fps)
+            if 0 <= j < len(shot.voice.envelope):
+                return shot.voice.envelope[j]
+        return 0.0
+
+    def _paste_layer(self, c: Canvas, layer) -> None:
+        """Composite a premultiplied RGBA layer (output pixels) onto the supersampled canvas."""
+        if layer is None or layer.rgba is None:
+            return
+        from PIL import ImageChops
+
+        x0, y0, w, h = layer.box
+        k = c.ss / self.os
+        im = Image.frombuffer("RGBa", (w, h), layer.rgba.tobytes(), "raw", "RGBa", 0, 1)   # premultiplied
+        if abs(k - 1) > 1e-6:
+            im = im.resize((round(w * k), round(h * k)), Image.BILINEAR)
+        X0, Y0 = round(x0 * k), round(y0 * k)
+        r, g, b, a = im.split()
+        region = c.img.crop((X0, Y0, X0 + im.width, Y0 + im.height))
+        inv = ImageChops.invert(a)
+        out = ImageChops.add(ImageChops.multiply(region, Image.merge("RGB", (inv, inv, inv))), Image.merge("RGB", (r, g, b)))
+        c.img.paste(out, (X0, Y0))
+
+    def _hand(self, aid: str, p: Pose, side: int) -> tuple[float, float]:
+        if self._anchors and aid in self._anchors:
+            return self._anchors[aid]["hand_r" if side > 0 else "hand_l"]
+        return hand_pos(p, side)
+
+    def _head_top(self, aid: str, p: Pose) -> tuple[float, float]:
+        if self._anchors and aid in self._anchors:
+            return self._anchors[aid]["head_top"]
+        return head_top(p)
 
     # ------------------------------------------------------------------ poses -------
     def pose(self, a: Actor, shot: Shot, t: float, tg: float, talking: float) -> Pose:
@@ -275,18 +345,19 @@ class Renderer:
         return p
 
     # ------------------------------------------------------------------ frame -------
-    def frame(self, shot: Shot, t: float, tg: float) -> Image.Image:
+    def frame(self, shot: Shot, t: float, tg: float, layer=None) -> Image.Image:
+        """One video frame. ``layer`` (a ``three_backend.Layer``) replaces the 2D characters with a
+        pre-rendered RGBA character layer; when it is None and ``self.three`` is set, it is rendered here."""
         env = ENVS[shot.env]
-        c = Canvas(W, H, self.ss, base=background(shot.env, self.ss), k=self.k)
+        plate = background_plate(shot.env, self.ss) if self.grade else background(shot.env, self.ss)
+        c = Canvas(W, H, self.ss, base=plate, k=self.k)
         if env.ambient:
             env.ambient(c, tg)
 
-        fi = int(t * self.fps)
-        talk = 0.0
-        if shot.voice and shot.voice.envelope:
-            j = fi - int(shot.voice.start * self.fps)
-            if 0 <= j < len(shot.voice.envelope):
-                talk = shot.voice.envelope[j]
+        poses = self.poses(shot, t, tg)
+        if layer is None and self.three is not None and shot.actors:
+            layer = self.character_layer(shot, t, tg, poses)
+        self._anchors = layer.anchors if layer is not None else None
 
         # --- props: sky + ground (behind actors) + showcase
         units = []
@@ -329,13 +400,13 @@ class Renderer:
             if it.label:
                 labels.append((it.label, sx, sy + bob, (it.size or size) * s))
 
-        # --- actors
-        poses: dict[str, Pose] = {}
+        # --- actors (2D puppets, or the 3D layer pasted at the same depth)
+        if layer is not None:
+            self._paste_layer(c, layer)
         for a in shot.actors:
-            speaking = talk if a.id == shot.speaker else 0.0
-            p = self.pose(a, shot, t, tg, speaking)
-            poses[a.id] = p
-            draw_character(c, self.specs[a.id], p, shadow_color=env.shadow)
+            p = poses[a.id]
+            if layer is None:
+                draw_character(c, self.specs[a.id], p, shadow_color=env.shadow)
             if a.hold:
                 self._held(c, a, p, tg)
 
@@ -358,6 +429,8 @@ class Renderer:
                 c.rrect(tx0, ty0, tx1, ty1, 26, cap_box["tag_color"], INK, 5)
 
         img = c.finish()
+        if self.grade:
+            img = self.grade.apply(img, dark=env.dark, keep=cap_box)
         d = ImageDraw.Draw(img)
         os_ = self.os
         for text, lx, ly, size in labels:
@@ -404,7 +477,7 @@ class Renderer:
     def _held(self, c, a: Actor, p: Pose, tg) -> None:
         h = a.hold
         side = h.get("side", 1)
-        hx, hy = hand_pos(p, side if not p.flip else -side)
+        hx, hy = self._hand(a.id, p, side)   # side +1 = the arm_r hand (the one the pose raises)
         size = h.get("size", 58)
         if h["name"] in ("balloon", "kite"):
             draw_prop(c, h["name"], hx, hy - size * 1.72, size, h.get("color"), tg)
@@ -419,8 +492,8 @@ class Renderer:
         a, b = poses.get(tr["from"]), poses.get(tr["to"])
         if not a or not b:
             return
-        ax, ay = hand_pos(a, 1 if b.x > a.x else -1)
-        bx, by = hand_pos(b, -1 if b.x > a.x else 1)
+        ax, ay = self._hand(tr["from"], a, 1 if b.x > a.x else -1)
+        bx, by = self._hand(tr["to"], b, -1 if b.x > a.x else 1)
         k = ease_in_out((t - tr.get("start", 0.5)) / max(0.1, tr.get("end", 1.6) - tr.get("start", 0.5)))
         x = ax + (bx - ax) * k
         y = ay + (by - ay) * k - 26 * math.sin(k * math.pi)
@@ -461,7 +534,7 @@ class Renderer:
         for a in shot.actors:
             if a.action != "sleep":
                 continue
-            hx, hy = head_top(poses[a.id])
+            hx, hy = self._head_top(a.id, poses[a.id])
             for i in range(3):
                 k = ((tg * 0.35 + i * 0.33) % 1.0)
                 size = round((46 + 60 * k) * os_)
@@ -529,7 +602,6 @@ class Renderer:
             out["tag_color"] = hex_rgb(spec["colors"]["body"])
             out["tag_box"] = (x0 + 26, y0 - 36, x0 + 26 + tw, y0 + 18)
         return out
-
 
 def crossfade(a: Image.Image, b: Image.Image, k: float) -> Image.Image:
     return Image.blend(a, b, clamp(k))

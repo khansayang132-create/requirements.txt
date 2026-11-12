@@ -214,3 +214,60 @@ def ease_in_out(t: float) -> float:
 def ease_out_back(t: float, overshoot: float = 1.5) -> float:
     t = clamp(t) - 1
     return t * t * ((overshoot + 1) * t + overshoot) + 1
+
+
+# ---- stylized grade -----------------------------------------------------------------
+class Grade:
+    """The finishing grade shared by both backends: gentle bloom, a soft vignette and a mild
+    warm-highlight / teal-shadow split tone. Applied to the finished picture BEFORE any text is
+    drawn, so captions and overlay words stay crisp; the caption box itself is kept ungraded.
+    (Depth of field lives on the background plate: ``environments.background_plate``.)"""
+
+    def __init__(self, width: int, height: int, bloom: float = 0.30, vignette: float = 0.10, split: float = 1.0):
+        import numpy as np
+
+        self.w, self.h = width, height
+        ys, xs = np.mgrid[0:height, 0:width].astype(np.float32)
+        dx, dy = (xs / width - 0.5) / 0.5, (ys / height - 0.5) / 0.5
+        r = np.sqrt(dx * dx * 0.9 + dy * dy * 1.1)
+        v = 1.0 - vignette * np.clip((r - 0.55) / 0.85, 0, 1) ** 1.6
+        self.vig = Image.fromarray((v * 255).round().astype("uint8"), "L").convert("RGB")
+        lut = []
+        for ch, (hi, lo) in enumerate(((0.030, -0.018), (0.010, 0.010), (-0.022, 0.030))):
+            for i in range(256):
+                x = i / 255
+                y = x + split * (hi * x * x + lo * (1 - x) ** 2)
+                lut.append(max(0, min(255, round(y * 255))))
+        self.lut = lut
+        self.bloom = bloom
+        self._bloom_lut = [max(0, min(255, round((i - 14) * 255 / 60 * bloom))) for i in range(256)] * 3
+        self._masks: dict = {}
+
+    def _keep_mask(self, box: tuple[int, int, int, int], r: int):
+        m = self._masks.get((box, r))
+        if m is None:
+            m = Image.new("L", (box[2] - box[0], box[3] - box[1]), 0)
+            ImageDraw.Draw(m).rounded_rectangle([0, 0, m.width - 1, m.height - 1], radius=r, fill=255)
+            if len(self._masks) > 64:
+                self._masks.clear()
+            self._masks[(box, r)] = m
+        return m
+
+    def apply(self, img: Image.Image, dark: bool = False, keep: dict | None = None) -> Image.Image:
+        from PIL import ImageChops, ImageFilter
+
+        src = img
+        small = img.reduce(6)
+        # glow only where a spot is brighter than its surroundings (sun, moon, stars, speculars),
+        # so pale pastel sets are not washed out
+        local = small.filter(ImageFilter.BoxBlur(10))
+        glow = ImageChops.subtract(small, local).point(self._bloom_lut).filter(ImageFilter.GaussianBlur(4 if not dark else 6))
+        img = ImageChops.screen(img, glow.resize(img.size, Image.BILINEAR))
+        img = ImageChops.multiply(img, self.vig).point(self.lut)
+        if keep:
+            k = self.w / 1080
+            boxes = [(keep["box"], 44)] + ([(keep["tag_box"], 26)] if keep.get("tag") else [])
+            for (x0, y0, x1, y1), r in boxes:
+                b = (int(x0 * k), int(y0 * k), int(x1 * k) + 2, int(y1 * k) + 2)
+                img.paste(src.crop(b), b[:2], self._keep_mask(b, round(r * k)))
+        return img

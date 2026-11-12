@@ -289,3 +289,20 @@ def background(key: str, ss: float = 2) -> Image.Image:
     c.d = ImageDraw.Draw(base)
     env.build(c)
     return base
+
+
+@lru_cache(maxsize=12)
+def background_plate(key: str, ss: float = 2) -> Image.Image:
+    """The background with a slight depth-of-field blur: sharp in the acting band around the
+    ground line, softly blurred toward the far sky and the near foreground (cached)."""
+    import numpy as np
+    from PIL import ImageFilter
+
+    base = background(key, ss)
+    soft = base.filter(ImageFilter.GaussianBlur(2.0 * ss))
+    ys = (np.arange(base.height, dtype=np.float32) + 0.5) / ss
+    w = np.clip((np.abs(ys - (GROUND_Y - 40)) - 170) / 420, 0, 1) ** 1.2
+    w = np.minimum(w, np.where(ys > GROUND_Y, 0.6, 1.0))
+    mask = Image.fromarray(np.repeat((w * 255).round().astype("uint8")[:, None], base.width, axis=1), "L")
+    return Image.composite(soft, base, mask)
+
