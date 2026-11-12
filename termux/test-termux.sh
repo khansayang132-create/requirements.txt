@@ -128,7 +128,7 @@ grep -qF "!(req.url.path == '/v1' || req.url.path.startsWith('/v1/'))" "$conf"
 sv status lskhan-router | grep -q '^run:'
 for _ in $(seq 1 20); do curl -s -o /dev/null http://127.0.0.1:8099/ && break; sleep 1; done
 [[ $(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8099/v1/models) == 401 ]]
-[[ $(curl -s -o /dev/null -w '%{http_code}' -H 'Authorization: Bearer sk-test-omniroute-key-123456' \
+[[ $(curl -s -o /dev/null -w '%{http_code}' --path-as-is -H 'Authorization: Bearer sk-test-omniroute-key-123456' \
      'http://127.0.0.1:8099/v1/%2e%2e/dashboard') == 400 ]]
 bash termux/install.sh status | grep -q lskhan-router
 sed -i '/^OMNIROUTE_PUBLIC=/d' .env
