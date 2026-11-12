@@ -165,6 +165,46 @@ jobs:
       - run: npm i -g playwright@1.49.1 && npx -y playwright@1.49.1 install --with-deps chromium
       - run: node --test .claude/skills/design-check/scripts/check.test.mjs
 
+  wonderland:
+    runs-on: ubuntu-latest
+    env:
+      WONDERLAND_STATE_DIR: ${{ github.workspace }}/wl-state
+    defaults:
+      run:
+        working-directory: wonderland-studio
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "22"
+      - run: sudo apt-get update -q && sudo apt-get install -y -q ffmpeg
+      - run: pip install -r requirements-dev.txt -r requirements-voice.txt && pip check
+      - name: 3D renderer dependencies (if present)
+        run: |
+          if [ -f render3d/package-lock.json ]; then (cd render3d && npm ci && npx playwright install --with-deps chromium); fi
+      - run: python -m pytest -q
+      - name: Free neural voice (Kokoro) installs and speaks
+        run: |
+          python -m wonderland voices install
+          python -m wonderland voices doctor | tee voices.json
+          grep -q '"provider": "kokoro"' voices.json
+      - name: Whole company cycle (publishing off; Kokoro voice from the step above)
+        run: |
+          python -m wonderland run-cycle --max-minutes 25 --only research,health,script,storyboard,animation,sound,edit,qa,seo,compliance
+          python -m wonderland status | tee status.json
+          python -c "import json,sys; s=json.load(open('status.json')); sys.exit(0 if s['episodes'].get('produced',0)>=1 else 1)"
+          mkdir -p ../wl-sample
+          for f in "$WONDERLAND_STATE_DIR"/episodes/*/final.mp4; do d=$(basename "$(dirname "$f")"); cp "$f" ../wl-sample/$d.mp4; cp "$(dirname "$f")/sheet.png" ../wl-sample/$d.png; done
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: wonderland-sample-episodes
+          path: wl-sample/
+          if-no-files-found: warn
+
   youtube:
     strategy:
       fail-fast: false

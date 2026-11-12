@@ -1,0 +1,5 @@
+# Wonderland Studio — production line (works on Linux and Termux; ffmpeg comes from the system)
+numpy==2.5.4
+Pillow==13.0.0
+PyYAML==6.0.3
+espeakng-loader==0.2.4

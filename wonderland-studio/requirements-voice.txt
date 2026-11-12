@@ -1,0 +1,2 @@
+# Free neural voice (Apache-2.0). Model files (~340 MB) are fetched by: python -m wonderland voices install
+kokoro-onnx==0.6.1
