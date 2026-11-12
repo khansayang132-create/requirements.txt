@@ -6,3 +6,5 @@ google-auth-httplib2==0.4.4
 python-dotenv==1.2.4
 Pillow==13.0.0
 PyYAML==6.0.3
+# zoneinfo data for systems without one (Android/Termux): schedule times and the Pacific quota day.
+tzdata==2026.6
