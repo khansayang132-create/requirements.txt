@@ -637,3 +637,485 @@ def draw_prop(c: Canvas, name: str, x: float, y: float, size: float, color=None,
     if col is None and name in TINTABLE:
         col = hex_rgb(COLORS["red"])
     fn(c, xf, col, t)
+
+
+# =====================================================================================
+# Additions for the wider story formats (appended; nothing above this line was changed).
+# Same style: basic shapes, a soft dark outline of the fill colour, one small highlight.
+# =====================================================================================
+def _c(name: str):
+    return hex_rgb(COLORS.get(name, name))
+
+
+def _eye(c, xf, x, y, r=7):
+    c.ellipse(x, y, r, r * 1.15, INK, xf=xf)
+    c.ellipse(x - r * 0.3, y - r * 0.35, r * 0.35, r * 0.35, WHITE, xf=xf)
+
+
+# --------------------------------------------------------------------- animals -------
+def p_bird(c, xf, col, t):
+    col = _c("blue") if col is None else col
+    o = _o(col)
+    c.shape([(-60, 10), (-100, -18), (-96, 34)], darken(col, 0.12), o, 5, xf)
+    c.ellipse(-6, 16, 64, 52, col, o, 6, xf)
+    c.ellipse(-2, 34, 40, 28, lighten(col, 0.5), xf=xf)
+    c.ellipse(-22, 12, 34, 22, darken(col, 0.14), o, 5, Xf.rotate(18 + 6 * math.sin(t * 5), -22, 12).then(xf))
+    c.ellipse(44, -34, 38, 36, col, o, 6, xf)
+    c.shape([(76, -40), (106, -30), (76, -18)], _c("orange"), darken(_c("orange"), 0.3), 4, xf)
+    _eye(c, xf, 54, -42)
+    for dx in (-14, 14):
+        c.line([(dx, 64), (dx, 88), (dx + 14, 92)], _c("orange"), 6, xf)
+
+
+def p_bee(c, xf, col, t):
+    y = _c("yellow")
+    flap = 0.7 + 0.3 * abs(math.sin(t * 12))
+    for sx in (-1, 1):
+        c.ellipse(sx * 26, -50 * flap, 30, 40 * flap, (226, 240, 255), (150, 190, 230), 4, Xf.rotate(sx * 24, sx * 26, -30).then(xf))
+    c.ellipse(-6, 14, 70, 52, y, _o(y), 6, xf)
+    for dx in (-30, 6):
+        c.line([(dx, -32), (dx - 4, 14), (dx, 60)], INK, 15, xf, caps=False)
+    c.ellipse(-6, 14, 70, 52, None, _o(y), 6, xf)
+    c.ellipse(56, 4, 34, 34, y, _o(y), 6, xf)
+    _eye(c, xf, 66, -4)
+    c.line([(52, 16), (64, 22), (76, 16)], INK, 4, xf)
+    c.line([(52, -28), (44, -60)], INK, 4, xf)
+    c.line([(70, -26), (78, -58)], INK, 4, xf)
+    c.shape([(-74, 6), (-98, 14), (-74, 24)], INK, xf=xf)
+
+
+def p_cow(c, xf, col, t):
+    w = hex_rgb("#FFF8EE")
+    o = darken(w, 0.4)
+    for sx in (-1, 1):
+        c.ellipse(sx * 62, -44, 26, 16, w, o, 5, Xf.rotate(sx * 24, sx * 62, -44).then(xf))
+        c.shape([(sx * 34, -70), (sx * 46, -98), (sx * 20, -78)], hex_rgb("#E9D8B4"), o, 4, xf)
+    c.ellipse(0, -6, 62, 68, w, o, 6, xf)
+    c.ellipse(-30, -36, 24, 28, INK, xf=xf)
+    c.ellipse(34, 0, 16, 20, INK, xf=xf)
+    c.ellipse(0, 44, 50, 34, _c("pink"), darken(_c("pink"), 0.3), 5, xf)
+    for sx in (-1, 1):
+        c.ellipse(sx * 18, 42, 7, 9, darken(_c("pink"), 0.4), xf=xf)
+        _eye(c, xf, sx * 24, -18, 8)
+    c.ellipse(0, -60, 20, 12, lighten(w, 0.5), xf=xf)
+
+
+def p_sheep(c, xf, col, t):
+    w = hex_rgb("#FDFBF5")
+    o = darken(w, 0.3)
+    for dx in (-36, 30):
+        c.line([(dx, 44), (dx, 88)], INK, 13, xf)
+    for cx, cy, r in ((-52, 6, 40), (-10, -24, 46), (34, -4, 42), (-20, 30, 44), (30, 32, 38), (-64, 30, 30)):
+        c.ellipse(cx, cy, r + 5, r + 5, o, xf=xf)
+    for cx, cy, r in ((-52, 6, 40), (-10, -24, 46), (34, -4, 42), (-20, 30, 44), (30, 32, 38), (-64, 30, 30)):
+        c.ellipse(cx, cy, r, r, w, xf=xf)
+    f = hex_rgb("#5B5470")
+    c.ellipse(70, -16, 30, 34, f, darken(f, 0.3), 5, xf)
+    c.ellipse(46, -40, 18, 10, f, darken(f, 0.3), 4, Xf.rotate(30, 46, -40).then(xf))
+    c.ellipse(74, -22, 6, 7, WHITE, xf=xf)
+    c.ellipse(76, -21, 3, 4, INK, xf=xf)
+    c.ellipse(62, -52, 20, 16, w, o, 4, xf)
+
+
+def p_pig(c, xf, col, t):
+    p = hex_rgb("#FFB3C7")
+    o = _o(p)
+    for sx in (-1, 1):
+        c.shape([(sx * 30, -66), (sx * 70, -86), (sx * 62, -40)], darken(p, 0.1), o, 5, xf)
+    c.ellipse(0, 0, 80, 74, p, o, 6, xf)
+    c.ellipse(0, 22, 36, 26, lighten(p, 0.25), o, 5, xf)
+    for sx in (-1, 1):
+        c.ellipse(sx * 13, 22, 6, 9, darken(p, 0.45), xf=xf)
+        _eye(c, xf, sx * 30, -18, 8)
+    c.line([(-20, 56), (0, 64), (20, 56)], darken(p, 0.45), 5, xf)
+    c.ellipse(-44, 16, 12, 8, lighten(p, 0.35), xf=xf)
+
+
+def p_owl(c, xf, col, t):
+    b = hex_rgb("#B98A62")
+    o = _o(b)
+    for sx in (-1, 1):
+        c.shape([(sx * 24, -74), (sx * 58, -100), (sx * 60, -56)], b, o, 5, xf)
+    c.ellipse(0, 6, 70, 84, b, o, 6, xf)
+    c.ellipse(0, 34, 44, 48, lighten(b, 0.5), xf=xf)
+    for yy in (16, 36, 56):
+        c.line([(-16, yy), (0, yy + 8), (16, yy)], darken(b, 0.1), 4, xf)
+    blink = (t % 3.0) < 0.12
+    for sx in (-1, 1):
+        c.ellipse(sx * 28, -30, 27, 27, WHITE, o, 5, xf)
+        if blink:
+            c.line([(sx * 28 - 14, -30), (sx * 28 + 14, -30)], INK, 5, xf)
+        else:
+            c.ellipse(sx * 28, -30, 12, 13, INK, xf=xf)
+            c.ellipse(sx * 28 - 4, -35, 4, 4, WHITE, xf=xf)
+        c.ellipse(sx * 70, 20, 14, 40, darken(b, 0.16), o, 5, Xf.rotate(sx * -12, sx * 70, 20).then(xf))
+    c.shape([(-9, -14), (9, -14), (0, 6)], _c("orange"), darken(_c("orange"), 0.3), 4, xf)
+    for sx in (-1, 1):
+        c.ellipse(sx * 20, 90, 16, 8, _c("orange"), darken(_c("orange"), 0.3), 4, xf)
+
+
+def p_turtle(c, xf, col, t):
+    g = hex_rgb("#7CCB7A")
+    sh = hex_rgb("#4FA36A")
+    for dx in (-48, 34):
+        c.ellipse(dx, 60, 20, 22, g, _o(g), 5, xf)
+    c.shape([(-80, 30), (-104, 44), (-80, 48)], g, _o(g), 4, xf)
+    c.ellipse(76, 6, 30, 26, g, _o(g), 5, xf)
+    _eye(c, xf, 84, -2, 6)
+    c.line([(74, 16), (86, 20), (96, 14)], INK, 4, xf)
+    dome = [(x, y) for x, y in ellipse_points(-6, 44, 82, 96, 48) if y <= 44]
+    dome.sort(key=lambda q: q[0])
+    c.shape(dome, sh, _o(sh), 6, xf)
+    for dx, dy, r in ((-40, 10, 17), (-6, -20, 19), (30, 10, 17), (-6, 22, 12)):
+        c.ellipse(dx, dy, r, r * 0.8, lighten(sh, 0.3), darken(sh, 0.2), 4, xf)
+
+
+def p_chick(c, xf, col, t):
+    y = hex_rgb("#FFE066")
+    o = _o(y)
+    c.ellipse(0, 28, 60, 54, y, o, 6, xf)
+    c.ellipse(-44, 26, 20, 28, darken(y, 0.08), o, 5, Xf.rotate(-20 + 8 * math.sin(t * 6), -44, 26).then(xf))
+    c.ellipse(16, -40, 42, 40, y, o, 6, xf)
+    for rot in (-20, 0, 20):
+        c.ellipse(16, -88, 6, 14, y, o, 4, Xf.rotate(rot, 16, -74).then(xf))
+    c.shape([(50, -42), (78, -34), (50, -24)], _c("orange"), darken(_c("orange"), 0.3), 4, xf)
+    _eye(c, xf, 30, -48)
+    for dx in (-14, 14):
+        c.line([(dx, 78), (dx, 94), (dx + 12, 96)], _c("orange"), 6, xf)
+
+
+def p_caterpillar(c, xf, col, t):
+    g = hex_rgb("#7BD46B")
+    for i, dx in enumerate((-78, -44, -10, 24)):
+        yy = 30 + 10 * math.sin(t * 4 + i * 1.2)
+        c.ellipse(dx, yy, 26, 26, g if i % 2 else lighten(g, 0.2), _o(g), 5, xf)
+        c.line([(dx, yy + 24), (dx, yy + 38)], INK, 5, xf)
+    c.ellipse(64, 6, 34, 34, lighten(g, 0.12), _o(g), 6, xf)
+    _eye(c, xf, 72, 0)
+    c.line([(58, 18), (70, 24), (82, 18)], INK, 4, xf)
+    c.line([(56, -24), (48, -56)], INK, 4, xf)
+    c.line([(74, -24), (84, -54)], INK, 4, xf)
+    c.ellipse(48, -58, 6, 6, _c("yellow"), xf=xf)
+    c.ellipse(84, -56, 6, 6, _c("yellow"), xf=xf)
+
+
+def p_cocoon(c, xf, col, t):
+    b = hex_rgb("#B6C97A")
+    sw = Xf.rotate(4 * math.sin(t * 1.6), 0, -92).then(xf)
+    c.line([(-60, -92), (60, -92)], hex_rgb("#9B6B43"), 14, xf)
+    c.line([(0, -92), (0, -62)], darken(b, 0.4), 6, sw)
+    c.ellipse(0, 6, 40, 72, b, _o(b), 6, sw)
+    for yy in (-30, -4, 22, 48):
+        c.line([(-32, yy), (0, yy + 10), (32, yy)], darken(b, 0.18), 5, sw)
+    c.ellipse(-14, -26, 8, 16, lighten(b, 0.4), xf=sw)
+
+
+def p_tadpole(c, xf, col, t):
+    g = hex_rgb("#5F8F6B")
+    wag = math.sin(t * 7) * 16
+    c.line([(-20, 6), (-56, 6 + wag * 0.5), (-98, 6 + wag)], _o(g), 20, xf)
+    c.line([(-20, 6), (-56, 6 + wag * 0.5), (-98, 6 + wag)], g, 11, xf)
+    c.ellipse(26, 4, 52, 44, g, _o(g), 6, xf)
+    c.ellipse(46, -8, 11, 12, WHITE, xf=xf)
+    c.ellipse(49, -7, 6, 7, INK, xf=xf)
+    c.line([(40, 18), (52, 22), (62, 16)], INK, 4, xf)
+
+
+def p_worm(c, xf, col, t):
+    p = hex_rgb("#F2A6B8")
+    w = math.sin(t * 3) * 8
+    pts = [(-90, 40), (-56, 10 - w), (-20, 40), (16, 10 + w), (50, 36), (78, -10)]
+    c.line(pts, _o(p), 34, xf)
+    c.line(pts, p, 24, xf)
+    c.ellipse(78, -14, 24, 24, p, _o(p), 5, xf)
+    _eye(c, xf, 84, -20, 6)
+    c.line([(72, -4), (82, 0), (92, -6)], INK, 4, xf)
+
+
+# --------------------------------------------------------------------- nature --------
+def p_snowflake(c, xf, col, t):
+    w = hex_rgb("#E8F6FF")
+    o = hex_rgb("#7FB8E6")
+    R = Xf.rotate(t * 10).then(xf)
+    for i in range(6):
+        A = Xf.rotate(i * 60).then(R)
+        for col_, wd in ((o, 16), (w, 8)):
+            c.line([(0, 0), (0, -90)], col_, wd, A)
+            c.line([(0, -52), (-24, -76)], col_, wd, A)
+            c.line([(0, -52), (24, -76)], col_, wd, A)
+    c.ellipse(0, 0, 14, 14, w, o, 4, xf)
+
+
+def p_feather(c, xf, col, t):
+    col = hex_rgb("#8ED1F2") if col is None else col
+    R = Xf.rotate(24 + 5 * math.sin(t * 1.5)).then(xf)
+    c.ellipse(0, -14, 36, 82, col, _o(col), 6, R)
+    c.line([(0, -92), (0, 96)], WHITE, 6, R)
+    for yy in (-50, -20, 10, 40):
+        c.line([(0, yy), (26, yy - 20)], lighten(col, 0.5), 4, R)
+        c.line([(0, yy), (-26, yy - 20)], lighten(col, 0.5), 4, R)
+
+
+def p_rock(c, xf, col, t):
+    g = hex_rgb("#A9A9B8")
+    c.shape([(-90, 60), (-70, -10), (-24, -56), (40, -50), (86, 0), (92, 60)], g, _o(g), 6, xf)
+    c.line([(-40, -20), (-14, -36)], lighten(g, 0.45), 10, xf)
+    c.line([(20, 20), (50, 34)], darken(g, 0.15), 6, xf)
+
+
+def p_shell(c, xf, col, t):
+    s = hex_rgb("#FFD3B0")
+    fan = [(x, y) for x, y in ellipse_points(0, 50, 92, 120, 48) if y <= 50]
+    fan.sort(key=lambda q: q[0])
+    c.shape([(-26, 78), (26, 78), (40, 50), (-40, 50)], darken(s, 0.1), _o(s), 6, xf)
+    c.shape(fan + [(0, 62)], s, _o(s), 6, xf)
+    for a in (-56, -28, 0, 28, 56):
+        r = math.radians(a - 90)
+        c.line([(0, 50), (84 * math.cos(r), 50 + 108 * math.sin(r))], darken(s, 0.22), 5, xf)
+
+
+def p_pinecone(c, xf, col, t):
+    b = hex_rgb("#9B6B43")
+    c.ellipse(0, 6, 56, 80, b, _o(b), 6, xf)
+    for row, yy in enumerate((-48, -20, 8, 36, 62)):
+        n = (2, 3, 4, 3, 2)[row]
+        for i in range(n):
+            xx = (i - (n - 1) / 2) * 28
+            c.shape([(xx - 15, yy - 10), (xx + 15, yy - 10), (xx, yy + 14)], lighten(b, 0.25), darken(b, 0.3), 3, xf)
+    c.line([(0, -76), (0, -94)], darken(b, 0.4), 9, xf)
+
+
+# ----------------------------------------------------------------- home & clothes ----
+def p_spoon(c, xf, col, t):
+    s = hex_rgb("#C9D3E0")
+    R = Xf.rotate(20).then(xf)
+    c.line([(0, -10), (0, 92)], _o(s), 22, R)
+    c.line([(0, -10), (0, 92)], s, 12, R)
+    c.ellipse(0, -50, 34, 46, s, _o(s), 6, R)
+    c.ellipse(-8, -60, 10, 18, lighten(s, 0.6), xf=R)
+
+
+def p_bowl(c, xf, col, t):
+    col = _c("blue") if col is None else col
+    bowl = [(x, y) for x, y in ellipse_points(0, -10, 94, 92, 48) if y >= -10]
+    bowl.sort(key=lambda q: -q[0])
+    c.shape(bowl, col, _o(col), 6, xf)
+    c.ellipse(0, -10, 94, 20, lighten(col, 0.5), _o(col), 6, xf)
+    c.shape([(-40, 72), (40, 72), (46, 88), (-46, 88)], darken(col, 0.12), _o(col), 5, xf)
+    c.line([(-66, 20), (-50, 44)], lighten(col, 0.4), 9, xf)
+
+
+def p_shoe(c, xf, col, t):
+    col = _c("red") if col is None else col
+    c.shape([(-80, 60), (-80, -50), (-20, -50), (-10, 0), (60, 14), (90, 40), (90, 60)], col, _o(col), 6, xf)
+    c.shape([(-86, 60), (94, 60), (94, 80), (-86, 80)], WHITE, (170, 170, 190), 5, xf)
+    for dx in (0, 22, 44):
+        c.line([(dx - 14, 6 + dx * 0.25), (dx, 28 + dx * 0.25)], WHITE, 6, xf)
+    c.line([(-74, -40), (-26, -40)], lighten(col, 0.5), 9, xf)
+
+
+def p_boot(c, xf, col, t):
+    col = _c("yellow") if col is None else col
+    c.shape([(-50, -90), (22, -90), (22, 10), (86, 34), (90, 70), (-50, 70)], col, _o(col), 6, xf)
+    c.shape([(-56, 66), (94, 66), (94, 86), (-56, 86)], darken(col, 0.2), _o(col), 5, xf)
+    c.shape([(-50, -90), (22, -90), (22, -64), (-50, -64)], lighten(col, 0.4), _o(col), 5, xf)
+
+
+def p_mitten(c, xf, col, t):
+    col = _c("red") if col is None else col
+    c.ellipse(-58, 4, 22, 34, col, _o(col), 6, Xf.rotate(-28, -58, 4).then(xf))
+    body = [(x, y) for x, y in ellipse_points(4, -10, 56, 82, 40) if y <= 30]
+    body.sort(key=lambda q: q[0])
+    c.shape([(-52, 60)] + body + [(60, 60)], col, _o(col), 6, xf)
+    c.shape([(-56, 56), (64, 56), (64, 90), (-56, 90)], lighten(col, 0.55), _o(col), 5, xf)
+    c.shape(star_points(4, -6, 24, 11), lighten(col, 0.6), xf=xf)
+
+
+def p_scarf(c, xf, col, t):
+    col = _c("green") if col is None else col
+    c.shape([(20, -30), (64, -30), (70, 84), (26, 84)], col, _o(col), 6, xf)
+    for dx in (32, 46, 60):
+        c.line([(dx, 84), (dx, 100)], _o(col), 5, xf)
+    c.ellipse(0, -40, 86, 30, col, _o(col), 6, xf)
+    c.ellipse(0, -46, 54, 12, darken(col, 0.3), xf=xf)
+    for dx in (-54, -18, 44):
+        c.line([(dx, -64 + abs(dx) * 0.12), (dx + 8, -18 - abs(dx) * 0.05)], lighten(col, 0.55), 10, xf, caps=False)
+    for yy in (4, 44):
+        c.line([(23, yy), (67, yy)], lighten(col, 0.55), 10, xf, caps=False)
+
+
+def p_basket(c, xf, col, t):
+    b = hex_rgb("#D9A066")
+    arc = [(x, y) for x, y in ellipse_points(0, -6, 70, 86, 40) if y <= -6]
+    arc.sort(key=lambda q: q[0])
+    c.line(arc, _o(b), 14, xf)
+    c.line(arc, b, 7, xf)
+    c.shape([(-84, -6), (84, -6), (62, 84), (-62, 84)], b, _o(b), 6, xf)
+    for yy in (18, 42, 66):
+        c.line([(-74 + (yy * 0.22), yy), (74 - (yy * 0.22), yy)], darken(b, 0.2), 5, xf)
+    for dx in (-40, 0, 40):
+        c.line([(dx, 0), (dx * 0.8, 80)], darken(b, 0.2), 5, xf)
+    c.shape([(-90, -16), (90, -16), (90, 6), (-90, 6)], lighten(b, 0.2), _o(b), 5, xf)
+
+
+def p_broom(c, xf, col, t):
+    R = Xf.rotate(-14).then(xf)
+    c.line([(0, -96), (0, 20)], darken("#B07A4F", 0.3), 14, R)
+    c.line([(0, -96), (0, 20)], hex_rgb("#B07A4F"), 8, R)
+    s = hex_rgb("#F2C94C")
+    c.shape([(-30, 14), (30, 14), (56, 92), (-56, 92)], s, _o(s), 6, R)
+    for dx in (-30, -10, 10, 30):
+        c.line([(dx * 0.5, 34), (dx, 86)], darken(s, 0.25), 4, R)
+    c.shape([(-32, 8), (32, 8), (32, 28), (-32, 28)], _c("red"), darken(_c("red"), 0.3), 5, R)
+
+
+def p_clock(c, xf, col, t):
+    col = _c("blue") if col is None else col
+    c.ellipse(0, 0, 90, 90, col, _o(col), 6, xf, n=56)
+    c.ellipse(0, 0, 70, 70, WHITE, _o(col), 5, xf, n=56)
+    for i in range(12):
+        a = math.radians(i * 30)
+        c.ellipse(58 * math.cos(a), 58 * math.sin(a), 4 if i % 3 else 7, 4 if i % 3 else 7, INK, xf=xf)
+    c.line([(0, 0), (0, -44)], INK, 8, xf)
+    c.line([(0, 0), (30, 12)], INK, 8, xf)
+    c.ellipse(0, 0, 8, 8, _c("red"), xf=xf)
+
+
+def p_wateringcan(c, xf, col, t):
+    col = _c("green") if col is None else col
+    c.line([(40, 20), (92, -40)], _o(col), 22, xf)
+    c.line([(40, 20), (92, -40)], col, 12, xf)
+    c.ellipse(96, -46, 20, 12, lighten(col, 0.3), _o(col), 5, Xf.rotate(-50, 96, -46).then(xf))
+    c.ellipse(-70, 16, 30, 40, None, _o(col), 12, xf)
+    c.shape([(-60, -40), (50, -40), (56, 84), (-66, 84)], col, _o(col), 6, xf)
+    c.ellipse(-5, -40, 55, 14, lighten(col, 0.35), _o(col), 5, xf)
+    c.line([(-40, -10), (-40, 50)], lighten(col, 0.45), 10, xf)
+
+
+def p_quilt(c, xf, col, t):
+    cols = ["pink", "yellow", "blue", "green", "purple", "orange", "blue", "pink", "yellow"]
+    for i in range(9):
+        x0, y0 = -84 + (i % 3) * 56, -84 + (i // 3) * 56
+        k = _c(cols[i])
+        c.shape([(x0, y0), (x0 + 56, y0), (x0 + 56, y0 + 56), (x0, y0 + 56)], k, darken(k, 0.3), 4, xf)
+        c.shape(star_points(x0 + 28, y0 + 30, 13, 6), lighten(k, 0.6), xf=xf)
+    c.shape([(-84, -84), (84, -84), (84, 84), (-84, 84)], None, INK, 6, xf)
+
+
+def p_vase(c, xf, col, t):
+    col = _c("blue") if col is None else col
+    g = hex_rgb("#4CAF50")
+    for dx, cc in ((-26, "pink"), (0, "yellow"), (26, "red")):
+        c.line([(dx * 0.4, -20), (dx, -70)], g, 7, xf)
+        c.ellipse(dx, -78, 17, 17, _c(cc), darken(_c(cc), 0.3), 4, xf)
+        c.ellipse(dx, -78, 6, 6, hex_rgb("#FFF6E3"), xf=xf)
+    c.shape([(-26, -24), (26, -24), (20, 0), (52, 40), (40, 90), (-40, 90), (-52, 40), (-20, 0)], col, _o(col), 6, xf)
+    c.line([(-30, 34), (-24, 66)], lighten(col, 0.5), 9, xf)
+
+
+def p_xylophone(c, xf, col, t):
+    c.shape([(-96, 30), (96, 4), (96, 30), (-96, 62)], hex_rgb("#B07A4F"), darken("#B07A4F", 0.3), 5, xf)
+    for i, cc in enumerate(("red", "orange", "yellow", "green", "blue", "purple")):
+        x = -80 + i * 32
+        h = 70 - i * 7
+        k = _c(cc)
+        c.shape([(x - 12, 40 - i * 4.5 - h), (x + 12, 40 - i * 4.5 - h), (x + 12, 44 - i * 4.5), (x - 12, 44 - i * 4.5)], k, _o(k), 4, xf)
+    c.line([(30, -90), (-10, -50)], hex_rgb("#8A6A4A"), 7, xf)
+    c.ellipse(-12, -48, 11, 11, _c("pink"), darken(_c("pink"), 0.3), 4, xf)
+
+
+def p_yarn(c, xf, col, t):
+    col = _c("pink") if col is None else col
+    c.line([(40, 60), (70, 84), (100, 70)], _o(col), 9, xf)
+    c.line([(40, 60), (70, 84), (100, 70)], col, 5, xf)
+    c.ellipse(0, 0, 80, 80, col, _o(col), 6, xf, n=48)
+    for rot in (-40, -10, 24, 60):
+        c.ellipse(0, 0, 78, 30, None, darken(col, 0.2), 5, Xf.rotate(rot).then(xf))
+    c.ellipse(0, 0, 80, 80, None, _o(col), 6, xf, n=48)
+    c.ellipse(-30, -34, 12, 9, lighten(col, 0.55), xf=xf)
+
+
+def p_zipper(c, xf, col, t):
+    col = _c("purple") if col is None else col
+    c.shape([(-60, -94), (-8, -94), (-8, 94), (-60, 94)], col, _o(col), 6, xf)
+    c.shape([(8, -94), (60, -94), (60, 94), (8, 94)], col, _o(col), 6, xf)
+    s = hex_rgb("#C9D3E0")
+    for i in range(9):
+        yy = -80 + i * 20
+        c.line([(-14 if i % 2 else 0, yy), (0 if i % 2 else 14, yy)], darken(s, 0.3), 9, xf, caps=False)
+    c.shape([(-18, -40), (18, -40), (12, -8), (-12, -8)], s, _o(s), 5, xf)
+    c.shape([(-9, -8), (9, -8), (9, 30), (-9, 30)], s, _o(s), 5, xf)
+
+
+# ------------------------------------------------------------------------ food -------
+def p_grapes(c, xf, col, t):
+    p = _c("purple")
+    c.line([(0, -60), (6, -92)], hex_rgb("#8A5A3A"), 8, xf)
+    lf = hex_rgb("#58B368")
+    c.ellipse(30, -78, 28, 13, lf, _o(lf), 4, Xf.rotate(-20, 30, -78).then(xf))
+    for row, n in enumerate((3, 4, 3, 2, 1)):
+        for i in range(n):
+            x, y = (i - (n - 1) / 2) * 38, -40 + row * 32
+            c.ellipse(x, y, 22, 22, p, _o(p), 4, xf)
+            c.ellipse(x - 7, y - 8, 6, 5, lighten(p, 0.5), xf=xf)
+
+
+def p_strawberry(c, xf, col, t):
+    r = _c("red")
+    c.shape([(-64, -40), (-40, -64), (40, -64), (64, -40), (40, 40), (0, 92), (-40, 40)], r, _o(r), 6, xf)
+    for dx, dy in ((-28, -24), (10, -30), (34, -4), (-10, 6), (14, 36), (-24, 34), (0, 62)):
+        c.ellipse(dx, dy, 4, 6, hex_rgb("#FFE9A8"), xf=xf)
+    g = hex_rgb("#58B368")
+    for rot in (-60, -20, 20, 60):
+        c.ellipse(0, -84, 12, 28, g, _o(g), 4, Xf.rotate(rot, 0, -62).then(xf))
+
+
+def p_pear(c, xf, col, t):
+    g = hex_rgb("#C5DC5A")
+    c.line([(0, -70), (8, -96)], hex_rgb("#8A5A3A"), 9, xf)
+    c.ellipse(0, -36, 36, 44, g, _o(g), 6, xf)
+    c.ellipse(0, 30, 60, 62, g, _o(g), 6, xf)
+    c.ellipse(0, -14, 33, 40, g, xf=xf)
+    c.ellipse(-24, 14, 10, 20, lighten(g, 0.5), xf=Xf.rotate(14, -24, 14).then(xf))
+
+
+def p_bread(c, xf, col, t):
+    b = hex_rgb("#E2A861")
+    top = [(x, y) for x, y in ellipse_points(0, -10, 94, 62, 40) if y <= -10]
+    top.sort(key=lambda q: q[0])
+    c.shape(top + [(84, 70), (-84, 70)], b, _o(b), 6, xf)
+    for dx in (-44, 0, 44):
+        c.line([(dx - 12, -44), (dx + 12, -14)], lighten(b, 0.45), 9, xf)
+    c.line([(-70, 44), (70, 44)], darken(b, 0.12), 6, xf)
+
+
+def p_milk(c, xf, col, t):
+    g = hex_rgb("#DDF2FF")
+    c.shape([(-52, -84), (52, -84), (44, 88), (-44, 88)], g, darken(g, 0.35), 6, xf)
+    c.shape([(-49, -30), (49, -30), (44, 88), (-44, 88)], WHITE, xf=xf)
+    c.ellipse(0, -30, 49, 10, WHITE, (200, 215, 230), 4, xf)
+    c.shape([(-52, -84), (52, -84), (44, 88), (-44, 88)], None, darken(g, 0.35), 6, xf)
+    c.line([(-30, -66), (-26, 40)], lighten(g, 0.7), 8, xf)
+
+
+PROPS.update({
+    "bird": p_bird, "bee": p_bee, "cow": p_cow, "sheep": p_sheep, "pig": p_pig, "owl": p_owl, "turtle": p_turtle,
+    "chick": p_chick, "caterpillar": p_caterpillar, "cocoon": p_cocoon, "tadpole": p_tadpole, "worm": p_worm,
+    "snowflake": p_snowflake, "feather": p_feather, "rock": p_rock, "shell": p_shell, "pinecone": p_pinecone,
+    "spoon": p_spoon, "bowl": p_bowl, "shoe": p_shoe, "boot": p_boot, "mitten": p_mitten, "scarf": p_scarf,
+    "basket": p_basket, "broom": p_broom, "clock": p_clock, "wateringcan": p_wateringcan, "quilt": p_quilt,
+    "vase": p_vase, "xylophone": p_xylophone, "yarn": p_yarn, "zipper": p_zipper, "grapes": p_grapes,
+    "strawberry": p_strawberry, "pear": p_pear, "bread": p_bread, "milk": p_milk,
+})
+TINTABLE.update({"bird", "feather", "bowl", "shoe", "boot", "mitten", "scarf", "clock", "wateringcan", "vase", "yarn", "zipper"})
+SPOKEN.update({"wateringcan": "watering can", "pinecone": "pine cone"})
+PLURAL.update({"sheep": "sheep", "strawberry": "strawberries", "wateringcan": "watering cans", "pinecone": "pine cones",
+               "milk": "glasses of milk", "bread": "loaves of bread", "grapes": "grapes", "yarn": "balls of yarn",
+               "scarf": "scarves"})
+for _letter, _words in {"B": ["bird", "bee", "basket", "bowl", "boot", "broom", "bread"], "C": ["cow", "chick", "caterpillar", "clock"],
+                        "F": ["feather"], "G": ["grapes"], "M": ["mitten", "milk"], "O": ["owl"], "P": ["pig", "pear", "pinecone"],
+                        "Q": ["quilt"], "R": ["rock"], "S": ["sheep", "shell", "spoon", "shoe", "scarf", "snowflake", "strawberry"],
+                        "T": ["turtle", "tadpole"], "V": ["vase"], "W": ["worm", "wateringcan"], "X": ["xylophone"], "Y": ["yarn"],
+                        "Z": ["zipper"]}.items():
+    LETTERS.setdefault(_letter, []).extend(_words)
+del _letter, _words

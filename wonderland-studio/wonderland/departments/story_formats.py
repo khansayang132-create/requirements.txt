@@ -20,7 +20,7 @@ from __future__ import annotations
 import random
 from dataclasses import dataclass, field
 
-from ..render.props import LETTERS, spoken_name
+from ..render.props import LETTERS, TINTABLE, spoken_name
 
 NUM = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"]
 INTERJ = ["Ooh!", "Look!", "Wow!", "Oh my!", "I see it!"]
@@ -68,6 +68,28 @@ class Story:
     def as_dict(self) -> dict:
         return {k: getattr(self, k) for k in ("category", "format", "series", "title", "summary", "learning_goal", "mood",
                                               "cast", "beats", "topics", "params", "song")}
+
+
+# Technical QA rejects any stretch of 3 s without visible motion (ffmpeg freezedetect, n=0.002).
+# Measured on the flat renderer: these actions, effects, props and scenes always move enough;
+# a still pose (idle, pointing, looking up, even talking) or a gently bobbing prop does not.
+MOVING_ACTIONS = {"nod", "clap", "cheer", "dance", "hop", "stretch"}
+MOVING_FX = {"hearts", "notes"}
+MOVING_PROPS = {"sun", "butterfly", "snowflake"}
+MOVING_ENVS = {"night"}
+CALM_SWAP = ("idle", "look_up", "wow", "think", "tiptoe", "point")   # poses a gentle nod can replace
+
+
+def keep_moving(acts: dict, speaker: str, fx, env: str, items: list[dict]) -> dict:
+    """Give a beat that would otherwise look frozen one gentle nod (a listener first)."""
+    if (env in MOVING_ENVS or fx in MOVING_FX or any(a in MOVING_ACTIONS for a in acts.values())
+            or any(it["name"] in MOVING_PROPS or it.get("layout") in ("fly", "fall") for it in items)):
+        return acts
+    order = sorted(acts, key=lambda c: (c == speaker, CALM_SWAP.index(acts[c]) if acts[c] in CALM_SWAP else 99))
+    for cid in order:
+        if acts[cid] in CALM_SWAP:
+            return {**acts, cid: "nod"}
+    return acts
 
 
 class B:
@@ -131,10 +153,12 @@ class B:
 
     def say(self, who: str, text: str, act: dict | None = None, word=None, number=None, letter=None, title=None, end=None,
             fx=None, transfer=None, sfx=None, sub=None) -> "B":
+        acts = {cid: (act or {}).get(cid, "idle") for cid in self.cast}
+        if not transfer:
+            acts = keep_moving(acts, who, fx, self.env, self.show_items + self.ground)
         actors = []
         for cid in self.cast:
-            a = (act or {}).get(cid, "idle")
-            actors.append({"id": cid, "action": a, "hold": self.state[cid].get("hold")})
+            actors.append({"id": cid, "action": acts[cid], "hold": self.state[cid].get("hold")})
         overlay = None
         if title:
             overlay = {"text": title, "style": "title", "color": "pink"}
@@ -1279,3 +1303,1303 @@ FORMATS = {
 }
 CATEGORY_NAMES = {"A": "Colors, Shapes & Numbers", "B": "Animal Adventures", "C": "Friendship & Kindness", "D": "Good Habits & Manners",
                   "E": "Rhymes & Sing-Along", "F": "Bedtime Stories", "G": "Alphabet & Early Learning", "H": "Everyday Discoveries"}
+
+
+# =====================================================================================
+# More formats, so the channel can keep four new episodes a day without repeating itself.
+# Each one is a different KIND of episode (a listening game, a riddle, a prediction, a
+# comparison, a countdown, a call-and-response, a wind-down...). Each draws its moments
+# from a bank of small, true situations, so two episodes of one format visit different
+# animals, objects and places instead of reading the same script with one word swapped.
+# =====================================================================================
+NIGHT_END = "Goodnight from Wonder Meadow"
+
+
+def _cycle_pair(seq: list, i: int):
+    """Alternate the asker and the answerer between two cast members."""
+    return (seq[0], seq[1]) if i % 2 == 0 else (seq[1], seq[0])
+
+
+# ------------------------------------------------------------------ H: discoveries ---
+SOUND_BANK = [  # prop, color, env, sound, overlay, clue, guess, reveal
+    ("bee", None, "garden", "Buzz, buzz, buzz.", "BUZZ", "It visits flower after flower.", "a bee",
+     "A bee! Its fast little wings make the buzz."),
+    ("bell", None, "playroom", "Ding, ding, ding!", "DING", "It is shiny, and it swings.", "a bell", "A bell! A bell rings when it swings."),
+    ("drum", None, "playroom", "Boom, boom, boom!", "BOOM", "You tap the top to play it.", "a drum", "A drum! Tap the top, and it goes boom."),
+    ("cow", None, "meadow", "Moo, moo.", "MOO", "It is big, and it munches grass.", "a cow", "A cow! Cows say moo."),
+    ("sheep", None, "hilltop", "Baa, baa.", "BAA", "It has a soft, woolly coat.", "a sheep", "A sheep! Sheep say baa."),
+    ("pig", None, "meadow", "Oink, oink.", "OINK", "It has a curly tail and a round nose.", "a pig", "A pig! Pigs say oink."),
+    ("frog", None, "pond", "Ribbit, ribbit.", "RIBBIT", "It sits by the pond, ready to hop.", "a frog", "A frog! Frogs say ribbit."),
+    ("owl", None, "night", "Hoo, hoo.", "HOO", "It has big round eyes and wakes at night.", "an owl", "An owl! Owls call hoo, hoo."),
+    ("chick", None, "garden", "Peep, peep, peep.", "PEEP", "It is small, yellow and fluffy.", "a chick", "A chick! Baby chickens say peep."),
+    ("bird", "blue", "forest", "Tweet, tweet, tweet.", "TWEET", "It sings up high in a tree.", "a bird", "A bird! Birds sing tweet, tweet."),
+    ("clock", "blue", "playroom", "Tick, tock, tick, tock.", "TICK TOCK", "It has two hands, but no fingers.", "a clock",
+     "A clock! A clock goes tick, tock."),
+    ("xylophone", None, "playroom", "Plink, plink, plonk!", "PLINK", "It has colorful bars in a row.", "a xylophone",
+     "A xylophone! Each bar plays a different note."),
+    ("raindrop", None, "rainy", "Pitter, patter, pitter, patter.", "PITTER PATTER", "It falls from gray clouds.", "rain",
+     "Rain! Raindrops go pitter, patter."),
+    ("broom", None, "playroom", "Swish, swish, swish.", "SWISH", "It sweeps the floor clean.", "a broom", "A broom! The broom goes swish."),
+    ("bubbles", None, "bathroom", "Pop! Pop! Pop!", "POP", "They are round and full of air.", "bubbles", "Bubbles! Bubbles go pop."),
+    ("leaf", "orange", "forest", "Crunch, crunch, crunch.", "CRUNCH", "Trees drop them in autumn.", "dry leaves",
+     "Dry leaves! They crunch under our feet."),
+]
+
+
+def guess_the_sound(rng, uni) -> Story:
+    x, y = _pick_cast(rng, uni, 2)
+    picks = rng.sample(SOUND_BANK, 3)
+    b = B(uni, picks[0][2]).enter(x, y)
+    X, Y = b.n(x), b.n(y)
+    b.say("narrator", _v(rng, f"Shh. {X} and {Y} hear something. What makes that sound?",
+                         f"Listen with {X} and {Y}. What makes that sound?", f"{X} and {Y} play a listening game. What makes that sound?"),
+          title="What Makes That Sound?", act={x: "think", y: "think"})
+    for i, (prop, col, env, snd, ov, clue, guess, reveal) in enumerate(picks):
+        b.go(env)
+        g, o = _cycle_pair([x, y], i)
+        b.say("narrator", snd, act={x: "look_up", y: "look_up"}, word=(ov, "orange"))
+        b.say(o, _v(rng, f"Here is a clue, {b.n(g)}. {clue}", f"Listen again. {clue}", clue), act={o: "point", g: "think"})
+        b.say(g, _v(rng, f"I think it is {guess}!", f"Could it be {guess}?", f"I know! It is {guess}!"), act={g: "wow"})
+        b.show(prop, col, 3 if prop == "leaf" else 1)
+        b.say("narrator", reveal, act={g: "cheer", o: "clap"}, word=(spoken_name(prop).upper(), "blue"), sfx=["ding"])
+    b.clear()
+    b.say("narrator", _v(rng, "Our ears help us find out what is around us.", "Listen closely, and sounds tell us so much!",
+                         "Ears are for listening. What good listeners!"), act={x: "cheer", y: "cheer"}, fx="sparkle")
+    b.say(x, _v(rng, "What sounds can you hear right now?", "Can you make one of those sounds?", "Which sound did you like best?"),
+          act={x: "wave"}, end=uni["brand"]["end_card"])
+    names = [p[6] for p in picks]
+    return Story("H", "guess_the_sound", "i_wonder", f"What Makes That Sound? {X} and {Y} Listen",
+                 f"{X} and {Y} listen to three sounds, use a clue for each, and find {join_words(names)}.",
+                 "Listening carefully: our ears tell us what makes a sound.", "bright", [x, y], b.beats,
+                 ["listening", "sounds", "senses", "science for kids"] + [p[0] for p in picks],
+                 {"picks": sorted(p[0] for p in picks), "x": x, "y": y})
+
+
+SENSES = {  # sense: (body part, verb phrase, ask verb, intro, [(prop, color, env, describe, overlay)])
+    "touch": ("hands", "touches", "feel", "Our hands can feel things. Let's touch and feel with {N}.", [
+        ("feather", None, "meadow", "It feels soft and tickly.", "SOFT"), ("rock", None, "forest", "It feels hard and bumpy.", "HARD"),
+        ("snowflake", None, "meadow", "Brr! It feels cold and wet.", "COLD"), ("yarn", "pink", "playroom", "It feels fuzzy and soft.", "FUZZY"),
+        ("shell", None, "pond", "It feels smooth inside and ridgy outside.", "RIDGY"),
+        ("towel", "green", "bathroom", "It feels fluffy and dry.", "FLUFFY"), ("pinecone", None, "forest", "It feels rough and scratchy.", "ROUGH"),
+        ("spoon", None, "playroom", "It feels smooth and cool.", "SMOOTH"), ("teddy", None, "playroom", "It feels cuddly and squishy.", "CUDDLY")]),
+    "smell": ("nose", "smells", "smell", "Sniff, sniff! Our noses can smell. Let's sniff with {N}.", [
+        ("flower", "pink", "garden", "Mmm. It smells sweet.", "SWEET"), ("bread", None, "playroom", "Mmm. Warm bread smells yummy.", "YUMMY"),
+        ("strawberry", None, "garden", "It smells sweet and fruity.", "FRUITY"), ("soap", None, "bathroom", "It smells fresh and clean.", "CLEAN"),
+        ("orange", None, "garden", "It smells fresh and tangy.", "TANGY"), ("pinecone", None, "forest", "It smells like the woods.", "PINE"),
+        ("banana", None, "meadow", "It smells sweet and ripe.", "RIPE")]),
+    "see": ("eyes", "looks at", "see", "Look, look! Our eyes can see. Let's look closely with {N}.", [
+        ("rainbow", None, "meadow", "It has so many colors.", "COLORS"), ("ladybug", None, "garden", "It is red with black spots.", "SPOTS"),
+        ("moon", None, "night", "It is round and bright.", "ROUND"), ("fish", "orange", "pond", "It is orange and shiny.", "SHINY"),
+        ("snail", None, "garden", "Its shell has a swirl.", "SWIRL"), ("butterfly", "purple", "meadow", "Its wings have pretty patterns.", "PATTERNS"),
+        ("star", "yellow", "night", "It twinkles far away.", "TWINKLE"), ("caterpillar", None, "garden", "It is long and green.", "LONG")]),
+    "taste": ("tongue", "tastes", "taste", "Yum! Our tongues can taste. It is snack time with {N}.", [
+        ("strawberry", None, "garden", "It tastes sweet and juicy.", "SWEET"), ("carrot", None, "garden", "It tastes crunchy and fresh.", "CRUNCHY"),
+        ("banana", None, "meadow", "It tastes soft and sweet.", "SOFT"), ("apple", None, "garden", "It tastes crisp and juicy.", "CRISP"),
+        ("grapes", None, "garden", "They taste juicy and sweet.", "JUICY"), ("bread", None, "playroom", "It tastes warm and soft.", "WARM"),
+        ("milk", None, "playroom", "It tastes cool and creamy.", "CREAMY"), ("pear", None, "garden", "It tastes sweet and juicy.", "JUICY")]),
+}
+
+
+def five_senses(rng, uni) -> Story:
+    who = _pick_cast(rng, uni, 1)[0]
+    sense = rng.choice(list(SENSES))
+    part, verb, ask, intro, bank = SENSES[sense]
+    picks = rng.sample(bank, 3)
+    b = B(uni, picks[0][2]).enter(who)
+    N = b.n(who)
+    b.say("narrator", intro.format(N=N), title=f"{cap(sense)} With {N}", act={who: "wave"}, word=(sense.upper(), "pink"))
+    b.say(who, _v(rng, "I wonder what I will find!", "Here I go!", f"Let's {ask} together!"), act={who: "hop"})
+    for prop, col, env, desc, ov in picks:
+        b.go(env).show(prop, col)
+        the = "the grapes" if prop == "grapes" else f"the {spoken_name(prop)}"
+        b.say("narrator", _v(rng, f"{N} {verb} {the}.", f"Now {N} {verb} {the}.", f"Next, {N} {verb} {the}."), act={who: "point"})
+        b.say(who, desc, act={who: "wow"}, word=(ov, "purple"))
+    b.clear()
+    words = [p[4].lower() for p in picks]
+    b.say("narrator", f"{cap(join_words(list(dict.fromkeys(words))))}. We {ask} so much with our {part}!", act={who: "cheer"}, fx="sparkle")
+    b.say(who, _v(rng, f"What can you {ask} right now?", f"What do you like to {ask}?"), act={who: "wave"}, end=uni["brand"]["end_card"])
+    return Story("H", "five_senses", "i_wonder", f"{cap(sense)} With {N}: {cap(join_words([spoken_name(p[0]) for p in picks]))}",
+                 f"{N} uses the sense of {sense} to explore {join_words([spoken_name(p[0]) for p in picks])}.",
+                 f"We {ask} with our {part}.", "bright", [who], b.beats, ["five senses", sense, "science for kids", "discovery"],
+                 {"sense": sense, "picks": sorted(p[0] for p in picks), "who": who})
+
+
+SEASON_CLUES = {
+    "spring": [("garden", "sprout", None, "Little green sprouts are poking up."), ("garden", "flower", "pink", "New flowers are opening."),
+               ("garden", "chick", None, "Fluffy baby chicks are hatching."), ("garden", "bee", None, "Busy bees are visiting the blossoms."),
+               ("forest", "nest", None, "Birds are building nests in the trees."), ("rainy", "raindrop", None, "Gentle rain helps the plants grow.")],
+    "summer": [("meadow", "sun", None, "The sun is hot, and the days are long."), ("garden", "strawberry", None, "Sweet strawberries are ripe."),
+               ("meadow", "hat", "orange", "We wear sun hats to stay cool."), ("night", "firefly", None, "Fireflies glow on warm evenings."),
+               ("garden", "icecream", None, "A cold treat tastes good on a hot day."),
+               ("meadow", "butterfly", "orange", "Butterflies flutter over the warm grass.")],
+    "autumn": [("forest", "leaf", "orange", "Leaves turn red, orange and yellow."), ("forest", "acorn", None, "Acorns drop from the oak trees."),
+               ("forest", "pinecone", None, "Pine cones fall to the ground."), ("garden", "apple", None, "Apples are ready to pick."),
+               ("hilltop", "kite", "red", "Cool, windy days are good for kites."), ("playroom", "scarf", "orange", "We put on a cozy scarf.")],
+    "winter": [("meadow", "snowflake", None, "Snowflakes are falling from the sky."),
+               ("playroom", "mitten", "red", "We wear mittens to keep our hands warm."), ("playroom", "boot", "blue", "Warm boots keep our feet dry."),
+               ("bedroom", "quilt", None, "The nights are long and cold. Time for a quilt."),
+               ("playroom", "scarf", "green", "A warm scarf keeps our neck cozy."), ("playroom", "milk", None, "Warm milk after playing in the cold.")],
+}
+SEASON_FACT = {"spring": "In spring, many plants start to grow again.", "summer": "Summer is the warmest season of the year.",
+               "autumn": "In autumn, the air gets cooler and many leaves fall.",
+               "winter": "Winter is the coldest season. In some places, it snows."}
+SEASON_COLOR = {"spring": "green", "summer": "yellow", "autumn": "orange", "winter": "blue"}
+
+
+def guess_the_season(rng, uni) -> Story:
+    x, y = _pick_cast(rng, uni, 2)
+    season = rng.choice(list(SEASON_CLUES))
+    clues = rng.sample(SEASON_CLUES[season], 3)
+    wrong = rng.choice([s for s in SEASON_CLUES if s != season])
+    b = B(uni, clues[0][0]).enter(x, y)
+    X, Y = b.n(x), b.n(y)
+    b.say("narrator", _v(rng, f"{X} has three clues. Can {Y} guess the season?", f"Let's play a game! {X} gives three clues. Guess the season!"),
+          title="Guess the Season!", act={x: "wave", y: "think"})
+    for i, (env, prop, col, line) in enumerate(clues):
+        b.go(env).show(prop, col)
+        b.say(x, (_v(rng, "Clue number one. ", "First clue. ", "") if i == 0 else "") + line, act={x: "point", y: "look_up"},
+              number=(i + 1, SEASON_COLOR[season]))
+        if i == 1:
+            b.say(y, _v(rng, f"Hmm. Is it {wrong}?", f"Maybe it is {wrong}?", f"I think it is {wrong}!"), act={y: "think"})
+            b.say(x, _v(rng, "Not quite! Here is one more clue.", "Good try! Listen to one more clue.", f"Close, {Y}! One more clue."),
+                  act={x: "nod"})
+    b.say(y, _v(rng, f"Now I know! It is {season}!", f"It is {season}!", f"{cap(season)}! It is {season}!"), act={y: "cheer"},
+          word=(season.upper(), SEASON_COLOR[season]), sfx=["chime"])
+    b.clear()
+    b.say("narrator", SEASON_FACT[season], act={x: "clap", y: "nod"}, word=(season.upper(), SEASON_COLOR[season]))
+    b.say("narrator", "Spring, summer, autumn, winter. Then spring comes again!", act={x: "dance", y: "dance"}, fx="sparkle")
+    b.say(x, _v(rng, "Which season do you like best?", f"What do you like to do in {season}?"), act={x: "wave"}, end=uni["brand"]["end_card"])
+    return Story("H", "guess_the_season", "i_wonder", f"Guess the Season! {X} Gives Three Clues",
+                 f"{X} gives three clues about {season}: {join_words([spoken_name(c[1], 2) for c in clues])}. {Y} guesses.",
+                 f"Signs of {season}; the four seasons in order.", "bright", [x, y], b.beats, ["seasons", season, "weather", "science for kids"],
+                 {"season": season, "clues": sorted(c[1] + str(c[2]) for c in clues), "x": x, "y": y})
+
+
+CYCLES = {  # key: (question, env, recap, [(prop, color, size, overlay, [line variants])])
+    "butterfly": ("How does a caterpillar become a butterfly?", "garden", "Egg, caterpillar, chrysalis, butterfly!", [
+        ("egg", None, 70, "EGG", ["A tiny egg sits on a leaf.", "Look closely. There is a tiny egg on a leaf."]),
+        ("caterpillar", None, 120, "CATERPILLAR", ["Out comes a hungry caterpillar. Munch, munch!", "A little caterpillar hatches and eats leaves."]),
+        ("cocoon", None, 130, "CHRYSALIS", ["The caterpillar makes a chrysalis and rests inside.", "It hangs very still, safe inside a chrysalis."]),
+        ("butterfly", "purple", 140, "BUTTERFLY", ["Out comes a butterfly! It opens its wings.", "Surprise! A butterfly with beautiful wings."])]),
+    "frog": ("How does a tadpole become a frog?", "pond", "Eggs, tadpole, little legs, frog!", [
+        ("bubbles", None, 110, "EGGS", ["Frog eggs float in the pond, like little jelly beads.", "In the pond, there are soft, jelly frog eggs."]),
+        ("tadpole", None, 110, "TADPOLE", ["A tadpole hatches. It swims with a long tail.", "Out wiggles a tadpole, swishing its tail."]),
+        ("frog", None, 80, "LEGS", ["The tadpole grows legs, and its tail gets smaller.", "Little legs grow, and the tail shrinks away."]),
+        ("frog", None, 140, "FROG", ["Now it is a frog! Ribbit!", "Hop! It is a frog at last."])]),
+    "chick": ("How does a chick hatch?", "garden", "Nest, egg, crack, chick!", [
+        ("nest", None, 120, "NEST", ["A mother hen keeps her eggs warm in the nest.", "A hen sits on her eggs to keep them warm."]),
+        ("egg", None, 110, "EGG", ["Tap, tap. Something is moving inside an egg.", "Listen. Tap, tap, tap, from inside the egg."]),
+        ("chick", None, 90, "CRACK", ["Crack! Out comes a wet little chick.", "The shell cracks open. Hello, little chick!"]),
+        ("chick", None, 140, "CHICK", ["The chick dries off, fluffy and yellow. Peep!", "Soon the chick is dry and fluffy. Peep, peep!"])]),
+    "oak": ("How does an acorn become an oak tree?", "forest", "Acorn, root, sprout, oak tree!", [
+        ("acorn", None, 110, "ACORN", ["An acorn falls from an oak tree.", "Plop! An acorn drops to the ground."]),
+        ("seed", None, 120, "ROOT", ["Under the soil, the acorn sends a root down.", "In the soil, a tiny root starts to grow."]),
+        ("sprout", None, 120, "SPROUT", ["A little green sprout pokes up.", "Up comes a small sprout with two leaves."]),
+        ("tree", None, 150, "OAK TREE", ["After many, many years, it is a tall oak tree!", "Slowly, over many years, it grows into a big oak."])]),
+    "apple": ("How does an apple grow?", "garden", "Blossom, bee, little apple, red apple!", [
+        ("flower", "pink", 120, "BLOSSOM", ["In spring, the apple tree is full of blossoms.", "Pink blossoms open on the apple tree."]),
+        ("bee", None, 110, "BEE", ["Bees visit the blossoms and carry pollen.", "Buzz! Bees carry pollen from blossom to blossom."]),
+        ("apple", "green", 90, "APPLE", ["A tiny green apple starts to grow.", "Where a blossom was, a little apple grows."]),
+        ("apple", "red", 140, "RED", ["It grows big and turns red. Ready to pick!", "All summer it grows, until it is red and ripe."])]),
+}
+
+
+def life_cycle(rng, uni) -> Story:
+    key = rng.choice(list(CYCLES))
+    q, env, recap, stages = CYCLES[key]
+    x, y = _pick_cast(rng, uni, 2)
+    b = B(uni, env).enter(x, y)
+    X, Y = b.n(x), b.n(y)
+    b.say(x, _v(rng, f"{Y}, I wonder. {q}", f"I have a question. {q}", q), title=q, act={x: "think"})
+    b.say(y, _v(rng, f"Let's find out, {X}. Step by step!", f"We can find out together, {X}.", f"Let's look closely and find out, {X}."),
+          act={y: "nod"})
+    for i, (prop, col, size, ov, lines) in enumerate(stages):
+        if i == len(stages) - 1:
+            b.say(y, _v(rng, f"What do you think comes next, {X}?", "What comes next?", "And then what happens?"), act={y: "think", x: "think"})
+        b.clear().show(prop, col, size=size)
+        if key == "butterfly" and i == 0:
+            b.show("leaf", None, size=90)
+        b.say("narrator", rng.choice(lines), act={x: "point" if i % 2 else "wow", y: "look_up"}, number=(i + 1, "green"), sub=ov.lower())
+    b.clear()
+    b.say("narrator", recap + " " + _v(rng, "Living things grow and change.", "Step by step, it grew and changed."), act={x: "cheer", y: "cheer"},
+          fx="sparkle")
+    b.say(x, _v(rng, "Nature is full of surprises!", "What else grows and changes?", "I love finding out how things grow!"), act={x: "wave"},
+          end=uni["brand"]["end_card"])
+    return Story("H", "life_cycle", "i_wonder", f"{q[:-1]}? {X} and {Y} Find Out",
+                 f"{X} and {Y} watch, step by step: {recap.rstrip('!').lower()}.", "Living things grow and change in steps.", "bright",
+                 [x, y], b.beats, ["life cycle", key, "nature", "science for kids"], {"cycle": key, "x": x, "y": y})
+
+
+COMPARE = {  # dimension: (question, overlay, outro word, [(a, a color, a size, b, b color, b size, env, fact)])
+    "heavy": ("Which one is heavier?", "HEAVY", "heavy", [
+        ("rock", None, 110, "feather", "blue", 110, "forest", "The rock is heavy. The feather is very light."),
+        ("block", "green", 110, "balloon", "red", 110, "playroom", "The block is heavier. The balloon is light and floats."),
+        ("book", "blue", 110, "leaf", None, 110, "forest", "The book is heavier than the little leaf.")]),
+    "tall": ("Which one is taller?", "TALL", "tall", [
+        ("tree", None, 150, "flower", "pink", 70, "garden", "The tree is taller than the flower."),
+        ("lamp", None, 140, "cup", "pink", 60, "playroom", "The lamp is taller than the cup."),
+        ("tree", None, 150, "sprout", None, 60, "forest", "The tree is tall. The little sprout is short.")]),
+    "fast": ("Which one is faster?", "FAST", "fast", [
+        ("bird", "blue", 110, "snail", None, 110, "garden", "The bird flies fast. The snail moves slowly."),
+        ("bee", None, 110, "turtle", None, 110, "pond", "The bee zooms fast. The turtle walks slowly."),
+        ("butterfly", "orange", 110, "caterpillar", None, 110, "meadow", "The butterfly flutters fast. The caterpillar crawls slowly.")]),
+    "long": ("Which one is longer?", "LONG", "long", [
+        ("worm", None, 120, "ant", None, 70, "garden", "The worm is longer than the ant."),
+        ("scarf", "green", 130, "mitten", "red", 80, "playroom", "The scarf is longer than the mitten."),
+        ("broom", None, 140, "spoon", None, 80, "playroom", "The broom is longer than the spoon.")]),
+    "hot": ("Which one is hot?", "HOT", "hot", [("sun", None, 120, "snowflake", None, 110, "meadow", "The sun is hot. Snow is cold.")]),
+    "soft": ("Which one is softer?", "SOFT", "soft", [
+        ("pillow", None, 110, "rock", None, 110, "playroom", "The pillow is soft. The rock is hard."),
+        ("teddy", None, 110, "block", "blue", 110, "playroom", "The teddy is soft. The block is hard."),
+        ("yarn", "pink", 110, "shell", None, 110, "pond", "The yarn is soft. The shell is hard.")]),
+    "big": ("Which one is bigger?", "BIG", "big", [
+        ("cow", None, 150, "ladybug", None, 50, "meadow", "The cow is much bigger than the ladybug."),
+        ("sheep", None, 150, "bee", None, 55, "hilltop", "The sheep is bigger than the bee."),
+        ("pig", None, 150, "ant", None, 50, "meadow", "The pig is bigger than the ant.")]),
+}
+
+
+def which_one(rng, uni) -> Story:
+    x, y = _pick_cast(rng, uni, 2)
+    dims = rng.sample(list(COMPARE), 3)
+    picks = [(d, rng.choice(COMPARE[d][3])) for d in dims]
+    b = B(uni, picks[0][1][6]).enter(x, y)
+    X, Y = b.n(x), b.n(y)
+    b.say("narrator", _v(rng, f"{X} and {Y} are comparing things. Which one is which?", f"Let's compare with {X} and {Y}!",
+                         f"Two things, side by side. {X} and {Y} will compare them."), title="Which One Is Bigger, Faster, Softer?",
+          act={x: "wave", y: "wave"})
+    for i, (d, (a, ac, asz, o, oc, osz, env, fact)) in enumerate(picks):
+        q, ov, _ = COMPARE[d][:3]
+        asker, answer = _cycle_pair([x, y], i)
+        b.go(env)
+        pair = [(a, ac, asz), (o, oc, osz)]
+        rng.shuffle(pair)
+        for p, c, s in pair:
+            b.show(p, c, size=s)
+        b.say(asker, _v(rng, f"{b.n(answer)}, {q[0].lower()}{q[1:]}", q, f"Look at these two. {q}"), act={asker: "point", answer: "think"})
+        b.say(answer, _v(rng, f"The {spoken_name(a)}!", f"I think the {spoken_name(a)}.", f"That is easy. The {spoken_name(a)}!"),
+              act={answer: "point"}, word=(ov, "orange"))
+        b.say("narrator", fact, act={x: "nod", y: "nod"}, word=(ov, "orange"))
+    b.clear()
+    b.say("narrator", f"{cap(join_words([COMPARE[d][2] for d in dims]))}. {X} and {Y} are great at comparing!", act={x: "cheer", y: "cheer"},
+          fx="sparkle")
+    b.say(y, _v(rng, "What two things can you compare today?", "Which is bigger, you or a ladybug?"), act={y: "wave"},
+          end=uni["brand"]["end_card"])
+    return Story("H", "which_one", "i_wonder", f"{COMPARE[dims[0]][0][:-1].title()}? {X} and {Y} Compare",
+                 f"{X} and {Y} compare pairs of things: {join_words([COMPARE[d][2] for d in dims])}.",
+                 "Comparing two things: heavier, taller, faster, longer, softer, bigger.", "bright", [x, y], b.beats,
+                 ["comparing", "opposites", "science for kids"] + dims, {"picks": sorted(f"{d}:{p[0]}{p[3]}" for d, p in picks), "x": x, "y": y})
+
+
+WHERE_FROM = [  # item, color, question, source, source color, env, answer, thanks
+    ("milk", None, "where does milk come from?", "cow", None, "meadow", "Milk comes from cows on a farm.", "Thank you, cows!"),
+    ("egg", None, "where do eggs come from?", "nest", None, "garden", "Eggs come from hens. A hen is a mother chicken.", "Thank you, hens!"),
+    ("jar", None, "where does honey come from?", "bee", None, "garden", "Honey comes from bees. Bees make it from flower nectar.",
+     "Thank you, busy bees!"),
+    ("yarn", "pink", "where does yarn come from?", "sheep", None, "hilltop", "Lots of yarn is made from wool. Wool comes from sheep.",
+     "Thank you, sheep!"),
+    ("apple", None, "where do apples come from?", "tree", None, "garden", "Apples grow on apple trees.", "Thank you, apple tree!"),
+    ("strawberry", None, "where do strawberries come from?", "sprout", None, "garden",
+     "Strawberries grow on small plants, close to the ground.", "Yum. Thank you, little plants!"),
+    ("bread", None, "where does bread come from?", "seed", None, "meadow", "Bread is made from flour. Flour comes from wheat seeds.",
+     "Thank you, wheat!"),
+    ("carrot", None, "where do carrots come from?", "sprout", None, "garden", "Carrots grow under the soil. Only the leaves poke out.",
+     "Under the ground! Who knew?"),
+    ("feather", "blue", "where do feathers come from?", "bird", "blue", "forest", "Feathers come from birds. Birds are covered in them.",
+     "Thank you, birds!"),
+    ("raindrop", None, "where does rain come from?", "cloud", None, "rainy", "Rain falls from clouds. Clouds hold tiny drops of water.",
+     "Thank you, clouds!"),
+    ("pinecone", None, "where do pine cones come from?", "tree", None, "forest", "Pine cones grow on pine trees. They hold the seeds.",
+     "Thank you, pine tree!"),
+    ("acorn", None, "where do acorns come from?", "tree", None, "forest", "Acorns grow on oak trees. Each acorn is a seed.",
+     "Thank you, oak tree!"),
+]
+
+
+def where_from(rng, uni) -> Story:
+    x, y = _pick_cast(rng, uni, 2)
+    picks = rng.sample(WHERE_FROM, 3)
+    b = B(uni, picks[0][5]).enter(x, y)
+    X, Y = b.n(x), b.n(y)
+    b.say("narrator", _v(rng, f"{X} has a question. Where does it come from?", f"{X} and {Y} are curious today. Where does it come from?"),
+          title="Where Does It Come From?", act={x: "think", y: "look_up"})
+    for i, (item, ic, q, src, sc, env, answer, thanks) in enumerate(picks):
+        asker, other = _cycle_pair([x, y], i)
+        b.go(env).show(item, ic)
+        b.say(asker, _v(rng, f"{b.n(other)}, {q}", f"Hmm. {cap(q)}", f"I wonder, {q}"), act={asker: "point", other: "think"})
+        b.show(src, sc)
+        b.say("narrator", answer, act={asker: "wow", other: "nod"}, sfx=["ding"])
+        b.say(other, thanks, act={other: "cheer"})
+    b.clear()
+    b.say("narrator", _v(rng, "So many good things come from plants and animals.", "Everything comes from somewhere. Asking is how we learn!"),
+          act={x: "cheer", y: "cheer"}, fx="sparkle")
+    b.say(y, _v(rng, "What would you like to ask about?", "What do you wonder about?"), act={y: "wave"}, end=uni["brand"]["end_card"])
+    topics = [p[2].split(" ")[2] for p in picks]
+    return Story("H", "where_from", "i_wonder", f"Where Does It Come From? {X} and {Y} Ask",
+                 f"{X} and {Y} find out where {join_words(topics)} come from.", "Food and things we use come from plants and animals.",
+                 "bright", [x, y], b.beats, ["where things come from", "farm", "nature", "science for kids"] + topics,
+                 {"picks": sorted(p[0] for p in picks), "x": x, "y": y})
+
+
+WEATHER = {  # kind: (env, overlay color, observe line, do line)
+    "sunny": ("meadow", "yellow", "The sun is shining. It is sunny and warm.", "Time for a sun hat!"),
+    "rainy": ("rainy", "blue", "Drip, drop. It is rainy today.", "Time for an umbrella and boots!"),
+    "windy": ("hilltop", "green", "Whoosh! The wind is blowing the leaves.", "A windy day is good for a kite!"),
+    "cloudy": ("meadow", "purple", "Big gray clouds cover the sun. It is cloudy.", "Maybe rain will come later."),
+    "snowy": ("meadow", "blue", "Snowflakes are falling. It is snowy and cold.", "Time for mittens and a scarf!"),
+    "foggy": ("forest", "purple", "Fog is a cloud close to the ground. It is foggy.", "We stay close together and walk slowly."),
+}
+DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+
+
+def weather_week(rng, uni) -> Story:
+    x, y = _pick_cast(rng, uni, 2)
+    kinds = rng.sample(list(WEATHER), 3)
+    d0 = rng.randrange(5)
+    b = B(uni, WEATHER[kinds[0]][0]).enter(x, y)
+    X, Y = b.n(x), b.n(y)
+    b.say("narrator", _v(rng, f"{X} and {Y} check the weather every day. What will it be?",
+                         f"Every morning, {X} and {Y} look outside. What is the weather?"), title="What Is the Weather Today?",
+          act={x: "look_up", y: "look_up"})
+    for i, k in enumerate(kinds):
+        env, col, obs, do = WEATHER[k]
+        day = DAYS[d0 + i]
+        speaker, other = _cycle_pair([x, y], i)
+        b.go(env)
+        if k == "sunny":
+            b.put("sun", "sky", x=820, y=560, size=110)
+        elif k == "rainy":
+            b.hold(speaker, "umbrella", "yellow", 110)
+        elif k == "windy":
+            b.put("leaf", "fly", count=3, color="orange", size=40, y=680)
+        elif k == "cloudy":
+            b.put("cloud", "sky", x=330, y=540, size=130, color="#D8DEE8").put("cloud", "sky", x=780, y=620, size=110, color="#D8DEE8")
+        elif k == "snowy":
+            b.put("snowflake", "fall", count=10, size=34)
+        elif k == "foggy":
+            b.put("cloud", "sky", x=540, y=760, size=200, color="#EEF2F6")
+        b.say("narrator", f"On {day}, {obs[0].lower()}{obs[1:]}", act={speaker: "look_up", other: "look_up"}, word=(k.upper(), col))
+        if k == "sunny":
+            b.show("hat", "orange")
+        elif k == "windy":
+            b.show("kite", "red")
+        elif k == "snowy":
+            b.show("mitten", "red").show("scarf", "green")
+        elif k == "rainy":
+            b.show("boot", "yellow")
+        b.say(speaker, do, act={speaker: "hold_up" if k == "rainy" else "point", other: "nod"})
+        b.hold(speaker, None)
+    b.clear()
+    b.say("narrator", f"{cap(join_words(kinds))}. The weather can change every day!", act={x: "cheer", y: "cheer"}, fx="sparkle")
+    b.say(y, _v(rng, "What is the weather like today?", "What do you wear when it rains?"), act={y: "wave"}, end=uni["brand"]["end_card"])
+    return Story("H", "weather_week", "i_wonder", f"What Is the Weather Today? {cap(join_words(kinds))}",
+                 f"{X} and {Y} check the weather on {DAYS[d0]}, {DAYS[d0 + 1]} and {DAYS[d0 + 2]}: {join_words(kinds)}.",
+                 "Weather words, and choosing what to wear for the weather.", "bright", [x, y], b.beats,
+                 ["weather", "days of the week", "science for kids"] + kinds, {"kinds": kinds, "day": d0, "x": x, "y": y})
+
+
+CHANGES = [  # before, color, after, color, env, after env, question, answer, overlay
+    ("snowflake", None, "raindrop", None, "meadow", None, "Here is a snowflake. What happens when it gets warm?",
+     "It melts into a drop of water!", "MELT"),
+    ("puddle", None, "sun", None, "meadow", None, "Here is a puddle. What happens when the sun shines all day?",
+     "The sun dries it up, little by little.", "DRY"),
+    ("icecream", None, "raindrop", None, "garden", None, "Here is an ice cream on a hot day. What will happen?",
+     "It melts and drips! Warm air melts ice cream.", "MELT"),
+    ("egg", None, "chick", None, "garden", None, "Here is an egg, warm in a nest. What will happen?", "Crack! A chick hatches out.", "HATCH"),
+    ("seed", None, "sprout", None, "garden", None, "Here is a seed, with soil and water. What will happen?",
+     "It sprouts! A tiny plant grows.", "GROW"),
+    ("bubbles", None, "bubbles", None, "meadow", None, "Here are some bubbles. What happens when they touch the grass?",
+     "Pop! They burst and are gone.", "POP"),
+    ("cloud", "#C9D3E0", "raindrop", None, "meadow", "rainy", "Here is a big gray cloud. What will happen?", "Rain falls from the cloud!",
+     "RAIN"),
+    ("caterpillar", None, "butterfly", "orange", "garden", None, "Here is a caterpillar. What will it become?",
+     "A butterfly, after it rests in a chrysalis!", "CHANGE"),
+    ("tadpole", None, "frog", None, "pond", None, "Here is a tadpole. What will it grow into?", "A frog! It grows legs and hops.", "GROW"),
+    ("sun", None, "moon", None, "meadow", "night", "The sun goes down in the evening. What comes next?",
+     "Night comes, with the moon and stars.", "NIGHT"),
+    ("acorn", None, "sprout", None, "forest", None, "An acorn is in the soil. What will happen?", "A little oak sprout pops up!", "GROW"),
+    ("leaf", None, "leaf", "orange", "forest", None, "Here is a green leaf in summer. What happens in autumn?",
+     "It turns orange, then it falls.", "AUTUMN"),
+]
+
+
+def what_will_happen(rng, uni) -> Story:
+    x, y = _pick_cast(rng, uni, 2)
+    picks = rng.sample(CHANGES, 3)
+    b = B(uni, picks[0][4]).enter(x, y)
+    X, Y = b.n(x), b.n(y)
+    b.say("narrator", _v(rng, f"{X} and {Y} like to guess what will happen next.", f"Watch closely with {X} and {Y}. What will happen?"),
+          title="What Will Happen Next?", act={x: "think", y: "think"})
+    for i, (bef, bc, aft, ac, env, env2, q, ans, ov) in enumerate(picks):
+        g, o = _cycle_pair([x, y], i)
+        b.go(env).show(bef, bc)
+        b.say("narrator", q, act={g: "think", o: "look_up"})
+        b.say(g, _v(rng, f"Let's watch and see, {b.n(o)}!", "I have a guess. Let's watch!", "Hmm. I think I know!"), act={g: "point"})
+        if env2:
+            b.go(env2)
+        b.clear()
+        if not (bef == "bubbles"):
+            b.show(aft, ac)
+        b.say("narrator", ans, act={g: "wow", o: "cheer"}, word=(ov, "green"), sfx=["pop"] if bef == "bubbles" else ["chime"])
+    b.clear()
+    b.say("narrator", _v(rng, "Things change all around us. We can watch and find out!", "Guess, then watch. That is how we learn."),
+          act={x: "cheer", y: "cheer"}, fx="sparkle")
+    b.say(y, _v(rng, "What change will you watch for today?", "Which change surprised you?"), act={y: "wave"}, end=uni["brand"]["end_card"])
+    return Story("H", "what_will_happen", "i_wonder", f"What Will Happen Next? {X} and {Y} Watch Things Change",
+                 f"{X} and {Y} guess, then watch: {join_words([p[7].split('!')[0].split('.')[0].lower() for p in picks])}.",
+                 "Things change: melting, drying, hatching, growing. We can predict, then watch.", "bright", [x, y], b.beats,
+                 ["changes", "predicting", "science for kids"], {"picks": sorted(p[0] + p[2] for p in picks), "x": x, "y": y})
+
+
+# ------------------------------------------------------------------ B: animals -------
+RIDDLES = [  # prop, color, env, clue one, clue two
+    ("cow", None, "meadow", "I am big, and I munch on grass all day.", "I say moo."),
+    ("bee", None, "garden", "I am small, with yellow and black stripes.", "I buzz from flower to flower."),
+    ("owl", None, "night", "I have big round eyes.", "I am awake at night, and I say hoo."),
+    ("turtle", None, "pond", "I carry a hard shell on my back.", "I walk very, very slowly."),
+    ("frog", None, "pond", "I am green, and I love the pond.", "I hop and say ribbit."),
+    ("fish", "orange", "pond", "I live in the water.", "I swim with fins and a tail."),
+    ("snail", None, "garden", "I am slow, and I leave a shiny trail.", "My shell is my home."),
+    ("ladybug", None, "garden", "I am tiny and red.", "I have black spots on my back."),
+    ("butterfly", "purple", "meadow", "I have big, colorful wings.", "I was once a caterpillar."),
+    ("sheep", None, "hilltop", "I have a thick, woolly coat.", "I say baa."),
+    ("pig", None, "meadow", "I have a curly tail.", "I say oink, and I roll in mud to stay cool."),
+    ("ant", None, "meadow", "I am tiny, but I am very strong.", "I live with my big family in tunnels."),
+    ("bird", "blue", "forest", "I have feathers and wings.", "I build a nest and sing tweet, tweet."),
+    ("chick", None, "garden", "I am small, fluffy and yellow.", "I hatched from an egg."),
+    ("caterpillar", None, "garden", "I am long and wiggly, and I munch leaves.", "One day I will be a butterfly."),
+    ("worm", None, "garden", "I have no legs, and I wiggle.", "I live in the soil and help plants grow."),
+]
+
+
+def animal_riddles(rng, uni) -> Story:
+    x, y = _pick_cast(rng, uni, 2)
+    picks = rng.sample(RIDDLES, 3)
+    b = B(uni, picks[0][2]).enter(x, y)
+    X, Y = b.n(x), b.n(y)
+    b.say("narrator", _v(rng, f"Riddle time with {X} and {Y}! Who am I?", f"{X} and {Y} love animal riddles. Listen to the clues!",
+                         "Here come three animal riddles. Can you guess? Who am I?"), title="Who Am I? Animal Riddles",
+          act={x: "clap", y: "clap"})
+    for i, (prop, col, env, c1, c2) in enumerate(picks):
+        g, o = _cycle_pair([x, y], i)
+        b.go(env)
+        b.say("narrator", c1, act={g: "think", o: "nod"}, word=("?", "purple"))
+        b.say("narrator", f"{c2} Who am I?", act={g: "think", o: "nod"}, word=("?", "purple"))
+        name = an(spoken_name(prop))
+        b.say(g, _v(rng, f"I know! You are {name}!", f"I think you are {name}.", f"{b.n(o)}, I think it is {name}!"), act={g: "hop", o: "look_up"})
+        b.show(prop, col)
+        b.say("narrator", _v(rng, f"Yes! It is {name}.", f"That is right. {cap(name)}!", f"Hooray! {cap(name)}!"), act={g: "cheer", o: "clap"},
+              word=(spoken_name(prop).upper(), "green"), sfx=["chime"])
+    b.clear()
+    b.say("narrator", _v(rng, "Listening to clues helps us figure things out.", "Three riddles, three animals. Great guessing!"),
+          act={x: "dance", y: "dance"}, fx="sparkle")
+    b.say(y, _v(rng, "Can you make up an animal riddle?", "Which animal riddle was your favorite?"), act={y: "wave"},
+          end=uni["brand"]["end_card"])
+    names = [spoken_name(p[0]) for p in picks]
+    return Story("B", "animal_riddles", "meadow_explorers", f"Who Am I? Animal Riddles With {X} and {Y}",
+                 f"{X} and {Y} solve three animal riddles: {join_words([an(n) for n in names])}.",
+                 f"Recognize {join_words(names)} from clues about how they look and live.", "adventure", [x, y], b.beats,
+                 ["animals", "riddles", "guessing game"] + names, {"picks": sorted(p[0] for p in picks), "x": x, "y": y})
+
+
+BABIES = [  # grown-up prop, baby prop, baby word, env, line
+    ("sheep", "sheep", "lamb", "hilltop", "A baby sheep is called a lamb."),
+    ("cow", "cow", "calf", "meadow", "A baby cow is called a calf."),
+    ("pig", "pig", "piglet", "meadow", "A baby pig is called a piglet."),
+    ("owl", "owl", "owlet", "forest", "A baby owl is called an owlet."),
+    ("turtle", "turtle", "hatchling", "pond", "A baby turtle is called a hatchling. It hatches from an egg."),
+    ("frog", "tadpole", "tadpole", "pond", "A baby frog is a tadpole. It swims with a tail."),
+    ("butterfly", "caterpillar", "caterpillar", "garden", "A butterfly starts out as a caterpillar."),
+    ("bird", "bird", "chick", "forest", "A baby bird is called a chick."),
+    ("fish", "fish", "fry", "pond", "Baby fish are called fry. They are very tiny."),
+    ("bee", "bee", "larva", "garden", "A baby bee is called a larva. It grows inside the hive."),
+]
+CHAR_BABY = {"bobo": ("bunny", "kit"), "mimi": ("cat", "kitten"), "toto": ("elephant", "calf"), "zuzu": ("duck", "duckling"),
+             "lolo": ("bear", "cub")}
+
+
+def animal_babies(rng, uni) -> Story:
+    x, y = _pick_cast(rng, uni, 2)
+    picks = rng.sample(BABIES, 3)
+    b = B(uni, picks[0][3]).enter(x, y)
+    X, Y = b.n(x), b.n(y)
+    b.say("narrator", _v(rng, f"{X} and {Y} are looking for animal babies today.", f"Grown-ups and babies! {X} and {Y} go exploring.",
+                         f"Who is the baby? {X} and {Y} are finding out."), title="Animal Babies: What Are They Called?",
+          act={x: "hop", y: "hop"})
+    for i, (big, small, word, env, line) in enumerate(picks):
+        a, o = _cycle_pair([x, y], i)
+        b.go(env).show(big, "orange" if big == "fish" else ("blue" if big == "bird" else None), size=130)
+        b.show(small, "orange" if small == "fish" else ("blue" if small == "bird" else None), size=60)
+        b.say(a, _v(rng, f"Look, {b.n(o)}! A big {spoken_name(big)} and a little one.", f"There is a grown-up {spoken_name(big)} with a baby!",
+                    f"A {spoken_name(big)} family!"), act={a: "nod", o: "look_up"})
+        b.say(o, f"What is a baby {spoken_name(big)} called?", act={o: "think", a: "nod"})
+        b.say("narrator", line, act={a: "clap", o: "cheer"}, word=(word.upper(), "pink"), sfx=["ding"])
+    b.clear()
+    kind, baby = CHAR_BABY[x]
+    b.say(x, _v(rng, f"And me? I am a {kind}. A baby {kind} is a {baby}!", f"I am a {kind}. When I was a baby, I was a {baby}!"),
+          act={x: "dance", y: "clap"}, word=(baby.upper(), "pink"), fx="hearts")
+    b.say(y, _v(rng, "Which animal baby do you like best?", "Every grown-up was a baby once!"), act={y: "wave"},
+          end=uni["brand"]["end_card"])
+    words = [p[2] for p in picks]
+    return Story("B", "animal_babies", "meadow_explorers", f"Animal Babies: {cap(join_words(words))}",
+                 f"{X} and {Y} meet animal families and learn the baby names {join_words(words)}.",
+                 f"Baby animal names: {join_words(words)}.", "adventure", [x, y], b.beats, ["animals", "animal babies", "nature"] + words,
+                 {"picks": sorted(p[2] for p in picks), "x": x, "y": y})
+
+
+EATS = [  # animal, color, env, food prop, food color, line
+    ("cow", None, "meadow", None, None, "Cows munch green grass, all day long."),
+    ("sheep", None, "hilltop", None, None, "Sheep nibble the grass on the hill."),
+    ("bee", None, "garden", "flower", "pink", "Bees drink sweet nectar from flowers."),
+    ("caterpillar", None, "garden", "leaf", None, "Caterpillars munch and munch on green leaves."),
+    ("bird", "blue", "forest", "worm", None, "Many birds eat worms, seeds and berries."),
+    ("frog", None, "pond", "ant", None, "Frogs catch little bugs with long, sticky tongues."),
+    ("snail", None, "garden", "leaf", None, "Snails nibble on soft leaves."),
+    ("pig", None, "meadow", "apple", None, "Pigs eat many foods, like apples and vegetables."),
+    ("ladybug", None, "garden", None, None, "Ladybugs eat tiny bugs that live on plants."),
+    ("chick", None, "garden", "seed", None, "Chicks peck at seeds and grains."),
+    ("turtle", None, "pond", "leaf", None, "Many turtles munch on plants and leaves."),
+    ("fish", "orange", "pond", None, None, "Fish eat tiny plants and bugs in the water."),
+    ("worm", None, "garden", "leaf", "orange", "Worms eat old leaves in the soil."),
+]
+LUNCH = [("apple", "carrot"), ("banana", "strawberry"), ("pear", "grapes"), ("bread", "milk"), ("orange", "banana")]
+
+
+def who_eats_what(rng, uni) -> Story:
+    x, y = _pick_cast(rng, uni, 2)
+    picks = rng.sample(EATS, 3)
+    lunch = rng.choice(LUNCH)
+    b = B(uni, picks[0][2]).enter(x, y)
+    X, Y = b.n(x), b.n(y)
+    b.say("narrator", _v(rng, f"It is lunchtime in Wonder Meadow. What do the animals eat?",
+                         f"{X} and {Y} are hungry. Are the animals hungry too?"), title="Who Eats What? Lunchtime for Animals",
+          act={x: "nod", y: "nod"})
+    for i, (an_, ac, env, food, fc, line) in enumerate(picks):
+        a, o = _cycle_pair([x, y], i)
+        b.go(env).show(an_, ac)
+        q = f"What do {spoken_name(an_, 2)} eat?"
+        b.say(a, _v(rng, q, f"{b.n(o)}, {q[0].lower()}{q[1:]}", f"I wonder. {q}"), act={a: "think", o: "nod"})
+        if food:
+            b.show(food, fc)
+        b.say("narrator", line, act={a: "nod", o: "clap"}, word=("YUM", "green"))
+    b.clear().show(lunch[0]).show(lunch[1])
+    b.say("narrator", f"And {X} and {Y} eat {spoken_name(lunch[0], 2) if lunch[0] not in ('bread', 'milk') else spoken_name(lunch[0])} "
+                      f"and {spoken_name(lunch[1], 2) if lunch[1] not in ('bread', 'milk', 'grapes') else spoken_name(lunch[1])}.",
+          act={x: "cheer", y: "cheer"}, fx="hearts")
+    b.say(y, _v(rng, "Different animals eat different foods. What do you like?", "What will you eat for lunch today?"), act={y: "wave"},
+          end=uni["brand"]["end_card"])
+    names = [spoken_name(p[0], 2) for p in picks]
+    return Story("B", "who_eats_what", "meadow_explorers", f"Who Eats What? {cap(join_words(names))}",
+                 f"At lunchtime, {X} and {Y} find out what {join_words(names)} eat.", "Different animals eat different foods.", "adventure",
+                 [x, y], b.beats, ["animals", "what animals eat", "nature"] + names, {"picks": sorted(p[0] for p in picks), "x": x, "y": y})
+
+
+GENTLE = [  # (env, [(role, text, act, show)]) roles: n narrator, x, y
+    ("garden", [("n", "A snail is crossing the path, slow and steady.", {"x": "look_up"}, ("snail", None)),
+                ("x", "Let's wait for the snail, {Y}.", {"y": "nod"}, None),
+                ("y", "Good idea. We can step around it.", {"x": "nod"}, None),
+                ("n", "Little animals need space. The friends wait patiently.", {"x": "clap", "y": "clap"}, None)]),
+    ("garden", [("n", "A bee buzzes near {X}'s snack.", {"x": "wow"}, ("bee", None)),
+                ("x", "Oh! What should I do?", {"y": "think"}, None),
+                ("y", "Stay calm and move slowly. The bee is looking for flowers.", {"x": "nod"}, None),
+                ("n", "Buzz! The bee flies away to the flowers.", {"x": "cheer", "y": "cheer"}, ("flower", "pink"))]),
+    ("meadow", [("n", "It is a hot day. A little bird looks thirsty.", {"x": "look_up"}, ("bird", "blue")),
+                ("y", "Let's put out a bowl of water, {X}.", {"x": "nod"}, ("bowl", "blue")),
+                ("n", "Sip, sip. The bird drinks and sings a happy song.", {"x": "clap", "y": "clap"}, None)]),
+    ("garden", [("n", "A ladybug lands on {X}'s arm. It tickles!", {"y": "look_up"}, ("ladybug", None)),
+                ("x", "Hello, ladybug. You can rest here a while.", {"y": "nod"}, None),
+                ("n", "{X} keeps very still. Soon, the ladybug flies away.", {"y": "nod"}, None)]),
+    ("garden", [("n", "After the rain, a worm wiggles on the path.", {"x": "look_up"}, ("worm", None)),
+                ("y", "Worms like soft soil. Let's help it with a leaf.", {"x": "nod"}, ("leaf", None)),
+                ("n", "{Y} gently moves the worm back onto the soil.", {"x": "clap"}, None)]),
+    ("forest", [("n", "Shh. An owl is sleeping in a tree.", {"x": "look_up"}, ("owl", None)),
+                ("x", "Owls sleep in the day and wake up at night.", {"y": "nod"}, None),
+                ("y", "Let's whisper and tiptoe past, {X}.", {"x": "nod"}, None)]),
+    ("pond", [("n", "A turtle is walking to the pond, step by step.", {"x": "look_up"}, ("turtle", None)),
+              ("x", "Should we pick it up, {Y}?", {"y": "think"}, None),
+              ("y", "No, let's just watch. The turtle knows the way.", {"x": "nod"}, None),
+              ("n", "Plop! The turtle slides into the pond.", {"x": "cheer", "y": "cheer"}, None)]),
+    ("garden", [("n", "A caterpillar is crawling across the path.", {"y": "look_up"}, ("caterpillar", None)),
+                ("y", "Let's put a leaf beside it, so it can climb on.", {"x": "nod"}, ("leaf", None)),
+                ("n", "The caterpillar climbs on, and {Y} sets it by a plant.", {"x": "clap"}, None)]),
+    ("pond", [("n", "Fish are swimming round and round in the pond.", {"x": "look_up"}, ("fish", "orange")),
+              ("x", "Can we give them our cupcake, {Y}?", {"y": "think"}, None),
+              ("y", "Cupcakes are not good for fish. Let's just watch them.", {"x": "nod"}, None)]),
+    ("meadow", [("n", "A butterfly rests on a flower.", {"x": "look_up"}, ("butterfly", "orange")),
+                ("x", "Let's look closely, but not touch its wings.", {"y": "nod"}, None),
+                ("n", "Butterfly wings are delicate. Looking is the kind thing to do.", {"y": "nod"}, None)]),
+    ("meadow", [("n", "A line of ants is carrying crumbs home.", {"x": "look_up"}, ("ant", None)),
+                ("x", "Look how strong they are, {Y}!", {"y": "nod"}, None),
+                ("y", "Let's walk around them, so they can get home.", {"x": "nod"}, None)]),
+]
+
+
+def gentle_with_animals(rng, uni) -> Story:
+    x, y = _pick_cast(rng, uni, 2)
+    idx = rng.sample(range(len(GENTLE)), 2)
+    b = B(uni, GENTLE[idx[0]][0]).enter(x, y)
+    X, Y = b.n(x), b.n(y)
+    who = {"x": x, "y": y}
+    b.say("narrator", _v(rng, f"{X} and {Y} go for a walk. Who will they meet?", f"Today {X} and {Y} meet some little animals.",
+                         f"Off go {X} and {Y}, looking for little animals."), title=f"{X} and {Y} Are Gentle With Animals",
+          act={x: "hop", y: "hop"})
+    for k in idx:
+        env, lines = GENTLE[k]
+        b.go(env)
+        for role, text, act, show in lines:
+            if show:
+                b.show(*show)
+            b.say("narrator" if role == "n" else who[role], text.format(X=X, Y=Y), act={who[r]: a for r, a in act.items()})
+    b.clear()
+    b.say("narrator", _v(rng, "Being gentle with animals is a way to be kind.", "Quiet, gentle and kind. That is how we treat animals."),
+          act={x: "cheer", y: "cheer"}, fx="hearts")
+    b.say(x, _v(rng, "Which little animal would you like to see?", "How can you be gentle with animals?"), act={x: "wave"},
+          end=uni["brand"]["end_card"])
+    return Story("B", "gentle_with_animals", "meadow_explorers", f"{X} and {Y} Are Gentle With Animals",
+                 f"On a walk, {X} and {Y} meet two little animals and find kind, gentle ways to help or give them space.",
+                 "Being gentle with animals: give them space, stay calm, look without touching.", "adventure", [x, y], b.beats,
+                 ["animals", "kindness", "nature", "adventure"], {"situations": sorted(idx), "x": x, "y": y})
+
+
+MOVE_LIKE = [  # prop, color, env, fact, invite, action
+    ("frog", None, "pond", "Frogs have strong back legs for hopping.", "Let's hop like a frog! Hop, hop, hop!", "hop"),
+    ("bird", "blue", "forest", "Birds flap their wings to fly.", "Let's flap like a bird! Flap, flap!", "cheer"),
+    ("fish", "orange", "pond", "Fish swish their tails to swim.", "Let's swim like a fish! Swish, swish!", "dance"),
+    ("snail", None, "garden", "Snails glide very, very slowly.", "Let's go slow like a snail. Slow... and slow...", "nod"),
+    ("worm", None, "garden", "Worms have no legs. They wiggle and stretch.", "Let's wiggle like a worm! Wiggle, wiggle!", "dance"),
+    ("bee", None, "garden", "Bees zip from flower to flower.", "Let's buzz like a bee! Bzzz, bzzz!", "dance"),
+    ("turtle", None, "pond", "Turtles take slow, steady steps.", "Let's walk like a turtle. Step... and step...", "nod"),
+    ("butterfly", "purple", "meadow", "Butterflies flutter their wings gently.", "Let's flutter like a butterfly. Flutter, flutter.", "cheer"),
+    ("ant", None, "meadow", "Ants march along in a long line.", "Let's march like ants! Left, right, left, right!", "hop"),
+    ("owl", None, "forest", "Owls can turn their heads very far.", "Let's turn our heads like an owl. Left, and right!", "nod"),
+    ("caterpillar", None, "garden", "Caterpillars scrunch up, then stretch out.", "Let's scrunch and stretch like a caterpillar!", "stretch"),
+    ("chick", None, "garden", "Chicks peck and hop around the yard.", "Let's peck and hop like a chick! Peep!", "hop"),
+]
+
+
+def move_like_animals(rng, uni) -> Story:
+    x, y = _pick_cast(rng, uni, 2)
+    picks = rng.sample(MOVE_LIKE, 4)
+    b = B(uni, picks[0][2]).enter(x, y)
+    X, Y = b.n(x), b.n(y)
+    b.say("narrator", _v(rng, f"Animals move in so many ways. Move along with {X} and {Y}!", f"Get ready to move! {X} and {Y} copy the animals."),
+          title="Move Like the Animals!", act={x: "stretch", y: "stretch"})
+    for i, (prop, col, env, fact, invite, move) in enumerate(picks):
+        a = [x, y][i % 2]
+        b.go(env).show(prop, col)
+        b.say("narrator", fact, act={x: "nod", y: "nod"}, word=(spoken_name(prop).upper(), "blue"))
+        b.say(a, invite, act={x: move, y: move})
+    b.clear()
+    b.say("narrator", _v(rng, "Hop, fly, swim and crawl. Animals move in different ways!", "So many ways to move! Every animal has its own."),
+          act={x: "cheer", y: "cheer"}, fx="sparkle")
+    b.say(y, _v(rng, "Which animal will you move like next?", "Can you move like your favorite animal?"), act={y: "wave"},
+          end=uni["brand"]["end_card"])
+    names = [spoken_name(p[0], 2) for p in picks]
+    return Story("B", "move_like_animals", "meadow_explorers", f"Move Like the Animals! {X} and {Y} Hop, Swim and Wiggle"
+                 if {"frog", "fish", "worm"} <= {p[0] for p in picks} else f"Move Like the Animals With {X} and {Y}",
+                 f"{X} and {Y} learn how {join_words(names)} move, then move like them.",
+                 "Animals move in different ways; moving our bodies like them.", "adventure", [x, y], b.beats,
+                 ["animals", "movement", "action game"] + names, {"picks": sorted(p[0] for p in picks), "x": x, "y": y})
+
+
+# ------------------------------------------------------------------ E: rhymes --------
+ANIMAL_VERSES = {  # prop: (color, env, line one, line two, action)
+    "cow": (None, "meadow", "Spotty cow is munching on the green,", "Moo, moo, moo, the friendliest cow I've seen!", "nod"),
+    "sheep": (None, "hilltop", "Woolly sheep up on the hill,", "Baa, baa, baa, then standing still.", "nod"),
+    "pig": (None, "meadow", "Pink little pig with a curly tail,", "Oink, oink, oink, as round as a pail!", "dance"),
+    "frog": (None, "pond", "Green little frog by the pond so wide,", "Ribbit, ribbit, hop to the other side!", "hop"),
+    "owl": (None, "night", "Round-eyed owl up in the tree,", "Hoo, hoo, hoo, the owl sees me!", "nod"),
+    "bee": (None, "garden", "Busy bee in the garden bed,", "Buzz, buzz, buzz, from blue to red!", "dance"),
+    "chick": (None, "garden", "Fluffy chick so small and new,", "Peep, peep, peep, I see you too!", "hop"),
+    "bird": ("blue", "forest", "Little bird on a branch so high,", "Tweet, tweet, tweet, across the sky!", "cheer"),
+    "turtle": (None, "pond", "Slow, slow turtle, one step more,", "Carries a shell from shore to shore!", "nod"),
+    "snail": (None, "garden", "Little snail goes slow, so slow,", "Home on its back wherever you go!", "nod"),
+    "fish": ("orange", "pond", "Shiny fish goes swish, swish, swish,", "Round the pond as quick as a wish!", "dance"),
+    "butterfly": ("purple", "meadow", "Flutter, flutter, butterfly,", "Colors dancing way up high!", "cheer"),
+    "caterpillar": (None, "garden", "Wiggly caterpillar, munch, munch, munch,", "Eating leaves for breakfast and lunch!", "dance"),
+}
+
+
+def animal_rhyme(rng, uni) -> Story:
+    who = _pick_cast(rng, uni, 1)[0]
+    picks = rng.sample(list(ANIMAL_VERSES), 4)
+    b = B(uni, ANIMAL_VERSES[picks[0]][1]).enter(who)
+    N = b.n(who)
+    b.say("narrator", _v(rng, f"Sing the animal rhyme with {N}!", f"{N} knows a rhyme about meadow animals. Sing along!"),
+          title="The Meadow Animal Rhyme", act={who: "clap"}, fx="notes")
+    for p in picks:
+        col, env, l1, l2, move = ANIMAL_VERSES[p]
+        b.go(env).show(p, col)
+        b.say(who, l1, act={who: "nod"}, fx="notes", word=(spoken_name(p).upper(), "green"))
+        b.say(who, l2, act={who: move}, fx="notes", word=(spoken_name(p).upper(), "green"))
+    b.clear()
+    b.say(who, "Animals, animals, big and small,", act={who: "dance"}, fx="notes")
+    b.say(who, "We love the meadow friends, one and all!", act={who: "cheer"}, fx="sparkle", end=uni["brand"]["end_card"])
+    names = [spoken_name(p) for p in picks]
+    return Story("E", "animal_rhyme", "sing_along", f"The Meadow Animal Rhyme: {cap(join_words(names))}",
+                 f"An original rhyme with {N} about the {join_words(names)}.", "Animal names and sounds in a rhyme.", "song", [who], b.beats,
+                 ["animal song", "animals", "rhyme"] + names, {"picks": sorted(picks), "who": who}, song=True)
+
+
+CALLS = [  # call, answer, rhyme tag, call action, answer action
+    ("up", "down", "Up and down, round and round!", "stretch", "nod"),
+    ("hello", "goodbye", "Hello, goodbye, wave it high!", "cheer", "cheer"),
+    ("big", "small", "Big and small, we love them all!", "stretch", "nod"),
+    ("fast", "slow", "Fast and slow, off we go!", "hop", "nod"),
+    ("day", "night", "Day and night, dark and bright!", "cheer", "nod"),
+    ("loud", "quiet", "Loud and quiet, let's all try it!", "clap", "nod"),
+    ("open", "close", "Open, close, wiggle your nose!", "stretch", "nod"),
+    ("hot", "cold", "Hot and cold, brave and bold!", "hop", "dance"),
+    ("in", "out", "In and out, turn about!", "nod", "dance"),
+    ("stand", "sit", "Stand up, sit, wiggle a bit!", "stretch", "dance"),
+    ("left", "right", "Left and right, hold on tight!", "dance", "nod"),
+    ("clap", "stomp", "Clap and stomp, a happy romp!", "clap", "hop"),
+]
+
+
+def call_and_response(rng, uni) -> Story:
+    x, y = _pick_cast(rng, uni, 2)
+    picks = rng.sample(CALLS, 4)
+    b = B(uni, rng.choice(["meadow", "hilltop", "playroom", "garden"])).enter(x, y)
+    X, Y = b.n(x), b.n(y)
+    b.say("narrator", _v(rng, f"{X} calls, and {Y} answers. Can you answer too?", f"A call and answer rhyme! {X} goes first."),
+          title=f"Call and Answer With {X} and {Y}", act={x: "clap", y: "clap"}, fx="notes")
+    for a, r, tag, ca, ra in picks:
+        b.say(x, f"When I say {a}, you say {r}!", act={x: "nod", y: "nod"}, fx="notes")
+        b.say(x, f"{cap(a)}!", act={x: ca}, word=(a.upper(), "orange"), fx="notes")
+        b.say(y, f"{cap(r)}! {tag}", act={y: ra, x: "clap"}, word=(r.upper(), "blue"), fx="notes")
+    b.say(y, _v(rng, "You are a great answerer! Hooray!", "We did it! What a fun rhyme."), act={x: "cheer", y: "cheer"}, fx="sparkle",
+          end=uni["brand"]["end_card"])
+    words = [f"{p[0]} and {p[1]}" for p in picks]
+    return Story("E", "call_and_response", "sing_along", f"Call and Answer With {X} and {Y}: {cap(picks[0][0])} and {cap(picks[0][1])}",
+                 f"An original call-and-answer rhyme: {X} calls a word, {Y} answers its opposite ({'; '.join(words)}).",
+                 "Opposite words in an original call-and-answer rhyme.", "song", [x, y], b.beats, ["call and response", "opposites", "rhyme"],
+                 {"picks": sorted(p[0] for p in picks), "x": x, "y": y}, song=True)
+
+
+COUNTDOWNS = [  # prop, color, env, line with {k}, line with {m} and maybe {W}
+    ("bubbles", None, "meadow", "{K} round bubbles floating in the air,", "One went pop! Now {m} are there."),
+    ("star", "yellow", "night", "{K} little stars are twinkling in the night,", "One hid behind a cloud. Now {m} shine bright."),
+    ("apple", None, "garden", "{K} shiny apples hanging on the tree,", "{W} picked one for a snack. Now {m}, you see!"),
+    ("leaf", "orange", "forest", "{K} orange leaves are holding on so tight,", "Whoosh! One floated down. Now {m} in sight."),
+    ("boat", "red", "pond", "{K} little boats are sailing on the pond,", "One sailed home to rest. Now {m} sail on."),
+    ("butterfly", "purple", "meadow", "{K} pretty butterflies sitting in a row,", "One fluttered to a flower. Now {m}, you know!"),
+    ("cupcake", None, "playroom", "{K} yummy cupcakes waiting on a plate,", "{W} shared one with a friend. Now {m}. How great!"),
+    ("balloon", "blue", "hilltop", "{K} bright balloons are bobbing up and down,", "{W} gave one to a friend. Now {m} around."),
+    ("fish", "orange", "pond", "{K} little fish are swimming in a ring,", "One swam home for a nap. Now {m}, we sing!"),
+    ("block", "green", "playroom", "{K} wooden blocks are stacked up very tall,", "{W} put one on the shelf. Now {m} in all."),
+    ("firefly", None, "night", "{K} glowing fireflies are blinking in the dark,", "One flew home to sleep. Now {m} make a spark."),
+]
+
+
+def countdown_rhyme(rng, uni) -> Story:
+    who = _pick_cast(rng, uni, 1)[0]
+    prop, col, env, l1, l2 = rng.choice(COUNTDOWNS)
+    n = rng.choice([3, 4, 5])
+    b = B(uni, env).enter(who)
+    N, many = b.n(who), spoken_name(prop, 2)
+    b.say("narrator", _v(rng, f"Count down with {N}! {cap(NUM[n])}, {NUM[n - 1]}, {NUM[n - 2]}...",
+                         f"A counting-down rhyme with {N}. Ready?"), title=f"{cap(NUM[n])} Little {cap(many)}: Count Down With {N}",
+          act={who: "clap"}, fx="notes")
+    for k in range(n, 0, -1):
+        b.clear().show(prop, col, k)
+        b.say(who, l1.format(K=cap(NUM[k])), act={who: "nod"}, number=k, fx="notes")
+        b.clear()
+        if k > 1:
+            b.show(prop, col, k - 1)
+        b.say(who, l2.format(m=NUM[k - 1] if k > 1 else "none", W=N), act={who: "dance"}, number=(k - 1, "blue"), fx="notes")
+    b.say("narrator", f"{cap(', '.join(NUM[n:0:-1]))}, zero! We counted down from {NUM[n]}.", act={who: "cheer"}, fx="sparkle",
+          end=uni["brand"]["end_card"])
+    return Story("E", "countdown_rhyme", "sing_along", f"{cap(NUM[n])} Little {cap(many)}: Count Down With {N}",
+                 f"An original counting-down rhyme: {N} counts {many} down from {NUM[n]} to zero.", f"Count backward from {NUM[n]} to zero.",
+                 "song", [who], b.beats, ["counting down", "numbers", "rhyme", prop], {"prop": prop, "n": n, "who": who}, song=True)
+
+
+def _couplet_song(rng, uni, *, fmt, verses: dict, k: int, title: str, intro: list[str], chorus: tuple[str, str], goal: str,
+                  topics: list[str], word_color=None) -> Story:
+    who = _pick_cast(rng, uni, 1)[0]
+    picks = rng.sample(list(verses), k)
+    first = verses[picks[0]]
+    b = B(uni, first[1]).enter(who)
+    N = b.n(who)
+    b.say("narrator", rng.choice(intro).format(N=N), title=title, act={who: "clap"}, fx="notes")
+    for p in picks:
+        prop, env, col, l1, l2, a1, a2 = verses[p]
+        b.go(env)
+        if prop:
+            b.show(prop, col)
+        wc = word_color or (col if col in ("red", "orange", "yellow", "green", "blue", "purple", "pink") else "orange")
+        b.say(who, l1, act={who: a1}, fx="notes", word=(p.upper(), wc))
+        b.say(who, l2, act={who: a2}, fx="notes", word=(p.upper(), wc))
+    b.clear()
+    b.say(who, chorus[0], act={who: "dance"}, fx="notes")
+    b.say(who, chorus[1], act={who: "cheer"}, fx="sparkle", end=uni["brand"]["end_card"])
+    return Story("E", fmt, "sing_along", f"{title}: {cap(join_words(picks))}", f"An original rhyme with {N}: {join_words(picks)}.", goal,
+                 "song", [who], b.beats, topics + picks, {"picks": sorted(picks), "who": who}, song=True)
+
+
+WEATHER_VERSES = {  # name: (prop, env, color, line, line, action, action)
+    "sunshine": ("sun", "meadow", None, "Sunshine, sunshine, warm and bright,", "Filling the meadow with golden light!", "stretch", "cheer"),
+    "rain": ("raindrop", "rainy", None, "Raindrops falling, drip, drip, drop,", "Watering the flowers, plip, plip, plop!", "nod", "hop"),
+    "wind": ("kite", "hilltop", "red", "Windy, windy, whoosh, whoosh, whoosh,", "The wind gives my kite a gentle push!", "dance", "cheer"),
+    "snow": ("snowflake", "meadow", None, "Snowflakes falling, soft and white,", "Dancing down from morning to night.", "nod", "dance"),
+    "clouds": ("cloud", "meadow", None, "Fluffy clouds go floating by,", "Like woolly sheep up in the sky!", "nod", "stretch"),
+    "rainbow": ("rainbow", "meadow", None, "Rain and sun, together they play,", "And paint a rainbow across the day!", "nod", "cheer"),
+    "fog": ("cloud", "forest", "#EEF2F6", "Foggy, foggy, soft and gray,", "Where did all the trees go today?", "nod", "dance"),
+}
+SHAPE_VERSES = {
+    "circle": ("circle", "playroom", "red", "Circle, circle, round and round,", "Like a ball that bounces on the ground!", "nod", "hop"),
+    "square": ("square", "playroom", "blue", "Square, square, four sides the same,", "Like a block in a building game!", "nod", "clap"),
+    "triangle": ("triangle", "playroom", "green", "Triangle, triangle, one, two, three,", "Three sides, three corners, count with me!", "nod",
+                 "clap"),
+    "rectangle": ("rectangle", "playroom", "orange", "Rectangle, rectangle, long and neat,", "Two long sides and two short. How sweet!",
+                  "stretch", "dance"),
+    "star": ("star", "night", "yellow", "Star, star, with five points bright,", "Shining in the sky at night!", "stretch", "cheer"),
+    "heart": ("heart", "garden", "pink", "Heart, heart, a shape we share,", "Draw a heart to show you care!", "nod", "dance"),
+    "oval": ("oval", "garden", "purple", "Oval, oval, long and round,", "Like an egg the hen just found!", "nod", "hop"),
+    "diamond": ("diamond", "hilltop", "pink", "Diamond, diamond, like a kite,", "Pointy top and flying bright!", "stretch", "cheer"),
+}
+FOOD_VERSES = {
+    "apple": ("apple", "garden", None, "Crunch, crunch, a crunchy apple treat,", "Red and shiny, juicy and sweet!", "nod", "dance"),
+    "banana": ("banana", "garden", None, "Peel a banana, one, two, three,", "Soft and yellow, yum for me!", "clap", "dance"),
+    "orange": ("orange", "garden", None, "Orange, orange, juicy and bright,", "Peel it slowly, take a bite!", "nod", "cheer"),
+    "strawberry": ("strawberry", "garden", None, "Little strawberry, red and sweet,", "Seeds on the outside, what a treat!", "nod", "hop"),
+    "grapes": ("grapes", "garden", None, "Grapes, grapes, in a bunch,", "Purple and round, a yummy lunch!", "clap", "dance"),
+    "pear": ("pear", "garden", None, "Green pear, green pear, shaped like a bell,", "Juicy and sweet, I like it well!", "nod", "dance"),
+    "carrot": ("carrot", "garden", None, "Crunchy carrot, orange and long,", "Munch, munch, munch, it helps me grow strong!", "nod", "cheer"),
+}
+BODY_VERSES = {
+    "nose": (None, "playroom", None, "Point to your nose, your nose, your nose,", "Sniff, sniff, sniff, that's how it goes!", "nod", "nod"),
+    "ears": (None, "playroom", None, "Touch your ears, one and two,", "Ears are for listening, it's true!", "nod", "clap"),
+    "tummy": (None, "playroom", None, "Pat your tummy, round and round,", "Pat, pat, pat, a gentle sound!", "nod", "dance"),
+    "hands": (None, "meadow", None, "Clap your hands, clap, clap, clap,", "Then rest them softly in your lap.", "clap", "nod"),
+    "feet": (None, "meadow", None, "Tap your feet upon the floor,", "Tap, tap, tap, and then once more!", "hop", "hop"),
+    "shoulders": (None, "playroom", None, "Lift your shoulders up so high,", "Then drop them down and give a sigh.", "stretch", "nod"),
+    "cheeks": (None, "meadow", None, "Puff your cheeks up, big and round,", "Pop! Let the air out, what a sound!", "nod", "cheer"),
+    "knees": (None, "hilltop", None, "Bend your knees and bounce, bounce, bounce,", "Every little bounce, it counts!", "hop", "hop"),
+    "arms": (None, "hilltop", None, "Stretch your arms out like a tree,", "Sway in the breeze, one, two, three!", "stretch", "dance"),
+    "chin": (None, "playroom", None, "Tap your chin and say hello,", "Chin goes up, and chin goes low.", "nod", "nod"),
+}
+
+
+def weather_rhyme(rng, uni) -> Story:
+    return _couplet_song(rng, uni, fmt="weather_rhyme", verses=WEATHER_VERSES, k=3, title="The Weather Rhyme",
+                         intro=["Sun or rain? Sing the weather rhyme with {N}!", "{N} sings about the weather. Sing along!"],
+                         chorus=("Sun or rain or wind or snow,", "We love the weather, high and low!"),
+                         goal="Weather words in an original rhyme.", topics=["weather song", "weather", "rhyme"], word_color="blue")
+
+
+def shape_rhyme(rng, uni) -> Story:
+    return _couplet_song(rng, uni, fmt="shape_rhyme", verses=SHAPE_VERSES, k=4, title="The Shape Rhyme",
+                         intro=["Sing the shape rhyme with {N}!", "Shapes are everywhere! {N} has a rhyme about them."],
+                         chorus=("Shapes, shapes, all around,", "Look and see what shapes you found!"),
+                         goal="Shape names and features in an original rhyme.", topics=["shape song", "shapes", "rhyme"])
+
+
+def fruit_rhyme(rng, uni) -> Story:
+    return _couplet_song(rng, uni, fmt="fruit_rhyme", verses=FOOD_VERSES, k=4, title="The Yummy Fruit Rhyme",
+                         intro=["Snack time! Sing the yummy fruit rhyme with {N}.", "{N} loves fruits and veggies. Sing along!"],
+                         chorus=("Fruits and veggies, yum, yum, yum,", "Healthy snacks for every tum!"),
+                         goal="Names of fruits and vegetables in an original rhyme.", topics=["food song", "fruits", "rhyme"], word_color="green")
+
+
+def body_rhyme(rng, uni) -> Story:
+    return _couplet_song(rng, uni, fmt="body_rhyme", verses=BODY_VERSES, k=4, title="The Wiggle and Touch Rhyme",
+                         intro=["Stand up and move with {N}! Ready?", "{N} has a wiggle and touch rhyme. Do it too!"],
+                         chorus=("Wiggle, touch and tap and sway,", "Our bodies love to move and play!"),
+                         goal="Naming body parts while moving to an original rhyme.", topics=["action song", "body parts", "rhyme"],
+                         word_color="pink")
+
+
+# ------------------------------------------------------------------ F: bedtime -------
+ANIMAL_NIGHTS = [  # prop, color, line
+    ("bird", "blue", "The little bird tucks its head and sleeps in the tree."),
+    ("cow", None, "The cow lies down in the soft, sweet hay."),
+    ("sheep", None, "The sheep huddle close together, warm and woolly."),
+    ("pig", None, "The pig snuggles into the warm straw."),
+    ("fish", "orange", "The fish rest quietly near the bottom of the pond."),
+    ("bee", None, "The bees rest inside their cozy hive."),
+    ("ladybug", None, "The ladybug rests under a leaf."),
+    ("snail", None, "The snail tucks itself into its shell."),
+    ("butterfly", "purple", "The butterfly rests on a flower, wings folded."),
+    ("frog", None, "The frog settles down beside the pond."),
+    ("chick", None, "The chick snuggles under its mother's wing."),
+    ("turtle", None, "The turtle pulls its head into its shell."),
+]
+
+
+def goodnight_animals(rng, uni) -> Story:
+    who = _pick_cast(rng, uni, 1)[0]
+    picks = rng.sample(ANIMAL_NIGHTS, 4)
+    owl = rng.random() < 0.5
+    b = B(uni, "night").enter(who)
+    N = b.n(who)
+    b.say("narrator", _v(rng, f"Night is here. {N} says goodnight to the meadow animals.",
+                         f"The stars are out. Who is going to sleep? {N} goes to see."), title="Goodnight, Meadow Animals",
+          act={who: "sleepy"}, sfx=["twinkle"])
+    for prop, col, line in picks:
+        b.clear().show(prop, col)
+        b.say("narrator", line, act={who: "sleepy"})
+        b.say(who, _v(rng, f"Goodnight, little {spoken_name(prop)}.", f"Sleep well, {spoken_name(prop)}.", f"Shh. Goodnight, {spoken_name(prop)}."),
+              act={who: "nod"})
+    b.clear()
+    if owl:
+        b.show("owl")
+        b.say("narrator", "But the owl is just waking up. Owls are awake at night.", act={who: "nod"})
+        b.say(who, "Good morning, owl! And goodnight, everyone.", act={who: "yawn"})
+        b.clear()
+    b.say("narrator", f"Now {N} curls up too. Goodnight, everyone.", act={who: "sleep"}, fx="zzz", end=NIGHT_END)
+    names = [spoken_name(p[0]) for p in picks]
+    return Story("F", "goodnight_animals", "sleepy_time", f"Goodnight, Meadow Animals: {cap(join_words(names))}",
+                 f"A calm bedtime story: {N} says goodnight to the {join_words(names)} as each one settles down to sleep.",
+                 "Animals rest at night too; a calm goodnight ritual.", "calm", [who], b.beats, ["bedtime story", "animals", "goodnight", "sleep"],
+                 {"picks": sorted(p[0] for p in picks), "owl": owl, "who": who})
+
+
+RELAX = [  # order, part, instruction
+    (0, "toes", "Wiggle your toes. Wiggle, wiggle. Now let them rest."),
+    (1, "feet", "Point your feet, then let them flop. So floppy."),
+    (2, "legs", "Make your legs long and straight. Now let them go soft."),
+    (3, "tummy", "Put a hand on your tummy. Breathe in, and out."),
+    (4, "hands", "Squeeze your hands tight. Now open them slowly."),
+    (5, "arms", "Stretch your arms up high. Now let them float down."),
+    (6, "shoulders", "Lift your shoulders up to your ears. Now let them drop."),
+    (7, "face", "Make a big smile. Now let your face go soft."),
+]
+
+
+def sleepy_body(rng, uni) -> Story:
+    who = _pick_cast(rng, uni, 1)[0]
+    steps = sorted(rng.sample(RELAX, 4))
+    env = rng.choice(["bedroom", "night"])
+    b = B(uni, env).enter(who)
+    N = b.n(who)
+    b.put("pillow", "ground", x=840, size=60, front=True)
+    b.say("narrator", _v(rng, f"Let's get our bodies sleepy with {N}. Slow and soft.", f"{N} is getting ready to sleep. Let's relax, too."),
+          title=f"Sleepy Body With {N}", act={who: "yawn"})
+    for _, part, line in steps:
+        b.say("narrator", line, act={who: "stretch"}, word=(part.upper(), "purple"))
+        b.say(who, _v(rng, f"Ahh. My {part} feel sleepy now." if part not in ("tummy", "face") else f"Ahh. My {part} feels sleepy now.",
+                      f"So soft and heavy. Goodnight, {part}.", f"Mmm. Cozy {part}."), act={who: "sleepy"})
+    b.say("narrator", "Now close your eyes, slow and gentle.", act={who: "sleepy"}, word=("EYES", "purple"))
+    b.say("narrator", f"Goodnight, {N}. Goodnight, sleepy body.", act={who: "sleep"}, fx="zzz", end=NIGHT_END)
+    parts = [s[1] for s in steps]
+    return Story("F", "sleepy_body", "sleepy_time", f"Sleepy Body With {N}: {cap(join_words(parts))}",
+                 f"A calm wind-down: {N} relaxes the {join_words(parts)}, one at a time, then closes both eyes.",
+                 "Relaxing the body, one part at a time, to get ready for sleep.", "calm", [who], b.beats,
+                 ["bedtime", "relaxation", "calm", "body parts"] + parts, {"parts": parts, "env": env, "who": who})
+
+
+QUIET_SOUNDS = [  # prop, color, env, line
+    ("clock", "blue", "bedroom", "Tick, tock, goes the clock on the wall."),
+    ("owl", None, "night", "Hoo, hoo, calls an owl in a tree."),
+    ("raindrop", None, "bedroom", "Pitter, patter, rain taps softly on the window."),
+    ("leaf", None, "night", "Whoosh, whispers the wind in the leaves."),
+    ("frog", None, "night", "Ribbit, ribbit, sing the frogs by the pond."),
+    ("book", "green", "bedroom", "Swish, a page turns in a bedtime book."),
+    ("moon", None, "night", "The moon makes no sound at all."),
+    ("pillow", None, "bedroom", "Fluff, fluff, goes the soft pillow."),
+    ("quilt", None, "bedroom", "Rustle, rustle, the quilt tucks in."),
+    ("teddy", None, "bedroom", "Shh. Even Teddy is quiet now."),
+]
+
+
+def quiet_sounds(rng, uni) -> Story:
+    who = _pick_cast(rng, uni, 1)[0]
+    picks = rng.sample(QUIET_SOUNDS, 4)
+    b = B(uni, picks[0][2]).enter(who)
+    N = b.n(who)
+    b.say("narrator", _v(rng, f"It is quiet time. {N} listens for soft night sounds.", f"Shh. Let's listen to the quiet night with {N}."),
+          title=f"{N} Listens to Quiet Night Sounds", act={who: "sleepy"}, sfx=["twinkle"])
+    for prop, col, env, line in picks:
+        b.go(env).show(prop, col)
+        b.say("narrator", line, act={who: "nod"})
+        b.say(who, _v(rng, "I hear it. So soft.", f"Mmm. {cap(spoken_name(prop))}, goodnight.", "Shh. Soft and slow."), act={who: "sleepy"})
+    b.clear()
+    b.say("narrator", f"Soft sounds, slow breaths. {N}'s eyes are getting heavy.", act={who: "yawn"})
+    b.say("narrator", f"Goodnight, {N}. Sleep tight.", act={who: "sleep"}, fx="zzz", end=NIGHT_END)
+    names = [spoken_name(p[0]) for p in picks]
+    return Story("F", "quiet_sounds", "sleepy_time", f"{N} Listens to Quiet Night Sounds",
+                 f"A calm bedtime story: {N} listens to quiet sounds ({join_words(names)}) and drifts off to sleep.",
+                 "Listening to quiet sounds to calm down for sleep.", "calm", [who], b.beats, ["bedtime story", "listening", "calm", "sleep"],
+                 {"picks": sorted(p[0] for p in picks), "who": who})
+
+
+GOOD_THINGS = [  # prop, color, line ({F} = the friend)
+    ("kite", "blue", "I flew my kite on the hilltop."), ("apple", None, "I ate a crunchy apple."),
+    ("book", "green", "{F} read me a story."), ("flower", "pink", "I smelled a pink flower."),
+    ("ball", "red", "I played ball with {F}."), ("boot", "yellow", "I splashed in a puddle in my boots."),
+    ("butterfly", "purple", "I saw a purple butterfly."), ("block", "blue", "I built a tall tower."),
+    ("drum", None, "I played the drum. Boom, boom!"), ("bubbles", None, "I blew big, round bubbles."),
+    ("sprout", None, "I watered our little sprout."), ("strawberry", None, "I picked a sweet strawberry."),
+    ("rainbow", None, "I saw a rainbow after the rain."), ("teddy", None, "I gave Teddy a big hug."),
+    ("cupcake", None, "I shared a cupcake with {F}."), ("shell", None, "I found a pretty shell."),
+    ("bird", "blue", "I heard a bird singing."), ("xylophone", None, "I played a song on the xylophone."),
+]
+GOOD_REPLY = ["That sounds lovely.", "I liked that too.", "What a happy thing.", "Mmm. That was fun.", "I am glad."]
+
+
+def three_good_things(rng, uni) -> Story:
+    x, y = _pick_cast(rng, uni, 2)
+    picks = rng.sample(GOOD_THINGS, 3)
+    replies = rng.sample(GOOD_REPLY, 3)
+    b = B(uni, "bedroom").enter(x, y)
+    X, Y = b.n(x), b.n(y)
+    b.say("narrator", _v(rng, f"It is bedtime. {X} and {Y} think about their day.", f"The lamp is low. {X} and {Y} remember today."),
+          title=f"{X}'s Three Happy Things", act={x: "sleepy", y: "sleepy"})
+    b.say(y, _v(rng, f"{X}, what made you happy today?", f"Tell me three happy things, {X}.", f"What was good today, {X}?"),
+          act={y: "nod", x: "sleepy"})
+    for i, ((prop, col, line), reply) in enumerate(zip(picks, replies)):
+        b.clear().show(prop, col)
+        b.say(x, line.format(F=Y), act={x: "nod", y: "sleepy"}, number=(i + 1, "purple"))
+        b.say(y, reply, act={y: "nod", x: "sleepy"})
+    b.clear()
+    b.say("narrator", _v(rng, "Thinking of happy things helps us feel calm and cozy.", "Three happy things. A thankful heart is a sleepy heart."),
+          act={x: "yawn", y: "yawn"})
+    b.say(x, _v(rng, "Thank you, today. Goodnight.", f"Goodnight, {Y}. Goodnight, today."), act={x: "sleep", y: "sleep"}, fx="zzz", end=NIGHT_END)
+    return Story("F", "three_good_things", "sleepy_time", f"{X}'s Three Happy Things: A Bedtime Story",
+                 f"At bedtime, {X} tells {Y} three happy things from the day, then falls asleep.",
+                 "Remembering happy moments to feel calm and thankful at bedtime.", "calm", [x, y], b.beats,
+                 ["bedtime story", "gratitude", "feelings", "calm"], {"picks": sorted(p[0] for p in picks), "x": x, "y": y})
+
+
+DREAMS = [  # prop, color, env, line, follow
+    ("boat", "blue", "night", "Imagine a little boat on a calm, still pond.", "It rocks gently, back and forth."),
+    ("cloud", None, "night", "Imagine floating on a soft, fluffy cloud.", "So light, so slow, so cozy."),
+    ("flower", "purple", "night", "Imagine a garden where the flowers are closing up.", "Every petal folds in, sleepy and still."),
+    ("sheep", None, "night", "Imagine woolly sheep, walking slowly over a hill.", "One... and two... and three."),
+    ("nest", None, "night", "Imagine a cozy nest, high in a quiet tree.", "Warm and safe, under the stars."),
+    ("moon", None, "night", "Imagine the moon, round and soft like a pillow.", "Its gentle light shines on the meadow."),
+    ("firefly", None, "night", "Imagine fireflies glowing, blink, blink, in the grass.", "Little lights, slow and soft."),
+    ("quilt", None, "bedroom", "Imagine a big quilt, covered in stars.", "It wraps you up, warm and snug."),
+    ("feather", "purple", "night", "Imagine a feather, drifting down, down, down.", "It lands softly on the grass."),
+    ("star", "yellow", "night", "Imagine one star, twinkling just for you.", "Twinkle... twinkle... slow and bright."),
+    ("turtle", None, "night", "Imagine a turtle, taking slow, sleepy steps.", "Slow... and slow... all the way home."),
+    ("shell", None, "night", "Imagine listening to a shell. Whoosh, like soft waves.", "In, and out. In, and out."),
+]
+
+
+def imagine_journey(rng, uni) -> Story:
+    who = _pick_cast(rng, uni, 1)[0]
+    picks = rng.sample(DREAMS, 3)
+    b = B(uni, "bedroom").enter(who)
+    N = b.n(who)
+    b.say("narrator", _v(rng, f"{N} is tucked in. Let's imagine something calm together.", f"Close your eyes with {N}. Let's imagine."),
+          title=f"Imagine With {N}: A Calm Bedtime Journey", act={who: "sleepy"})
+    for prop, col, env, line, follow in picks:
+        b.go(env).show(prop, col)
+        b.say("narrator", line, act={who: "sleepy"})
+        b.say("narrator", follow, act={who: "nod"})
+    b.go("bedroom")
+    b.say(who, _v(rng, "Mmm. That was so calm.", "I feel so cozy now.", "Thank you. I am sleepy."), act={who: "yawn"})
+    b.say("narrator", f"Sweet dreams, {N}. Goodnight.", act={who: "sleep"}, fx="zzz", end=NIGHT_END)
+    names = [spoken_name(p[0]) for p in picks]
+    return Story("F", "imagine_journey", "sleepy_time", f"Imagine With {N}: A Calm Bedtime Journey",
+                 f"A calm bedtime imagination journey: {N} imagines {join_words([an(n) for n in names])}, then falls asleep.",
+                 "Using calm imagination to settle down for sleep.", "calm", [who], b.beats, ["bedtime story", "imagination", "calm", "sleep"],
+                 {"picks": sorted(p[0] for p in picks), "who": who})
+
+
+TOYS = [  # prop, color, line
+    ("teddy", None, "Teddy gets a soft pillow."), ("drum", None, "The drum is quiet now. No more booms."),
+    ("ball", "red", "The ball rolls into the toy basket."), ("book", "green", "The book closes. The story is done."),
+    ("boat", "orange", "The little boat rests on the shelf."), ("kite", "purple", "The kite folds up its tail."),
+    ("block", "blue", "The blocks stack up in a quiet pile."), ("bell", None, "The bell stops ringing. Shh."),
+    ("xylophone", None, "The xylophone plays one last, soft note."), ("yarn", "pink", "The yarn ball curls up small."),
+    ("bucket", "yellow", "The bucket sits by the door, ready for tomorrow."),
+]
+
+
+def toys_goodnight(rng, uni) -> Story:
+    who = _pick_cast(rng, uni, 1)[0]
+    n = rng.choice([3, 4])
+    picks = rng.sample(TOYS, n)
+    b = B(uni, "bedroom").enter(who)
+    N = b.n(who)
+    for i, (prop, col, _) in enumerate(picks):
+        b.put(prop, "ground", x=230 + i * (620 / max(1, n - 1)), size=50, color=col, front=True)
+    b.say("narrator", _v(rng, f"It is bedtime, but {N}'s toys are still awake!", f"Before bed, {N} tucks in the toys."),
+          title=f"{N} Puts the Toys to Bed", act={who: "nod"}, number=(n, "purple"))
+    for i, (prop, col, line) in enumerate(picks):
+        b.say(who, f"Goodnight, {spoken_name(prop)}.", act={who: "nod"})
+        b.drop(prop)
+        left = n - i - 1
+        b.say("narrator", f"{line} {cap(NUM[left])} still awake." if left else f"{line} All the toys are asleep.", act={who: "sleepy"},
+              number=(left, "purple"))
+    b.say("narrator", f"Now it is {N}'s turn. Snuggle in, nice and warm.", act={who: "yawn"})
+    b.say("narrator", f"Goodnight, {N}. Goodnight, toys.", act={who: "sleep"}, fx="zzz", end=NIGHT_END)
+    names = [spoken_name(p[0]) for p in picks]
+    return Story("F", "toys_goodnight", "sleepy_time", f"{N} Puts the Toys to Bed",
+                 f"A calm bedtime story: {N} says goodnight to the {join_words(names)}, counting down until all are asleep.",
+                 "A calm goodnight routine; counting down.", "calm", [who], b.beats, ["bedtime story", "toys", "counting down", "sleep"],
+                 {"picks": sorted(p[0] for p in picks), "who": who})
+
+
+# ------------------------------------------------------------------ G: letters & early learning
+PATTERN_KINDS = {"AB": ("AB", 4), "AAB": ("AAB", 5), "ABB": ("ABB", 5), "ABC": ("ABC", 5)}
+PATTERN_PROPS = ["balloon", "star", "heart", "circle", "block", "flower", "fish", "ball"]
+PATTERN_PAIRS = [("apple", "banana"), ("star", "moon"), ("sun", "cloud"), ("leaf", "flower"), ("fish", "boat"), ("bee", "flower"),
+                 ("strawberry", "pear"), ("shoe", "sock"), ("cup", "spoon"), ("bird", "nest"), ("frog", "snail"), ("acorn", "leaf")]
+PATTERN_TRIPLES = [("apple", "banana", "orange"), ("circle", "square", "triangle"), ("sun", "moon", "star"), ("cow", "pig", "sheep")]
+
+
+def _pattern(rng, colors: bool):
+    kind = rng.choice(list(PATTERN_KINDS))
+    seq_kind, shown = PATTERN_KINDS[kind]
+    k = len(set(seq_kind))
+    if colors:
+        prop = rng.choice(PATTERN_PROPS)
+        cols = rng.sample(["red", "blue", "yellow", "green", "purple", "orange", "pink"], k)
+        elems = [(prop, c, c) for c in cols]
+    elif k == 3:
+        elems = [(p, None, spoken_name(p)) for p in rng.choice(PATTERN_TRIPLES)]
+    else:
+        pair = list(rng.choice(PATTERN_PAIRS))
+        rng.shuffle(pair)
+        elems = [(p, None, spoken_name(p)) for p in pair]
+    letters = "ABC"
+    seq = [elems[letters.index(seq_kind[i % len(seq_kind)])] for i in range(shown + 1)]
+    return kind, seq
+
+
+def what_comes_next(rng, uni) -> Story:
+    x, y = _pick_cast(rng, uni, 2)
+    rounds = [_pattern(rng, True), _pattern(rng, False)]
+    rng.shuffle(rounds)
+    b = B(uni, rng.choice(["playroom", "meadow", "garden"])).enter(x, y)
+    X, Y = b.n(x), b.n(y)
+    b.say("narrator", _v(rng, f"{X} is making patterns. Can {Y} find what comes next?", f"Patterns repeat, again and again. Let's play with {X}!"),
+          title="What Comes Next? Pattern Fun", act={x: "clap", y: "nod"})
+    for i, (kind, seq) in enumerate(rounds):
+        a, o = _cycle_pair([x, y], i)
+        b.clear()
+        for p, c, _ in seq[:-1]:
+            b.show(p, c)
+        names = [w for _, _, w in seq[:-1]]
+        b.say(a, f"{cap(', '.join(names))}...", act={a: "nod", o: "nod"})
+        b.say(a, _v(rng, f"What comes next, {b.n(o)}?", "What comes next?", "Can you guess what comes next?"), act={a: "nod", o: "think"},
+              word=("?", "purple"))
+        nxt = seq[-1]
+        b.show(nxt[0], nxt[1])
+        b.say(o, _v(rng, f"{cap(nxt[2])}! The pattern repeats.", f"I know! {cap(nxt[2])} comes next.", f"{cap(nxt[2])}!"),
+              act={o: "cheer", a: "clap"}, word=(nxt[2].upper(), nxt[1] or "green"), sfx=["chime"])
+    b.clear()
+    b.say("narrator", _v(rng, "A pattern repeats in the same order. You can find patterns everywhere!",
+                         "Same order, again and again. That is a pattern!"), act={x: "dance", y: "dance"}, fx="sparkle")
+    b.say(y, _v(rng, "Can you make a pattern with your toys?", "What pattern can you find today?"), act={y: "wave"},
+          end=uni["brand"]["end_card"])
+    return Story("G", "what_comes_next", "letter_day", f"What Comes Next? Pattern Fun With {X} and {Y}",
+                 f"{X} and {Y} read two patterns aloud and guess what comes next.", "Recognize and continue simple repeating patterns.",
+                 "bright", [x, y], b.beats, ["patterns", "early math", "what comes next"],
+                 {"rounds": sorted(f"{k}:" + ",".join(f"{p}{c}" for p, c, _ in s) for k, s in rounds), "x": x, "y": y})
+
+
+def _initial(word: str) -> str:
+    return spoken_name(word)[0].upper()
+
+
+def starts_with(rng, uni) -> Story:
+    x, y = _pick_cast(rng, uni, 2)
+    letters = rng.sample([k for k in LETTERS if len(LETTERS[k]) >= 1], 3)
+    rounds = []
+    pool = [w for ws in LETTERS.values() for w in ws]
+    for L in letters:
+        target = rng.choice(LETTERS[L])
+        others = rng.sample([w for w in pool if _initial(w) != L], 2)
+        opts = [target] + others
+        rng.shuffle(opts)
+        rounds.append((L, target, opts))
+    b = B(uni, rng.choice(["playroom", "meadow", "garden"])).enter(x, y)
+    X, Y = b.n(x), b.n(y)
+    b.say("narrator", _v(rng, f"Letter hunt! {X} and {Y} listen for the first sound.", f"Three things, one letter. Which one starts with it?"),
+          title="Which One Starts With the Letter?", act={x: "clap", y: "clap"})
+    for i, (L, target, opts) in enumerate(rounds):
+        a, o = _cycle_pair([x, y], i)
+        b.clear()
+        for w in opts:
+            b.show(w, "red" if w in TINTABLE else None)
+        b.say(a, _v(rng, f"Which one starts with {L}?", f"{b.n(o)}, which one starts with {L}?"), act={a: "nod", o: "think"},
+              letter=f"{L} {L.lower()}")
+        b.say(o, f"{cap(join_words([spoken_name(w) for w in opts]))}. Hmm...", act={o: "nod"})
+        b.clear().show(target, "red" if target in TINTABLE else None, size=140)
+        b.say(o, f"{cap(spoken_name(target))}! {cap(spoken_name(target))} starts with {L}.", act={o: "cheer", a: "clap"},
+              word=(cap(spoken_name(target)), "purple"), sfx=["chime"])
+    b.clear()
+    b.say("narrator", f"{', '.join(letters)}. Every word starts with a letter sound.", act={x: "dance", y: "dance"}, fx="sparkle")
+    b.say(x, _v(rng, f"What else starts with {letters[0]}?", "What letter does your favorite toy start with?"), act={x: "wave"},
+          end=uni["brand"]["end_card"])
+    return Story("G", "starts_with", "letter_day", f"Which One Starts With {letters[0]}? A Letter Hunt",
+                 f"{X} and {Y} find which object starts with {join_words(letters)}.", "Hear and match the first letter of a word.", "bright",
+                 [x, y], b.beats, ["alphabet", "phonics", "letters"] + [f"letter {L}" for L in letters],
+                 {"rounds": sorted(f"{L}:{t}:" + ",".join(sorted(o)) for L, t, o in rounds), "x": x, "y": y})
+
+
+RHYMES = [("moon", "spoon"), ("sock", "rock"), ("clock", "sock"), ("rock", "clock"), ("bed", "bread"), ("star", "jar"), ("bell", "shell"),
+          ("bee", "tree"), ("bee", "key"), ("tree", "key"), ("owl", "towel")]
+
+
+def rhyme_time(rng, uni) -> Story:
+    x, y = _pick_cast(rng, uni, 2)
+    yes = rng.sample(RHYMES, 2)
+    used = {w for p in yes for w in p}
+    a0 = rng.choice([w for w in ("drum", "kite", "fish", "apple", "frog", "boat", "ball", "hat", "pig", "cow") if w not in used])
+    b0 = rng.choice([w for w in ("moon", "sock", "bed", "star", "bell", "bee") if w not in used])
+    rounds = [(yes[0], True), (yes[1], True), ((a0, b0), False)]
+    rng.shuffle(rounds)
+    b = B(uni, rng.choice(["playroom", "meadow", "garden"])).enter(x, y)
+    X, Y = b.n(x), b.n(y)
+    b.say("narrator", _v(rng, f"Rhyme time! Words that rhyme end with the same sound.", f"{X} and {Y} are listening for rhymes."),
+          title=f"Rhyme Time With {X} and {Y}", act={x: "clap", y: "clap"})
+    for i, ((w1, w2), rhymes) in enumerate(rounds):
+        a, o = _cycle_pair([x, y], i)
+        b.clear().show(w1, "red" if w1 in TINTABLE else None).show(w2, "blue" if w2 in TINTABLE else None)
+        b.say(a, f"{cap(spoken_name(w1))}, {spoken_name(w2)}. Do they rhyme?", act={a: "nod", o: "think"})
+        if rhymes:
+            b.say(o, _v(rng, f"Yes! {cap(spoken_name(w1))} and {spoken_name(w2)} rhyme!", f"{cap(spoken_name(w1))}, {spoken_name(w2)}. They rhyme!"),
+                  act={o: "cheer", a: "clap"}, word=("RHYME!", "green"), sfx=["chime"])
+        else:
+            b.say(o, _v(rng, f"No. {cap(spoken_name(w1))} and {spoken_name(w2)} do not rhyme.", "Hmm, no. They sound different at the end."),
+                  act={o: "nod", a: "nod"}, word=("NO RHYME", "orange"))
+    b.clear()
+    good = [f"{spoken_name(p[0][0])} and {spoken_name(p[0][1])}" for p in rounds if p[1]]
+    b.say("narrator", f"{cap(good[0])}. {cap(good[1])}. Rhymes are fun to say!", act={x: "dance", y: "dance"}, fx="sparkle")
+    b.say(y, _v(rng, f"Can you think of a word that rhymes with {spoken_name(yes[0][0])}?", "What words can you rhyme today?"),
+          act={y: "wave"}, end=uni["brand"]["end_card"])
+    return Story("G", "rhyme_time", "letter_day", f"Rhyme Time With {X} and {Y}: {cap(spoken_name(yes[0][0]))} and {cap(spoken_name(yes[0][1]))}",
+                 f"{X} and {Y} listen to pairs of words and decide whether they rhyme: {'; '.join(good)}.",
+                 "Hear when two words rhyme (end with the same sound).", "bright", [x, y], b.beats, ["rhyming words", "phonics", "early reading"],
+                 {"yes": sorted("-".join(p) for p in yes), "no": f"{a0}-{b0}", "x": x, "y": y})
+
+
+def alphabet_walk(rng, uni) -> Story:
+    x, y = _pick_cast(rng, uni, 2)
+    order = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    start = rng.randrange(0, 23)
+    run = order[start:start + 4]
+    words = [rng.choice(LETTERS[L]) for L in run]
+    b = B(uni, rng.choice(["meadow", "garden", "playroom"])).enter(x, y)
+    X, Y = b.n(x), b.n(y)
+    b.say("narrator", _v(rng, f"{X} and {Y} walk through the alphabet, from {run[0]} to {run[-1]}.",
+                         f"Alphabet walk! Today {X} and {Y} go from {run[0]} to {run[-1]}."), title=f"Alphabet Walk: {run[0]} to {run[-1]}",
+          act={x: "hop", y: "hop"}, letter=f"{run[0]} to {run[-1]}")
+    for i, (L, w) in enumerate(zip(run, words)):
+        a, o = _cycle_pair([x, y], i)
+        if i:
+            b.say(o, f"What comes after {run[i - 1]}?", act={o: "think", a: "nod"}, letter=f"{run[i - 1]} ?")
+        b.clear().show(w, "red" if w in TINTABLE else None, size=140)
+        b.say(a, f"{L}! {L} is for {spoken_name(w)}.", act={a: "cheer", o: "clap"}, letter=f"{L} {L.lower()}", sub=spoken_name(w))
+    b.clear()
+    b.say("narrator", f"{', '.join(run)}. {cap(join_words([spoken_name(w) for w in words]))}!", act={x: "dance", y: "dance"}, fx="sparkle")
+    b.say(x, _v(rng, f"What comes after {run[-1]}?" if run[-1] != "Z" else "Z is the last letter. Can you sing the ABC?",
+                "Which letter is your favorite?"), act={x: "wave"}, end=uni["brand"]["end_card"])
+    return Story("G", "alphabet_walk", "letter_day", f"Alphabet Walk: {run[0]} to {run[-1]} With {X} and {Y}",
+                 f"{X} and {Y} walk through the letters {', '.join(run)}: {join_words([spoken_name(w) for w in words])}.",
+                 f"Letter order from {run[0]} to {run[-1]}; a word for each letter.", "bright", [x, y], b.beats,
+                 ["alphabet", "abc", "letter order"] + [f"letter {L}" for L in run], {"run": run, "words": words, "x": x, "y": y})
+
+
+FORMATS["B"].extend([animal_riddles, animal_babies, who_eats_what, gentle_with_animals, move_like_animals])
+FORMATS["E"].extend([animal_rhyme, call_and_response, countdown_rhyme, weather_rhyme, shape_rhyme, fruit_rhyme, body_rhyme])
+FORMATS["F"].extend([goodnight_animals, sleepy_body, quiet_sounds, three_good_things, imagine_journey, toys_goodnight])
+FORMATS["G"].extend([what_comes_next, starts_with, rhyme_time, alphabet_walk])
+FORMATS["H"].extend([guess_the_sound, five_senses, guess_the_season, life_cycle, which_one, where_from, weather_week, what_will_happen])
