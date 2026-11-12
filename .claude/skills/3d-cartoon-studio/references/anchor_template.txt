@@ -1,0 +1,8 @@
+CHARACTER ANCHOR:
+[codename], [age range], [face shape], [eye shape + spacing + color],
+[brow shape], [nose structure], [mouth/lip shape], [skin tone + marks],
+[hair color + length + texture + silhouette], [body build + posture],
+[signature wardrobe silhouette + accessory + color accent],
+[visual style: modern 3D toon, soft rounded forms, cel-shaded with rim light]
+
+In wonderland-studio, generate the filled anchors with scripts/anchors.py (never by hand).

@@ -1,0 +1,7 @@
+Foley description, 4-second clip: character jumps onto a wooden crate (timecoded, from SKILL.md §5)
+0.0–0.4s — cloth rustle (soft, cotton)
+0.4–1.2s — wooden creak (low, resonant)
+1.2–1.8s — impact thud (layered: real thud + pitched-up pop at 20%)
+
+wonderland-studio writes the same information per episode to <episode>/foley.json
+(time, frame, HH:MM:SS:FF timecode, source pose/prop event, layer, gain, pan).
