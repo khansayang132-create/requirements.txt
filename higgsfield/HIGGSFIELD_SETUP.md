@@ -28,3 +28,18 @@ Never paste a token into chat or into this repository. In Claude Code cloud sess
 
 Some skill files tell an agent to run `curl … install.sh | sh` when the CLI is missing. The CLI is already installed
 from npm here, so that path is not needed; don't pipe a download into a shell without reading it first.
+
+## The other "higgsfield": the open-source training framework (github.com/higgsfield-ai/higgsfield)
+
+A different product from the image/video service: a GPU orchestration framework for training large language models
+(ZeRO-3 / FSDP) across your own Ubuntu GPU servers, deployed through GitHub Actions.
+
+| Check | Result |
+|---|---|
+| Installed | PASS: `pip install higgsfield==0.0.3` (latest on PyPI, Apache-2.0) into its own venv `.venv-higgsfield-train/` (gitignored). |
+| Runs | PASS: `.venv-higgsfield-train/bin/higgsfield --help` lists `init`, `setup-nodes`, `build-experiments`, `run`, `ci`, `show-deploy-key`. |
+| No clash | PASS: the global `higgsfield` is still the creative CLI 1.2.2. The two use the same command name, which is why this one lives in a venv. |
+| Used for anything | NOT RUN: it needs SSH access to Ubuntu GPU nodes with passwordless sudo, and it installs Docker and deploy keys on them. None exist here, and the cartoon studio does not train models. |
+
+Caution: it pins old crypto libraries (`cryptography` 41.0.7, `pyOpenSSL` 23.3.0, which have published security
+advisories). Keep it isolated and don't use it on servers that matter until upstream updates those pins.
