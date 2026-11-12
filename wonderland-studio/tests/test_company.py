@@ -399,3 +399,10 @@ def test_notifications_are_deduplicated(studio):
 
 def test_times_are_utc_iso(studio):
     assert iso(studio.now()).endswith("Z")
+
+
+def test_catch_up_finishes_one_episode_at_a_time(studio, monkeypatch):
+    calls = stub_departments(monkeypatch)
+    studio.run_cycle()
+    first = [c for c in calls if c.startswith("ep-")]
+    assert first[: len(ceo_mod.EPISODE_CHAIN)] == [f"ep-20261112-s1:{k}" for k in ceo_mod.EPISODE_CHAIN]

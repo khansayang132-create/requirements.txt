@@ -3,7 +3,7 @@
 VERIFIED = run and checked here, with the evidence named. IMPLEMENTED = written and unit-tested, but the
 real external service was not available, so it has not run for real. BLOCKED = needs the owner.
 
-Last updated 2026-11-12.
+Last updated 2026-11-12 (20:25 UTC).
 
 ## Verified
 
@@ -16,6 +16,7 @@ Last updated 2026-11-12.
 | Story variety | 71 formats; 365-day simulation: 1460/1460 slots filled, 0 repeats, similarity ≤ 0.62 (`tools/simulate_runway.py`); 281 tests. Spell check over every generated word. |
 | Queue, retries, recovery, gates, publishing logic | 23 tests (`tests/test_company.py`) with YouTube faked: crash recovery, backoff, blocked work, QC regeneration, review approval bound to the file hash, first upload as a test, no re-upload after a crash, "published" only when YouTube says public. |
 | Dashboard | Rendered from a real state database; design-check 0 errors, 0 warnings at 390/1440 px, light and dark. |
+| Free neural voice (Kokoro) | CI run 43293962770 (commit f868b2a): `voices install` then `voices doctor` reported kokoro `available: true` on a GitHub runner. In this sandbox the model hosts are blocked, so local episodes still use eSpeak. |
 | Your `3d-cartoon-studio` skill | Installed at `.claude/skills/3d-cartoon-studio/`, skills-manager audit low risk, discovered by Claude Code. |
 
 Full suite: 349 passed.
@@ -24,7 +25,6 @@ Full suite: 349 passed.
 
 | What | Why not verified | How it gets verified |
 |---|---|---|
-| Free neural voice (Kokoro) | Model download hosts are blocked in this sandbox; episodes here use the robotic eSpeak fallback. | CI job `wonderland` installs Kokoro and checks it speaks. |
 | Upload, schedule, playlists, verify on YouTube | No channel and no Google sign-in exist yet. | Owner steps 1–4 in the README, then one review-mode test upload. |
 | Analytics, reports with numbers, experiments | Need published videos. | Automatic once videos are public. |
 | Telegram notifications | No bot token; Telegram is blocked here. Notifications are stored in the database and shown in `status`/dashboard. | Set `WONDERLAND_TELEGRAM_TOKEN` and `WONDERLAND_TELEGRAM_CHAT`. |
@@ -37,6 +37,10 @@ Full suite: 349 passed.
 4. Somewhere to run every day: the phone (`python -m wonderland daemon` in Termux, 2D look) or a computer/server with Chromium (3D look).
 
 ## Known weak spots
+
+- CI run 43293962770 finished 36 tasks with no failures but no complete episode inside 25 minutes, because the queue
+  worked breadth-first (every script, then every storyboard, …) and 3D rendering on a 4-core runner is slow. Catch-up runs
+  now finish one episode at a time, earliest slot first; the next CI run confirms it.
 
 - 3D: Toto's trunk hides most of his neckerchief; in 3/4 view the far eye pokes slightly past the head outline; a raised wave is a little lower than in 2D; actors share one depth plane.
 - The grade pass made the 2D renderer ~2.7× slower and cannot be switched off from config yet.

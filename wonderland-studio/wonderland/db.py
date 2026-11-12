@@ -229,6 +229,10 @@ class DB:
             rows = self.q(sql + " ORDER BY priority, COALESCE(cycle_at, created_at), id", tuple(args))
             if not rows:
                 return None
+            if not respect_cycle:
+                # Catching up: finish one episode at a time, earliest slot first ("ep-YYYYMMDD-sN" sorts by time),
+                # instead of every script, then every storyboard, ... so a cut-short run still has finished episodes.
+                rows.sort(key=lambda r: (r["episode_id"] is not None, r["episode_id"] or "", r["priority"]))
             state = {r["key"]: r["status"] for r in self.q("SELECT key, status FROM tasks")}
             for row in rows:
                 deps = _loads(row["depends_on"], [])
