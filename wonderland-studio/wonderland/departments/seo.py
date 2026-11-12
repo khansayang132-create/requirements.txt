@@ -119,6 +119,9 @@ def handle_seo(studio, task: dict, ep: dict) -> AgentReport:
         raise PermanentError("episode has no story")
     cover = Path(ep["dir"]) / "cover.png" if ep.get("dir") else None
     variant = improvement.assignment(studio, ep)
+    defaults = studio.db.get("metadata_defaults", {}) or {}
+    if defaults:
+        variant = {**variant, "settings": {**defaults, **(variant.get("settings") or {})}}
     meta = build_metadata(ep["story"], studio.universe, studio.cfg, cover if cover and cover.is_file() else None, variant)
     verdict = compliance.review_metadata(meta)
     if not verdict["ok"]:

@@ -51,8 +51,14 @@ def handle_script(studio, task: dict, ep: dict) -> AgentReport:
     for fmt, boost in (brief.get("format_boosts") or {}).items():
         weights[fmt] = round(weights.get(fmt, 1.0) * float(boost), 4)
     engine = story_dept.StoryEngine(studio.universe, studio.cfg.get("story"))
+    avoid = set(studio.db.get(f"failed_formats:{ep['id']}", []) or [])   # formats that already failed QC for this slot
     try:
-        story, report = engine.generate(list(slot["categories"]), f"{ep['id']}:{ep['attempt']}", history, same_day, weights or None)
+        for n in range(6):
+            story, report = engine.generate(list(slot["categories"]), f"{ep['id']}:{ep['attempt']}:{n}", history, same_day, weights or None)
+            if story.format not in avoid:
+                break
+        else:
+            raise RuntimeError(f"only formats that already failed quality control were available ({', '.join(sorted(avoid))})")
     except RuntimeError as exc:
         studio.notify("warning", f"No new story for {ep['id']}", f"Slot left empty instead of repeating an old video. {str(exc)[:400]}",
                       fingerprint=f"nostory:{ep['slot']}")

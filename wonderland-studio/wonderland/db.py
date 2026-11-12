@@ -166,7 +166,7 @@ class DB:
             return
         cols, vals = [], []
         for k, v in fields.items():
-            cols.append(f"{k}=?")
+            cols.append(f'"{k}"=?')
             if k in JSON_EPISODE and v is not None:
                 v = json.dumps(v, ensure_ascii=False, default=str)
             elif isinstance(v, bool):
@@ -180,7 +180,7 @@ class DB:
 
     def story_history(self, exclude: str | None = None) -> list[dict]:
         """Rows the story engine compares against, oldest first: every episode that got a script and was not thrown away."""
-        rows = self.q("SELECT id, day, signature, format, script, cast FROM episodes WHERE signature IS NOT NULL AND status NOT IN ('failed','rejected','skipped') "
+        rows = self.q("SELECT id, day, signature, format, script, \"cast\" FROM episodes WHERE signature IS NOT NULL AND status NOT IN ('failed','rejected','skipped') "
                       "AND id IS NOT ? ORDER BY publish_at", (exclude,))
         for r in rows:
             r["cast"] = _loads(r["cast"], [])

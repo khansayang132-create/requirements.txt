@@ -190,6 +190,11 @@ class Studio:
             report = self._failure(task, exc)
         seconds = round(time.time() - t0, 2)
         now = self.now()
+        try:
+            from . import finance
+            finance.record_compute(self, task, seconds)
+        except Exception:  # noqa: BLE001 - bookkeeping must never fail a task
+            pass
         self.db.add_report(report.as_dict(), now, task_key=task["key"], episode_id=task["episode_id"], seconds=seconds)
         self._react(task, ep, report, now)
         return {"task": task["key"], "agent": agent, "status": report.status, "seconds": seconds, "errors": report.errors[:2], "next_action": report.next_action}
@@ -249,6 +254,10 @@ class Studio:
         if ep["attempt"] >= limit:
             self.db.log("error", "ceo", f"{ep['id']} failed quality control {ep['attempt'] + 1} times; giving up", now, error=error[:300])
             return False
+        failed = list(self.db.get(f"failed_formats:{ep['id']}", []) or [])
+        if ep.get("format") and ep["format"] not in failed:
+            failed.append(ep["format"])
+            self.db.set(f"failed_formats:{ep['id']}", failed, now)
         with self.db.tx():
             self.db.update_episode(ep["id"], now, attempt=ep["attempt"] + 1, status="in_production", story=None, story_report=None, signature=None, script=None,
                                    title=None, qa=None, metadata=None, compliance=None, production=None, video_path=None, video_sha256=None,
