@@ -116,10 +116,30 @@ sv status lskhan-site | grep -q '^run:'
 for _ in $(seq 1 20); do grep -q 'FAKE NGROK start --config' "$PREFIX/var/log/sv/lskhan-site/current" 2>/dev/null && break; sleep 1; done
 grep -q "FAKE NGROK start --config $conf --log stdout lskhan-site" "$PREFIX/var/log/sv/lskhan-site/current"
 bash termux/install.sh status | grep -q lskhan-site
+! grep -q lskhan-router "$conf"   # no router unless OmniRoute is published
+
+# Publishing OmniRoute: refused without a key, then the router runs behind ngrok and guards /v1.
+printf 'OMNIROUTE_PUBLIC=yes\n' >> .env
+if bash termux/install.sh site; then echo "OMNIROUTE_PUBLIC without a key must be refused"; exit 1; fi
+printf 'OMNIROUTE_API_KEY=sk-test-omniroute-key-123456\nOMNIROUTE_BASE_URL=http://127.0.0.1:20199/v1\n' >> .env
+bash termux/install.sh site | grep -q 'OmniRoute API published'
+grep -q 'url: 8099' "$conf"
+grep -qF "!(req.url.path == '/v1' || req.url.path.startsWith('/v1/'))" "$conf"
+sv status lskhan-router | grep -q '^run:'
+for _ in $(seq 1 20); do curl -s -o /dev/null http://127.0.0.1:8099/ && break; sleep 1; done
+[[ $(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8099/v1/models) == 401 ]]
+[[ $(curl -s -o /dev/null -w '%{http_code}' --path-as-is -H 'Authorization: Bearer sk-test-omniroute-key-123456' \
+     'http://127.0.0.1:8099/v1/%2e%2e/dashboard') == 400 ]]
+bash termux/install.sh status | grep -q lskhan-router
+sed -i '/^OMNIROUTE_PUBLIC=/d' .env
+bash termux/install.sh site
+test -e "$PREFIX/var/service/lskhan-router/down"   # switched off again
+grep -q 'url: 8080' "$conf"
 
 bash termux/install.sh uninstall
 test ! -d "$PREFIX/var/service/lskhan-bot"
 test ! -d "$PREFIX/var/service/lskhan-site"
+test ! -d "$PREFIX/var/service/lskhan-router"
 test ! -d "$PREFIX/var/service/lskhan-omniroute"
 ! compgen -G "$PREFIX/var/service/.lskhan-*" >/dev/null   # no half-removed folders left
 bash termux/install.sh uninstall   # idempotent: a second run is a no-op

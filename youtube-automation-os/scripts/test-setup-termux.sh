@@ -24,7 +24,8 @@ bash scripts/setup.sh | tee "$HOME/second.log"
 grep -q "Dependencies already installed" "$HOME/second.log"
 grep -q "# keep me" .env
 
-bash scripts/setup.sh check | grep -q "Authorize once"
+check_out=$(bash scripts/setup.sh check)   # not piped: grep -q exits early and pipefail turns SIGPIPE into exit 141
+grep -q "Authorize once" <<<"$check_out"
 
 # The whole suite on Android's Python.
 .venv/bin/python -m pip install -q pytest==9.2.0

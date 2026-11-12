@@ -145,8 +145,9 @@ install_ngrok() {
 # Publish the phone's local website at the owner's fixed ngrok address, as a runit service.
 site() {
     [[ -f $BOT_DIR/.env ]] || die "No .env yet: copy .env.example to .env first."
-    local token domain port auth public
+    local token domain port auth public omni_public upstream
     token=$(env_get NGROK_AUTHTOKEN); domain=$(env_get SITE_DOMAIN)
+    omni_public=$(env_get OMNIROUTE_PUBLIC)
     port=$(env_get SITE_PORT); port=${port:-8080}
     auth=$(env_get SITE_AUTH); public=$(env_get SITE_PUBLIC)
     domain=${domain#https://}; domain=${domain#http://}; domain=${domain%%/*}
@@ -160,6 +161,16 @@ site() {
     if [[ -n $auth ]]; then
         [[ $auth =~ ^[^:]+:.{8,}$ ]] || die "SITE_AUTH must look like username:password, with a password of 8+ characters."
         [[ $auth != *\"* && $auth != *\\* ]] || die "SITE_AUTH must not contain quotes or backslashes."
+    fi
+
+    # With OMNIROUTE_PUBLIC=yes, a router (termux/router.py) sits behind ngrok: /v1/... goes to
+    # OmniRoute's API (only with the OmniRoute key), everything else to the website.
+    upstream=$port
+    if [[ $omni_public == yes ]]; then
+        local key; key=$(env_get OMNIROUTE_API_KEY)
+        [[ ${#key} -ge 16 ]] || die "OMNIROUTE_PUBLIC=yes needs OMNIROUTE_API_KEY in .env (a key from the OmniRoute dashboard)."
+        upstream=$(env_get SITE_ROUTER_PORT); upstream=${upstream:-8099}
+        [[ $upstream =~ ^[0-9]+$ ]] || die "SITE_ROUTER_PORT must be a number (got: $upstream)."
     fi
 
     install_ngrok
@@ -177,11 +188,18 @@ site() {
           echo "  - name: lskhan-site"
           echo "    url: https://$domain"
           echo "    upstream:"
-          echo "      url: $port"
+          echo "      url: $upstream"
           if [[ -n $auth ]]; then
               echo "    traffic_policy:"
               echo "      on_http_request:"
-              echo "        - actions:"
+              if [[ $omni_public == yes ]]; then
+                  # OmniRoute's API carries its own key in Authorization, so the password skips /v1.
+                  echo "        - expressions:"
+                  echo "            - \"!(req.url.path == '/v1' || req.url.path.startsWith('/v1/'))\""
+                  echo "          actions:"
+              else
+                  echo "        - actions:"
+              fi
               echo "            - type: basic-auth"
               echo "              config:"
               echo "                credentials:"
@@ -191,8 +209,15 @@ site() {
 
     command -v sv-enable >/dev/null || pkg install -y termux-services >/dev/null
     pkill -f "ngrok start" 2>/dev/null || true
+    if [[ $omni_public == yes ]]; then
+        make_service lskhan-router python -u termux/router.py "\"$BOT_DIR/.env\""
+    elif [[ -d $SV/lskhan-router ]]; then
+        sv down lskhan-router 2>/dev/null || true
+        touch "$SV/lskhan-router/down"   # turned off: OMNIROUTE_PUBLIC is no longer yes
+    fi
     make_service lskhan-site ngrok start --config "\"$conf\"" --log stdout lskhan-site
     start_service_daemon
+    [[ $omni_public == yes ]] && enable_service lskhan-router
     enable_service lskhan-site
     command -v termux-wake-lock >/dev/null && timeout 10 termux-wake-lock || true
 
@@ -200,6 +225,7 @@ site() {
         echo "⚠️  Nothing answers on http://127.0.0.1:$port yet. Start your website, and the address will work."
     fi
     ok "Website published at https://$domain${auth:+ (password protected)}."
+    [[ $omni_public == yes ]] && echo "   OmniRoute API published at https://$domain/v1 (only with your OmniRoute key)."
     echo "   It restarts automatically and comes back after a reboot like the bot."
     echo "   Check:  bash termux/install.sh status"
     echo "   Log:    tail $PREFIX/var/log/sv/lskhan-site/current"
@@ -251,7 +277,7 @@ update() {
     fi
     start_service_daemon >/dev/null 2>&1 || true
     local name
-    for name in lskhan-omniroute lskhan-bot lskhan-site; do
+    for name in lskhan-omniroute lskhan-bot lskhan-site lskhan-router; do
         [[ -d $SV/$name ]] && sv restart "$name" >/dev/null 2>&1 || true
     done
     # OmniRoute needs a few seconds to start listening after a restart.
@@ -263,7 +289,7 @@ update() {
 status() {
     start_service_daemon >/dev/null 2>&1 || true
     local name
-    for name in lskhan-omniroute lskhan-bot lskhan-site; do
+    for name in lskhan-omniroute lskhan-bot lskhan-site lskhan-router; do
         [[ -d $SV/$name ]] || continue
         sv status "$name" || true
     done
@@ -278,7 +304,7 @@ logs() {
 uninstall() {
     start_service_daemon >/dev/null 2>&1 || true
     local name gone
-    for name in lskhan-bot lskhan-omniroute lskhan-site; do
+    for name in lskhan-bot lskhan-omniroute lskhan-site lskhan-router; do
         gone="${SV:?}/.$name.removing"
         rm -rf "$gone" 2>/dev/null || true   # left over from an interrupted uninstall
         [[ -d $SV/$name ]] || continue
