@@ -3,12 +3,13 @@
 VERIFIED = run and checked here, with the evidence named. IMPLEMENTED = written and unit-tested, but the
 real external service was not available, so it has not run for real. BLOCKED = needs the owner.
 
-Last updated 2026-11-12 (20:25 UTC).
+Last updated 2026-11-12 (21:00 UTC).
 
 ## Verified
 
 | What | Evidence |
 |---|---|
+| Whole company cycle on CI | Run 43299417303 (commit 67bae13, depth-first catch-up): the 25-minute cycle finished with ≥ 1 produced episode (the job's own check) and uploaded 12 finished episodes (24 files: MP4 + contact sheet) as the artifact `wonderland-sample-episodes`. |
 | Whole production line, story → finished MP4 | `run-cycle` in a fresh state folder: 9 episodes planned, 8 produced and passed every gate, 1 rejected by quality control (frozen picture) three times and left empty instead of published. |
 | Real 3D toon characters (Three.js, Chromium/SwiftShader) | 617-frame episode in 117.6 s, QA pass; 22 tests (`tests/test_render3d.py`); character sheet and 7-angle turnarounds looked at by eye. |
 | 2D fallback renderer | Same seed: 617 frames in 33 s, QA pass. Used automatically when Chromium is missing (phone). |
@@ -38,9 +39,7 @@ Full suite: 349 passed.
 
 ## Known weak spots
 
-- CI run 43293962770 finished 36 tasks with no failures but no complete episode inside 25 minutes, because the queue
-  worked breadth-first (every script, then every storyboard, …) and 3D rendering on a 4-core runner is slow. Catch-up runs
-  now finish one episode at a time, earliest slot first; the next CI run confirms it.
+- Fixed: CI run 43293962770 produced no episode in 25 minutes (breadth-first queue). With depth-first catch-up, run 43299417303 produced 12.
 
 - 3D: Toto's trunk hides most of his neckerchief; in 3/4 view the far eye pokes slightly past the head outline; a raised wave is a little lower than in 2D; actors share one depth plane.
 - The grade pass made the 2D renderer ~2.7× slower and cannot be switched off from config yet.

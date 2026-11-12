@@ -43,5 +43,6 @@ LivePortrait / SadTalker (no GPU; model licences need a deliberate review); any 
 | Full 14-step dry run (mock provider) | PASS | `rendered-videos/demo-presenter/final.mp4`, 1080×1920, 10.10 s, h264 + AAC 48 kHz, −14.0 LUFS, full decode clean; QC overall **BLOCKED** because it is a labelled mock |
 | `pytest -q` | PASS | 21 passed |
 | `ruff check src tests` | PASS | All checks passed |
+| CI job `digital-human-factory` (GitHub runner) | PASS | run 43299417303, commit 67bae13: install + `pip check`, ruff, pytest, full dry run and `qc` all green |
 | Live provider call | **BLOCKED** | no credentials, and provider hosts unreachable from this sandbox |
 | Real presenter video | **BLOCKED** | see `test-reports/demo-status.md` |
