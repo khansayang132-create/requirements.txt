@@ -27,8 +27,22 @@
       }
     ]
   },
-  "enabledMcpjsonServers": ["headroom", "21st"],
+  "enabledMcpjsonServers": [
+    "headroom",
+    "21st"
+  ],
   "env": {
     "MCP_TIMEOUT": "300000"
+  },
+  "extraKnownMarketplaces": {
+    "higgsfield": {
+      "source": {
+        "source": "github",
+        "repo": "higgsfield-ai/skills"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "higgsfield@higgsfield": true
   }
 }
