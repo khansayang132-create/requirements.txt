@@ -132,4 +132,4 @@ Every packaged episode now gets `agency/media_audit.py`: all frames decoded (bla
 | ep004 | runaway-kite | 1570 | −14.0 / −2.4 | PASS | superseded: the set label "Valley panorama" spoken in the first line; kite drawn twice during the hand-off |
 | ep005 | nervous-drum | 1302 | −14.0 / −2.5 | PASS | reviewed frame by frame |
 | ep006 | runaway-kite | 1557 | −14.0 / −2.4 | PASS | caption fixed; still has the double kite (rendered before that fix) |
-| ep007 | runaway-kite | see `agency/out/production/episodes/ep007/` | | | both fixes |
+| ep007 | runaway-kite | 1557 | −14.0 / −2.4 | PASS | **current version of this story**: caption and single-kite hand-off both fixed and checked frame by frame |

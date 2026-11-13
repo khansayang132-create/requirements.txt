@@ -1,0 +1,114 @@
+{
+  "overall": "PASS",
+  "checks": {
+    "container_mp4": {
+      "status": "PASS",
+      "detail": "mov,mp4,m4a,3gp,3g2,mj2"
+    },
+    "has_video_stream": {
+      "status": "PASS",
+      "detail": "found"
+    },
+    "has_audio_stream": {
+      "status": "PASS",
+      "detail": "found"
+    },
+    "video_codec_h264": {
+      "status": "PASS",
+      "detail": "h264"
+    },
+    "pixel_format_yuv420p": {
+      "status": "PASS",
+      "detail": "yuv420p"
+    },
+    "resolution": {
+      "status": "PASS",
+      "detail": "1080x1920 (want 1080x1920)"
+    },
+    "aspect_9_16": {
+      "status": "PASS",
+      "detail": "1080:1920"
+    },
+    "frame_rate": {
+      "status": "PASS",
+      "detail": "24.000 fps (want 24)"
+    },
+    "audio_codec_aac": {
+      "status": "PASS",
+      "detail": "aac"
+    },
+    "audio_48000_stereo": {
+      "status": "PASS",
+      "detail": "48000 Hz, 2 ch"
+    },
+    "audio_bitrate_high": {
+      "status": "PASS",
+      "detail": "276 kbps (requested 320, floor 192)"
+    },
+    "duration_window": {
+      "status": "PASS",
+      "detail": "64.88s (want 53-67.5s)"
+    },
+    "audio_video_same_length": {
+      "status": "PASS",
+      "detail": "video 64.88s, audio 64.88s"
+    },
+    "faststart_moov_first": {
+      "status": "PASS",
+      "detail": "moov atom before mdat"
+    },
+    "no_black_frames": {
+      "status": "PASS",
+      "detail": "none"
+    },
+    "no_long_freeze": {
+      "status": "PASS",
+      "detail": "none"
+    },
+    "no_blank_frames": {
+      "status": "PASS",
+      "detail": "lowest picture detail 45.8 (flat colour = 0)"
+    },
+    "first_frame_is_picture": {
+      "status": "PASS",
+      "detail": "detail 45.8"
+    },
+    "no_long_silence": {
+      "status": "PASS",
+      "detail": "none"
+    },
+    "loudness_on_target": {
+      "status": "PASS",
+      "detail": "-14.0 LUFS (target -14 \u00b11)"
+    },
+    "true_peak_ceiling": {
+      "status": "PASS",
+      "detail": "true peak -2.4 dBTP (ceiling -1.5)"
+    },
+    "target_duration": {
+      "status": "PASS",
+      "detail": "64.9s (target 60s \u00b110%)"
+    },
+    "lip_sync_track": {
+      "status": "PASS",
+      "detail": "worst drift 0.0404s"
+    },
+    "character_reference_hashes": {
+      "status": "PASS",
+      "detail": "5 bibles match the hashes locked at job start"
+    },
+    "visual_identity_review": {
+      "status": "NOT_TESTED",
+      "detail": "look at sheet.png: automatic face matching is not installed"
+    }
+  },
+  "metrics": {
+    "duration": 64.875,
+    "bytes": 11611547,
+    "fps": 24.0,
+    "audio_kbps": 276,
+    "frame_std_min": 45.82,
+    "lufs": -14.0,
+    "true_peak_dbfs": -2.4
+  }
+}
