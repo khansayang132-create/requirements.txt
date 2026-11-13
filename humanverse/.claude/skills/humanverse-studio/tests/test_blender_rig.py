@@ -58,3 +58,27 @@ def test_walk_keeps_planted_feet(built):
     p.walk(5, [(-1.5, 0.0), (0.5, 0.0)])
     slide = hvanim.foot_slide_report(built["rig"], p.stance_frames)
     assert max(slide.values()) < 2.0, slide
+
+
+def test_held_prop_follows_the_palm(built):
+    """A prop attached to a hand is keyed to that palm (+ offset) on every frame, even while the arm moves.
+    Found in the pilot: the kite was keyed to fixed points and hung in front of Noor instead of in her hand."""
+    import build_scene
+    rig = built["rig"]
+    pb = rig.pose.bones["upper_arm.R"]
+    pb.rotation_mode = "XYZ"
+    for f, ang in ((1, 0), (12, 70)):
+        pb.rotation_euler = (math.radians(ang), 0, 0)
+        pb.keyframe_insert("rotation_euler", frame=f)
+    sc = bpy.context.scene
+    prop = bpy.data.objects.new("held", None)
+    sc.collection.objects.link(prop)
+    off = (0.0, -0.05, 0.2)
+    build_scene.bake_attach(sc, prop, [{"f0": 1, "f1": 12, "char": "c", "hand": "R", "offset": off}], {"c": rig})
+    seen = []
+    for f in (1, 6, 12):
+        sc.frame_set(f)
+        palm = build_scene.palm_world(rig, "R")
+        seen.append(palm.copy())
+        assert (prop.matrix_world.translation - palm).length == pytest.approx(math.dist((0, 0, 0), off), abs=1e-4)
+    assert (seen[0] - seen[2]).length > 0.1                   # the hand really moved, and the prop went with it

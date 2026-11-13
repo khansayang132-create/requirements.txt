@@ -156,7 +156,11 @@ def scene3(lines):
     end = e11 + 50
     kite = {"type": "kite", "keys": [{"f": 1, "loc": [0.55, -0.3, 1.05], "rot": [0, 0, -20]}, {"f": e8 + 2, "loc": [0.55, -0.3, 1.05], "rot": [0, 0, -20]},
                                     {"f": e8 + 20, "loc": [-0.05, -0.3, 1.45], "rot": [-10, 0, 10]}, {"f": e11 + 10, "loc": [-0.75, -0.15, 1.55], "rot": [-10, 0, 10]},
-                                    {"f": end, "loc": [-0.8, -0.1, 1.95], "rot": [-15, 0, 0]}]}
+                                    {"f": end, "loc": [-0.8, -0.1, 1.95], "rot": [-15, 0, 0]}],
+            # held in a hand (baked per frame to the palm): Noor holds it until the hand-off, Amara holds it beside her
+            # until her final cheer, then the world keys lift it above the group ("kite ends above Amara")
+            "attach": [{"f0": 1, "f1": e8 + 2, "char": N, "hand": "R", "offset": [-0.15, -0.08, 0.3]},
+                       {"f0": e8 + 20, "f1": e11 + 1, "char": A, "hand": "R", "offset": [-0.24, -0.06, 0.3]}]}
     shots = [
         shot("S03_SH01", "S03", 1, arrive + 4, {"loc": [0.0, -8.0, 1.8], "target": [-0.4, 0.5, 1.0], "lens": 30}, [A, T, I, N, R], "Maple Street",
              "The family walks up the street; Noor waits by her gate holding the kite, Rosa beside her", "hope", "wide, eye level",

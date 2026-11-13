@@ -99,6 +99,32 @@ def kite(coll, color="#E4573D"):
     return o
 
 
+def palm_world(rig, side: str):
+    """World position of the palm: midpoint of the hand bone (wrist to hand end)."""
+    pb = rig.pose.bones["hand." + side]
+    return (rig.matrix_world @ ((pb.head + pb.tail) * 0.5))
+
+
+def bake_attach(sc, obj, segments: list[dict], rigs: dict) -> None:
+    """Key `obj` to a character's palm (+ offset) on every frame of each segment: {f0, f1, char, hand, offset}.
+    Location keys inside a segment are replaced; rotation keys from the spec are kept."""
+    if obj is None or not segments:
+        return
+    for seg in segments:
+        fc = obj.animation_data.action.fcurves if obj.animation_data and obj.animation_data.action else []
+        for c in fc:
+            if c.data_path == "location":
+                for kp in [k for k in c.keyframe_points if seg["f0"] <= k.co[0] <= seg["f1"]][::-1]:
+                    c.keyframe_points.remove(kp)
+        off = seg.get("offset", [0, 0, 0])
+        for f in range(seg["f0"], seg["f1"] + 1):
+            sc.frame_set(f)
+            pw = palm_world(rigs[seg["char"]], seg.get("hand", "R"))
+            obj.location = (pw.x + off[0], pw.y + off[1], pw.z + off[2])
+            obj.keyframe_insert("location", frame=f)
+    sc.frame_set(1)
+
+
 def main():
     A = args()
     spec = json.load(open(A.spec))
@@ -193,6 +219,11 @@ def main():
                 if i == 0 or fs[i - 1] != f - 1:
                     cues.append({"type": "footstep", "frame": f, "char": cid, "side": s})
 
+    # props held in a hand: baked to the hand bone on every frame of each segment, after all body animation is keyed,
+    # so the prop follows the hand exactly. Between two segments the keys interpolate: that is the hand-off.
+    for pr in spec.get("props", []):
+        bake_attach(sc, props.get(pr.get("name", "kite")), pr.get("attach", []), rigs)
+
     # cameras: one per shot, bound with timeline markers
     shots = []
     for i, sh in enumerate(spec["shots"]):
@@ -223,4 +254,5 @@ def main():
     print("SCENE_OK", json.dumps({k: rep[k] for k in ("scene_id", "frames", "tears", "foot_slide_cm")}))
 
 
-main()
+if __name__ == "__main__":
+    main()
