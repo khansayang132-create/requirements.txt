@@ -1,0 +1,339 @@
+{
+  "episode": "mosslight-valley-nervous-drum-1",
+  "scenes": [
+    {
+      "number": 1,
+      "act": "hook",
+      "duration": 0.0,
+      "location": "playroom",
+      "environment": "playroom",
+      "characters": [
+        "Pipkin",
+        "Oakley"
+      ],
+      "actions": {
+        "Pipkin": "nod",
+        "Oakley": "idle"
+      },
+      "dialogue": {
+        "speaker": "Narrator",
+        "text": "Boom, boom! Today is music day."
+      },
+      "camera_angle": "wide establishing",
+      "camera_movement": "slow push-in",
+      "lighting": "warm daylight",
+      "background": "painted playroom set",
+      "sound_effects": [
+        "pop"
+      ],
+      "music": "bright motif, light",
+      "transition": "cut"
+    },
+    {
+      "number": 2,
+      "act": "hook",
+      "duration": 0.0,
+      "location": "playroom",
+      "environment": "playroom",
+      "characters": [
+        "Pipkin",
+        "Oakley"
+      ],
+      "actions": {
+        "Pipkin": "clap",
+        "Oakley": "idle"
+      },
+      "dialogue": {
+        "speaker": "Pipkin",
+        "text": "I play the drum. Boom, boom, boom!"
+      },
+      "camera_angle": "wide establishing",
+      "camera_movement": "slow push-in",
+      "lighting": "warm daylight",
+      "background": "painted playroom set",
+      "sound_effects": [],
+      "music": "bright motif, light",
+      "transition": "cut"
+    },
+    {
+      "number": 3,
+      "act": "introduction",
+      "duration": 0.0,
+      "location": "playroom",
+      "environment": "playroom",
+      "characters": [
+        "Pipkin",
+        "Oakley"
+      ],
+      "actions": {
+        "Pipkin": "idle",
+        "Oakley": "dance"
+      },
+      "dialogue": {
+        "speaker": "Oakley",
+        "text": "I play the xylophone. Ding, ding!"
+      },
+      "camera_angle": "medium two-shot",
+      "camera_movement": "gentle pan",
+      "lighting": "warm daylight",
+      "background": "painted playroom set",
+      "sound_effects": [
+        "ding"
+      ],
+      "music": "theme, bouncy",
+      "transition": "cut"
+    },
+    {
+      "number": 4,
+      "act": "introduction",
+      "duration": 0.0,
+      "location": "playroom",
+      "environment": "playroom",
+      "characters": [
+        "Pipkin",
+        "Oakley",
+        "Morrow"
+      ],
+      "actions": {
+        "Pipkin": "nod",
+        "Oakley": "idle",
+        "Morrow": "sad"
+      },
+      "dialogue": {
+        "speaker": "Morrow",
+        "text": "I want to play too. But I feel nervous."
+      },
+      "camera_angle": "medium two-shot",
+      "camera_movement": "gentle pan",
+      "lighting": "warm daylight",
+      "background": "painted playroom set",
+      "sound_effects": [],
+      "music": "theme, bouncy",
+      "transition": "cut"
+    },
+    {
+      "number": 5,
+      "act": "development",
+      "duration": 0.0,
+      "location": "playroom",
+      "environment": "playroom",
+      "characters": [
+        "Pipkin",
+        "Oakley",
+        "Morrow"
+      ],
+      "actions": {
+        "Pipkin": "idle",
+        "Oakley": "idle",
+        "Morrow": "stretch"
+      },
+      "dialogue": {
+        "speaker": "Narrator",
+        "text": "Feeling nervous is okay. Morrow takes a big breath."
+      },
+      "camera_angle": "medium",
+      "camera_movement": "follow",
+      "lighting": "warm daylight",
+      "background": "painted playroom set",
+      "sound_effects": [],
+      "music": "curious pizzicato",
+      "transition": "cut"
+    },
+    {
+      "number": 6,
+      "act": "development",
+      "duration": 0.0,
+      "location": "playroom",
+      "environment": "playroom",
+      "characters": [
+        "Pipkin",
+        "Oakley",
+        "Morrow"
+      ],
+      "actions": {
+        "Pipkin": "idle",
+        "Oakley": "clap",
+        "Morrow": "clap"
+      },
+      "dialogue": {
+        "speaker": "Oakley",
+        "text": "Let's try slowly. Clap with me, one, two."
+      },
+      "camera_angle": "medium",
+      "camera_movement": "follow",
+      "lighting": "warm daylight",
+      "background": "painted playroom set",
+      "sound_effects": [],
+      "music": "curious pizzicato",
+      "transition": "cut"
+    },
+    {
+      "number": 7,
+      "act": "conflict",
+      "duration": 0.0,
+      "location": "playroom",
+      "environment": "playroom",
+      "characters": [
+        "Pipkin",
+        "Oakley",
+        "Morrow"
+      ],
+      "actions": {
+        "Pipkin": "idle",
+        "Oakley": "idle",
+        "Morrow": "clap"
+      },
+      "dialogue": {
+        "speaker": "Morrow",
+        "text": "One, two. One, two. I can do it!"
+      },
+      "camera_angle": "close-up",
+      "camera_movement": "slight dolly-in",
+      "lighting": "warm daylight",
+      "background": "painted playroom set",
+      "sound_effects": [],
+      "music": "soft minor, slower",
+      "transition": "cut"
+    },
+    {
+      "number": 8,
+      "act": "climax",
+      "duration": 0.0,
+      "location": "playroom",
+      "environment": "playroom",
+      "characters": [
+        "Pipkin",
+        "Oakley",
+        "Morrow"
+      ],
+      "actions": {
+        "Pipkin": "dance",
+        "Oakley": "dance",
+        "Morrow": "clap"
+      },
+      "dialogue": {
+        "speaker": "Narrator",
+        "text": "Clap, boom, ding! Three friends play together."
+      },
+      "camera_angle": "low-angle hero",
+      "camera_movement": "quick push-in",
+      "lighting": "warm daylight",
+      "background": "painted playroom set",
+      "sound_effects": [],
+      "music": "build, drums",
+      "transition": "cut"
+    },
+    {
+      "number": 9,
+      "act": "climax",
+      "duration": 0.0,
+      "location": "playroom",
+      "environment": "playroom",
+      "characters": [
+        "Pipkin",
+        "Oakley",
+        "Morrow"
+      ],
+      "actions": {
+        "Pipkin": "cheer",
+        "Oakley": "idle",
+        "Morrow": "idle"
+      },
+      "dialogue": {
+        "speaker": "Pipkin",
+        "text": "You did it, Morrow! That sounded great."
+      },
+      "camera_angle": "low-angle hero",
+      "camera_movement": "quick push-in",
+      "lighting": "warm daylight",
+      "background": "painted playroom set",
+      "sound_effects": [],
+      "music": "build, drums",
+      "transition": "cut"
+    },
+    {
+      "number": 10,
+      "act": "resolution",
+      "duration": 0.0,
+      "location": "playroom",
+      "environment": "playroom",
+      "characters": [
+        "Pipkin",
+        "Oakley",
+        "Morrow"
+      ],
+      "actions": {
+        "Pipkin": "idle",
+        "Oakley": "idle",
+        "Morrow": "hop"
+      },
+      "dialogue": {
+        "speaker": "Morrow",
+        "text": "Trying slowly helped me feel brave."
+      },
+      "camera_angle": "medium wide",
+      "camera_movement": "slow pull-back",
+      "lighting": "warm daylight",
+      "background": "painted playroom set",
+      "sound_effects": [],
+      "music": "warm theme returns",
+      "transition": "cut"
+    },
+    {
+      "number": 11,
+      "act": "resolution",
+      "duration": 0.0,
+      "location": "playroom",
+      "environment": "playroom",
+      "characters": [
+        "Pipkin",
+        "Oakley",
+        "Morrow"
+      ],
+      "actions": {
+        "Pipkin": "idle",
+        "Oakley": "idle",
+        "Morrow": "nod"
+      },
+      "dialogue": {
+        "speaker": "Narrator",
+        "text": "Small steps can help us try new things."
+      },
+      "camera_angle": "medium wide",
+      "camera_movement": "slow pull-back",
+      "lighting": "warm daylight",
+      "background": "painted playroom set",
+      "sound_effects": [],
+      "music": "warm theme returns",
+      "transition": "cut"
+    },
+    {
+      "number": 12,
+      "act": "ending",
+      "duration": 0.0,
+      "location": "playroom",
+      "environment": "playroom",
+      "characters": [
+        "Pipkin",
+        "Oakley",
+        "Morrow"
+      ],
+      "actions": {
+        "Pipkin": "nod",
+        "Oakley": "idle",
+        "Morrow": "wave"
+      },
+      "dialogue": {
+        "speaker": "Morrow",
+        "text": "What new thing would you like to try?"
+      },
+      "camera_angle": "wide",
+      "camera_movement": "crane up",
+      "lighting": "warm daylight",
+      "background": "painted playroom set",
+      "sound_effects": [],
+      "music": "sting + end theme",
+      "transition": "cut"
+    }
+  ]
+}

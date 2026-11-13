@@ -1,0 +1,66 @@
+{
+  "id": "11-pippa",
+  "name": "Pippa",
+  "style": "11-animal-adventure",
+  "species": "bear",
+  "age": "child",
+  "build": "stocky",
+  "colors": {
+    "body": "#C79567",
+    "belly": "#FAEDCD",
+    "inner_ear": "#FCB2BE",
+    "accent": "#1D3557",
+    "nose": "#FF8DAC"
+  },
+  "clothing": {
+    "accessory": "scarf",
+    "color": "#1D3557"
+  },
+  "personality": [
+    "quick-witted",
+    "nature-wise",
+    "playful"
+  ],
+  "quirk": "laughs before the punchline",
+  "seed": 1,
+  "proportions": {
+    "age": "child",
+    "build": "stocky"
+  },
+  "style_name": "Animal Adventure",
+  "render_spec": {
+    "id": "11-pippa",
+    "name": "Pippa",
+    "species": "bear",
+    "colors": {
+      "body": "#C79567",
+      "belly": "#FAEDCD",
+      "inner_ear": "#FCB2BE",
+      "accent": "#1D3557",
+      "nose": "#FF8DAC"
+    },
+    "clothing": {
+      "accessory": "scarf",
+      "color": "#1D3557"
+    },
+    "style": {
+      "mode": 5,
+      "head": 1.0,
+      "body": [
+        1.173,
+        0.933,
+        1.142
+      ],
+      "eye": 1.0,
+      "outline": 0,
+      "noise": 0.35,
+      "noise_scale": 0.16,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.632,
+    "scale": 1.9
+  }
+}

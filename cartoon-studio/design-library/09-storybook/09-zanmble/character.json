@@ -1,0 +1,66 @@
+{
+  "id": "09-zanmble",
+  "name": "Zanmble",
+  "style": "09-storybook",
+  "species": "cat",
+  "age": "teen",
+  "build": "stocky",
+  "colors": {
+    "body": "#ABD6A5",
+    "belly": "#EEF3E5",
+    "inner_ear": "#F9B2C2",
+    "accent": "#B56576",
+    "nose": "#F886A5"
+  },
+  "clothing": {
+    "accessory": "scarf",
+    "color": "#B56576"
+  },
+  "personality": [
+    "thoughtful",
+    "wise",
+    "careful"
+  ],
+  "quirk": "keeps a pocket notebook",
+  "seed": 1,
+  "proportions": {
+    "age": "teen",
+    "build": "stocky"
+  },
+  "style_name": "2D Storybook",
+  "render_spec": {
+    "id": "09-zanmble",
+    "name": "Zanmble",
+    "species": "cat",
+    "colors": {
+      "body": "#ABD6A5",
+      "belly": "#EEF3E5",
+      "inner_ear": "#F9B2C2",
+      "accent": "#B56576",
+      "nose": "#F886A5"
+    },
+    "clothing": {
+      "accessory": "scarf",
+      "color": "#B56576"
+    },
+    "style": {
+      "mode": 3,
+      "head": 0.996,
+      "body": [
+        1.219,
+        0.933,
+        1.187
+      ],
+      "eye": 0.902,
+      "outline": 0.7,
+      "noise": 0.35,
+      "noise_scale": 0.08,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.631,
+    "scale": 1.9
+  }
+}

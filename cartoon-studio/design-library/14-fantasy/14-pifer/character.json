@@ -1,0 +1,66 @@
+{
+  "id": "14-pifer",
+  "name": "Pifer",
+  "style": "14-fantasy",
+  "species": "cat",
+  "age": "adult",
+  "build": "stocky",
+  "colors": {
+    "body": "#77A892",
+    "belly": "#E3EFE6",
+    "inner_ear": "#F6BBBE",
+    "accent": "#C9A227",
+    "nose": "#FE94B1"
+  },
+  "clothing": {
+    "accessory": "bow",
+    "color": "#C9A227"
+  },
+  "personality": [
+    "noble",
+    "mischievous",
+    "playful"
+  ],
+  "quirk": "keeps a pocket notebook",
+  "seed": 1,
+  "proportions": {
+    "age": "adult",
+    "build": "stocky"
+  },
+  "style_name": "Fantasy Adventure",
+  "render_spec": {
+    "id": "14-pifer",
+    "name": "Pifer",
+    "species": "cat",
+    "colors": {
+      "body": "#77A892",
+      "belly": "#E3EFE6",
+      "inner_ear": "#F6BBBE",
+      "accent": "#C9A227",
+      "nose": "#FE94B1"
+    },
+    "clothing": {
+      "accessory": "bow",
+      "color": "#C9A227"
+    },
+    "style": {
+      "mode": 1,
+      "head": 0.918,
+      "body": [
+        1.262,
+        1.045,
+        1.229
+      ],
+      "eye": 0.968,
+      "outline": 0.3,
+      "noise": 0.35,
+      "noise_scale": 0.05,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.576,
+    "scale": 1.9
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "id": "14-drimo",
+  "name": "Drimo",
+  "style": "14-fantasy",
+  "species": "bear",
+  "age": "child",
+  "build": "round",
+  "colors": {
+    "body": "#91AD06",
+    "belly": "#EEF4D4",
+    "inner_ear": "#F6B2C2",
+    "accent": "#B23A48",
+    "nose": "#FF8AAD"
+  },
+  "clothing": {
+    "accessory": "scarf",
+    "color": "#B23A48"
+  },
+  "personality": [
+    "mischievous",
+    "enchanted",
+    "funny"
+  ],
+  "quirk": "always shares the last snack",
+  "seed": 1,
+  "proportions": {
+    "age": "child",
+    "build": "round"
+  },
+  "style_name": "Fantasy Adventure",
+  "render_spec": {
+    "id": "14-drimo",
+    "name": "Drimo",
+    "species": "bear",
+    "colors": {
+      "body": "#91AD06",
+      "belly": "#EEF4D4",
+      "inner_ear": "#F6B2C2",
+      "accent": "#B23A48",
+      "nose": "#FF8AAD"
+    },
+    "clothing": {
+      "accessory": "scarf",
+      "color": "#B23A48"
+    },
+    "style": {
+      "mode": 1,
+      "head": 1.02,
+      "body": [
+        1.098,
+        0.975,
+        1.078
+      ],
+      "eye": 1.1,
+      "outline": 0.3,
+      "noise": 0.35,
+      "noise_scale": 0.05,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.626,
+    "scale": 1.9
+  }
+}

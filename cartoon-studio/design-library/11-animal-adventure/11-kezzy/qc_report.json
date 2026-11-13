@@ -1,0 +1,49 @@
+{
+  "character": "11-kezzy",
+  "name": "Kezzy",
+  "style": "11-animal-adventure",
+  "status": "PASS",
+  "checks": {
+    "files": {
+      "status": "PASS",
+      "detail": "all present and readable"
+    },
+    "high_res_sheet": {
+      "status": "PASS",
+      "detail": "character sheet 3000x2200"
+    },
+    "transparent_png": {
+      "status": "PASS",
+      "detail": "RGBA with alpha 0 background on all views"
+    },
+    "visual_quality": {
+      "status": "PASS",
+      "detail": "figure present, not cropped, no black/garbage regions"
+    },
+    "turnaround_scale": {
+      "status": "PASS",
+      "detail": "view heights {'front': 989, 'three-quarter': 1004, 'side': 1006, 'back': 971} (spread 3.5%, limit 10%: ears and tails foreshorten by angle)"
+    },
+    "character_consistency": {
+      "status": "PASS",
+      "detail": "front vs three-quarter colour histogram correlation 0.99 (min 0.60)"
+    },
+    "symmetry": {
+      "status": "PASS",
+      "detail": "front silhouette mirror IoU 1.00 (min 0.82)"
+    },
+    "proportions": {
+      "status": "PASS",
+      "detail": "head:body 0.60 (valid 0.3-0.72; big-head styles need >= 0.42)"
+    },
+    "color_consistency": {
+      "status": "PASS",
+      "detail": "nearest-pixel CIELAB distance {'body': 0.4, 'accent': 1.0} (limit 28.0)"
+    },
+    "style_signature": {
+      "status": "PASS",
+      "detail": "{'render_mode_matches': True, 'silhouette_ink': 0.324, 'texture': 2.35} (mode 5, outline 0)"
+    }
+  },
+  "not_tested": "appeal and acting quality (human review of the sheets)"
+}

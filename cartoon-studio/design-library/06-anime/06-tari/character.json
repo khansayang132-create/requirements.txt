@@ -1,0 +1,66 @@
+{
+  "id": "06-tari",
+  "name": "Tari",
+  "style": "06-anime",
+  "species": "cat",
+  "age": "teen",
+  "build": "round",
+  "colors": {
+    "body": "#E9F3F7",
+    "belly": "#FFFFFF",
+    "inner_ear": "#F5B5D1",
+    "accent": "#E63946",
+    "nose": "#FF99B0"
+  },
+  "clothing": {
+    "accessory": "bow",
+    "color": "#E63946"
+  },
+  "personality": [
+    "mysterious",
+    "stoic",
+    "careful"
+  ],
+  "quirk": "never walks past a puddle",
+  "seed": 1,
+  "proportions": {
+    "age": "teen",
+    "build": "round"
+  },
+  "style_name": "Anime",
+  "render_spec": {
+    "id": "06-tari",
+    "name": "Tari",
+    "species": "cat",
+    "colors": {
+      "body": "#E9F3F7",
+      "belly": "#FFFFFF",
+      "inner_ear": "#F5B5D1",
+      "accent": "#E63946",
+      "nose": "#FF99B0"
+    },
+    "clothing": {
+      "accessory": "bow",
+      "color": "#E63946"
+    },
+    "style": {
+      "mode": 4,
+      "head": 1.015,
+      "body": [
+        1.116,
+        1.034,
+        1.096
+      ],
+      "eye": 1.14,
+      "outline": 0.55,
+      "noise": 0.35,
+      "noise_scale": 0.05,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.608,
+    "scale": 1.9
+  }
+}

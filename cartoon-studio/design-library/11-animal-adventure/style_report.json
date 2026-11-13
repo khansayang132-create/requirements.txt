@@ -1,0 +1,113 @@
+{
+  "style": "11-animal-adventure",
+  "name": "Animal Adventure",
+  "summary": "Anthropomorphic animals with natural fur texture and explorer gear tones, warm golden light.",
+  "accepted": 5,
+  "wanted": 5,
+  "status": "PASS",
+  "characters": [
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/11-animal-adventure/11-noquin",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.598,
+      "id": "11-noquin",
+      "name": "Noquin",
+      "seconds": 20.9
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/11-animal-adventure/11-pippa",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.632,
+      "id": "11-pippa",
+      "name": "Pippa",
+      "seconds": 23.0
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/11-animal-adventure/11-kezzy",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.597,
+      "id": "11-kezzy",
+      "name": "Kezzy",
+      "seconds": 22.1
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/11-animal-adventure/11-driri",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.565,
+      "id": "11-driri",
+      "name": "Driri",
+      "seconds": 26.1
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/11-animal-adventure/11-piri",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.632,
+      "id": "11-piri",
+      "name": "Piri",
+      "seconds": 23.9
+    }
+  ],
+  "rejected": [],
+  "environment": "/home/user/requirements.txt/cartoon-studio/design-library/11-animal-adventure/environment_concept.png",
+  "lineup": "/home/user/requirements.txt/cartoon-studio/design-library/11-animal-adventure/style_lineup.png"
+}

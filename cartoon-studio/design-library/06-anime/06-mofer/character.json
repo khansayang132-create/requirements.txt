@@ -1,0 +1,66 @@
+{
+  "id": "06-mofer",
+  "name": "Mofer",
+  "style": "06-anime",
+  "species": "bunny",
+  "age": "child",
+  "build": "round",
+  "colors": {
+    "body": "#F8BEA8",
+    "belly": "#FFF0EB",
+    "inner_ear": "#FFB0BD",
+    "accent": "#3A86FF",
+    "nose": "#FF85AA"
+  },
+  "clothing": {
+    "accessory": "bandana",
+    "color": "#3A86FF"
+  },
+  "personality": [
+    "mysterious",
+    "rival-minded",
+    "kind"
+  ],
+  "quirk": "hums when nervous",
+  "seed": 1,
+  "proportions": {
+    "age": "child",
+    "build": "round"
+  },
+  "style_name": "Anime",
+  "render_spec": {
+    "id": "06-mofer",
+    "name": "Mofer",
+    "species": "bunny",
+    "colors": {
+      "body": "#F8BEA8",
+      "belly": "#FFF0EB",
+      "inner_ear": "#FFB0BD",
+      "accent": "#3A86FF",
+      "nose": "#FF85AA"
+    },
+    "clothing": {
+      "accessory": "bandana",
+      "color": "#3A86FF"
+    },
+    "style": {
+      "mode": 4,
+      "head": 1.08,
+      "body": [
+        1.053,
+        0.975,
+        1.034
+      ],
+      "eye": 1.2,
+      "outline": 0.55,
+      "noise": 0.35,
+      "noise_scale": 0.05,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.643,
+    "scale": 1.9
+  }
+}

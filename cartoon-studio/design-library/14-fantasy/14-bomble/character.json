@@ -1,0 +1,66 @@
+{
+  "id": "14-bomble",
+  "name": "Bomble",
+  "style": "14-fantasy",
+  "species": "elephant",
+  "age": "child",
+  "build": "stocky",
+  "colors": {
+    "body": "#515D9C",
+    "belly": "#E0DDF0",
+    "inner_ear": "#FFAECE",
+    "accent": "#F4D35E",
+    "nose": "#FF8BAD"
+  },
+  "clothing": {
+    "accessory": "scarf",
+    "color": "#F4D35E"
+  },
+  "personality": [
+    "spell-curious",
+    "enchanted",
+    "careful"
+  ],
+  "quirk": "hums when nervous",
+  "seed": 1,
+  "proportions": {
+    "age": "child",
+    "build": "stocky"
+  },
+  "style_name": "Fantasy Adventure",
+  "render_spec": {
+    "id": "14-bomble",
+    "name": "Bomble",
+    "species": "elephant",
+    "colors": {
+      "body": "#515D9C",
+      "belly": "#E0DDF0",
+      "inner_ear": "#FFAECE",
+      "accent": "#F4D35E",
+      "nose": "#FF8BAD"
+    },
+    "clothing": {
+      "accessory": "scarf",
+      "color": "#F4D35E"
+    },
+    "style": {
+      "mode": 1,
+      "head": 1.02,
+      "body": [
+        1.127,
+        0.933,
+        1.098
+      ],
+      "eye": 1.1,
+      "outline": 0.3,
+      "noise": 0.35,
+      "noise_scale": 0.05,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.637,
+    "scale": 1.615
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "id": "11-kezzy",
+  "name": "Kezzy",
+  "style": "11-animal-adventure",
+  "species": "cat",
+  "age": "child",
+  "build": "standard",
+  "colors": {
+    "body": "#737B67",
+    "belly": "#CB997E",
+    "inner_ear": "#FFBCC6",
+    "accent": "#E76F51",
+    "nose": "#FF8EB1"
+  },
+  "clothing": {
+    "accessory": "bandana",
+    "color": "#E76F51"
+  },
+  "personality": [
+    "protective",
+    "fearless",
+    "kind"
+  ],
+  "quirk": "names every cloud",
+  "seed": 1,
+  "proportions": {
+    "age": "child",
+    "build": "standard"
+  },
+  "style_name": "Animal Adventure",
+  "render_spec": {
+    "id": "11-kezzy",
+    "name": "Kezzy",
+    "species": "cat",
+    "colors": {
+      "body": "#737B67",
+      "belly": "#CB997E",
+      "inner_ear": "#FFBCC6",
+      "accent": "#E76F51",
+      "nose": "#FF8EB1"
+    },
+    "clothing": {
+      "accessory": "bandana",
+      "color": "#E76F51"
+    },
+    "style": {
+      "mode": 5,
+      "head": 1.0,
+      "body": [
+        1.02,
+        1.06,
+        1.02
+      ],
+      "eye": 1.0,
+      "outline": 0,
+      "noise": 0.35,
+      "noise_scale": 0.16,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.597,
+    "scale": 1.9
+  }
+}

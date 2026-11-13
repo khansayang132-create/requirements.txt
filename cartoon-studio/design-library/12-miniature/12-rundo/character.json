@@ -1,0 +1,66 @@
+{
+  "id": "12-rundo",
+  "name": "Rundo",
+  "style": "12-miniature",
+  "species": "bear",
+  "age": "child",
+  "build": "round",
+  "colors": {
+    "body": "#ED7E7C",
+    "belly": "#FFE5E5",
+    "inner_ear": "#FFB3C9",
+    "accent": "#84A59D",
+    "nose": "#F695B4"
+  },
+  "clothing": {
+    "accessory": "overalls",
+    "color": "#84A59D"
+  },
+  "personality": [
+    "collector",
+    "daydreamer",
+    "bold"
+  ],
+  "quirk": "names every cloud",
+  "seed": 1,
+  "proportions": {
+    "age": "child",
+    "build": "round"
+  },
+  "style_name": "Miniature 3D World",
+  "render_spec": {
+    "id": "12-rundo",
+    "name": "Rundo",
+    "species": "bear",
+    "colors": {
+      "body": "#ED7E7C",
+      "belly": "#FFE5E5",
+      "inner_ear": "#FFB3C9",
+      "accent": "#84A59D",
+      "nose": "#F695B4"
+    },
+    "clothing": {
+      "accessory": "overalls",
+      "color": "#84A59D"
+    },
+    "style": {
+      "mode": 2,
+      "head": 1.08,
+      "body": [
+        1.053,
+        0.865,
+        1.034
+      ],
+      "eye": 1.05,
+      "outline": 0,
+      "noise": 0.25,
+      "noise_scale": 0.06,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.675,
+    "scale": 1.9
+  }
+}

@@ -1,0 +1,123 @@
+{
+  "style": "12-miniature",
+  "name": "Miniature 3D World",
+  "summary": "Toy-like painted surfaces, macro tilt-shift depth of field and saturated miniature sets.",
+  "accepted": 5,
+  "wanted": 5,
+  "status": "PASS",
+  "characters": [
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/12-miniature/12-rundo",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.675,
+      "id": "12-rundo",
+      "name": "Rundo",
+      "seconds": 23.4
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/12-miniature/12-norra",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.653,
+      "id": "12-norra",
+      "name": "Norra",
+      "seconds": 23.1
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/12-miniature/12-nolix",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.618,
+      "id": "12-nolix",
+      "name": "Nolix",
+      "seconds": 26.0
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/12-miniature/12-nomo",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.587,
+      "id": "12-nomo",
+      "name": "Nomo",
+      "seconds": 23.1
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/12-miniature/12-tappa",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.621,
+      "id": "12-tappa",
+      "name": "Tappa",
+      "seconds": 23.2
+    }
+  ],
+  "rejected": [
+    {
+      "id": "12-jomble",
+      "name": "Jomble",
+      "attempt": 1,
+      "failed": {
+        "style_signature": "{'render_mode_matches': True, 'silhouette_ink': 0.198, 'texture': 1.06} (mode 2, outline 0)"
+      },
+      "kept_at": "/home/user/requirements.txt/cartoon-studio/design-library/rejected/12-miniature/12-jomble-attempt1"
+    }
+  ],
+  "environment": "/home/user/requirements.txt/cartoon-studio/design-library/12-miniature/environment_concept.png",
+  "lineup": "/home/user/requirements.txt/cartoon-studio/design-library/12-miniature/style_lineup.png"
+}

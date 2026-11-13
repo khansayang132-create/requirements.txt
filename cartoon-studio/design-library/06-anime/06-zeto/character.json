@@ -1,0 +1,66 @@
+{
+  "id": "06-zeto",
+  "name": "Zeto",
+  "style": "06-anime",
+  "species": "duck",
+  "age": "child",
+  "build": "round",
+  "colors": {
+    "body": "#363336",
+    "belly": "#8D99AE",
+    "inner_ear": "#FFABCB",
+    "accent": "#EF233C",
+    "nose": "#FCA821"
+  },
+  "clothing": {
+    "accessory": "bow",
+    "color": "#EF233C"
+  },
+  "personality": [
+    "cheerful",
+    "stoic",
+    "careful"
+  ],
+  "quirk": "laughs before the punchline",
+  "seed": 1,
+  "proportions": {
+    "age": "child",
+    "build": "round"
+  },
+  "style_name": "Anime",
+  "render_spec": {
+    "id": "06-zeto",
+    "name": "Zeto",
+    "species": "duck",
+    "colors": {
+      "body": "#363336",
+      "belly": "#8D99AE",
+      "inner_ear": "#FFABCB",
+      "accent": "#EF233C",
+      "nose": "#FCA821"
+    },
+    "clothing": {
+      "accessory": "bow",
+      "color": "#EF233C"
+    },
+    "style": {
+      "mode": 4,
+      "head": 1.08,
+      "body": [
+        1.053,
+        0.975,
+        1.034
+      ],
+      "eye": 1.2,
+      "outline": 0.55,
+      "noise": 0.35,
+      "noise_scale": 0.05,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.643,
+    "scale": 1.9
+  }
+}

@@ -1,0 +1,113 @@
+{
+  "style": "06-anime",
+  "name": "Anime",
+  "summary": "Hard two-tone cel shading, crisp highlight, thin dark linework, saturated sky-blue world.",
+  "accepted": 5,
+  "wanted": 5,
+  "status": "PASS",
+  "characters": [
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/06-anime/06-tari",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.608,
+      "id": "06-tari",
+      "name": "Tari",
+      "seconds": 59.0
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/06-anime/06-zeto",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.643,
+      "id": "06-zeto",
+      "name": "Zeto",
+      "seconds": 41.8
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/06-anime/06-mofer",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.643,
+      "id": "06-mofer",
+      "name": "Mofer",
+      "seconds": 35.5
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/06-anime/06-zanto",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.607,
+      "id": "06-zanto",
+      "name": "Zanto",
+      "seconds": 33.6
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/06-anime/06-pibie",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.554,
+      "id": "06-pibie",
+      "name": "Pibie",
+      "seconds": 24.7
+    }
+  ],
+  "rejected": [],
+  "environment": "/home/user/requirements.txt/cartoon-studio/design-library/06-anime/environment_concept.png",
+  "lineup": "/home/user/requirements.txt/cartoon-studio/design-library/06-anime/style_lineup.png"
+}

@@ -1,0 +1,66 @@
+{
+  "id": "09-dridle",
+  "name": "Dridle",
+  "style": "09-storybook",
+  "species": "bunny",
+  "age": "child",
+  "build": "standard",
+  "colors": {
+    "body": "#C7BCE8",
+    "belly": "#F6EFF8",
+    "inner_ear": "#FFBDBD",
+    "accent": "#6D597A",
+    "nose": "#F585A2"
+  },
+  "clothing": {
+    "accessory": "scarf",
+    "color": "#6D597A"
+  },
+  "personality": [
+    "polite",
+    "thoughtful",
+    "careful"
+  ],
+  "quirk": "laughs before the punchline",
+  "seed": 1,
+  "proportions": {
+    "age": "child",
+    "build": "standard"
+  },
+  "style_name": "2D Storybook",
+  "render_spec": {
+    "id": "09-dridle",
+    "name": "Dridle",
+    "species": "bunny",
+    "colors": {
+      "body": "#C7BCE8",
+      "belly": "#F6EFF8",
+      "inner_ear": "#FFBDBD",
+      "accent": "#6D597A",
+      "nose": "#F585A2"
+    },
+    "clothing": {
+      "accessory": "scarf",
+      "color": "#6D597A"
+    },
+    "style": {
+      "mode": 3,
+      "head": 1.06,
+      "body": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "eye": 0.95,
+      "outline": 0.7,
+      "noise": 0.35,
+      "noise_scale": 0.08,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.63,
+    "scale": 1.9
+  }
+}

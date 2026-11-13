@@ -1,0 +1,113 @@
+{
+  "style": "09-storybook",
+  "name": "2D Storybook",
+  "summary": "Two painted tones with paper grain and warm brown ink, like a picture-book illustration.",
+  "accepted": 5,
+  "wanted": 5,
+  "status": "PASS",
+  "characters": [
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/09-storybook/09-kato",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.597,
+      "id": "09-kato",
+      "name": "Kato",
+      "seconds": 26.1
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/09-storybook/09-kebin",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.537,
+      "id": "09-kebin",
+      "name": "Kebin",
+      "seconds": 23.4
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/09-storybook/09-kendo",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.653,
+      "id": "09-kendo",
+      "name": "Kendo",
+      "seconds": 22.1
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/09-storybook/09-dridle",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.63,
+      "id": "09-dridle",
+      "name": "Dridle",
+      "seconds": 25.6
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/09-storybook/09-zanmble",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.631,
+      "id": "09-zanmble",
+      "name": "Zanmble",
+      "seconds": 22.6
+    }
+  ],
+  "rejected": [],
+  "environment": "/home/user/requirements.txt/cartoon-studio/design-library/09-storybook/environment_concept.png",
+  "lineup": "/home/user/requirements.txt/cartoon-studio/design-library/09-storybook/style_lineup.png"
+}

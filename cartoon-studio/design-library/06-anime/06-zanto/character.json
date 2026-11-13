@@ -1,0 +1,66 @@
+{
+  "id": "06-zanto",
+  "name": "Zanto",
+  "style": "06-anime",
+  "species": "elephant",
+  "age": "teen",
+  "build": "round",
+  "colors": {
+    "body": "#8EE2F5",
+    "belly": "#F0FBFF",
+    "inner_ear": "#FCBAC2",
+    "accent": "#FB5607",
+    "nose": "#F797B3"
+  },
+  "clothing": {
+    "accessory": "bandana",
+    "color": "#FB5607"
+  },
+  "personality": [
+    "stoic",
+    "cheerful",
+    "careful"
+  ],
+  "quirk": "names every cloud",
+  "seed": 1,
+  "proportions": {
+    "age": "teen",
+    "build": "round"
+  },
+  "style_name": "Anime",
+  "render_spec": {
+    "id": "06-zanto",
+    "name": "Zanto",
+    "species": "elephant",
+    "colors": {
+      "body": "#8EE2F5",
+      "belly": "#F0FBFF",
+      "inner_ear": "#FCBAC2",
+      "accent": "#FB5607",
+      "nose": "#F797B3"
+    },
+    "clothing": {
+      "accessory": "bandana",
+      "color": "#FB5607"
+    },
+    "style": {
+      "mode": 4,
+      "head": 1.015,
+      "body": [
+        1.116,
+        1.034,
+        1.096
+      ],
+      "eye": 1.14,
+      "outline": 0.55,
+      "noise": 0.35,
+      "noise_scale": 0.05,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.607,
+    "scale": 1.615
+  }
+}

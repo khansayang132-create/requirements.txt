@@ -1,0 +1,66 @@
+{
+  "id": "12-norra",
+  "name": "Norra",
+  "style": "12-miniature",
+  "species": "bunny",
+  "age": "child",
+  "build": "standard",
+  "colors": {
+    "body": "#8FABA7",
+    "belly": "#E6F0EE",
+    "inner_ear": "#FFAAC1",
+    "accent": "#F6BD60",
+    "nose": "#F988A2"
+  },
+  "clothing": {
+    "accessory": "bow",
+    "color": "#F6BD60"
+  },
+  "personality": [
+    "neighbourly",
+    "meticulous",
+    "careful"
+  ],
+  "quirk": "never walks past a puddle",
+  "seed": 1,
+  "proportions": {
+    "age": "child",
+    "build": "standard"
+  },
+  "style_name": "Miniature 3D World",
+  "render_spec": {
+    "id": "12-norra",
+    "name": "Norra",
+    "species": "bunny",
+    "colors": {
+      "body": "#8FABA7",
+      "belly": "#E6F0EE",
+      "inner_ear": "#FFAAC1",
+      "accent": "#F6BD60",
+      "nose": "#F988A2"
+    },
+    "clothing": {
+      "accessory": "bow",
+      "color": "#F6BD60"
+    },
+    "style": {
+      "mode": 2,
+      "head": 1.08,
+      "body": [
+        0.94,
+        0.94,
+        0.94
+      ],
+      "eye": 1.05,
+      "outline": 0,
+      "noise": 0.25,
+      "noise_scale": 0.06,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.653,
+    "scale": 1.9
+  }
+}

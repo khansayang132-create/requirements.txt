@@ -1,0 +1,66 @@
+{
+  "id": "12-nomo",
+  "name": "Nomo",
+  "style": "12-miniature",
+  "species": "cat",
+  "age": "teen",
+  "build": "tall",
+  "colors": {
+    "body": "#E0754D",
+    "belly": "#FCE4E1",
+    "inner_ear": "#FAACC1",
+    "accent": "#5CA4A9",
+    "nose": "#F98CAD"
+  },
+  "clothing": {
+    "accessory": "scarf",
+    "color": "#5CA4A9"
+  },
+  "personality": [
+    "tiny-but-mighty",
+    "neighbourly",
+    "careful"
+  ],
+  "quirk": "never walks past a puddle",
+  "seed": 1,
+  "proportions": {
+    "age": "teen",
+    "build": "tall"
+  },
+  "style_name": "Miniature 3D World",
+  "render_spec": {
+    "id": "12-nomo",
+    "name": "Nomo",
+    "species": "cat",
+    "colors": {
+      "body": "#E0754D",
+      "belly": "#FCE4E1",
+      "inner_ear": "#FAACC1",
+      "accent": "#5CA4A9",
+      "nose": "#F98CAD"
+    },
+    "clothing": {
+      "accessory": "scarf",
+      "color": "#5CA4A9"
+    },
+    "style": {
+      "mode": 2,
+      "head": 1.015,
+      "body": [
+        0.917,
+        1.116,
+        0.917
+      ],
+      "eye": 0.997,
+      "outline": 0,
+      "noise": 0.25,
+      "noise_scale": 0.06,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.587,
+    "scale": 1.9
+  }
+}

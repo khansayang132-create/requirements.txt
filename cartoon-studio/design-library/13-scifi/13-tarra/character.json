@@ -1,0 +1,66 @@
+{
+  "id": "13-tarra",
+  "name": "Tarra",
+  "style": "13-scifi",
+  "species": "duck",
+  "age": "adult",
+  "build": "stocky",
+  "colors": {
+    "body": "#2F1F48",
+    "belly": "#8D99AE",
+    "inner_ear": "#F6B3C8",
+    "accent": "#F72585",
+    "nose": "#FEA631"
+  },
+  "clothing": {
+    "accessory": "bow",
+    "color": "#F72585"
+  },
+  "personality": [
+    "rebellious",
+    "hacker",
+    "bold"
+  ],
+  "quirk": "never walks past a puddle",
+  "seed": 1,
+  "proportions": {
+    "age": "adult",
+    "build": "stocky"
+  },
+  "style_name": "Futuristic Sci-Fi",
+  "render_spec": {
+    "id": "13-tarra",
+    "name": "Tarra",
+    "species": "duck",
+    "colors": {
+      "body": "#2F1F48",
+      "belly": "#8D99AE",
+      "inner_ear": "#F6B3C8",
+      "accent": "#F72585",
+      "nose": "#FEA631"
+    },
+    "clothing": {
+      "accessory": "bow",
+      "color": "#F72585"
+    },
+    "style": {
+      "mode": 6,
+      "head": 0.9,
+      "body": [
+        1.262,
+        1.025,
+        1.229
+      ],
+      "eye": 0.88,
+      "outline": 0,
+      "noise": 0.35,
+      "noise_scale": 0.05,
+      "glow": 0.85,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.575,
+    "scale": 1.9
+  }
+}

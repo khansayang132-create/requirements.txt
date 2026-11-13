@@ -1,0 +1,66 @@
+{
+  "id": "13-ruppa",
+  "name": "Ruppa",
+  "style": "13-scifi",
+  "species": "elephant",
+  "age": "teen",
+  "build": "tall",
+  "colors": {
+    "body": "#454E68",
+    "belly": "#C9CBD9",
+    "inner_ear": "#FFB0C2",
+    "accent": "#4CC9F0",
+    "nose": "#FF93B0"
+  },
+  "clothing": {
+    "accessory": "overalls",
+    "color": "#4CC9F0"
+  },
+  "personality": [
+    "space-born",
+    "analytical",
+    "playful"
+  ],
+  "quirk": "never walks past a puddle",
+  "seed": 1,
+  "proportions": {
+    "age": "teen",
+    "build": "tall"
+  },
+  "style_name": "Futuristic Sci-Fi",
+  "render_spec": {
+    "id": "13-ruppa",
+    "name": "Ruppa",
+    "species": "elephant",
+    "colors": {
+      "body": "#454E68",
+      "belly": "#C9CBD9",
+      "inner_ear": "#FFB0C2",
+      "accent": "#4CC9F0",
+      "nose": "#FF93B0"
+    },
+    "clothing": {
+      "accessory": "overalls",
+      "color": "#4CC9F0"
+    },
+    "style": {
+      "mode": 6,
+      "head": 0.94,
+      "body": [
+        0.956,
+        1.235,
+        0.956
+      ],
+      "eye": 0.95,
+      "outline": 0,
+      "noise": 0.35,
+      "noise_scale": 0.05,
+      "glow": 0.85,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.535,
+    "scale": 1.615
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "character": "09-zanmble",
+  "name": "Zanmble",
+  "style": "09-storybook",
+  "status": "PASS",
+  "checks": {
+    "files": {
+      "status": "PASS",
+      "detail": "all present and readable"
+    },
+    "high_res_sheet": {
+      "status": "PASS",
+      "detail": "character sheet 3000x2200"
+    },
+    "transparent_png": {
+      "status": "PASS",
+      "detail": "RGBA with alpha 0 background on all views"
+    },
+    "visual_quality": {
+      "status": "PASS",
+      "detail": "figure present, not cropped, no black/garbage regions"
+    },
+    "turnaround_scale": {
+      "status": "PASS",
+      "detail": "view heights {'front': 941, 'three-quarter': 957, 'side': 960, 'back': 919} (spread 4.3%, limit 10%: ears and tails foreshorten by angle)"
+    },
+    "character_consistency": {
+      "status": "PASS",
+      "detail": "front vs three-quarter colour histogram correlation 0.99 (min 0.60)"
+    },
+    "symmetry": {
+      "status": "PASS",
+      "detail": "front silhouette mirror IoU 0.99 (min 0.82)"
+    },
+    "proportions": {
+      "status": "PASS",
+      "detail": "head:body 0.63 (valid 0.3-0.72; big-head styles need >= 0.42)"
+    },
+    "color_consistency": {
+      "status": "PASS",
+      "detail": "nearest-pixel CIELAB distance {'body': 3.0, 'accent': 2.5} (limit 28.0)"
+    },
+    "style_signature": {
+      "status": "PASS",
+      "detail": "{'render_mode_matches': True, 'silhouette_ink': 0.004, 'texture': 1.7} (mode 3, outline 0.7)"
+    }
+  },
+  "not_tested": "appeal and acting quality (human review of the sheets)"
+}

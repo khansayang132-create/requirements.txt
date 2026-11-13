@@ -1,0 +1,66 @@
+{
+  "id": "13-vito",
+  "name": "Vito",
+  "style": "13-scifi",
+  "species": "bear",
+  "age": "child",
+  "build": "round",
+  "colors": {
+    "body": "#115669",
+    "belly": "#BEE9E8",
+    "inner_ear": "#F9B7BD",
+    "accent": "#FFBE0B",
+    "nose": "#FF90B4"
+  },
+  "clothing": {
+    "accessory": "overalls",
+    "color": "#FFBE0B"
+  },
+  "personality": [
+    "analytical",
+    "calm-under-pressure",
+    "careful"
+  ],
+  "quirk": "never walks past a puddle",
+  "seed": 1,
+  "proportions": {
+    "age": "child",
+    "build": "round"
+  },
+  "style_name": "Futuristic Sci-Fi",
+  "render_spec": {
+    "id": "13-vito",
+    "name": "Vito",
+    "species": "bear",
+    "colors": {
+      "body": "#115669",
+      "belly": "#BEE9E8",
+      "inner_ear": "#F9B7BD",
+      "accent": "#FFBE0B",
+      "nose": "#FF90B4"
+    },
+    "clothing": {
+      "accessory": "overalls",
+      "color": "#FFBE0B"
+    },
+    "style": {
+      "mode": 6,
+      "head": 1.0,
+      "body": [
+        1.098,
+        0.957,
+        1.078
+      ],
+      "eye": 1.0,
+      "outline": 0,
+      "noise": 0.35,
+      "noise_scale": 0.05,
+      "glow": 0.85,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.625,
+    "scale": 1.9
+  }
+}

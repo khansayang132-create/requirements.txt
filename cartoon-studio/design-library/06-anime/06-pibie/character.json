@@ -1,0 +1,66 @@
+{
+  "id": "06-pibie",
+  "name": "Pibie",
+  "style": "06-anime",
+  "species": "bear",
+  "age": "teen",
+  "build": "tall",
+  "colors": {
+    "body": "#FFCA06",
+    "belly": "#FFF9DB",
+    "inner_ear": "#FFA9C7",
+    "accent": "#003566",
+    "nose": "#F795A5"
+  },
+  "clothing": {
+    "accessory": "scarf",
+    "color": "#003566"
+  },
+  "personality": [
+    "stoic",
+    "mysterious",
+    "careful"
+  ],
+  "quirk": "never walks past a puddle",
+  "seed": 1,
+  "proportions": {
+    "age": "teen",
+    "build": "tall"
+  },
+  "style_name": "Anime",
+  "render_spec": {
+    "id": "06-pibie",
+    "name": "Pibie",
+    "species": "bear",
+    "colors": {
+      "body": "#FFCA06",
+      "belly": "#FFF9DB",
+      "inner_ear": "#FFA9C7",
+      "accent": "#003566",
+      "nose": "#F795A5"
+    },
+    "clothing": {
+      "accessory": "scarf",
+      "color": "#003566"
+    },
+    "style": {
+      "mode": 4,
+      "head": 1.015,
+      "body": [
+        0.917,
+        1.258,
+        0.917
+      ],
+      "eye": 1.14,
+      "outline": 0.55,
+      "noise": 0.35,
+      "noise_scale": 0.05,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.554,
+    "scale": 1.9
+  }
+}

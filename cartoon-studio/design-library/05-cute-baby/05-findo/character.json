@@ -1,0 +1,66 @@
+{
+  "id": "05-findo",
+  "name": "Findo",
+  "style": "05-cute-baby",
+  "species": "duck",
+  "age": "baby",
+  "build": "stocky",
+  "colors": {
+    "body": "#FFC7E8",
+    "belly": "#FFF4F8",
+    "inner_ear": "#FFB3D1",
+    "accent": "#A2D2FF",
+    "nose": "#FD9F2E"
+  },
+  "clothing": {
+    "accessory": "boots",
+    "color": "#A2D2FF"
+  },
+  "personality": [
+    "wobbly",
+    "giggly",
+    "bold"
+  ],
+  "quirk": "keeps a pocket notebook",
+  "seed": 1,
+  "proportions": {
+    "age": "baby",
+    "build": "stocky"
+  },
+  "style_name": "Cute Baby Cartoon",
+  "render_spec": {
+    "id": "05-findo",
+    "name": "Findo",
+    "species": "duck",
+    "colors": {
+      "body": "#FFC7E8",
+      "belly": "#FFF4F8",
+      "inner_ear": "#FFB3D1",
+      "accent": "#A2D2FF",
+      "nose": "#FD9F2E"
+    },
+    "clothing": {
+      "accessory": "boots",
+      "color": "#A2D2FF"
+    },
+    "style": {
+      "mode": 1,
+      "head": 1.475,
+      "body": [
+        0.811,
+        0.591,
+        0.79
+      ],
+      "eye": 1.45,
+      "outline": 0.45,
+      "noise": 0.35,
+      "noise_scale": 0.05,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.85,
+    "scale": 1.373
+  }
+}

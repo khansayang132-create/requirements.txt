@@ -1,0 +1,66 @@
+{
+  "id": "05-plolix",
+  "name": "Plolix",
+  "style": "05-cute-baby",
+  "species": "bunny",
+  "age": "baby",
+  "build": "round",
+  "colors": {
+    "body": "#B5D9FD",
+    "belly": "#F5FAFF",
+    "inner_ear": "#FEACCD",
+    "accent": "#FFAFCC",
+    "nose": "#FF90AB"
+  },
+  "clothing": {
+    "accessory": "bow",
+    "color": "#FFAFCC"
+  },
+  "personality": [
+    "cuddly",
+    "sleepy",
+    "kind"
+  ],
+  "quirk": "names every cloud",
+  "seed": 1,
+  "proportions": {
+    "age": "baby",
+    "build": "round"
+  },
+  "style_name": "Cute Baby Cartoon",
+  "render_spec": {
+    "id": "05-plolix",
+    "name": "Plolix",
+    "species": "bunny",
+    "colors": {
+      "body": "#B5D9FD",
+      "belly": "#F5FAFF",
+      "inner_ear": "#FEACCD",
+      "accent": "#FFAFCC",
+      "nose": "#FF90AB"
+    },
+    "clothing": {
+      "accessory": "bow",
+      "color": "#FFAFCC"
+    },
+    "style": {
+      "mode": 1,
+      "head": 1.475,
+      "body": [
+        0.79,
+        0.618,
+        0.776
+      ],
+      "eye": 1.45,
+      "outline": 0.45,
+      "noise": 0.35,
+      "noise_scale": 0.05,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.84,
+    "scale": 1.373
+  }
+}

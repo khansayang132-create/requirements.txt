@@ -1,0 +1,113 @@
+{
+  "style": "14-fantasy",
+  "name": "Fantasy Adventure",
+  "summary": "Enchanted-forest jewel tones, violet rim light and a glowing magical atmosphere.",
+  "accepted": 5,
+  "wanted": 5,
+  "status": "PASS",
+  "characters": [
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/14-fantasy/14-pifer",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.576,
+      "id": "14-pifer",
+      "name": "Pifer",
+      "seconds": 21.4
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/14-fantasy/14-bomble",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.637,
+      "id": "14-bomble",
+      "name": "Bomble",
+      "seconds": 25.0
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/14-fantasy/14-talo",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.563,
+      "id": "14-talo",
+      "name": "Talo",
+      "seconds": 23.0
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/14-fantasy/14-nozzy",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.603,
+      "id": "14-nozzy",
+      "name": "Nozzy",
+      "seconds": 19.4
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/14-fantasy/14-drimo",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.626,
+      "id": "14-drimo",
+      "name": "Drimo",
+      "seconds": 21.6
+    }
+  ],
+  "rejected": [],
+  "environment": "/home/user/requirements.txt/cartoon-studio/design-library/14-fantasy/environment_concept.png",
+  "lineup": "/home/user/requirements.txt/cartoon-studio/design-library/14-fantasy/style_lineup.png"
+}

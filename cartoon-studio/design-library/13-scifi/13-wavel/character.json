@@ -1,0 +1,66 @@
+{
+  "id": "13-wavel",
+  "name": "Wavel",
+  "style": "13-scifi",
+  "species": "bunny",
+  "age": "adult",
+  "build": "round",
+  "colors": {
+    "body": "#305257",
+    "belly": "#AFC3DA",
+    "inner_ear": "#FFB7C8",
+    "accent": "#00F5D4",
+    "nose": "#FF88A6"
+  },
+  "clothing": {
+    "accessory": "scarf",
+    "color": "#00F5D4"
+  },
+  "personality": [
+    "hacker",
+    "analytical",
+    "funny"
+  ],
+  "quirk": "always shares the last snack",
+  "seed": 1,
+  "proportions": {
+    "age": "adult",
+    "build": "round"
+  },
+  "style_name": "Futuristic Sci-Fi",
+  "render_spec": {
+    "id": "13-wavel",
+    "name": "Wavel",
+    "species": "bunny",
+    "colors": {
+      "body": "#305257",
+      "belly": "#AFC3DA",
+      "inner_ear": "#FFB7C8",
+      "accent": "#00F5D4",
+      "nose": "#FF88A6"
+    },
+    "clothing": {
+      "accessory": "scarf",
+      "color": "#00F5D4"
+    },
+    "style": {
+      "mode": 6,
+      "head": 0.9,
+      "body": [
+        1.229,
+        1.072,
+        1.207
+      ],
+      "eye": 0.88,
+      "outline": 0,
+      "noise": 0.35,
+      "noise_scale": 0.05,
+      "glow": 0.85,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.563,
+    "scale": 1.9
+  }
+}

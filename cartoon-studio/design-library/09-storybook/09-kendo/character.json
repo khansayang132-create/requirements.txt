@@ -1,0 +1,66 @@
+{
+  "id": "09-kendo",
+  "name": "Kendo",
+  "style": "09-storybook",
+  "species": "duck",
+  "age": "child",
+  "build": "round",
+  "colors": {
+    "body": "#FAAB5A",
+    "belly": "#FDEBD8",
+    "inner_ear": "#FFBDC7",
+    "accent": "#2A9D8F",
+    "nose": "#FFAB25"
+  },
+  "clothing": {
+    "accessory": "scarf",
+    "color": "#2A9D8F"
+  },
+  "personality": [
+    "polite",
+    "thoughtful",
+    "playful"
+  ],
+  "quirk": "laughs before the punchline",
+  "seed": 1,
+  "proportions": {
+    "age": "child",
+    "build": "round"
+  },
+  "style_name": "2D Storybook",
+  "render_spec": {
+    "id": "09-kendo",
+    "name": "Kendo",
+    "species": "duck",
+    "colors": {
+      "body": "#FAAB5A",
+      "belly": "#FDEBD8",
+      "inner_ear": "#FFBDC7",
+      "accent": "#2A9D8F",
+      "nose": "#FFAB25"
+    },
+    "clothing": {
+      "accessory": "scarf",
+      "color": "#2A9D8F"
+    },
+    "style": {
+      "mode": 3,
+      "head": 1.06,
+      "body": [
+        1.12,
+        0.92,
+        1.1
+      ],
+      "eye": 0.95,
+      "outline": 0.7,
+      "noise": 0.35,
+      "noise_scale": 0.08,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.653,
+    "scale": 1.9
+  }
+}

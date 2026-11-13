@@ -1,0 +1,66 @@
+{
+  "id": "11-driri",
+  "name": "Driri",
+  "style": "11-animal-adventure",
+  "species": "elephant",
+  "age": "child",
+  "build": "tall",
+  "colors": {
+    "body": "#DBDCAD",
+    "belly": "#FFF8E7",
+    "inner_ear": "#FFBBCE",
+    "accent": "#005F73",
+    "nose": "#FF8BA9"
+  },
+  "clothing": {
+    "accessory": "bandana",
+    "color": "#005F73"
+  },
+  "personality": [
+    "protective",
+    "quick-witted",
+    "playful"
+  ],
+  "quirk": "hums when nervous",
+  "seed": 1,
+  "proportions": {
+    "age": "child",
+    "build": "tall"
+  },
+  "style_name": "Animal Adventure",
+  "render_spec": {
+    "id": "11-driri",
+    "name": "Driri",
+    "species": "elephant",
+    "colors": {
+      "body": "#DBDCAD",
+      "belly": "#FFF8E7",
+      "inner_ear": "#FFBBCE",
+      "accent": "#005F73",
+      "nose": "#FF8BA9"
+    },
+    "clothing": {
+      "accessory": "bandana",
+      "color": "#005F73"
+    },
+    "style": {
+      "mode": 5,
+      "head": 1.0,
+      "body": [
+        0.938,
+        1.187,
+        0.938
+      ],
+      "eye": 1.0,
+      "outline": 0,
+      "noise": 0.35,
+      "noise_scale": 0.16,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.565,
+    "scale": 1.615
+  }
+}

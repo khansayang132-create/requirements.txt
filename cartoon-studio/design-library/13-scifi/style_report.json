@@ -1,0 +1,113 @@
+{
+  "style": "13-scifi",
+  "name": "Futuristic Sci-Fi",
+  "summary": "Dark metallic bodies with glowing neon edges, cool night lighting and a neon-teal grade.",
+  "accepted": 5,
+  "wanted": 5,
+  "status": "PASS",
+  "characters": [
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/13-scifi/13-wavel",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.563,
+      "id": "13-wavel",
+      "name": "Wavel",
+      "seconds": 22.3
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/13-scifi/13-tarra",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.575,
+      "id": "13-tarra",
+      "name": "Tarra",
+      "seconds": 17.2
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/13-scifi/13-ruppa",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.535,
+      "id": "13-ruppa",
+      "name": "Ruppa",
+      "seconds": 24.1
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/13-scifi/13-vito",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.625,
+      "id": "13-vito",
+      "name": "Vito",
+      "seconds": 21.5
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/13-scifi/13-fidle",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.591,
+      "id": "13-fidle",
+      "name": "Fidle",
+      "seconds": 20.8
+    }
+  ],
+  "rejected": [],
+  "environment": "/home/user/requirements.txt/cartoon-studio/design-library/13-scifi/environment_concept.png",
+  "lineup": "/home/user/requirements.txt/cartoon-studio/design-library/13-scifi/style_lineup.png"
+}

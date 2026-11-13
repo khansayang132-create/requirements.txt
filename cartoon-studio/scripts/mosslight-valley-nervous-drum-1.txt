@@ -1,0 +1,12 @@
+[hook] Narrator: Boom, boom! Today is music day.
+[hook] Pipkin: I play the drum. Boom, boom, boom!
+[introduction] Oakley: I play the xylophone. Ding, ding!
+[introduction] Morrow: I want to play too. But I feel nervous.
+[development] Narrator: Feeling nervous is okay. Morrow takes a big breath.
+[development] Oakley: Let's try slowly. Clap with me, one, two.
+[conflict] Morrow: One, two. One, two. I can do it!
+[climax] Narrator: Clap, boom, ding! Three friends play together.
+[climax] Pipkin: You did it, Morrow! That sounded great.
+[resolution] Morrow: Trying slowly helped me feel brave.
+[resolution] Narrator: Small steps can help us try new things.
+[ending] Morrow: What new thing would you like to try?

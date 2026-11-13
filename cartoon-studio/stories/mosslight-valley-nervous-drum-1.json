@@ -1,0 +1,888 @@
+{
+  "episode_id": "mosslight-valley-nervous-drum-1",
+  "universe_id": "mosslight-valley",
+  "title": "Morrow Plays Along",
+  "theme": "emotional",
+  "logline": "Morrow is nervous to join music day and learns to try slowly.",
+  "moral": "Small steps help us try new things.",
+  "target_seconds": 60,
+  "scenes": [
+    {
+      "number": 1,
+      "act": "hook",
+      "duration": 0.0,
+      "location": "playroom",
+      "environment": "playroom",
+      "characters": [
+        "Pipkin",
+        "Oakley"
+      ],
+      "actions": {
+        "Pipkin": "nod",
+        "Oakley": "idle"
+      },
+      "dialogue": {
+        "speaker": "Narrator",
+        "text": "Boom, boom! Today is music day."
+      },
+      "camera_angle": "wide establishing",
+      "camera_movement": "slow push-in",
+      "lighting": "warm daylight",
+      "background": "painted playroom set",
+      "sound_effects": [
+        "pop"
+      ],
+      "music": "bright motif, light",
+      "transition": "cut"
+    },
+    {
+      "number": 2,
+      "act": "hook",
+      "duration": 0.0,
+      "location": "playroom",
+      "environment": "playroom",
+      "characters": [
+        "Pipkin",
+        "Oakley"
+      ],
+      "actions": {
+        "Pipkin": "clap",
+        "Oakley": "idle"
+      },
+      "dialogue": {
+        "speaker": "Pipkin",
+        "text": "I play the drum. Boom, boom, boom!"
+      },
+      "camera_angle": "wide establishing",
+      "camera_movement": "slow push-in",
+      "lighting": "warm daylight",
+      "background": "painted playroom set",
+      "sound_effects": [],
+      "music": "bright motif, light",
+      "transition": "cut"
+    },
+    {
+      "number": 3,
+      "act": "introduction",
+      "duration": 0.0,
+      "location": "playroom",
+      "environment": "playroom",
+      "characters": [
+        "Pipkin",
+        "Oakley"
+      ],
+      "actions": {
+        "Pipkin": "idle",
+        "Oakley": "dance"
+      },
+      "dialogue": {
+        "speaker": "Oakley",
+        "text": "I play the xylophone. Ding, ding!"
+      },
+      "camera_angle": "medium two-shot",
+      "camera_movement": "gentle pan",
+      "lighting": "warm daylight",
+      "background": "painted playroom set",
+      "sound_effects": [
+        "ding"
+      ],
+      "music": "theme, bouncy",
+      "transition": "cut"
+    },
+    {
+      "number": 4,
+      "act": "introduction",
+      "duration": 0.0,
+      "location": "playroom",
+      "environment": "playroom",
+      "characters": [
+        "Pipkin",
+        "Oakley",
+        "Morrow"
+      ],
+      "actions": {
+        "Pipkin": "nod",
+        "Oakley": "idle",
+        "Morrow": "sad"
+      },
+      "dialogue": {
+        "speaker": "Morrow",
+        "text": "I want to play too. But I feel nervous."
+      },
+      "camera_angle": "medium two-shot",
+      "camera_movement": "gentle pan",
+      "lighting": "warm daylight",
+      "background": "painted playroom set",
+      "sound_effects": [],
+      "music": "theme, bouncy",
+      "transition": "cut"
+    },
+    {
+      "number": 5,
+      "act": "development",
+      "duration": 0.0,
+      "location": "playroom",
+      "environment": "playroom",
+      "characters": [
+        "Pipkin",
+        "Oakley",
+        "Morrow"
+      ],
+      "actions": {
+        "Pipkin": "idle",
+        "Oakley": "idle",
+        "Morrow": "stretch"
+      },
+      "dialogue": {
+        "speaker": "Narrator",
+        "text": "Feeling nervous is okay. Morrow takes a big breath."
+      },
+      "camera_angle": "medium",
+      "camera_movement": "follow",
+      "lighting": "warm daylight",
+      "background": "painted playroom set",
+      "sound_effects": [],
+      "music": "curious pizzicato",
+      "transition": "cut"
+    },
+    {
+      "number": 6,
+      "act": "development",
+      "duration": 0.0,
+      "location": "playroom",
+      "environment": "playroom",
+      "characters": [
+        "Pipkin",
+        "Oakley",
+        "Morrow"
+      ],
+      "actions": {
+        "Pipkin": "idle",
+        "Oakley": "clap",
+        "Morrow": "clap"
+      },
+      "dialogue": {
+        "speaker": "Oakley",
+        "text": "Let's try slowly. Clap with me, one, two."
+      },
+      "camera_angle": "medium",
+      "camera_movement": "follow",
+      "lighting": "warm daylight",
+      "background": "painted playroom set",
+      "sound_effects": [],
+      "music": "curious pizzicato",
+      "transition": "cut"
+    },
+    {
+      "number": 7,
+      "act": "conflict",
+      "duration": 0.0,
+      "location": "playroom",
+      "environment": "playroom",
+      "characters": [
+        "Pipkin",
+        "Oakley",
+        "Morrow"
+      ],
+      "actions": {
+        "Pipkin": "idle",
+        "Oakley": "idle",
+        "Morrow": "clap"
+      },
+      "dialogue": {
+        "speaker": "Morrow",
+        "text": "One, two. One, two. I can do it!"
+      },
+      "camera_angle": "close-up",
+      "camera_movement": "slight dolly-in",
+      "lighting": "warm daylight",
+      "background": "painted playroom set",
+      "sound_effects": [],
+      "music": "soft minor, slower",
+      "transition": "cut"
+    },
+    {
+      "number": 8,
+      "act": "climax",
+      "duration": 0.0,
+      "location": "playroom",
+      "environment": "playroom",
+      "characters": [
+        "Pipkin",
+        "Oakley",
+        "Morrow"
+      ],
+      "actions": {
+        "Pipkin": "dance",
+        "Oakley": "dance",
+        "Morrow": "clap"
+      },
+      "dialogue": {
+        "speaker": "Narrator",
+        "text": "Clap, boom, ding! Three friends play together."
+      },
+      "camera_angle": "low-angle hero",
+      "camera_movement": "quick push-in",
+      "lighting": "warm daylight",
+      "background": "painted playroom set",
+      "sound_effects": [],
+      "music": "build, drums",
+      "transition": "cut"
+    },
+    {
+      "number": 9,
+      "act": "climax",
+      "duration": 0.0,
+      "location": "playroom",
+      "environment": "playroom",
+      "characters": [
+        "Pipkin",
+        "Oakley",
+        "Morrow"
+      ],
+      "actions": {
+        "Pipkin": "cheer",
+        "Oakley": "idle",
+        "Morrow": "idle"
+      },
+      "dialogue": {
+        "speaker": "Pipkin",
+        "text": "You did it, Morrow! That sounded great."
+      },
+      "camera_angle": "low-angle hero",
+      "camera_movement": "quick push-in",
+      "lighting": "warm daylight",
+      "background": "painted playroom set",
+      "sound_effects": [],
+      "music": "build, drums",
+      "transition": "cut"
+    },
+    {
+      "number": 10,
+      "act": "resolution",
+      "duration": 0.0,
+      "location": "playroom",
+      "environment": "playroom",
+      "characters": [
+        "Pipkin",
+        "Oakley",
+        "Morrow"
+      ],
+      "actions": {
+        "Pipkin": "idle",
+        "Oakley": "idle",
+        "Morrow": "hop"
+      },
+      "dialogue": {
+        "speaker": "Morrow",
+        "text": "Trying slowly helped me feel brave."
+      },
+      "camera_angle": "medium wide",
+      "camera_movement": "slow pull-back",
+      "lighting": "warm daylight",
+      "background": "painted playroom set",
+      "sound_effects": [],
+      "music": "warm theme returns",
+      "transition": "cut"
+    },
+    {
+      "number": 11,
+      "act": "resolution",
+      "duration": 0.0,
+      "location": "playroom",
+      "environment": "playroom",
+      "characters": [
+        "Pipkin",
+        "Oakley",
+        "Morrow"
+      ],
+      "actions": {
+        "Pipkin": "idle",
+        "Oakley": "idle",
+        "Morrow": "nod"
+      },
+      "dialogue": {
+        "speaker": "Narrator",
+        "text": "Small steps can help us try new things."
+      },
+      "camera_angle": "medium wide",
+      "camera_movement": "slow pull-back",
+      "lighting": "warm daylight",
+      "background": "painted playroom set",
+      "sound_effects": [],
+      "music": "warm theme returns",
+      "transition": "cut"
+    },
+    {
+      "number": 12,
+      "act": "ending",
+      "duration": 0.0,
+      "location": "playroom",
+      "environment": "playroom",
+      "characters": [
+        "Pipkin",
+        "Oakley",
+        "Morrow"
+      ],
+      "actions": {
+        "Pipkin": "nod",
+        "Oakley": "idle",
+        "Morrow": "wave"
+      },
+      "dialogue": {
+        "speaker": "Morrow",
+        "text": "What new thing would you like to try?"
+      },
+      "camera_angle": "wide",
+      "camera_movement": "crane up",
+      "lighting": "warm daylight",
+      "background": "painted playroom set",
+      "sound_effects": [],
+      "music": "sting + end theme",
+      "transition": "cut"
+    }
+  ],
+  "beats": [
+    {
+      "speaker": "narrator",
+      "text": "Boom, boom! Today is music day.",
+      "env": "playroom",
+      "actors": [
+        {
+          "id": "pipkin",
+          "action": "nod",
+          "hold": null
+        },
+        {
+          "id": "oakley",
+          "action": "idle",
+          "hold": null
+        }
+      ],
+      "items": [
+        {
+          "name": "drum",
+          "layout": "ground",
+          "x": 540,
+          "y": 1250,
+          "size": 150,
+          "appear": "pop"
+        },
+        {
+          "name": "xylophone",
+          "layout": "ground",
+          "x": 830,
+          "y": 1260,
+          "size": 150,
+          "appear": "pop"
+        }
+      ],
+      "overlay": {
+        "text": "Morrow Plays Along",
+        "style": "title",
+        "color": "pink"
+      },
+      "fx": null,
+      "transfer": null,
+      "sfx": [
+        "pop"
+      ]
+    },
+    {
+      "speaker": "pipkin",
+      "text": "I play the drum. Boom, boom, boom!",
+      "env": "playroom",
+      "actors": [
+        {
+          "id": "pipkin",
+          "action": "clap",
+          "hold": null
+        },
+        {
+          "id": "oakley",
+          "action": "idle",
+          "hold": null
+        }
+      ],
+      "items": [
+        {
+          "name": "drum",
+          "layout": "ground",
+          "x": 540,
+          "y": 1250,
+          "size": 150,
+          "appear": "already"
+        },
+        {
+          "name": "xylophone",
+          "layout": "ground",
+          "x": 830,
+          "y": 1260,
+          "size": 150,
+          "appear": "already"
+        }
+      ],
+      "overlay": null,
+      "fx": null,
+      "transfer": null,
+      "sfx": []
+    },
+    {
+      "speaker": "oakley",
+      "text": "I play the xylophone. Ding, ding!",
+      "env": "playroom",
+      "actors": [
+        {
+          "id": "pipkin",
+          "action": "idle",
+          "hold": null
+        },
+        {
+          "id": "oakley",
+          "action": "dance",
+          "hold": null
+        }
+      ],
+      "items": [
+        {
+          "name": "drum",
+          "layout": "ground",
+          "x": 540,
+          "y": 1250,
+          "size": 150,
+          "appear": "already"
+        },
+        {
+          "name": "xylophone",
+          "layout": "ground",
+          "x": 830,
+          "y": 1260,
+          "size": 150,
+          "appear": "already"
+        }
+      ],
+      "overlay": null,
+      "fx": null,
+      "transfer": null,
+      "sfx": [
+        "ding"
+      ]
+    },
+    {
+      "speaker": "morrow",
+      "text": "I want to play too. But I feel nervous.",
+      "env": "playroom",
+      "actors": [
+        {
+          "id": "pipkin",
+          "action": "nod",
+          "hold": null
+        },
+        {
+          "id": "oakley",
+          "action": "idle",
+          "hold": null
+        },
+        {
+          "id": "morrow",
+          "action": "sad",
+          "hold": null
+        }
+      ],
+      "items": [
+        {
+          "name": "drum",
+          "layout": "ground",
+          "x": 540,
+          "y": 1250,
+          "size": 150,
+          "appear": "already"
+        },
+        {
+          "name": "xylophone",
+          "layout": "ground",
+          "x": 830,
+          "y": 1260,
+          "size": 150,
+          "appear": "already"
+        }
+      ],
+      "overlay": null,
+      "fx": null,
+      "transfer": null,
+      "sfx": []
+    },
+    {
+      "speaker": "narrator",
+      "text": "Feeling nervous is okay. Morrow takes a big breath.",
+      "env": "playroom",
+      "actors": [
+        {
+          "id": "pipkin",
+          "action": "idle",
+          "hold": null
+        },
+        {
+          "id": "oakley",
+          "action": "idle",
+          "hold": null
+        },
+        {
+          "id": "morrow",
+          "action": "stretch",
+          "hold": null
+        }
+      ],
+      "items": [
+        {
+          "name": "drum",
+          "layout": "ground",
+          "x": 540,
+          "y": 1250,
+          "size": 150,
+          "appear": "already"
+        },
+        {
+          "name": "xylophone",
+          "layout": "ground",
+          "x": 830,
+          "y": 1260,
+          "size": 150,
+          "appear": "already"
+        }
+      ],
+      "overlay": null,
+      "fx": null,
+      "transfer": null,
+      "sfx": []
+    },
+    {
+      "speaker": "oakley",
+      "text": "Let's try slowly. Clap with me, one, two.",
+      "env": "playroom",
+      "actors": [
+        {
+          "id": "pipkin",
+          "action": "idle",
+          "hold": null
+        },
+        {
+          "id": "oakley",
+          "action": "clap",
+          "hold": null
+        },
+        {
+          "id": "morrow",
+          "action": "clap",
+          "hold": null
+        }
+      ],
+      "items": [
+        {
+          "name": "drum",
+          "layout": "ground",
+          "x": 540,
+          "y": 1250,
+          "size": 150,
+          "appear": "already"
+        },
+        {
+          "name": "xylophone",
+          "layout": "ground",
+          "x": 830,
+          "y": 1260,
+          "size": 150,
+          "appear": "already"
+        }
+      ],
+      "overlay": null,
+      "fx": null,
+      "transfer": null,
+      "sfx": []
+    },
+    {
+      "speaker": "morrow",
+      "text": "One, two. One, two. I can do it!",
+      "env": "playroom",
+      "actors": [
+        {
+          "id": "pipkin",
+          "action": "idle",
+          "hold": null
+        },
+        {
+          "id": "oakley",
+          "action": "idle",
+          "hold": null
+        },
+        {
+          "id": "morrow",
+          "action": "clap",
+          "hold": null
+        }
+      ],
+      "items": [
+        {
+          "name": "drum",
+          "layout": "ground",
+          "x": 540,
+          "y": 1250,
+          "size": 150,
+          "appear": "already"
+        },
+        {
+          "name": "xylophone",
+          "layout": "ground",
+          "x": 830,
+          "y": 1260,
+          "size": 150,
+          "appear": "already"
+        }
+      ],
+      "overlay": {
+        "text": "2",
+        "style": "number",
+        "color": "orange",
+        "sub": null
+      },
+      "fx": null,
+      "transfer": null,
+      "sfx": []
+    },
+    {
+      "speaker": "narrator",
+      "text": "Clap, boom, ding! Three friends play together.",
+      "env": "playroom",
+      "actors": [
+        {
+          "id": "pipkin",
+          "action": "dance",
+          "hold": null
+        },
+        {
+          "id": "oakley",
+          "action": "dance",
+          "hold": null
+        },
+        {
+          "id": "morrow",
+          "action": "clap",
+          "hold": null
+        }
+      ],
+      "items": [
+        {
+          "name": "drum",
+          "layout": "ground",
+          "x": 540,
+          "y": 1250,
+          "size": 150,
+          "appear": "already"
+        },
+        {
+          "name": "xylophone",
+          "layout": "ground",
+          "x": 830,
+          "y": 1260,
+          "size": 150,
+          "appear": "already"
+        }
+      ],
+      "overlay": null,
+      "fx": "sparkle",
+      "transfer": null,
+      "sfx": []
+    },
+    {
+      "speaker": "pipkin",
+      "text": "You did it, Morrow! That sounded great.",
+      "env": "playroom",
+      "actors": [
+        {
+          "id": "pipkin",
+          "action": "cheer",
+          "hold": null
+        },
+        {
+          "id": "oakley",
+          "action": "idle",
+          "hold": null
+        },
+        {
+          "id": "morrow",
+          "action": "idle",
+          "hold": null
+        }
+      ],
+      "items": [
+        {
+          "name": "drum",
+          "layout": "ground",
+          "x": 540,
+          "y": 1250,
+          "size": 150,
+          "appear": "already"
+        },
+        {
+          "name": "xylophone",
+          "layout": "ground",
+          "x": 830,
+          "y": 1260,
+          "size": 150,
+          "appear": "already"
+        }
+      ],
+      "overlay": null,
+      "fx": null,
+      "transfer": null,
+      "sfx": []
+    },
+    {
+      "speaker": "morrow",
+      "text": "Trying slowly helped me feel brave.",
+      "env": "playroom",
+      "actors": [
+        {
+          "id": "pipkin",
+          "action": "idle",
+          "hold": null
+        },
+        {
+          "id": "oakley",
+          "action": "idle",
+          "hold": null
+        },
+        {
+          "id": "morrow",
+          "action": "hop",
+          "hold": null
+        }
+      ],
+      "items": [
+        {
+          "name": "drum",
+          "layout": "ground",
+          "x": 540,
+          "y": 1250,
+          "size": 150,
+          "appear": "already"
+        },
+        {
+          "name": "xylophone",
+          "layout": "ground",
+          "x": 830,
+          "y": 1260,
+          "size": 150,
+          "appear": "already"
+        }
+      ],
+      "overlay": null,
+      "fx": null,
+      "transfer": null,
+      "sfx": []
+    },
+    {
+      "speaker": "narrator",
+      "text": "Small steps can help us try new things.",
+      "env": "playroom",
+      "actors": [
+        {
+          "id": "pipkin",
+          "action": "idle",
+          "hold": null
+        },
+        {
+          "id": "oakley",
+          "action": "idle",
+          "hold": null
+        },
+        {
+          "id": "morrow",
+          "action": "nod",
+          "hold": null
+        }
+      ],
+      "items": [
+        {
+          "name": "drum",
+          "layout": "ground",
+          "x": 540,
+          "y": 1250,
+          "size": 150,
+          "appear": "already"
+        },
+        {
+          "name": "xylophone",
+          "layout": "ground",
+          "x": 830,
+          "y": 1260,
+          "size": 150,
+          "appear": "already"
+        }
+      ],
+      "overlay": null,
+      "fx": null,
+      "transfer": null,
+      "sfx": []
+    },
+    {
+      "speaker": "morrow",
+      "text": "What new thing would you like to try?",
+      "env": "playroom",
+      "actors": [
+        {
+          "id": "pipkin",
+          "action": "nod",
+          "hold": null
+        },
+        {
+          "id": "oakley",
+          "action": "idle",
+          "hold": null
+        },
+        {
+          "id": "morrow",
+          "action": "wave",
+          "hold": null
+        }
+      ],
+      "items": [
+        {
+          "name": "drum",
+          "layout": "ground",
+          "x": 540,
+          "y": 1250,
+          "size": 150,
+          "appear": "already"
+        },
+        {
+          "name": "xylophone",
+          "layout": "ground",
+          "x": 830,
+          "y": 1260,
+          "size": 150,
+          "appear": "already"
+        }
+      ],
+      "overlay": {
+        "text": "See you next time in Mosslight Valley!",
+        "style": "end",
+        "color": "yellow"
+      },
+      "fx": null,
+      "transfer": null,
+      "sfx": []
+    }
+  ],
+  "originality": {
+    "plot": "nervous-drum",
+    "issues": [],
+    "review": "engine child-safety review passed",
+    "cast": [
+      "morrow",
+      "oakley",
+      "pipkin"
+    ],
+    "mood": "bright"
+  }
+}

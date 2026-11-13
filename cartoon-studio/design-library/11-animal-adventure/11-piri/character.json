@@ -1,0 +1,66 @@
+{
+  "id": "11-piri",
+  "name": "Piri",
+  "style": "11-animal-adventure",
+  "species": "bunny",
+  "age": "child",
+  "build": "stocky",
+  "colors": {
+    "body": "#865B43",
+    "belly": "#DDB892",
+    "inner_ear": "#FBB3C7",
+    "accent": "#9B2226",
+    "nose": "#F986A1"
+  },
+  "clothing": {
+    "accessory": "bow",
+    "color": "#9B2226"
+  },
+  "personality": [
+    "adventurous",
+    "nature-wise",
+    "kind"
+  ],
+  "quirk": "laughs before the punchline",
+  "seed": 1,
+  "proportions": {
+    "age": "child",
+    "build": "stocky"
+  },
+  "style_name": "Animal Adventure",
+  "render_spec": {
+    "id": "11-piri",
+    "name": "Piri",
+    "species": "bunny",
+    "colors": {
+      "body": "#865B43",
+      "belly": "#DDB892",
+      "inner_ear": "#FBB3C7",
+      "accent": "#9B2226",
+      "nose": "#F986A1"
+    },
+    "clothing": {
+      "accessory": "bow",
+      "color": "#9B2226"
+    },
+    "style": {
+      "mode": 5,
+      "head": 1.0,
+      "body": [
+        1.173,
+        0.933,
+        1.142
+      ],
+      "eye": 1.0,
+      "outline": 0,
+      "noise": 0.35,
+      "noise_scale": 0.16,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.632,
+    "scale": 1.9
+  }
+}

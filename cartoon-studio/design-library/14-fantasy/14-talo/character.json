@@ -1,0 +1,66 @@
+{
+  "id": "14-talo",
+  "name": "Talo",
+  "style": "14-fantasy",
+  "species": "bunny",
+  "age": "adult",
+  "build": "round",
+  "colors": {
+    "body": "#A98ECE",
+    "belly": "#F0EAF8",
+    "inner_ear": "#FFB8CA",
+    "accent": "#2EC4B6",
+    "nose": "#FF94B4"
+  },
+  "clothing": {
+    "accessory": "bandana",
+    "color": "#2EC4B6"
+  },
+  "personality": [
+    "spell-curious",
+    "noble",
+    "bold"
+  ],
+  "quirk": "keeps a pocket notebook",
+  "seed": 1,
+  "proportions": {
+    "age": "adult",
+    "build": "round"
+  },
+  "style_name": "Fantasy Adventure",
+  "render_spec": {
+    "id": "14-talo",
+    "name": "Talo",
+    "species": "bunny",
+    "colors": {
+      "body": "#A98ECE",
+      "belly": "#F0EAF8",
+      "inner_ear": "#FFB8CA",
+      "accent": "#2EC4B6",
+      "nose": "#FF94B4"
+    },
+    "clothing": {
+      "accessory": "bandana",
+      "color": "#2EC4B6"
+    },
+    "style": {
+      "mode": 1,
+      "head": 0.918,
+      "body": [
+        1.229,
+        1.092,
+        1.207
+      ],
+      "eye": 0.968,
+      "outline": 0.3,
+      "noise": 0.35,
+      "noise_scale": 0.05,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.563,
+    "scale": 1.9
+  }
+}

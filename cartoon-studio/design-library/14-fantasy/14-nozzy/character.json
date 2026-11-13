@@ -1,0 +1,66 @@
+{
+  "id": "14-nozzy",
+  "name": "Nozzy",
+  "style": "14-fantasy",
+  "species": "duck",
+  "age": "child",
+  "build": "standard",
+  "colors": {
+    "body": "#BE7E8E",
+    "belly": "#F7E7EC",
+    "inner_ear": "#FFB0D1",
+    "accent": "#3D5A80",
+    "nose": "#FFA32C"
+  },
+  "clothing": {
+    "accessory": "boots",
+    "color": "#3D5A80"
+  },
+  "personality": [
+    "enchanted",
+    "spell-curious",
+    "playful"
+  ],
+  "quirk": "always shares the last snack",
+  "seed": 1,
+  "proportions": {
+    "age": "child",
+    "build": "standard"
+  },
+  "style_name": "Fantasy Adventure",
+  "render_spec": {
+    "id": "14-nozzy",
+    "name": "Nozzy",
+    "species": "duck",
+    "colors": {
+      "body": "#BE7E8E",
+      "belly": "#F7E7EC",
+      "inner_ear": "#FFB0D1",
+      "accent": "#3D5A80",
+      "nose": "#FFA32C"
+    },
+    "clothing": {
+      "accessory": "boots",
+      "color": "#3D5A80"
+    },
+    "style": {
+      "mode": 1,
+      "head": 1.02,
+      "body": [
+        0.98,
+        1.06,
+        0.98
+      ],
+      "eye": 1.1,
+      "outline": 0.3,
+      "noise": 0.35,
+      "noise_scale": 0.05,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.603,
+    "scale": 1.9
+  }
+}

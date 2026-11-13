@@ -1,0 +1,66 @@
+{
+  "id": "12-nolix",
+  "name": "Nolix",
+  "style": "12-miniature",
+  "species": "elephant",
+  "age": "teen",
+  "build": "standard",
+  "colors": {
+    "body": "#FFAF5F",
+    "belly": "#FFF3D6",
+    "inner_ear": "#FFB1C9",
+    "accent": "#5E548E",
+    "nose": "#FA96B1"
+  },
+  "clothing": {
+    "accessory": "overalls",
+    "color": "#5E548E"
+  },
+  "personality": [
+    "collector",
+    "tiny-but-mighty",
+    "bold"
+  ],
+  "quirk": "hums when nervous",
+  "seed": 1,
+  "proportions": {
+    "age": "teen",
+    "build": "standard"
+  },
+  "style_name": "Miniature 3D World",
+  "render_spec": {
+    "id": "12-nolix",
+    "name": "Nolix",
+    "species": "elephant",
+    "colors": {
+      "body": "#FFAF5F",
+      "belly": "#FFF3D6",
+      "inner_ear": "#FFB1C9",
+      "accent": "#5E548E",
+      "nose": "#FA96B1"
+    },
+    "clothing": {
+      "accessory": "overalls",
+      "color": "#5E548E"
+    },
+    "style": {
+      "mode": 2,
+      "head": 1.015,
+      "body": [
+        0.996,
+        0.996,
+        0.996
+      ],
+      "eye": 0.997,
+      "outline": 0,
+      "noise": 0.25,
+      "noise_scale": 0.06,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.618,
+    "scale": 1.615
+  }
+}

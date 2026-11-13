@@ -1,0 +1,66 @@
+{
+  "id": "05-tabie",
+  "name": "Tabie",
+  "style": "05-cute-baby",
+  "species": "bear",
+  "age": "baby",
+  "build": "tall",
+  "colors": {
+    "body": "#D1F1BB",
+    "belly": "#F6FCF2",
+    "inner_ear": "#FAB7C9",
+    "accent": "#FFB4A2",
+    "nose": "#FD8CB5"
+  },
+  "clothing": {
+    "accessory": "overalls",
+    "color": "#FFB4A2"
+  },
+  "personality": [
+    "wobbly",
+    "sleepy",
+    "careful"
+  ],
+  "quirk": "sleeps with one ear up",
+  "seed": 1,
+  "proportions": {
+    "age": "baby",
+    "build": "tall"
+  },
+  "style_name": "Cute Baby Cartoon",
+  "render_spec": {
+    "id": "05-tabie",
+    "name": "Tabie",
+    "species": "bear",
+    "colors": {
+      "body": "#D1F1BB",
+      "belly": "#F6FCF2",
+      "inner_ear": "#FAB7C9",
+      "accent": "#FFB4A2",
+      "nose": "#FD8CB5"
+    },
+    "clothing": {
+      "accessory": "overalls",
+      "color": "#FFB4A2"
+    },
+    "style": {
+      "mode": 1,
+      "head": 1.475,
+      "body": [
+        0.649,
+        0.753,
+        0.649
+      ],
+      "eye": 1.45,
+      "outline": 0.45,
+      "noise": 0.35,
+      "noise_scale": 0.05,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.795,
+    "scale": 1.373
+  }
+}

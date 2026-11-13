@@ -1,0 +1,66 @@
+{
+  "id": "09-kato",
+  "name": "Kato",
+  "style": "09-storybook",
+  "species": "elephant",
+  "age": "child",
+  "build": "tall",
+  "colors": {
+    "body": "#F2BE72",
+    "belly": "#FAF0D7",
+    "inner_ear": "#FFABBF",
+    "accent": "#264653",
+    "nose": "#F899A9"
+  },
+  "clothing": {
+    "accessory": "bandana",
+    "color": "#264653"
+  },
+  "personality": [
+    "wandering",
+    "wise",
+    "playful"
+  ],
+  "quirk": "hums when nervous",
+  "seed": 1,
+  "proportions": {
+    "age": "child",
+    "build": "tall"
+  },
+  "style_name": "2D Storybook",
+  "render_spec": {
+    "id": "09-kato",
+    "name": "Kato",
+    "species": "elephant",
+    "colors": {
+      "body": "#F2BE72",
+      "belly": "#FAF0D7",
+      "inner_ear": "#FFABBF",
+      "accent": "#264653",
+      "nose": "#F899A9"
+    },
+    "clothing": {
+      "accessory": "bandana",
+      "color": "#264653"
+    },
+    "style": {
+      "mode": 3,
+      "head": 1.06,
+      "body": [
+        0.92,
+        1.12,
+        0.92
+      ],
+      "eye": 0.95,
+      "outline": 0.7,
+      "noise": 0.35,
+      "noise_scale": 0.08,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.597,
+    "scale": 1.373
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "id": "09-kebin",
+  "name": "Kebin",
+  "style": "09-storybook",
+  "species": "bear",
+  "age": "adult",
+  "build": "tall",
+  "colors": {
+    "body": "#A6D9E3",
+    "belly": "#F1FAEE",
+    "inner_ear": "#F9AFC7",
+    "accent": "#E63946",
+    "nose": "#FF99B0"
+  },
+  "clothing": {
+    "accessory": "scarf",
+    "color": "#E63946"
+  },
+  "personality": [
+    "polite",
+    "wise",
+    "funny"
+  ],
+  "quirk": "always shares the last snack",
+  "seed": 1,
+  "proportions": {
+    "age": "adult",
+    "build": "tall"
+  },
+  "style_name": "2D Storybook",
+  "render_spec": {
+    "id": "09-kebin",
+    "name": "Kebin",
+    "species": "bear",
+    "colors": {
+      "body": "#A6D9E3",
+      "belly": "#F1FAEE",
+      "inner_ear": "#F9AFC7",
+      "accent": "#E63946",
+      "nose": "#FF99B0"
+    },
+    "clothing": {
+      "accessory": "scarf",
+      "color": "#E63946"
+    },
+    "style": {
+      "mode": 3,
+      "head": 0.954,
+      "body": [
+        1.03,
+        1.254,
+        1.03
+      ],
+      "eye": 0.836,
+      "outline": 0.7,
+      "noise": 0.35,
+      "noise_scale": 0.08,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.537,
+    "scale": 1.9
+  }
+}

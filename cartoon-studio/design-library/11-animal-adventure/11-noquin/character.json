@@ -1,0 +1,66 @@
+{
+  "id": "11-noquin",
+  "name": "Noquin",
+  "style": "11-animal-adventure",
+  "species": "duck",
+  "age": "teen",
+  "build": "stocky",
+  "colors": {
+    "body": "#AF7C4F",
+    "belly": "#E7CBA9",
+    "inner_ear": "#F8B5CB",
+    "accent": "#2E6F40",
+    "nose": "#FFAC2F"
+  },
+  "clothing": {
+    "accessory": "boots",
+    "color": "#2E6F40"
+  },
+  "personality": [
+    "quick-witted",
+    "protective",
+    "kind"
+  ],
+  "quirk": "collects shiny pebbles",
+  "seed": 1,
+  "proportions": {
+    "age": "teen",
+    "build": "stocky"
+  },
+  "style_name": "Animal Adventure",
+  "render_spec": {
+    "id": "11-noquin",
+    "name": "Noquin",
+    "species": "duck",
+    "colors": {
+      "body": "#AF7C4F",
+      "belly": "#E7CBA9",
+      "inner_ear": "#F8B5CB",
+      "accent": "#2E6F40",
+      "nose": "#FFAC2F"
+    },
+    "clothing": {
+      "accessory": "boots",
+      "color": "#2E6F40"
+    },
+    "style": {
+      "mode": 5,
+      "head": 0.94,
+      "body": [
+        1.243,
+        0.989,
+        1.211
+      ],
+      "eye": 0.95,
+      "outline": 0,
+      "noise": 0.35,
+      "noise_scale": 0.16,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.598,
+    "scale": 1.9
+  }
+}

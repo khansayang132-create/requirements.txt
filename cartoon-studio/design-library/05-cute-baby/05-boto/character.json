@@ -1,0 +1,66 @@
+{
+  "id": "05-boto",
+  "name": "Boto",
+  "style": "05-cute-baby",
+  "species": "cat",
+  "age": "baby",
+  "build": "round",
+  "colors": {
+    "body": "#FFEFB3",
+    "belly": "#FFFDF0",
+    "inner_ear": "#F6AECC",
+    "accent": "#9ADBB5",
+    "nose": "#FF86B0"
+  },
+  "clothing": {
+    "accessory": "bandana",
+    "color": "#9ADBB5"
+  },
+  "personality": [
+    "cuddly",
+    "giggly",
+    "playful"
+  ],
+  "quirk": "hums when nervous",
+  "seed": 1,
+  "proportions": {
+    "age": "baby",
+    "build": "round"
+  },
+  "style_name": "Cute Baby Cartoon",
+  "render_spec": {
+    "id": "05-boto",
+    "name": "Boto",
+    "species": "cat",
+    "colors": {
+      "body": "#FFEFB3",
+      "belly": "#FFFDF0",
+      "inner_ear": "#F6AECC",
+      "accent": "#9ADBB5",
+      "nose": "#FF86B0"
+    },
+    "clothing": {
+      "accessory": "bandana",
+      "color": "#9ADBB5"
+    },
+    "style": {
+      "mode": 1,
+      "head": 1.475,
+      "body": [
+        0.79,
+        0.618,
+        0.776
+      ],
+      "eye": 1.45,
+      "outline": 0.45,
+      "noise": 0.35,
+      "noise_scale": 0.05,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.84,
+    "scale": 1.373
+  }
+}

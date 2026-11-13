@@ -1,0 +1,66 @@
+{
+  "id": "12-tappa",
+  "name": "Tappa",
+  "style": "12-miniature",
+  "species": "bunny",
+  "age": "child",
+  "build": "tall",
+  "colors": {
+    "body": "#A7B9B7",
+    "belly": "#EDF6F5",
+    "inner_ear": "#FCADCA",
+    "accent": "#ED6A5A",
+    "nose": "#FF8FB1"
+  },
+  "clothing": {
+    "accessory": "scarf",
+    "color": "#ED6A5A"
+  },
+  "personality": [
+    "neighbourly",
+    "daydreamer",
+    "kind"
+  ],
+  "quirk": "laughs before the punchline",
+  "seed": 203,
+  "proportions": {
+    "age": "child",
+    "build": "tall"
+  },
+  "style_name": "Miniature 3D World",
+  "render_spec": {
+    "id": "12-tappa",
+    "name": "Tappa",
+    "species": "bunny",
+    "colors": {
+      "body": "#A7B9B7",
+      "belly": "#EDF6F5",
+      "inner_ear": "#FCADCA",
+      "accent": "#ED6A5A",
+      "nose": "#FF8FB1"
+    },
+    "clothing": {
+      "accessory": "scarf",
+      "color": "#ED6A5A"
+    },
+    "style": {
+      "mode": 2,
+      "head": 1.08,
+      "body": [
+        0.865,
+        1.053,
+        0.865
+      ],
+      "eye": 1.05,
+      "outline": 0,
+      "noise": 0.25,
+      "noise_scale": 0.06,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.621,
+    "scale": 1.615
+  }
+}
