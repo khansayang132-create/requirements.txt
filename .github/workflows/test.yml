@@ -243,14 +243,14 @@ jobs:
       - run: pip install -e ".[test,voice]" && pip check
       - run: ruff check src/cartoon_studio/agents src/cartoon_studio/cli.py src/cartoon_studio/generators src/cartoon_studio/providers src/cartoon_studio/bible.py tests/test_v3.py
       - run: python -m pytest -q
-      - name: Real episode with the local engine (2D, 30 s, no keys, no spend)
+      - name: Real episode with the local engine (2D, 60 s at 540x960, no keys, no spend)
         run: |
           cartoon-studio doctor
           cartoon-studio import-universe --id mosslight-valley
-          git diff --exit-code -- universes character-bibles/*/character.json   # owner files untouched
+          git diff --exit-code -- universes/*/universe.json universes/*/characters.json character-bibles/*/character.json   # owner files untouched
           cartoon-studio init-characters --universe mosslight-valley --backend flat
-          cartoon-studio write-episode --universe mosslight-valley --plot seed-glow --seconds 30
-          cartoon-studio run --job ci --universe mosslight-valley --episode mosslight-valley-seed-glow-1 --seconds 30 --backend flat --width 540 --height 960
+          cartoon-studio write-episode --universe mosslight-valley --plot seed-glow --seconds 60
+          cartoon-studio run --job ci --universe mosslight-valley --episode mosslight-valley-seed-glow-1 --seconds 60 --backend flat --width 540 --height 960
           cartoon-studio qc --video rendered-videos/ci/final.mp4
       - uses: actions/upload-artifact@v4
         if: always()

@@ -1,0 +1,12 @@
+[hook] Narrator: It is picnic day! Look what is in the basket.
+[hook] Brindle: Two apples and some bread. Yum, yum!
+[introduction] Morrow: Look at the sky. Those clouds are getting dark.
+[introduction] Narrator: Plip, plop. Raindrops start to fall!
+[development] Brindle: Oh no! Our picnic will get wet.
+[development] Tilli: Come under my big umbrella, friends!
+[conflict] Narrator: Three friends, one umbrella. Squeeze in close!
+[climax] Morrow: We can have our picnic right here, together.
+[climax] Narrator: The rain stops. The sun comes out. Look, a rainbow!
+[resolution] Brindle: Sunlight and rain made a rainbow!
+[resolution] Narrator: A rainy day can still be a happy day with friends.
+[ending] Tilli: What do you like to do on rainy days?

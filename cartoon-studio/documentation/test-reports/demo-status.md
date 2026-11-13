@@ -25,6 +25,21 @@ Command: `cartoon-studio run --job ep001 --universe mosslight-valley --episode m
 
 `final.mp4` (11 MB) is not committed: regenerate it with the command above, or download it from the CI artifact `cartoon-studio-ci-episode`.
 
+## Episode 2: "The Rainy Picnic" (2026-11-13)
+
+`cartoon-studio run --job ep002 --universe mosslight-valley --episode mosslight-valley-rainy-picnic-1 --seconds 60`, 4 min 21 s, 3D.
+QC PASS (`ep002-qc-report.json`): 54.3 s against a 60 s target, −14.0 LUFS, 1080×1920, full decode clean. Contact sheet checked by eye:
+every speaker is on screen, and the rain, umbrella and rainbow all read. Cast: Brindle, Morrow and Tilli (this plot uses three characters).
+
+## CI fixes found by replaying the job on a clean checkout (2026-11-13)
+
+- The first CI run of `cartoon-studio` failed at its own owner-file check, which also covered the generated `universe-bible.json`.
+  It now checks only the owner's files (`universe.json`, `characters.json`, `character-bibles/*/character.json`).
+- In a fresh checkout `animations/` does not exist (it is git-ignored), and step 08 crashed copying into it. The agents now
+  create their output folders. This sandbox already had the folder, which hid the bug.
+- CI targeted 30 s for a script with 49 s of dialogue, which can never pass QC. It now uses 60 s at 540×960.
+  Replayed locally on a clean worktree: QC PASS, 55.0 s.
+
 ## Found by looking, and fixed
 
 The first full render passed every automatic check, but the contact sheet showed the problem: the engine draws only

@@ -1,0 +1,333 @@
+{
+  "episode": "mosslight-valley-rainy-picnic-1",
+  "scenes": [
+    {
+      "number": 1,
+      "act": "hook",
+      "duration": 0.0,
+      "location": "Fernbridge clearing",
+      "environment": "meadow",
+      "characters": [
+        "Brindle",
+        "Morrow"
+      ],
+      "actions": {
+        "Brindle": "nod",
+        "Morrow": "idle"
+      },
+      "dialogue": {
+        "speaker": "Narrator",
+        "text": "It is picnic day! Look what is in the basket."
+      },
+      "camera_angle": "wide establishing",
+      "camera_movement": "slow push-in",
+      "lighting": "warm key 45°, cool fill, teal/orange rims",
+      "background": "painted meadow set",
+      "sound_effects": [],
+      "music": "bright motif, light",
+      "transition": "cut"
+    },
+    {
+      "number": 2,
+      "act": "hook",
+      "duration": 0.0,
+      "location": "Fernbridge clearing",
+      "environment": "meadow",
+      "characters": [
+        "Brindle",
+        "Morrow"
+      ],
+      "actions": {
+        "Brindle": "point",
+        "Morrow": "nod"
+      },
+      "dialogue": {
+        "speaker": "Brindle",
+        "text": "Two apples and some bread. Yum, yum!"
+      },
+      "camera_angle": "wide establishing",
+      "camera_movement": "slow push-in",
+      "lighting": "warm key 45°, cool fill, teal/orange rims",
+      "background": "painted meadow set",
+      "sound_effects": [],
+      "music": "bright motif, light",
+      "transition": "cut"
+    },
+    {
+      "number": 3,
+      "act": "introduction",
+      "duration": 0.0,
+      "location": "Fernbridge clearing",
+      "environment": "meadow",
+      "characters": [
+        "Brindle",
+        "Morrow"
+      ],
+      "actions": {
+        "Brindle": "nod",
+        "Morrow": "look_up"
+      },
+      "dialogue": {
+        "speaker": "Morrow",
+        "text": "Look at the sky. Those clouds are getting dark."
+      },
+      "camera_angle": "medium two-shot",
+      "camera_movement": "gentle pan",
+      "lighting": "warm key 45°, cool fill, teal/orange rims",
+      "background": "painted meadow set",
+      "sound_effects": [],
+      "music": "theme, bouncy",
+      "transition": "cut"
+    },
+    {
+      "number": 4,
+      "act": "introduction",
+      "duration": 0.0,
+      "location": "Fernbridge clearing",
+      "environment": "meadow",
+      "characters": [
+        "Brindle",
+        "Morrow"
+      ],
+      "actions": {
+        "Brindle": "nod",
+        "Morrow": "wow"
+      },
+      "dialogue": {
+        "speaker": "Narrator",
+        "text": "Plip, plop. Raindrops start to fall!"
+      },
+      "camera_angle": "medium two-shot",
+      "camera_movement": "gentle pan",
+      "lighting": "warm key 45°, cool fill, teal/orange rims",
+      "background": "painted meadow set",
+      "sound_effects": [
+        "splash"
+      ],
+      "music": "theme, bouncy",
+      "transition": "cut"
+    },
+    {
+      "number": 5,
+      "act": "development",
+      "duration": 0.0,
+      "location": "rainy",
+      "environment": "rainy",
+      "characters": [
+        "Brindle",
+        "Morrow"
+      ],
+      "actions": {
+        "Brindle": "sad",
+        "Morrow": "idle"
+      },
+      "dialogue": {
+        "speaker": "Brindle",
+        "text": "Oh no! Our picnic will get wet."
+      },
+      "camera_angle": "medium",
+      "camera_movement": "follow",
+      "lighting": "overcast, soft",
+      "background": "painted rainy set",
+      "sound_effects": [],
+      "music": "curious pizzicato",
+      "transition": "cross-dissolve"
+    },
+    {
+      "number": 6,
+      "act": "development",
+      "duration": 0.0,
+      "location": "rainy",
+      "environment": "rainy",
+      "characters": [
+        "Brindle",
+        "Morrow",
+        "Tilli"
+      ],
+      "actions": {
+        "Brindle": "idle",
+        "Morrow": "idle",
+        "Tilli": "wave"
+      },
+      "dialogue": {
+        "speaker": "Tilli",
+        "text": "Come under my big umbrella, friends!"
+      },
+      "camera_angle": "medium",
+      "camera_movement": "follow",
+      "lighting": "overcast, soft",
+      "background": "painted rainy set",
+      "sound_effects": [],
+      "music": "curious pizzicato",
+      "transition": "cut"
+    },
+    {
+      "number": 7,
+      "act": "conflict",
+      "duration": 0.0,
+      "location": "rainy",
+      "environment": "rainy",
+      "characters": [
+        "Brindle",
+        "Morrow",
+        "Tilli"
+      ],
+      "actions": {
+        "Brindle": "hop",
+        "Morrow": "hop",
+        "Tilli": "idle"
+      },
+      "dialogue": {
+        "speaker": "Narrator",
+        "text": "Three friends, one umbrella. Squeeze in close!"
+      },
+      "camera_angle": "close-up",
+      "camera_movement": "slight dolly-in",
+      "lighting": "overcast, soft",
+      "background": "painted rainy set",
+      "sound_effects": [],
+      "music": "soft minor, slower",
+      "transition": "cut"
+    },
+    {
+      "number": 8,
+      "act": "climax",
+      "duration": 0.0,
+      "location": "rainy",
+      "environment": "rainy",
+      "characters": [
+        "Brindle",
+        "Morrow",
+        "Tilli"
+      ],
+      "actions": {
+        "Brindle": "idle",
+        "Morrow": "nod",
+        "Tilli": "idle"
+      },
+      "dialogue": {
+        "speaker": "Morrow",
+        "text": "We can have our picnic right here, together."
+      },
+      "camera_angle": "low-angle hero",
+      "camera_movement": "quick push-in",
+      "lighting": "overcast, soft",
+      "background": "painted rainy set",
+      "sound_effects": [],
+      "music": "build, drums",
+      "transition": "cut"
+    },
+    {
+      "number": 9,
+      "act": "climax",
+      "duration": 0.0,
+      "location": "Fernbridge clearing",
+      "environment": "meadow",
+      "characters": [
+        "Brindle",
+        "Morrow",
+        "Tilli"
+      ],
+      "actions": {
+        "Brindle": "cheer",
+        "Morrow": "cheer",
+        "Tilli": "idle"
+      },
+      "dialogue": {
+        "speaker": "Narrator",
+        "text": "The rain stops. The sun comes out. Look, a rainbow!"
+      },
+      "camera_angle": "low-angle hero",
+      "camera_movement": "quick push-in",
+      "lighting": "warm key 45°, cool fill, teal/orange rims",
+      "background": "painted meadow set",
+      "sound_effects": [],
+      "music": "build, drums",
+      "transition": "cross-dissolve"
+    },
+    {
+      "number": 10,
+      "act": "resolution",
+      "duration": 0.0,
+      "location": "Fernbridge clearing",
+      "environment": "meadow",
+      "characters": [
+        "Brindle",
+        "Morrow",
+        "Tilli"
+      ],
+      "actions": {
+        "Brindle": "point",
+        "Morrow": "nod",
+        "Tilli": "idle"
+      },
+      "dialogue": {
+        "speaker": "Brindle",
+        "text": "Sunlight and rain made a rainbow!"
+      },
+      "camera_angle": "medium wide",
+      "camera_movement": "slow pull-back",
+      "lighting": "warm key 45°, cool fill, teal/orange rims",
+      "background": "painted meadow set",
+      "sound_effects": [],
+      "music": "warm theme returns",
+      "transition": "cut"
+    },
+    {
+      "number": 11,
+      "act": "resolution",
+      "duration": 0.0,
+      "location": "Fernbridge clearing",
+      "environment": "meadow",
+      "characters": [
+        "Brindle",
+        "Morrow",
+        "Tilli"
+      ],
+      "actions": {
+        "Brindle": "idle",
+        "Morrow": "idle",
+        "Tilli": "dance"
+      },
+      "dialogue": {
+        "speaker": "Narrator",
+        "text": "A rainy day can still be a happy day with friends."
+      },
+      "camera_angle": "medium wide",
+      "camera_movement": "slow pull-back",
+      "lighting": "warm key 45°, cool fill, teal/orange rims",
+      "background": "painted meadow set",
+      "sound_effects": [],
+      "music": "warm theme returns",
+      "transition": "cut"
+    },
+    {
+      "number": 12,
+      "act": "ending",
+      "duration": 0.0,
+      "location": "Fernbridge clearing",
+      "environment": "meadow",
+      "characters": [
+        "Brindle",
+        "Morrow",
+        "Tilli"
+      ],
+      "actions": {
+        "Brindle": "nod",
+        "Morrow": "idle",
+        "Tilli": "wave"
+      },
+      "dialogue": {
+        "speaker": "Tilli",
+        "text": "What do you like to do on rainy days?"
+      },
+      "camera_angle": "wide",
+      "camera_movement": "crane up",
+      "lighting": "warm key 45°, cool fill, teal/orange rims",
+      "background": "painted meadow set",
+      "sound_effects": [],
+      "music": "sting + end theme",
+      "transition": "cut"
+    }
+  ]
+}

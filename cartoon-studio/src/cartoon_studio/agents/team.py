@@ -192,6 +192,7 @@ class VoiceSoundEngineerAgent(BaseAgent, _EngineMixin):
         wp, prep, story, uni, cfg = await asyncio.to_thread(self.prepared, state)
         out = await asyncio.to_thread(wp.stage_sound, self.work(state), prep, story, uni, cfg)
         sfx = self.ctx.root / "sound-effects" / f"{state.job_id}-foley.json"
+        sfx.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(self.work(state) / "foley.json", sfx)
         return AgentResult(status="success", artifact_paths=[out["path"], str(sfx)],
                            metadata={k: out.get(k) for k in ("seconds", "voice_providers", "voice_to_bed_db", "foley_events")})
@@ -219,6 +220,7 @@ class AnimationEngineerAgent(BaseAgent, _EngineMixin):
         wp, prep, _story, uni, cfg = await asyncio.to_thread(self.prepared, state)
         out = await asyncio.to_thread(wp.stage_animation, self.work(state), prep, uni, cfg)
         dst = self.ctx.root / "animations" / f"{state.job_id}-silent.mp4"
+        dst.parent.mkdir(parents=True, exist_ok=True)   # git-ignored, so absent in a fresh checkout
         shutil.copyfile(self.work(state) / "silent.mp4", dst)
         return AgentResult(status="success", artifact_paths=[str(dst)],
                            metadata={k: out.get(k) for k in ("frames", "render_seconds", "backend", "backend_reason")})
