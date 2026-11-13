@@ -261,6 +261,27 @@ jobs:
             cartoon-studio/jobs/ci/production_report.json
           if-no-files-found: warn
 
+  humanverse:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: humanverse
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+      - run: sudo apt-get update -q && sudo apt-get install -y -q ffmpeg
+      - run: pip install "bpy==4.5.*" espeakng-loader Pillow pytest && pip check
+      - run: python -m pytest -q .claude/skills/humanverse-studio/tests
+      - name: Real character build in headless Blender (mesh, rig, weights, deformation test, GLB/FBX export)
+        run: |
+          python .claude/skills/humanverse-studio/scripts/blender/build_character.py -- --char project/cast/CHAR-HUM-004.json --out /tmp/ci-char | tee build.log
+          grep -q 'CHARACTER_OK CHAR-HUM-004' build.log
+          python -c "import json,sys; r=json.load(open('/tmp/ci-char/build_report.json')); sys.exit(0 if r['deformation_status']=='PASS' and set(r['exports'])=={'glb','fbx'} and all(s['unweighted_pct']<0.5 for s in r['skinning']) else 1)"
+      - name: Installer copies the skill and 18 subagents
+        run: ./install.sh /tmp/hv-install && test "$(ls /tmp/hv-install/.claude/agents | wc -l)" = 18
+
   youtube:
     strategy:
       fail-fast: false

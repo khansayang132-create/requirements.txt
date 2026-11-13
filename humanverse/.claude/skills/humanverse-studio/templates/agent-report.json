@@ -1,0 +1,9 @@
+{
+  "agent": "hv-rigging-engineer",
+  "task": "rig and skin CHAR-HUM-006",
+  "status": "PASS | FAIL | BLOCKED | NOT TESTED",
+  "artifacts": ["project/characters/CHAR-HUM-006/CHAR-HUM-006.blend", "project/characters/CHAR-HUM-006/build_report.json"],
+  "evidence": {"command": "hv build-cast", "exit_code": 0, "numbers": {"bones": 41, "unweighted_pct": 0.0, "leak_pct": 0.0}},
+  "blockers": [],
+  "next_action": "facial-animation-specialist: check the expression sheet"
+}

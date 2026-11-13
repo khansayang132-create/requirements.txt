@@ -1,0 +1,20 @@
+{
+  "id": "CHAR-HUM-006",
+  "name": "Original Name",
+  "age": 30,
+  "category": "adult",
+  "role": "role in the story",
+  "personality": ["trait", "trait", "flaw"],
+  "motivation": "what they want",
+  "backstory": "one or two original sentences",
+  "appearance": {
+    "height": 1.7, "head_ratio": 0.16, "leg_ratio": 0.56, "shoulder_width": 0.115, "hip_width": 0.075, "thickness": 1.0,
+    "belly": 0.0, "head_width": 0.9, "jaw_taper": 0.22, "eye_size": 1.0, "nose": 1.0, "ears": 1.0, "cheeks": 1.0,
+    "hair_style": "short | ponytail | bun | bob | long | curly | spiky | balding | bald", "hairline": 0.6,
+    "beard": false, "mustache": false, "glasses": false, "cap": false, "tie": false, "sleeve": "long | short", "shorts": false,
+    "palette": {"skin": "#C68A62", "hair": "#2A1B14", "iris": "#4A2F1A", "shirt": "#3FA37C", "pants": "#2F3E5C", "shoes": "#2B2B2B",
+                "accent": "#E4573D", "lips": "#B5534C", "frame": "#2B2B2B"}
+  },
+  "voice": {"espeak_voice": "en-us+f2", "rate": 150, "pitch": 55, "range": 60},
+  "animation": {"walk_speed": 0.9, "energy": 1.0, "signature": "one recognisable gesture"}
+}

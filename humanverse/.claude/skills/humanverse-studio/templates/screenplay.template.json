@@ -1,0 +1,134 @@
+{
+  "title": "The Kite That Came Home",
+  "logline": "When the wind snaps the string of her late grandmother's kite, nine-year-old Amara learns that a neighbourhood is a kind of family.",
+  "audience": "families, ages 5-10",
+  "genre": "family comedy-drama",
+  "theme": "small kindnesses find their way back",
+  "motivations": {
+    "CHAR-HUM-001": "fly Grandma's kite all by herself",
+    "CHAR-HUM-004": "keep his late wife's spring tradition alive",
+    "CHAR-HUM-002": "cheer his sister up without looking soft",
+    "CHAR-HUM-005": "return what the wind brought her",
+    "CHAR-HUM-003": "keep the family's small traditions"
+  },
+  "conflict": "The kite string snaps and the family heirloom disappears over the rooftops.",
+  "emotional_progression": [
+    "excitement",
+    "joy",
+    "loss and tears",
+    "comfort",
+    "surprise",
+    "shared joy"
+  ],
+  "ending": "The neighbour who found the kite is invited to fly it with them tomorrow.",
+  "scenes": [
+    {
+      "scene_id": "S01",
+      "heading": "EXT. FERNMOOR PARK - DAY",
+      "location": "park",
+      "mood": "warm",
+      "purpose": "Set up the bond between Amara and Grandpa and the heirloom kite.",
+      "characters": [
+        "CHAR-HUM-001",
+        "CHAR-HUM-004"
+      ],
+      "lines": [
+        {
+          "line_id": "L01",
+          "character_id": "CHAR-HUM-001",
+          "text": "Grandpa! The wind is perfect today!",
+          "emotion": "excited"
+        },
+        {
+          "line_id": "L02",
+          "character_id": "CHAR-HUM-004",
+          "text": "Then let's wake up Grandma's old dragon kite.",
+          "emotion": "happy"
+        },
+        {
+          "line_id": "L03",
+          "character_id": "CHAR-HUM-001",
+          "text": "Look how high it goes!",
+          "emotion": "laughing"
+        }
+      ]
+    },
+    {
+      "scene_id": "S02",
+      "heading": "EXT. FERNMOOR PARK - MOMENTS LATER",
+      "location": "park",
+      "mood": "sad",
+      "purpose": "The loss: the string breaks; her brother turns tears into a plan.",
+      "characters": [
+        "CHAR-HUM-001",
+        "CHAR-HUM-002"
+      ],
+      "lines": [
+        {
+          "line_id": "L04",
+          "character_id": "CHAR-HUM-001",
+          "text": "No... the string broke. It's gone!",
+          "emotion": "crying"
+        },
+        {
+          "line_id": "L05",
+          "character_id": "CHAR-HUM-002",
+          "text": "Hey, don't cry. Kites can't fly far without wind.",
+          "emotion": "worried"
+        },
+        {
+          "line_id": "L06",
+          "character_id": "CHAR-HUM-002",
+          "text": "Come on. We'll find it together.",
+          "emotion": "happy"
+        }
+      ]
+    },
+    {
+      "scene_id": "S03",
+      "heading": "EXT. MAPLE STREET - SUNSET",
+      "location": "street",
+      "mood": "joyful",
+      "purpose": "The return: the neighbour found it; kindness comes back and the circle grows.",
+      "characters": [
+        "CHAR-HUM-005",
+        "CHAR-HUM-003",
+        "CHAR-HUM-001",
+        "CHAR-HUM-002",
+        "CHAR-HUM-004"
+      ],
+      "lines": [
+        {
+          "line_id": "L07",
+          "character_id": "CHAR-HUM-005",
+          "text": "Is this little dragon looking for someone?",
+          "emotion": "happy"
+        },
+        {
+          "line_id": "L08",
+          "character_id": "CHAR-HUM-001",
+          "text": "Our kite! You found it!",
+          "emotion": "surprised"
+        },
+        {
+          "line_id": "L09",
+          "character_id": "CHAR-HUM-005",
+          "text": "It landed in my lemon tree.",
+          "emotion": "happy"
+        },
+        {
+          "line_id": "L10",
+          "character_id": "CHAR-HUM-003",
+          "text": "Good things find their way back to kind hearts.",
+          "emotion": "happy"
+        },
+        {
+          "line_id": "L11",
+          "character_id": "CHAR-HUM-004",
+          "text": "Same time tomorrow, neighbour?",
+          "emotion": "laughing"
+        }
+      ]
+    }
+  ]
+}
