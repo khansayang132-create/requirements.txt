@@ -89,3 +89,11 @@ def test_real_render_produces_verified_references(tmp_path):
     a = np.asarray(front)[..., 3]
     assert a[0, 0] == 0 and a.max() == 255                    # real transparency around a real figure
     assert len(res["files"]) == 11
+
+
+def test_narration_speaks_place_labels_naturally():
+    """Found in ep004's first caption: the set label 'Valley panorama' was read out verbatim."""
+    from cartoon_studio.generators.story import spoken_place
+    assert spoken_place("Valley panorama") == "the valley"
+    assert spoken_place("Root garden") == "the root garden"
+    assert spoken_place(None) == "the field"

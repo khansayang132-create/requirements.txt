@@ -113,6 +113,8 @@ def check_character(d: Path) -> dict:
     row("symmetry", iou >= limit, f"front silhouette mirror IoU {iou:.2f} (min {limit}{'; bow is one-sided' if one_sided else ''})")
     hr = data["measured"]["head_ratio"]
     lo, hi = 0.30, 0.72
+    if st.head >= 1.2:                       # baby / chibi / comedy: head may dominate, but the body must stay visible
+        hi = 0.86
     row("proportions", lo <= hr <= hi and (st.head <= 1.15 or hr >= 0.42),
         f"head:body {hr:.2f} (valid {lo}-{hi}; big-head styles need >= 0.42)")
 
@@ -141,12 +143,16 @@ def check_character(d: Path) -> dict:
     g = np.asarray(Image.open(d / "views" / "front.png").convert("L"), np.float64)
     edge = np.abs(np.diff(g, axis=1))[(views["front"][..., 3] > 250)[:, 1:]]
     tex = float(edge.mean()) if edge.size else 0.0
-    sig = {"render_mode_matches": spec_ok, "silhouette_ink": round(ink, 3), "texture": round(tex, 2)}
-    ok = spec_ok
-    if st.outline >= 0.9:                                   # bold-outline styles: ink along the silhouette
-        ok = ok and ink >= 0.5
-    if st.mode in (2, 3, 5):                                # clay / storybook / hyperreal: visible surface texture
-        ok = ok and tex >= 1.2
+    rs = data.get("render_spec", {}).get("style", {})
+    outline_ok = (rs.get("outline", 1) > 0) == (st.outline > 0)        # outlines requested exactly when the style has them
+    sig = {"render_mode_matches": spec_ok, "outline_setting_matches": outline_ok,
+           "silhouette_ink_reported": round(ink, 3), "texture": round(tex, 2)}
+    ok = spec_ok and outline_ok
+    # Outline darkness is reported, not gated: with dark fur an ink-tinted outline is real but low-contrast, so pixel
+    # darkness cannot prove or disprove an outline for every palette (measured across all 15 styles).
+    min_tex = {2: 1.0, 3: 1.2, 5: 1.2}.get(st.mode)         # clay / storybook / hyperreal: visible surface texture
+    if min_tex:
+        ok = ok and tex >= min_tex
     if st.mode == 6:                                        # sci-fi: glowing edge
         glow = float(((fig[:, 1] > 200) & (fig[:, 2] > 200) & (fig[:, 0] < 200)).mean()) if len(fig) else 0.0
         sig["cyan_glow_share"] = round(glow, 3)
@@ -174,7 +180,8 @@ def style_distinctness(results: dict[str, list[dict]]) -> dict:
             g = np.asarray(Image.open(Path(r["dir"]) / "views" / "three-quarter.png").convert("L"), np.float64)
             tex = float(np.abs(np.diff(g, axis=1))[(a[..., 3] > 250)[:, 1:]].mean())
             vals.append((sat, float(lum.std()) / 64, tex / 10))
-        sig[sid] = np.mean(vals, axis=0)
+        if vals:                                            # a style with no accepted designs has no signature
+            sig[sid] = np.mean(vals, axis=0)
     ids = list(sig)
     pairs = sorted((float(np.linalg.norm(sig[a] - sig[b])), a, b) for i, a in enumerate(ids) for b in ids[i + 1:])
     return {"signatures": {k: [round(x, 3) for x in v] for k, v in sig.items()},

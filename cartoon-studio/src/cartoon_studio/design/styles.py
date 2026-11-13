@@ -103,7 +103,7 @@ STYLES: dict[str, Style] = {s.id: s for s in [
           env="meadow", grade="bright", backdrop=("#FFF9E6", "#FFE8B8"),
           traits=("hyper", "snack-obsessed", "bossy", "clumsy", "sparkly"),
           summary="Head bigger than the body, stubby limbs, bold outlines and candy colours."),
-    Style("08-clay", "Clay Animation", 2, head=1.02, body=(1.04, 0.98, 1.04), eye=0.9, outline=0, noise=0.55, noise_scale=0.035,
+    Style("08-clay", "Clay Animation", 2, head=1.02, body=(1.04, 0.98, 1.04), eye=0.9, outline=0, noise=0.8, noise_scale=0.05,
           lights={"lit": [1.0, 0.96, 0.9], "shade1": [0.72, 0.66, 0.62], "shade2": [0.48, 0.42, 0.42], "spec": 0.05},
           palettes=(("#D98E6A", "#F2D0B5", "#3E6990"), ("#9DB17C", "#E3EBD3", "#C1403D"), ("#E6B655", "#F7E6BF", "#5B4E77"),
                     ("#B07D62", "#E8D2C2", "#4E8098"), ("#7BA5A3", "#D8E8E6", "#E07A5F")),

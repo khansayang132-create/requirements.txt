@@ -23,12 +23,24 @@ MUSIC = {"hook": "bright motif, light", "introduction": "theme, bouncy", "develo
 LIGHT = {"night": "cool moonlight, soft rim", "rainy": "overcast, soft", "bedroom": "warm lamp", "playroom": "warm daylight"}
 
 
+DESCRIPTOR_WORDS = {"panorama", "view", "vista", "area", "set", "backdrop", "scene"}
+
+
+def spoken_place(name: str | None, default: str = "the field") -> str:
+    """A place label as narration says it: 'Valley panorama' -> 'the valley', 'Root garden' -> 'the root garden'.
+    Universe files hold set labels, not proper names, so they are never read out verbatim."""
+    if not name:
+        return default
+    words = [w for w in name.split() if w.lower() not in DESCRIPTOR_WORDS] or name.split()
+    return "the " + " ".join(w.lower() for w in words)
+
+
 def _plot_lost_kite(rng, u, b, c):
     a, f, w = c[0], c[1], c[4]
     p = u.places
     home = next(e for e in ("hilltop", "meadow", "garden") if e in p) if any(e in p for e in ("hilltop", "meadow", "garden")) else "meadow"
     b.go(home).enter(a.character_id)
-    b.say("narrator", f"Whoosh! The wind is strong in {p.get(home, 'the field')} today.", title=f"{a.name} and the Runaway Kite", sfx=["whoosh"])
+    b.say("narrator", f"Whoosh! The wind is strong in {spoken_place(p.get(home))} today.", title=f"{a.name} and the Runaway Kite", sfx=["whoosh"])
     b.put("kite", layout="sky", color="red")
     b.say(a.character_id, "My red kite! It is flying away!", act={a.character_id: "look_up"})
     b.enter(f.character_id)
