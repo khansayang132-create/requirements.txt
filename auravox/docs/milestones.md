@@ -20,7 +20,7 @@ blocked in this sandbox (they are reachable from GitHub Actions).
 | A | Environment inspection and capability report | PASS | `data/reports/environment.md` (OS, Python, CPU cores, free memory, GPU: none detected, free disk, ffmpeg). Network reachability was measured by hand (curl) and is recorded at the top of this file, not in the report. |
 | B | Voice technology discovery and registry | PASS | `src/auravox/registry.py`: 17 technologies with source, licence, weights, hardware, limits; `data/reports/technology-registry.md`. Discovery recommends; it never auto-installs. |
 | C | Skills installer and validator | PASS (Claude Code) / NOT TESTED (Codex host) | `src/auravox/skills.py`: dangerous-operation scan, front-matter validation, provenance (git commit, remote, dirty), backup, refusal without `--replace`, rollback. Real install of `humanverse-studio` into a fresh project; `claude -p` listed it (invocation PASS). Codex files are written and rolled back in tests; the Codex CLI is not installed here, so its invocation is NOT TESTED. |
-| D | At least one verified local voice engine | PASS (eSpeak NG) / BLOCKED here (Piper) | eSpeak NG via its C API with phoneme events. Piper code and model manager are complete and tested against a local HTTP catalogue (MD5, size, tamper, resume, approval threshold); a real Piper voice download runs in CI (`tools/ci_piper.py`) because huggingface.co is blocked here. |
+| D | At least one verified local voice engine | PASS (eSpeak NG here; Piper in CI) | eSpeak NG via its C API with phoneme events. Piper: BLOCKED in this sandbox (huggingface.co unreachable), PASS on GitHub Actions run 43383376795 (`tools/ci_piper.py`): `en_US-lessac-low` downloaded (63,206,176 bytes, MD5 + size checked, sha256 f7d01dde…f375), engine health PASS, 2.48 s of speech, no defects, 48 engine phoneme alignments, lip-sync validation PASS (correlation 0.358, offsets -0.042 / +0.23 s). Licence recorded from the model card (Lessac Blizzard 2013 licence); not marked commercially usable. The first CI run found two real faults, both fixed: no alignments (needs `piper-tts[alignment]`) and 0 dBFS clipping (now -1 dBFS peak). |
 | E | Unified voice generation API | PASS | `engines/base.py`: generate, generate_dialogue, analyze, align, validate, export; `convert` raises `Unsupported` (no engine here does speech-to-speech; not claimed). Router test: no silent substitution. |
 | F | Character voice factory | PASS | `voices.py`: brief from a HUMANVERSE character, auditions, cast selection by F0 separation, approval with who/when/profile hash/model version; tampering raises `VoiceLocked`; `redesign` needs a person and a reason. |
 | G | Multi-speaker dialogue production | PASS | `production.py`: screenplay → job graph; per line 3 takes + corrective regeneration, best take selected, rejected kept; speaker-substitution guard (voice id + profile hash + file hash) tested. |
@@ -38,7 +38,7 @@ NOT TESTED (CLI not installed here); the TOML files parse and contain exactly na
 
 ## Known limitations
 
-- Piper voices: BLOCKED in this sandbox (network); verified only where CI can download them.
+- Piper voices: BLOCKED in this sandbox (network); verified on GitHub Actions, where the model can be downloaded.
 - eSpeak NG sounds robotic; it is the honest baseline, not a production-grade voice.
 - No voice cloning or speech-to-speech engine is installed; none is claimed.
 - Perceptual quality (naturalness, acting, lip-sync as watched) is NOT TESTED by any automated check here.
