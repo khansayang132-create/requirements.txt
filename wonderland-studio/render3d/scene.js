@@ -49,15 +49,69 @@ const UO = {
 };
 
 const TOON_VS = `
-varying vec3 vN; varying vec3 vP;
-void main(){ vec4 mv = modelViewMatrix * vec4(position,1.0); vP = mv.xyz; vN = normalMatrix * normal; gl_Position = projectionMatrix * mv; }`;
+varying vec3 vN; varying vec3 vP; varying vec3 vO;
+void main(){ vec4 mv = modelViewMatrix * vec4(position,1.0); vP = mv.xyz; vO = (modelMatrix * vec4(position,1.0)).xyz;
+  vN = normalMatrix * normal; gl_Position = projectionMatrix * mv; }`;
 const TOON_FS = `
 uniform vec3 uColor; uniform float uGloss; uniform float uRimGain;
 uniform vec3 uKeyDir, uLit, uShade1, uShade2, uSss, uRimA, uRimADir, uRimB, uRimBDir; uniform float uSpec; uniform vec2 uBands;
-varying vec3 vN; varying vec3 vP;
+uniform float uMode, uNoise, uNoiseScale, uGlow; uniform vec3 uGlowCol;
+varying vec3 vN; varying vec3 vP; varying vec3 vO;
+float h3(vec3 p){ return fract(sin(dot(p, vec3(127.1, 311.7, 74.7))) * 43758.5453); }
+float vnoise(vec3 p){ vec3 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f);
+  return mix(mix(mix(h3(i), h3(i + vec3(1,0,0)), f.x), mix(h3(i + vec3(0,1,0)), h3(i + vec3(1,1,0)), f.x), f.y),
+             mix(mix(h3(i + vec3(0,0,1)), h3(i + vec3(1,0,1)), f.x), mix(h3(i + vec3(0,1,1)), h3(i + vec3(1,1,1)), f.x), f.y), f.z); }
+float fbm(vec3 p){ return 0.5 * vnoise(p) + 0.3 * vnoise(p * 2.03) + 0.2 * vnoise(p * 4.1); }
+// Style modes: 0 toon (default), 1 soft 3D, 2 clay, 3 storybook flat, 4 anime cel, 5 hyperreal, 6 sci-fi glow.
+vec3 styled(vec3 N, vec3 V, float ndl){
+  float lam = clamp(ndl * 0.5 + 0.5, 0.0, 1.0);
+  if (uMode > 5.5) {                                   // sci-fi: soft dark body, glowing fresnel edge
+    vec3 c = uColor * mix(uShade2 * 0.7, uLit, smoothstep(0.1, 0.95, lam));
+    float fr = pow(1.0 - max(dot(N, V), 0.0), 2.5);
+    return c + uGlowCol * fr * uGlow + uGlowCol * 0.08 * uGlow;
+  }
+  if (uMode > 4.5) {                                   // hyperreal: soft wrap light, micro texture, sheen
+    float n = fbm(vO * uNoiseScale);
+    vec3 c = uColor * (0.86 + 0.28 * n) * mix(uShade2, uLit, smoothstep(0.05, 1.0, lam));
+    c += uColor * uSss * 1.6 * exp(-pow((ndl + 0.1) / 0.35, 2.0));
+    float fr = pow(1.0 - max(dot(N, V), 0.0), 3.0);
+    return c + vec3(1.0) * 0.18 * fr;
+  }
+  if (uMode > 3.5) {                                   // anime cel: one hard terminator, crisp light
+    float b = step(0.02, ndl);
+    return uColor * mix(uShade1 * 0.92, uLit, b);
+  }
+  if (uMode > 2.5) {                                   // storybook: two painted tones and paper grain
+    float b = smoothstep(-0.12, 0.0, ndl);
+    float g = fbm(vO * uNoiseScale);
+    return uColor * mix(uShade1, uLit, b) * (0.93 + 0.12 * g);
+  }
+  if (uMode > 1.5) {                                   // clay: matte, soft, thumb-pressed surface
+    float n = fbm(vO * uNoiseScale);
+    vec3 Np = normalize(N + uNoise * (vec3(n, fbm(vO * uNoiseScale + 7.3), fbm(vO * uNoiseScale + 3.1)) - 0.5));
+    float l = clamp(dot(Np, uKeyDir) * 0.5 + 0.5, 0.0, 1.0);
+    return uColor * mix(uShade2 * 0.95, uLit, smoothstep(0.15, 0.95, l)) * (0.95 + 0.08 * n);
+  }
+  vec3 c = uColor * mix(uShade2, uLit, smoothstep(0.08, 1.0, lam));     // soft 3D
+  return c + uColor * uSss * exp(-pow((ndl + 0.05) / 0.3, 2.0));
+}
 void main(){
   vec3 N = normalize(vN); vec3 V = normalize(-vP);
   float ndl = dot(N, uKeyDir);
+  if (uMode > 0.5) {
+    vec3 c = styled(N, V, ndl);
+    if (uMode < 2.5 || (uMode > 4.5 && uMode < 5.5)) {   // soft/hyperreal: gentle rim + glossy highlight
+      float fr = pow(1.0 - max(dot(N, V), 0.0), 2.0);
+      c = c + (vec3(1.0) - c) * uRimA * 0.5 * smoothstep(0.15, 0.6, fr * smoothstep(-0.1, 0.6, dot(N, uRimADir))) * uRimGain;
+      float nh = max(dot(N, normalize(uKeyDir + V)), 0.0);
+      c = c + (vec3(1.0) - c) * uSpec * pow(nh, 60.0) * 1.3;
+    } else if (uMode > 3.5 && uMode < 4.5) {             // anime: small hard highlight
+      float nh = dot(N, normalize(uKeyDir + V));
+      c = c + (vec3(1.0) - c) * 0.55 * step(uGloss, nh);
+    }
+    gl_FragColor = vec4(c, 1.0);
+    return;
+  }
   float w = fwidth(ndl) * 1.5 + 0.03;
   float b1 = smoothstep(uBands.x - w, uBands.x + w, ndl);
   float b2 = smoothstep(uBands.y - w, uBands.y + w, ndl);
@@ -99,10 +153,18 @@ const mixc = (a, b, t) => { a = rgb(a); b = rgb(b); return [a[0] + (b[0] - a[0])
 const lighten = (c, t) => mixc(c, [1, 1, 1], t);
 const darken = (c, t) => mixc(c, [30 / 255, 25 / 255, 50 / 255], t);
 
+// Per-character art style. Set while a character is built; null = the original toon look.
+let STY = null;
+function styleUniforms(st) {
+  return { uMode: { value: st.mode || 0 }, uNoise: { value: st.noise ?? 0.35 }, uNoiseScale: { value: st.noise_scale ?? 0.05 },
+           uGlow: { value: st.glow ?? 0 }, uGlowCol: { value: new THREE.Vector3(...rgb(st.glow_color || '#40E0FF')) } };
+}
+const NO_STYLE = styleUniforms({});
 function toonMat(color, gloss = 0.986, rimGain = 1.0) {
   return new THREE.ShaderMaterial({
     vertexShader: TOON_VS, fragmentShader: TOON_FS,
-    uniforms: { ...U, uColor: { value: new THREE.Vector3(...rgb(color)) }, uGloss: { value: gloss }, uRimGain: { value: rimGain } },
+    uniforms: { ...U, ...(STY ? STY.u : NO_STYLE), uColor: { value: new THREE.Vector3(...rgb(color)) }, uGloss: { value: gloss },
+                uRimGain: { value: rimGain } },
   });
 }
 function flatMat(color, unlit = 0.0) {
@@ -127,8 +189,8 @@ function part(parent, geom, color, o = {}) {
   if (o.scale) m.scale.set(...(Array.isArray(o.scale) ? o.scale : [o.scale, o.scale, o.scale]));
   if (o.rot) m.rotation.set(o.rot[0] * D2R, o.rot[1] * D2R, o.rot[2] * D2R);
   m.castShadow = o.cast === true;          // only the big forms cast (cheap shadow pass)
-  if (o.outline !== false && !o.flat) {
-    const h = new THREE.Mesh(geom, hullMat(o.outlineColor || color, o.outlineScale || 1));
+  if (o.outline !== false && !o.flat && !(STY && STY.outline === 0)) {
+    const h = new THREE.Mesh(geom, hullMat(o.outlineColor || color, (o.outlineScale || 1) * (STY ? (STY.outline ?? 1) : 1)));
     h.castShadow = false;
     m.add(h);
     m.userData.hull = h;
@@ -178,6 +240,11 @@ function arc(parent, half, sag, radius, color, z = 0) {
 
 // ------------------------------------------------------------------ character -------
 function buildCharacter(spec) {
+  STY = spec.style ? { ...spec.style, u: styleUniforms(spec.style) } : null;
+  try { return buildStyled(spec); } finally { STY = null; }
+}
+
+function buildStyled(spec) {
   const sp = spec.species, col = spec.colors;
   const body = rgb(col.body), belly = rgb(col.belly), inner = rgb(col.inner_ear), accent = rgb(col.accent), nose = rgb(col.nose);
   const accessory = (spec.clothing || {}).accessory;
@@ -456,8 +523,16 @@ function buildCharacter(spec) {
   }
 
   // ---- anchors
-  R.loc = { headTop: group(Hd, [0, 450, 0]), mouth: group(Hd, [0, mouthY, HEAD.c[2] + HEAD.r[2]]), feet: group(R.root, [0, 0, 0]) };
+  R.loc = { headTop: group(Hd, [0, 450, 0]), mouth: group(Hd, [0, mouthY, HEAD.c[2] + HEAD.r[2]]), feet: group(R.root, [0, 0, 0]),
+            chin: group(Hd, [0, HEAD.c[1] - HEAD.r[1], 0]) };
   R.root.traverse(o => { o.frustumCulled = false; });
+  // style proportions: body (uniform or [x, y, z]) scales the figure; head and eyes scale on top of it
+  const st = spec.style || {};
+  const bs = Array.isArray(st.body) ? st.body : [st.body || 1, st.body || 1, st.body || 1];
+  R.yawN.scale.set(...bs);
+  const hk = st.head || 1;
+  R.headPivot.scale.set(hk / bs[0], hk / bs[1], hk / bs[2]);
+  R.eyeK = st.eye || 1;
   return R;
 }
 
@@ -534,7 +609,7 @@ function poseCharacter(R, a) {
   const asleep = mood === 'asleep', shut = asleep || (a.blink || 0) >= 0.5;
   const grow = mood === 'wow' ? 1.14 : 1.0;
   for (const e of R.eyes) {
-    e.sizeN.scale.set(grow, grow, 1);
+    e.sizeN.scale.set(grow * (R.eyeK || 1), grow * (R.eyeK || 1), 1);
     e.open.visible = !shut;
     e.closed.visible = shut;
     e.lid.visible = !shut && mood === 'sleepy';
@@ -727,6 +802,7 @@ export function renderFrame(actors, opts) {
       hand_r: right ? hp : hn, hand_l: right ? hn : hp,
       head_top: toDesign(R.loc.headTop.getWorldPosition(new THREE.Vector3())),
       mouth: toDesign(R.loc.mouth.getWorldPosition(new THREE.Vector3())),
+      chin: toDesign(R.loc.chin.getWorldPosition(new THREE.Vector3())),
       feet: [a.x, a.y - (a.lift || 0)],
     };
   }

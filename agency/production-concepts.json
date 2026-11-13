@@ -1,0 +1,9 @@
+{
+  "_comment": "Owner-editable. Only concepts with approved=true are produced, oldest first; set approved=false to stop one. These are Cartoon Studio's built-in plots (each passes the studio's child-safety review in generators/story.py). Producing never publishes.",
+  "concepts": [
+    {"universe": "mosslight-valley", "plot": "seed-glow", "seed": "1", "approved": true, "note": "produced as ep001"},
+    {"universe": "mosslight-valley", "plot": "rainy-picnic", "seed": "1", "approved": true, "note": "produced as ep002 (ep003 = editing test re-run)"},
+    {"universe": "mosslight-valley", "plot": "runaway-kite", "seed": "1", "approved": true, "note": "built-in plot"},
+    {"universe": "mosslight-valley", "plot": "nervous-drum", "seed": "1", "approved": true, "note": "built-in plot"}
+  ]
+}

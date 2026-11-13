@@ -20,7 +20,7 @@ import getpass
 import json
 from pathlib import Path
 
-from . import departments, planner
+from . import autoproduce, departments, planner
 from . import orchestrator as orch
 from .dashboard import serve
 from .healing import Healer
@@ -77,7 +77,7 @@ def main(argv: list[str] | None = None) -> int:
         if name == "resume":
             p.add_argument("--concurrency", type=int, default=4)
     sub.add_parser("approve").add_argument("task")
-    for name in ("missions", "roles", "tools", "playbooks", "agents", "heal", "diagnose"):
+    for name in ("missions", "roles", "tools", "playbooks", "agents", "heal", "diagnose", "produce-next", "productions"):
         sub.add_parser(name)
     d = sub.add_parser("dashboard")
     d.add_argument("--host", default="127.0.0.1")
@@ -88,6 +88,7 @@ def main(argv: list[str] | None = None) -> int:
     w.add_argument("--every", type=float, default=3600, help="seconds between scheduled runs")
     w.add_argument("--poll", type=float, default=30, help="seconds between checks for resumable missions")
     w.add_argument("--once", action="store_true", help="one iteration, then exit")
+    w.add_argument("--autoproduce", action="store_true", help="when idle, produce the next approved, unproduced episode")
     args = ap.parse_args(argv)
 
     _load_env(args.root)
@@ -131,6 +132,18 @@ def _stateful(args, store: Store, toolbox: Toolbox, who: str, prices: dict) -> i
         for row in departments.status(store):
             tool = f"{row['role']}/{row['tool']}" if row["tool"] else (row["note"] or "built-in")
             print(f"{row['department']:11} {row['state']:15} {row['agent']:32} {tool}")
+        return 0
+    if args.cmd == "produce-next":
+        mid = autoproduce.plan_next(store, toolbox)
+        if not mid:
+            print(json.dumps(autoproduce.status(store)["events"][:1], indent=2, default=str))
+            return 0
+        state = orch.Orchestrator(store, toolbox).run(mid)
+        autoproduce.sync(store)
+        print(markdown(store, mid, prices=prices))
+        return EXIT.get(state, 2)
+    if args.cmd == "productions":
+        print(json.dumps(autoproduce.status(store), indent=2, default=str))
         return 0
     if args.cmd == "heal":
         print(json.dumps(Healer(store).heal(), indent=2, default=str))
@@ -190,7 +203,7 @@ def _stateful(args, store: Store, toolbox: Toolbox, who: str, prices: dict) -> i
         print(json.dumps({"requeued": orch.retry(store, args.mission, who)}))
         return 0
     if args.cmd == "worker":
-        wk = Worker(store, toolbox, args.playbook, args.every)
+        wk = Worker(store, toolbox, args.playbook, args.every, autoproduce=args.autoproduce)
         if args.once:
             for mid, state in wk.tick():
                 print(f"{mid}: {state}")

@@ -271,3 +271,36 @@ def test_worker_finishes_a_job_then_claims_the_next_eligible_one(repo, monkeypat
     ran = Worker(store, tb, None, 3600, idle=0).tick()
     assert ran == [(first, "COMPLETED"), (second, "COMPLETED")]
     assert Worker(store, tb, None, 3600, idle=0).tick() == []    # nothing left: no duplicate processing
+
+
+def test_autoproduce_plans_only_approved_unproduced_episodes_and_never_duplicates(repo, monkeypatch, tmp_path):
+    from agency import autoproduce
+    store, tb = make(repo)
+    concepts = tmp_path / "c.json"
+    concepts.write_text(json.dumps({"concepts": [
+        {"universe": "u", "plot": "kite", "approved": True},
+        {"universe": "u", "plot": "secret", "approved": False},
+        {"universe": "u", "plot": "drum", "approved": True}]}))
+    m1 = autoproduce.plan_next(store, tb, concepts)
+    assert json.loads(store.mission(m1)["params"])["episode"] == "u-kite-1"
+    assert autoproduce.plan_next(store, tb, concepts) is None            # one at a time: a mission is still queued
+    orch.cancel(store, m1, "test")
+    store.db.execute("UPDATE productions SET state='COMPLETED' WHERE episode='u-kite-1'")
+    m2 = autoproduce.plan_next(store, tb, concepts)
+    assert json.loads(store.mission(m2)["params"])["episode"] == "u-drum-1"   # kite not repeated, secret never planned
+    orch.cancel(store, m2, "test")
+    store.db.execute("UPDATE productions SET state='COMPLETED'")
+    assert autoproduce.plan_next(store, tb, concepts) is None
+    assert autoproduce.status(store)["events"][0]["kind"] == "idle"       # waits for the owner; invents nothing
+    jobs = [r["job"] for r in store.db.execute("SELECT job FROM productions")]
+    assert len(jobs) == len(set(jobs)) == 2
+
+
+def test_autoproduce_disk_guard(repo, monkeypatch, tmp_path):
+    from agency import autoproduce
+    store, tb = make(repo)
+    concepts = tmp_path / "c.json"
+    concepts.write_text(json.dumps({"concepts": [{"universe": "u", "plot": "kite", "approved": True}]}))
+    monkeypatch.setattr(autoproduce, "MIN_FREE_GB", 10 ** 9)
+    assert autoproduce.plan_next(store, tb, concepts) is None
+    assert autoproduce.status(store)["events"][0]["kind"] == "blocked"

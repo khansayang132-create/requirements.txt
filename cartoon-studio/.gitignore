@@ -7,3 +7,7 @@ voices/
 **/__pycache__/
 *.egg-info/
 rendered-videos/*/final.mp4
+# design library: full-resolution renders are regenerable (`cartoon-studio design build`); commit reports + previews
+design-library/**/*.png
+design-library/rejected/
+!design-library/previews/

@@ -244,7 +244,10 @@ class Session:
 
 
 def _spec_for_js(spec: dict) -> dict:
-    return {"id": spec["id"], "species": spec["species"], "colors": spec["colors"], "clothing": spec.get("clothing", {})}
+    out = {"id": spec["id"], "species": spec["species"], "colors": spec["colors"], "clothing": spec.get("clothing", {})}
+    if spec.get("style"):                     # art style (cartoon-studio design engine); absent = original toon look
+        out["style"] = spec["style"]
+    return out
 
 
 # A worker keeps one session for its whole life (shots of one episode share the cast).

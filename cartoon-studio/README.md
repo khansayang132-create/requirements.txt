@@ -80,3 +80,29 @@ In this repository the project lives at `cartoon-studio/`; Claude Code picks up 
 Run `cartoon-studio integration-audit` to inspect local Codex/Claude CLI availability and repository integration readiness. The audit is read-only: it does not read credentials, call external models, spend credits, or mutate host settings. Use `--json` for machine-readable evidence.
 
 The Codex Dev Workflows and Engineering Guardrails repository contracts are included under `AGENTS.md`, `.codex/`, and `documentation/integrations/`. Voice Notify requires a supported macOS/Windows Codex host and manual hook trust. Empire LLM requires its separately installed plugin, secure local keyring, and explicit route/budget authorization.
+
+## Multi-style design engine (15 art styles)
+
+`cartoon-studio design …` generates original casts in 15 distinct styles and renders every reference for real with the
+studio's 3D renderer (Three.js in headless Chromium; no GPU, no paid service). Code: `src/cartoon_studio/design/`.
+
+| Command | What it makes |
+|---|---|
+| `design styles` | The 15 styles and what each changes |
+| `design build [--styles a,b] [--per-style 5]` | Per style: 5 original characters, each with transparent front / three-quarter / side / back PNGs, turnaround, expression sheet, proportions sheet (head-top, chin and ground lines from the rig), palette + clothing card, pose sheet and a 3000×2200 production character sheet; plus the style's environment concept and cast lineup. QC rejects failures, keeps them in `design-library/rejected/` and regenerates (max 3 tries per slot). |
+| `design compare --character ID --styles a,b,c,d,e` | The same character (identity locked: species, colours, clothing, name) in several styles side by side |
+| `design studio` | Web interface on 127.0.0.1:8770: style, species, age, body proportions, fur/belly/clothing colours, clothing piece, expression, animation pose, camera angle, lighting and environment selectors; Render and Compare-5-styles are real renders |
+
+How styles differ (all data in `design/styles.py`): seven shading models in the renderer's toon shader (toon bands,
+soft 3D, clay with a procedural thumb-pressed surface, two-tone storybook with paper grain, hard anime cel, hyperreal
+micro-texture with sheen, sci-fi glowing fresnel), per-style head/body/eye proportions on the rig, outline thickness,
+lighting, palettes, environment and post grade. Studio names in style titles describe a general look only.
+
+QC (`design/qc.py`, all measured on the PNGs): files readable and high-resolution; real transparency; figure present,
+not cut off, no black/garbage regions; turnaround views at one scale; front vs three-quarter colour histogram
+correlation; mirror symmetry (bows are one-sided by design); head:body ratio from the rig's anchors; spec colours present
+(CIELAB distance); style actually applied (render mode recorded, outlines on bold-outline styles, texture on textured
+styles, glow on sci-fi). Not measured by machine: appeal and acting; the sheets are made for a person to review.
+
+Species are the studio's five rigs (bunny, cat, elephant, bear, duck). Human characters come from HUMANVERSE (Blender)
+and are not part of this engine.

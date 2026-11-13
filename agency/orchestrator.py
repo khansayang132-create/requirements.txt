@@ -144,7 +144,7 @@ PLAYBOOKS: dict[str, Playbook] = {
     )),
     "cartoon": Playbook("Cartoon episode {episode} as job {job}", (
         Step("episode", "Cartoon Studio pipeline (idea to final MP4) with studio QC", "video", "cartoon_episode",
-             {"job": "{job}", "universe": "{universe}", "episode": "{episode}"}),
+             {"job": "{job}", "universe": "{universe}", "episode": "{episode}", "plot": "{plot}", "seed": "{seed}"}),
         Step("verify", "Verify the episode MP4 (streams, duration, full decode)", "qa", "media_verify",
              {"need_audio": True}, ("episode",), {"path": ("episode", "media")}),
     )),
@@ -153,7 +153,8 @@ PLAYBOOKS: dict[str, Playbook] = {
         for p in ("auravox", "humanverse", "cartoon-studio", "digital-human-factory"))),
 }
 
-DEFAULT_PARAMS = {"patch": {"role": "fullstack"}, "digital-human": {"res": "960x540", "samples": "4"}}
+DEFAULT_PARAMS = {"patch": {"role": "fullstack"}, "digital-human": {"res": "960x540", "samples": "4"},
+                  "cartoon": {"plot": "", "seed": "1"}}
 
 
 def dynamic_playbook(name: str, toolbox: Toolbox) -> Playbook | None:

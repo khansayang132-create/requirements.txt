@@ -359,11 +359,20 @@ def build(tb) -> list[Tool]:
         return ToolResult("PASS" if rep["status"] == "PASS" else "FAIL", f"{rep['frames']} frames, {rep['duration_s']:.2f}s, "
                           f"checks {rep['checks']}", log[-2000:], code, {"media": rep["mp4"], "report": str(rep_p)} | rep)
 
-    def cartoon_episode(job: str, universe: str, episode: str) -> ToolResult:
+    def cartoon_episode(job: str, universe: str, episode: str, plot: str = "", seed: str = "1") -> ToolResult:
         cli = _venv(tb, "cartoon-studio", "cartoon-studio")
         if not Path(cli).exists():
             return ToolResult("BLOCKED", "cartoon-studio/.venv is missing")
         cwd = tb.root / "cartoon-studio"
+        if not (cwd / "stories" / f"{episode}.json").is_file():
+            if not plot:
+                return ToolResult("FAIL", f"no story {episode} and no approved plot to write it from")
+            code, out, blocked = run([cli, "write-episode", "--universe", universe, "--plot", plot, "--seed", seed], cwd=cwd,
+                                     timeout=300)
+            if blocked:
+                return blocked
+            if code != 0 or not (cwd / "stories" / f"{episode}.json").is_file():
+                return ToolResult("FAIL", f"write-episode exit {code}; story {episode} not written", out[-2000:], code)
         code, out, blocked = run([cli, "run", "--job", job, "--universe", universe, "--episode", episode], cwd=cwd,
                                  timeout=3 * 3600)
         if blocked:
@@ -372,8 +381,67 @@ def build(tb) -> list[Tool]:
         if code != 0 or not final.is_file():
             return ToolResult("FAIL", f"cartoon-studio run exit {code}; no final.mp4", out[-3000:], code)
         code2, qc, _ = run([cli, "qc", "--video", final], cwd=cwd, timeout=600)
-        return ToolResult("PASS" if code2 == 0 else "FAIL", f"episode {job}: final.mp4 written, studio QC exit {code2}",
-                          (out[-1500:] + "\n--- qc ---\n" + qc[-1500:]), code2, {"media": str(final), "job": job})
+        if code2 != 0:
+            return ToolResult("FAIL", f"episode {job}: studio QC exit {code2}",
+                              out[-1500:] + "\n--- qc ---\n" + qc[-1500:], code2, {"media": str(final), "job": job})
+        pkg = package_episode(job, cwd)
+        return ToolResult("PASS", f"episode {job}: studio QC passed; package {pkg['dir']}", qc[-1500:], code2,
+                          {"media": pkg["final"], "job": job, "package": pkg["dir"], "quality": pkg["quality"],
+                           "backup": pkg.get("backup")})
+
+    def package_episode(job: str, studio: Path) -> dict:
+        """The delivery folder: script.md, storyboard/, assets/, audio/, subtitles/, project/, preview.mp4, final.mp4,
+        quality_report.json, production_log.json. An existing final that differs is backed up, never overwritten."""
+        state = json.loads((studio / "jobs" / job / "state.json").read_text())
+        d = tb.root / OUT / "episodes" / job
+        for sub in ("storyboard", "assets", "audio", "subtitles", "project"):
+            (d / sub).mkdir(parents=True, exist_ok=True)
+        story_p = studio / "stories" / f"{state['episode_id']}.json"
+        story = json.loads(story_p.read_text())
+        lines = [f"# {story['title']}", "", f"*{story.get('logline', '')}*", "", f"Moral: {story.get('moral', '')}", ""]
+        for sc in story["scenes"]:
+            dlg = sc.get("dialogue") or {}
+            lines += [f"## Scene {sc['number']} ({sc['act']}) - {sc['location']}",
+                      f"Camera: {sc['camera_angle']}, {sc['camera_movement']}. Transition: {sc['transition']}.",
+                      f"**{dlg.get('speaker', '')}:** {dlg.get('text', '')}", ""]
+        (d / "script.md").write_text("\n".join(lines))
+
+        def cp(src, dst_dir):
+            src = Path(src)
+            if src.is_file():
+                shutil.copy2(src, d / dst_dir / src.name)
+        cp(studio / "storyboards" / f"{state['episode_id']}.json", "storyboard")
+        rv = studio / "rendered-videos" / job
+        cp(rv / "sheet.png", "storyboard")
+        for f in (studio / "scenes" / job / "backgrounds").glob("*.png"):
+            cp(f, "assets")
+        cp(rv / "cover.png", "assets")
+        cp(studio / "scenes" / job / "sound.wav", "audio")
+        cp(studio / "sound-effects" / f"{job}-foley.json", "audio")
+        cp(rv / "final.srt", "subtitles")
+        for f in ("state.json", "production_report.json"):
+            cp(studio / "jobs" / job / f, "project")
+        cp(studio / "scenes" / job / "storyboard.json", "project")
+        final, backup = d / "final.mp4", None
+        src = rv / "final.mp4"
+        if final.exists() and final.read_bytes() != src.read_bytes():
+            backup = d / f"final.backup-{int(time.time())}.mp4"
+            final.rename(backup)
+        shutil.copy2(src, final)
+        run(["ffmpeg", "-v", "error", "-y", "-i", final, "-vf", "scale=540:-2", "-c:v", "libx264", "-crf", "30",
+             "-c:a", "aac", "-b:a", "96k", d / "preview.mp4"], timeout=600)
+        sqc = json.loads((rv / "qc_report.json").read_text())
+        checks = sqc.get("checks", {})
+        passed = sum(1 for v in checks.values() if (v.get("status") if isinstance(v, dict) else v) == "PASS")
+        ok, probe = probe_media(tb, str(final), True)
+        quality = {"studio_checks_passed": passed, "studio_checks_total": len(checks), "overlord_probe": "PASS" if ok else "FAIL",
+                   "score_meaning": "share of the studio's technical QC checks that passed; it does not rate appeal or "
+                                    "storytelling (human review)"}
+        (d / "quality_report.json").write_text(json.dumps({"studio_qc": sqc, "overlord_probe": probe, "quality": quality,
+                                                           "at": time.time()}, indent=2, default=str))
+        (d / "production_log.json").write_text(json.dumps({"job": job, "episode": state["episode_id"],
+                                                           "steps": state["steps"], "errors": state.get("errors", [])}, indent=2))
+        return {"dir": str(d), "final": str(final), "quality": quality} | ({"backup": str(backup)} if backup else {})
 
     # ------------------------------------------------------------ TECHNICAL department
     def project_tests(project: str) -> ToolResult:
@@ -387,7 +455,6 @@ def build(tb) -> list[Tool]:
         tail = out.strip().splitlines()[-1] if out.strip() else ""
         return ToolResult("PASS" if code == 0 else "FAIL", f"{project}: {tail}", out[-4000:], code, {"project": project})
 
-    S = Param(str)
     return [
         Tool("integration_probe", "Prove one integration works by doing real work with it (render a frame, encode and "
              "decode a clip, speak and measure, or a free read-only API call with an existing credential).",
@@ -412,8 +479,11 @@ def build(tb) -> list[Tool]:
               "res": Param(str, required=False, pattern=r"\d{2,4}x\d{2,4}"),
               "samples": Param(str, required=False, pattern=r"\d{1,3}")},
              "execute", 6 * 3600 + 60, False, talking_scene),
-        Tool("cartoon_episode", "Cartoon Studio: run (or resume) its 13-step episode pipeline and its own QC.",
-             {"job": S, "universe": S, "episode": S}, "execute", 3 * 3600 + 700, False, cartoon_episode),
+        Tool("cartoon_episode", "Cartoon Studio: write the story from an approved plot if needed, run (or resume) its "
+             "13-step episode pipeline and QC, then package the delivery folder.",
+             {"job": Param(str, pattern=r"ep\d{3}"), "universe": Param(str, pattern=NAME), "episode": Param(str, pattern=NAME),
+              "plot": Param(str, required=False, pattern=r"[a-z0-9-]*"), "seed": Param(str, required=False, pattern=r"\d{1,4}")},
+             "execute", 3 * 3600 + 700, False, cartoon_episode),
         Tool("project_tests", "Run a production project's own test suite in its own environment.",
              {"project": Param(str, choices=("auravox", "humanverse", "cartoon-studio", "digital-human-factory"))},
              "execute", 1900, False, project_tests),

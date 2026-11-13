@@ -14,6 +14,7 @@ import signal
 import threading
 import time
 
+from . import autoproduce
 from . import orchestrator as orch
 from .healing import Healer
 from .store import InvalidTransition, Store
@@ -22,13 +23,14 @@ from .tools import Toolbox
 
 class Worker:
     def __init__(self, store: Store, toolbox: Toolbox, playbook: str | None, every: float, concurrency: int = 4,
-                 clock=time.time, idle: float = 120.0):
+                 clock=time.time, idle: float = 120.0, autoproduce: bool = False):
         self.store, self.toolbox, self.playbook, self.every, self.idle = store, toolbox, playbook, every, idle
         self.orch = orch.Orchestrator(store, toolbox, concurrency)
         self.clock = clock
         self.stop = threading.Event()
         self.last_scheduled = 0.0
         self.healer = Healer(store)
+        self.autoproduce = autoproduce
         self.last_heal: dict = {}
 
     def resumable(self) -> list[str]:
@@ -53,6 +55,11 @@ class Worker:
                 ran.append((mid, self.orch.run(mid)))
             except InvalidTransition as e:  # another process claimed it first; theirs to finish
                 ran.append((mid, f"skipped: {e}"))
+        if self.autoproduce and not ran and not self.stop.is_set():   # idle: next approved, unproduced episode
+            mid = autoproduce.plan_next(self.store, self.toolbox)
+            if mid:
+                ran.append((mid, self.orch.run(mid)))
+                autoproduce.sync(self.store)
         if self.playbook and self.clock() - self.last_scheduled >= self.every and not self.stop.is_set():
             self.last_scheduled = self.clock()
             mid = orch.plan(self.store, self.toolbox, self.playbook)

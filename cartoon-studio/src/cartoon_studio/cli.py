@@ -202,3 +202,53 @@ def integration_audit(json_output: bool = typer.Option(False, "--json")):
 
 if __name__ == "__main__":
     app()
+
+
+# --------------------------------------------------------------------------- multi-style design engine
+design_app = typer.Typer(help="Multi-style character design: 15 art styles, original casts, sheets, comparison, QC.")
+app.add_typer(design_app, name="design")
+LIBRARY = Path(__file__).resolve().parents[2] / "design-library"
+
+
+@design_app.command("styles")
+def design_styles():
+    from .design.styles import STYLES
+
+    for s in STYLES.values():
+        console.print(f"[bold]{s.id}[/] {s.name}: {s.summary}")
+
+
+@design_app.command("build")
+def design_build(styles: str = typer.Option("", "--styles", help="comma-separated style ids; default all 15"),
+                 per_style: int = typer.Option(5, "--per-style"), out: Path = typer.Option(LIBRARY, "--out")):
+    """Generate, render and QC original characters for each style (rejects and regenerates failures, max 3 tries)."""
+    from .design.build import build
+
+    lib = build(out, [s for s in styles.split(",") if s] or None, per_style, log=lambda m: console.print(m, highlight=False))
+    bad = [sid for sid, r in lib["styles"].items() if r["status"] != "PASS"]
+    console.print(f"styles PASS {len(lib['styles']) - len(bad)}/{len(lib['styles'])}; unique names {lib['unique_names']}")
+    raise typer.Exit(1 if bad or not lib["unique_names"] else 0)
+
+
+@design_app.command("compare")
+def design_compare(character: str = typer.Option(..., "--character", help="character id from the design library"),
+                   styles: str = typer.Option(..., "--styles", help="comma-separated style ids"),
+                   out: Path = typer.Option(LIBRARY / "comparisons", "--out")):
+    """Same character identity rendered in several styles, side by side."""
+    from .design import engine as E
+
+    path = next(LIBRARY.glob(f"*/{character}/character.json"), None)
+    if path is None:
+        raise typer.BadParameter(f"no character {character} in {LIBRARY}")
+    data = json.loads(path.read_text())
+    c = E.Character(**{k: v for k, v in data.items() if k in E.Character.__dataclass_fields__})
+    console.print(str(E.compare(c, styles.split(","), out)))
+
+
+@design_app.command("studio")
+def design_studio(port: int = typer.Option(8770, "--port")):
+    """Design interface (127.0.0.1): selectors for style, species, age, build, colours, clothing, expression,
+    animation, camera, lighting and environment; every preview is a real 3D render."""
+    from .design.studio import serve
+
+    serve(LIBRARY, port)

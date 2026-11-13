@@ -21,8 +21,9 @@ import secrets
 import threading
 import urllib.parse
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from pathlib import Path
 
-from . import departments
+from . import autoproduce, departments
 from . import orchestrator as orch
 from .healing import Healer
 from .orchestrator import PLAYBOOKS, verdict
@@ -83,6 +84,64 @@ def _form(token: str | None, action: str, label: str, extra: str = "") -> str:
             f"value='{e(token)}'>{extra}<button>{e(label)}</button></form> ")
 
 
+def verified_media(store: Store, mission_id: str) -> str | None:
+    """The final file a mission delivered: only a path recorded by a PASS media_verify call, never one from the URL."""
+    c = store.db.execute("SELECT evidence FROM tool_calls WHERE mission_id=? AND tool='media_verify' AND status='PASS' "
+                         "ORDER BY id DESC LIMIT 1", (mission_id,)).fetchone()
+    return json.loads(c["evidence"]).get("media") if c else None
+
+
+def production_panel(store: Store, toolbox: Toolbox) -> str:
+    db = store.db
+    db.executescript(autoproduce.SCHEMA)
+    autoproduce.sync(store)
+    eps = db.execute("SELECT * FROM missions WHERE playbook IN ('cartoon','digital-human') ORDER BY created_at DESC").fetchall()
+    active = next((m for m in eps if m["state"] in ("RUNNING", "READY")), None)
+    stage = agent = "—"
+    if active and active["playbook"] == "cartoon":
+        job = json.loads(active["params"]).get("job", "")
+        sp = toolbox.root / "cartoon-studio" / "jobs" / job / "state.json"
+        if sp.is_file():
+            steps = json.loads(sp.read_text()).get("steps", {})
+            cur = next(((k, v) for k, v in steps.items() if v.get("status") != "success"), None)
+            stage, agent = (cur[0], cur[1].get("agent", "?")) if cur else ("13_export done", "quality-control")
+    done = [m for m in eps if m["state"] == "COMPLETED"]
+    failed = [m for m in eps if m["state"] in ("FAILED", "BLOCKED")]
+    retries = db.execute("SELECT COALESCE(SUM(attempts - 1), 0) FROM tasks WHERE attempts > 1").fetchone()[0]
+    queued = db.execute("SELECT COUNT(*) FROM missions WHERE state='READY'").fetchone()[0]
+    waiting = len(autoproduce.pending(store, toolbox))
+    rows = []
+    for m in eps[:12]:
+        call = db.execute("SELECT started_at, finished_at, evidence FROM tool_calls WHERE mission_id=? AND tool IN "
+                          "('cartoon_episode','talking_scene') ORDER BY id DESC LIMIT 1", (m["id"],)).fetchone()
+        ev = json.loads(call["evidence"]) if call else {}
+        media = verified_media(store, m["id"])
+        size = f"{Path(media).stat().st_size / 1e6:.1f} MB" if media and Path(media).is_file() else "—"
+        q = ev.get("quality") or {}
+        checks = ev.get("checks") or {}
+        score = (f"{q['studio_checks_passed']}/{q['studio_checks_total']} studio checks" if q.get("studio_checks_total")
+                 else f"{sum(checks.values())}/{len(checks)} checks" if checks else "—")
+        took = f"{(call['finished_at'] - call['started_at']) / 60:.1f} min" if call else "—"
+        link = f"<a href='/media/{e(m['id'])}' download>final.mp4</a>" if media else "—"
+        rows.append(f"<tr><td><a href='/mission/{e(m['id'])}'>{e(m['title'][:60])}</a></td><td>{_pill(m['state'])}</td>"
+                    f"<td>{e(took)}</td><td>{e(size)}</td><td>{e(str(score))}</td><td>{link}</td></tr>")
+    last = done[0] if done else None
+    tiles = "".join(f"<div class=tile><span class=muted>{e(k)}</span><b>{e(str(v))}</b></div>" for k, v in [
+        ("Active project", active["title"][:40] if active else "none"), ("Current stage", stage), ("Editing agent", agent),
+        ("Queue length", f"{queued} queued + {waiting} approved concepts"), ("Completed", len(done)),
+        ("Failed / blocked", len(failed)),
+        ("Retries", retries), ("Last success", _ts(last["updated_at"]) if last else "—")])
+    ev = db.execute("SELECT * FROM production_events ORDER BY id DESC LIMIT 6").fetchall()
+    evs = "".join(f"<li>{_ts(r['at'])} <b>{e(r['kind'])}</b> {e(r['detail'])}</li>" for r in ev)
+    return (f"<h2>Production</h2><div class=grid>{tiles}</div>"
+            + (f"<div class=wrap><table><tr><th>Project</th><th>State</th><th>Render time</th><th>File size</th>"
+               f"<th>Quality (technical checks)</th><th>Download</th></tr>{''.join(rows)}</table></div>" if rows else
+               "<p class=muted>No productions yet.</p>")
+            + "<p class=muted>Quality counts passed technical checks (streams, duration, loudness, black/silence, lip-sync "
+              "drift, reference hashes); it does not rate storytelling or appeal.</p>"
+            + (f"<ul>{evs}</ul>" if evs else ""))
+
+
 def overlord(store: Store, toolbox: Toolbox) -> str:
     """OVERLORD panels: system status, agents, integrations, MCP, production, errors, recoveries. All from the store."""
     db = store.db
@@ -134,7 +193,7 @@ def overlord(store: Store, toolbox: Toolbox) -> str:
 
     def table(head: str, rows: str, empty: str) -> str:
         return f"<div class=wrap><table><tr>{head}</tr>{rows}</table></div>" if rows else f"<p class=muted>{e(empty)}</p>"
-    return (f"<h2>System status {_pill(system)}</h2><div class=grid>{tiles}</div>"
+    return (f"<h2>System status {_pill(system)}</h2><div class=grid>{tiles}</div>" + production_panel(store, toolbox) +
             "<h2>Integrations</h2>"
             + table("<th>Integration / status</th><th>Evidence</th><th class=sm-hide>Checked</th>", "".join(integ), "")
             + "<p class=muted>VERIFIED means real work was done (frame rendered, clip decoded, speech measured, "
@@ -311,6 +370,12 @@ def make_handler(store: Store, toolbox: Toolbox, actions: bool = False):
                 elif path == "/health":
                     self._send(200, json.dumps({"ok": True, "missions": len(store.missions())}).encode(),
                                "application/json")
+                elif m := re.fullmatch(r"/media/(m-[0-9a-f]{10})", path):
+                    media = verified_media(store, m.group(1))
+                    if not media or not Path(media).is_file():
+                        self._send(404, _page("Not found", "<p>No verified final for this mission.</p>"))
+                    else:
+                        self._send(200, Path(media).read_bytes(), "video/mp4")
                 elif m := re.fullmatch(r"/mission/(m-[0-9a-f]{10})", path):
                     self._send(200, mission_page(store, m.group(1), token, prices))
                 else:
