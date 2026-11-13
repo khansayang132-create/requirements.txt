@@ -449,7 +449,8 @@ def cmd_edit(a):
     final = out_dir / f"{sp['title'].lower().replace(' ', '-')}.mp4"
     subprocess.run(["ffmpeg", "-y", "-v", "error", "-i", str(video), "-i", str(final_audio), "-i", str(srt), "-map", "0:v", "-map", "1:a", "-map", "2",
                     "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-c:s", "mov_text", "-metadata:s:s:0", "language=eng",
-                    "-shortest", "-movflags", "+faststart", str(final)], check=True)
+                    # exact edit length: -shortest would also count the subtitle track, which ends at the last line
+                    "-t", f"{t:.3f}", "-movflags", "+faststart", str(final)], check=True)
     core.atomic_json(out_dir / "edit_report.json", {"final": str(final), "segments": [(n, d) for n, _s, d in segs], "loudness": loud,
                                                      "dialogue_cues": cues_out, "deliver_resolution": [W, H], "render_resolution": c["render_resolution"]})
     print("final:", final, media.ffprobe(final))

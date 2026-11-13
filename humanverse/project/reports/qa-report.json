@@ -1,0 +1,868 @@
+{
+  "generated": "2026-11-13T13:08:26Z",
+  "result": "PASS",
+  "counts": {
+    "PASS": 142,
+    "FAIL": 0,
+    "BLOCKED": 0,
+    "NOT TESTED": 0
+  },
+  "rows": [
+    {
+      "area": "character CHAR-HUM-001",
+      "check": "model exists (.blend header)",
+      "status": "PASS",
+      "detail": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-001/CHAR-HUM-001.blend"
+    },
+    {
+      "area": "character CHAR-HUM-001",
+      "check": "glb export (magic glTF)",
+      "status": "PASS",
+      "detail": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-001/CHAR-HUM-001.glb"
+    },
+    {
+      "area": "character CHAR-HUM-001",
+      "check": "fbx export",
+      "status": "PASS",
+      "detail": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-001/CHAR-HUM-001.fbx"
+    },
+    {
+      "area": "character CHAR-HUM-001",
+      "check": "geometry valid",
+      "status": "PASS",
+      "detail": "17567 verts, 18120 polys"
+    },
+    {
+      "area": "character CHAR-HUM-001",
+      "check": "materials assigned",
+      "status": "PASS",
+      "detail": "13 materials"
+    },
+    {
+      "area": "character CHAR-HUM-001",
+      "check": "identity documented (7 files)",
+      "status": "PASS",
+      "detail": "[]"
+    },
+    {
+      "area": "character CHAR-HUM-001",
+      "check": "reference renders",
+      "status": "PASS",
+      "detail": "23 refs"
+    },
+    {
+      "area": "rig CHAR-HUM-001",
+      "check": "armature + connected bones",
+      "status": "PASS",
+      "detail": "41 bones"
+    },
+    {
+      "area": "rig CHAR-HUM-001",
+      "check": "weights body",
+      "status": "PASS",
+      "detail": "bone_heat; unweighted 0.0%, cross-side 0.0%"
+    },
+    {
+      "area": "rig CHAR-HUM-001",
+      "check": "weights shirt",
+      "status": "PASS",
+      "detail": "bone_heat; unweighted 0.0%, cross-side 0.0%"
+    },
+    {
+      "area": "rig CHAR-HUM-001",
+      "check": "weights pants",
+      "status": "PASS",
+      "detail": "bone_heat; unweighted 0.0%, cross-side 0.0%"
+    },
+    {
+      "area": "rig CHAR-HUM-001",
+      "check": "deformation rest",
+      "status": "PASS",
+      "detail": "stretch 1.0-1.0, over-limit edges 0"
+    },
+    {
+      "area": "rig CHAR-HUM-001",
+      "check": "deformation shoulders_raise",
+      "status": "PASS",
+      "detail": "stretch 0.514-1.088, over-limit edges 0"
+    },
+    {
+      "area": "rig CHAR-HUM-001",
+      "check": "deformation arms_forward",
+      "status": "PASS",
+      "detail": "stretch 0.771-1.453, over-limit edges 0"
+    },
+    {
+      "area": "rig CHAR-HUM-001",
+      "check": "deformation elbows_bend",
+      "status": "PASS",
+      "detail": "stretch 0.441-1.67, over-limit edges 0"
+    },
+    {
+      "area": "rig CHAR-HUM-001",
+      "check": "deformation wrists_fingers",
+      "status": "PASS",
+      "detail": "stretch 0.287-2.092, over-limit edges 0"
+    },
+    {
+      "area": "rig CHAR-HUM-001",
+      "check": "deformation hips_twist_bend",
+      "status": "PASS",
+      "detail": "stretch 1.0-1.0, over-limit edges 0"
+    },
+    {
+      "area": "rig CHAR-HUM-001",
+      "check": "deformation knees_bend",
+      "status": "PASS",
+      "detail": "stretch 1.0-1.0, over-limit edges 0"
+    },
+    {
+      "area": "rig CHAR-HUM-001",
+      "check": "deformation head_turn_tilt",
+      "status": "PASS",
+      "detail": "stretch 0.573-1.358, over-limit edges 0"
+    },
+    {
+      "area": "rig CHAR-HUM-001",
+      "check": "face controls drive mouth shape keys",
+      "status": "PASS",
+      "detail": "['Basis', 'open', 'smile', 'frown', 'wide', 'round', 'closed']"
+    },
+    {
+      "area": "character CHAR-HUM-002",
+      "check": "model exists (.blend header)",
+      "status": "PASS",
+      "detail": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-002/CHAR-HUM-002.blend"
+    },
+    {
+      "area": "character CHAR-HUM-002",
+      "check": "glb export (magic glTF)",
+      "status": "PASS",
+      "detail": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-002/CHAR-HUM-002.glb"
+    },
+    {
+      "area": "character CHAR-HUM-002",
+      "check": "fbx export",
+      "status": "PASS",
+      "detail": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-002/CHAR-HUM-002.fbx"
+    },
+    {
+      "area": "character CHAR-HUM-002",
+      "check": "geometry valid",
+      "status": "PASS",
+      "detail": "17148 verts, 17636 polys"
+    },
+    {
+      "area": "character CHAR-HUM-002",
+      "check": "materials assigned",
+      "status": "PASS",
+      "detail": "13 materials"
+    },
+    {
+      "area": "character CHAR-HUM-002",
+      "check": "identity documented (7 files)",
+      "status": "PASS",
+      "detail": "[]"
+    },
+    {
+      "area": "character CHAR-HUM-002",
+      "check": "reference renders",
+      "status": "PASS",
+      "detail": "23 refs"
+    },
+    {
+      "area": "rig CHAR-HUM-002",
+      "check": "armature + connected bones",
+      "status": "PASS",
+      "detail": "41 bones"
+    },
+    {
+      "area": "rig CHAR-HUM-002",
+      "check": "weights body",
+      "status": "PASS",
+      "detail": "bone_heat; unweighted 0.0%, cross-side 0.0%"
+    },
+    {
+      "area": "rig CHAR-HUM-002",
+      "check": "weights shirt",
+      "status": "PASS",
+      "detail": "bone_heat; unweighted 0.0%, cross-side 0.0%"
+    },
+    {
+      "area": "rig CHAR-HUM-002",
+      "check": "weights pants",
+      "status": "PASS",
+      "detail": "bone_heat; unweighted 0.0%, cross-side 0.0%"
+    },
+    {
+      "area": "rig CHAR-HUM-002",
+      "check": "deformation rest",
+      "status": "PASS",
+      "detail": "stretch 1.0-1.0, over-limit edges 0"
+    },
+    {
+      "area": "rig CHAR-HUM-002",
+      "check": "deformation shoulders_raise",
+      "status": "PASS",
+      "detail": "stretch 0.34-1.09, over-limit edges 0"
+    },
+    {
+      "area": "rig CHAR-HUM-002",
+      "check": "deformation arms_forward",
+      "status": "PASS",
+      "detail": "stretch 0.75-1.301, over-limit edges 0"
+    },
+    {
+      "area": "rig CHAR-HUM-002",
+      "check": "deformation elbows_bend",
+      "status": "PASS",
+      "detail": "stretch 0.951-1.303, over-limit edges 0"
+    },
+    {
+      "area": "rig CHAR-HUM-002",
+      "check": "deformation wrists_fingers",
+      "status": "PASS",
+      "detail": "stretch 0.287-2.093, over-limit edges 0"
+    },
+    {
+      "area": "rig CHAR-HUM-002",
+      "check": "deformation hips_twist_bend",
+      "status": "PASS",
+      "detail": "stretch 1.0-1.0, over-limit edges 0"
+    },
+    {
+      "area": "rig CHAR-HUM-002",
+      "check": "deformation knees_bend",
+      "status": "PASS",
+      "detail": "stretch 0.303-1.745, over-limit edges 0"
+    },
+    {
+      "area": "rig CHAR-HUM-002",
+      "check": "deformation head_turn_tilt",
+      "status": "PASS",
+      "detail": "stretch 0.57-1.337, over-limit edges 0"
+    },
+    {
+      "area": "rig CHAR-HUM-002",
+      "check": "face controls drive mouth shape keys",
+      "status": "PASS",
+      "detail": "['Basis', 'open', 'smile', 'frown', 'wide', 'round', 'closed']"
+    },
+    {
+      "area": "character CHAR-HUM-003",
+      "check": "model exists (.blend header)",
+      "status": "PASS",
+      "detail": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-003/CHAR-HUM-003.blend"
+    },
+    {
+      "area": "character CHAR-HUM-003",
+      "check": "glb export (magic glTF)",
+      "status": "PASS",
+      "detail": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-003/CHAR-HUM-003.glb"
+    },
+    {
+      "area": "character CHAR-HUM-003",
+      "check": "fbx export",
+      "status": "PASS",
+      "detail": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-003/CHAR-HUM-003.fbx"
+    },
+    {
+      "area": "character CHAR-HUM-003",
+      "check": "geometry valid",
+      "status": "PASS",
+      "detail": "16987 verts, 17512 polys"
+    },
+    {
+      "area": "character CHAR-HUM-003",
+      "check": "materials assigned",
+      "status": "PASS",
+      "detail": "12 materials"
+    },
+    {
+      "area": "character CHAR-HUM-003",
+      "check": "identity documented (7 files)",
+      "status": "PASS",
+      "detail": "[]"
+    },
+    {
+      "area": "character CHAR-HUM-003",
+      "check": "reference renders",
+      "status": "PASS",
+      "detail": "23 refs"
+    },
+    {
+      "area": "rig CHAR-HUM-003",
+      "check": "armature + connected bones",
+      "status": "PASS",
+      "detail": "41 bones"
+    },
+    {
+      "area": "rig CHAR-HUM-003",
+      "check": "weights body",
+      "status": "PASS",
+      "detail": "bone_heat; unweighted 0.0%, cross-side 0.0%"
+    },
+    {
+      "area": "rig CHAR-HUM-003",
+      "check": "weights shirt",
+      "status": "PASS",
+      "detail": "bone_heat; unweighted 0.0%, cross-side 0.0%"
+    },
+    {
+      "area": "rig CHAR-HUM-003",
+      "check": "weights pants",
+      "status": "PASS",
+      "detail": "bone_heat; unweighted 0.0%, cross-side 0.0%"
+    },
+    {
+      "area": "rig CHAR-HUM-003",
+      "check": "deformation rest",
+      "status": "PASS",
+      "detail": "stretch 1.0-1.0, over-limit edges 0"
+    },
+    {
+      "area": "rig CHAR-HUM-003",
+      "check": "deformation shoulders_raise",
+      "status": "PASS",
+      "detail": "stretch 0.558-1.072, over-limit edges 0"
+    },
+    {
+      "area": "rig CHAR-HUM-003",
+      "check": "deformation arms_forward",
+      "status": "PASS",
+      "detail": "stretch 0.76-1.42, over-limit edges 0"
+    },
+    {
+      "area": "rig CHAR-HUM-003",
+      "check": "deformation elbows_bend",
+      "status": "PASS",
+      "detail": "stretch 0.969-1.238, over-limit edges 0"
+    },
+    {
+      "area": "rig CHAR-HUM-003",
+      "check": "deformation wrists_fingers",
+      "status": "PASS",
+      "detail": "stretch 0.287-2.094, over-limit edges 0"
+    },
+    {
+      "area": "rig CHAR-HUM-003",
+      "check": "deformation hips_twist_bend",
+      "status": "PASS",
+      "detail": "stretch 1.0-1.0, over-limit edges 0"
+    },
+    {
+      "area": "rig CHAR-HUM-003",
+      "check": "deformation knees_bend",
+      "status": "PASS",
+      "detail": "stretch 1.0-1.0, over-limit edges 0"
+    },
+    {
+      "area": "rig CHAR-HUM-003",
+      "check": "deformation head_turn_tilt",
+      "status": "PASS",
+      "detail": "stretch 0.611-1.37, over-limit edges 0"
+    },
+    {
+      "area": "rig CHAR-HUM-003",
+      "check": "face controls drive mouth shape keys",
+      "status": "PASS",
+      "detail": "['Basis', 'open', 'smile', 'frown', 'wide', 'round', 'closed']"
+    },
+    {
+      "area": "character CHAR-HUM-004",
+      "check": "model exists (.blend header)",
+      "status": "PASS",
+      "detail": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-004/CHAR-HUM-004.blend"
+    },
+    {
+      "area": "character CHAR-HUM-004",
+      "check": "glb export (magic glTF)",
+      "status": "PASS",
+      "detail": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-004/CHAR-HUM-004.glb"
+    },
+    {
+      "area": "character CHAR-HUM-004",
+      "check": "fbx export",
+      "status": "PASS",
+      "detail": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-004/CHAR-HUM-004.fbx"
+    },
+    {
+      "area": "character CHAR-HUM-004",
+      "check": "geometry valid",
+      "status": "PASS",
+      "detail": "17625 verts, 18170 polys"
+    },
+    {
+      "area": "character CHAR-HUM-004",
+      "check": "materials assigned",
+      "status": "PASS",
+      "detail": "13 materials"
+    },
+    {
+      "area": "character CHAR-HUM-004",
+      "check": "identity documented (7 files)",
+      "status": "PASS",
+      "detail": "[]"
+    },
+    {
+      "area": "character CHAR-HUM-004",
+      "check": "reference renders",
+      "status": "PASS",
+      "detail": "23 refs"
+    },
+    {
+      "area": "rig CHAR-HUM-004",
+      "check": "armature + connected bones",
+      "status": "PASS",
+      "detail": "41 bones"
+    },
+    {
+      "area": "rig CHAR-HUM-004",
+      "check": "weights body",
+      "status": "PASS",
+      "detail": "bone_heat; unweighted 0.0%, cross-side 0.0%"
+    },
+    {
+      "area": "rig CHAR-HUM-004",
+      "check": "weights shirt",
+      "status": "PASS",
+      "detail": "bone_heat; unweighted 0.0%, cross-side 0.0%"
+    },
+    {
+      "area": "rig CHAR-HUM-004",
+      "check": "weights pants",
+      "status": "PASS",
+      "detail": "bone_heat; unweighted 0.0%, cross-side 0.0%"
+    },
+    {
+      "area": "rig CHAR-HUM-004",
+      "check": "deformation rest",
+      "status": "PASS",
+      "detail": "stretch 1.0-1.0, over-limit edges 0"
+    },
+    {
+      "area": "rig CHAR-HUM-004",
+      "check": "deformation shoulders_raise",
+      "status": "PASS",
+      "detail": "stretch 0.577-1.07, over-limit edges 0"
+    },
+    {
+      "area": "rig CHAR-HUM-004",
+      "check": "deformation arms_forward",
+      "status": "PASS",
+      "detail": "stretch 0.762-1.426, over-limit edges 0"
+    },
+    {
+      "area": "rig CHAR-HUM-004",
+      "check": "deformation elbows_bend",
+      "status": "PASS",
+      "detail": "stretch 0.97-1.22, over-limit edges 0"
+    },
+    {
+      "area": "rig CHAR-HUM-004",
+      "check": "deformation wrists_fingers",
+      "status": "PASS",
+      "detail": "stretch 0.287-2.094, over-limit edges 0"
+    },
+    {
+      "area": "rig CHAR-HUM-004",
+      "check": "deformation hips_twist_bend",
+      "status": "PASS",
+      "detail": "stretch 1.0-1.0, over-limit edges 0"
+    },
+    {
+      "area": "rig CHAR-HUM-004",
+      "check": "deformation knees_bend",
+      "status": "PASS",
+      "detail": "stretch 1.0-1.0, over-limit edges 0"
+    },
+    {
+      "area": "rig CHAR-HUM-004",
+      "check": "deformation head_turn_tilt",
+      "status": "PASS",
+      "detail": "stretch 0.618-1.362, over-limit edges 0"
+    },
+    {
+      "area": "rig CHAR-HUM-004",
+      "check": "face controls drive mouth shape keys",
+      "status": "PASS",
+      "detail": "['Basis', 'open', 'smile', 'frown', 'wide', 'round', 'closed']"
+    },
+    {
+      "area": "character CHAR-HUM-005",
+      "check": "model exists (.blend header)",
+      "status": "PASS",
+      "detail": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-005/CHAR-HUM-005.blend"
+    },
+    {
+      "area": "character CHAR-HUM-005",
+      "check": "glb export (magic glTF)",
+      "status": "PASS",
+      "detail": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-005/CHAR-HUM-005.glb"
+    },
+    {
+      "area": "character CHAR-HUM-005",
+      "check": "fbx export",
+      "status": "PASS",
+      "detail": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-005/CHAR-HUM-005.fbx"
+    },
+    {
+      "area": "character CHAR-HUM-005",
+      "check": "geometry valid",
+      "status": "PASS",
+      "detail": "18421 verts, 18986 polys"
+    },
+    {
+      "area": "character CHAR-HUM-005",
+      "check": "materials assigned",
+      "status": "PASS",
+      "detail": "13 materials"
+    },
+    {
+      "area": "character CHAR-HUM-005",
+      "check": "identity documented (7 files)",
+      "status": "PASS",
+      "detail": "[]"
+    },
+    {
+      "area": "character CHAR-HUM-005",
+      "check": "reference renders",
+      "status": "PASS",
+      "detail": "23 refs"
+    },
+    {
+      "area": "rig CHAR-HUM-005",
+      "check": "armature + connected bones",
+      "status": "PASS",
+      "detail": "41 bones"
+    },
+    {
+      "area": "rig CHAR-HUM-005",
+      "check": "weights body",
+      "status": "PASS",
+      "detail": "bone_heat; unweighted 0.0%, cross-side 0.0%"
+    },
+    {
+      "area": "rig CHAR-HUM-005",
+      "check": "weights shirt",
+      "status": "PASS",
+      "detail": "bone_heat; unweighted 0.0%, cross-side 0.0%"
+    },
+    {
+      "area": "rig CHAR-HUM-005",
+      "check": "weights pants",
+      "status": "PASS",
+      "detail": "bone_heat; unweighted 0.0%, cross-side 0.0%"
+    },
+    {
+      "area": "rig CHAR-HUM-005",
+      "check": "deformation rest",
+      "status": "PASS",
+      "detail": "stretch 1.0-1.0, over-limit edges 0"
+    },
+    {
+      "area": "rig CHAR-HUM-005",
+      "check": "deformation shoulders_raise",
+      "status": "PASS",
+      "detail": "stretch 0.585-1.086, over-limit edges 0"
+    },
+    {
+      "area": "rig CHAR-HUM-005",
+      "check": "deformation arms_forward",
+      "status": "PASS",
+      "detail": "stretch 0.76-1.404, over-limit edges 0"
+    },
+    {
+      "area": "rig CHAR-HUM-005",
+      "check": "deformation elbows_bend",
+      "status": "PASS",
+      "detail": "stretch 0.971-1.228, over-limit edges 0"
+    },
+    {
+      "area": "rig CHAR-HUM-005",
+      "check": "deformation wrists_fingers",
+      "status": "PASS",
+      "detail": "stretch 0.287-2.093, over-limit edges 0"
+    },
+    {
+      "area": "rig CHAR-HUM-005",
+      "check": "deformation hips_twist_bend",
+      "status": "PASS",
+      "detail": "stretch 1.0-1.0, over-limit edges 0"
+    },
+    {
+      "area": "rig CHAR-HUM-005",
+      "check": "deformation knees_bend",
+      "status": "PASS",
+      "detail": "stretch 1.0-1.0, over-limit edges 0"
+    },
+    {
+      "area": "rig CHAR-HUM-005",
+      "check": "deformation head_turn_tilt",
+      "status": "PASS",
+      "detail": "stretch 0.623-1.365, over-limit edges 0"
+    },
+    {
+      "area": "rig CHAR-HUM-005",
+      "check": "face controls drive mouth shape keys",
+      "status": "PASS",
+      "detail": "['Basis', 'open', 'smile', 'frown', 'wide', 'round', 'closed']"
+    },
+    {
+      "area": "storyboard",
+      "check": "complete and approved",
+      "status": "PASS",
+      "detail": "10 shots, approved by Executive Director agent (Claude), after shot-by-shot review"
+    },
+    {
+      "area": "voice",
+      "check": "L01 audible + phoneme timing",
+      "status": "PASS",
+      "detail": "2.777s rms 0.13037, 29 phonemes"
+    },
+    {
+      "area": "voice",
+      "check": "L02 audible + phoneme timing",
+      "status": "PASS",
+      "detail": "3.543s rms 0.07934, 34 phonemes"
+    },
+    {
+      "area": "voice",
+      "check": "L03 audible + phoneme timing",
+      "status": "PASS",
+      "detail": "1.441s rms 0.12768, 14 phonemes"
+    },
+    {
+      "area": "voice",
+      "check": "L04 audible + phoneme timing",
+      "status": "PASS",
+      "detail": "2.989s rms 0.13539, 24 phonemes"
+    },
+    {
+      "area": "voice",
+      "check": "L05 audible + phoneme timing",
+      "status": "PASS",
+      "detail": "4.047s rms 0.09102, 37 phonemes"
+    },
+    {
+      "area": "voice",
+      "check": "L06 audible + phoneme timing",
+      "status": "PASS",
+      "detail": "2.452s rms 0.08151, 23 phonemes"
+    },
+    {
+      "area": "voice",
+      "check": "L07 audible + phoneme timing",
+      "status": "PASS",
+      "detail": "2.402s rms 0.10112, 30 phonemes"
+    },
+    {
+      "area": "voice",
+      "check": "L08 audible + phoneme timing",
+      "status": "PASS",
+      "detail": "1.996s rms 0.14443, 16 phonemes"
+    },
+    {
+      "area": "voice",
+      "check": "L09 audible + phoneme timing",
+      "status": "PASS",
+      "detail": "1.741s rms 0.13352, 22 phonemes"
+    },
+    {
+      "area": "voice",
+      "check": "L10 audible + phoneme timing",
+      "status": "PASS",
+      "detail": "3.242s rms 0.10332, 30 phonemes"
+    },
+    {
+      "area": "voice",
+      "check": "L11 audible + phoneme timing",
+      "status": "PASS",
+      "detail": "2.446s rms 0.07605, 19 phonemes"
+    },
+    {
+      "area": "animation S01",
+      "check": "animation data exists",
+      "status": "PASS",
+      "detail": "{'CHAR-HUM-001': 90, 'CHAR-HUM-004': 90}"
+    },
+    {
+      "area": "animation S01",
+      "check": "lip sync keyed from phonemes",
+      "status": "PASS",
+      "detail": "{'L01': 27, 'L02': 33, 'L03': 13}"
+    },
+    {
+      "area": "animation S01",
+      "check": "no foot sliding (< 2 cm per planted frame)",
+      "status": "PASS",
+      "detail": "worst 0.89 cm"
+    },
+    {
+      "area": "render S01",
+      "check": "every frame present and CRC-valid",
+      "status": "PASS",
+      "detail": "341"
+    },
+    {
+      "area": "audio S01",
+      "check": "mix: no clipping",
+      "status": "PASS",
+      "detail": "{'sr': 48000, 'channels': 2, 'duration': 14.208, 'rms': 0.10695, 'peak': 0.8981, 'clipped_samples': 0, 'longest_silence_s': 0.0}"
+    },
+    {
+      "area": "audio S01",
+      "check": "mix: no accidental silence (> 1.5 s)",
+      "status": "PASS",
+      "detail": "0.0"
+    },
+    {
+      "area": "animation S02",
+      "check": "animation data exists",
+      "status": "PASS",
+      "detail": "{'CHAR-HUM-001': 96, 'CHAR-HUM-002': 84}"
+    },
+    {
+      "area": "animation S02",
+      "check": "lip sync keyed from phonemes",
+      "status": "PASS",
+      "detail": "{'L04': 24, 'L05': 35, 'L06': 22}"
+    },
+    {
+      "area": "animation S02",
+      "check": "no foot sliding (< 2 cm per planted frame)",
+      "status": "PASS",
+      "detail": "worst 0.9 cm"
+    },
+    {
+      "area": "render S02",
+      "check": "every frame present and CRC-valid",
+      "status": "PASS",
+      "detail": "375"
+    },
+    {
+      "area": "audio S02",
+      "check": "mix: no clipping",
+      "status": "PASS",
+      "detail": "{'sr': 48000, 'channels': 2, 'duration': 15.625, 'rms': 0.09782, 'peak': 0.8982, 'clipped_samples': 0, 'longest_silence_s': 0.0}"
+    },
+    {
+      "area": "audio S02",
+      "check": "mix: no accidental silence (> 1.5 s)",
+      "status": "PASS",
+      "detail": "0.0"
+    },
+    {
+      "area": "animation S03",
+      "check": "animation data exists",
+      "status": "PASS",
+      "detail": "{'CHAR-HUM-001': 84, 'CHAR-HUM-002': 84, 'CHAR-HUM-004': 84, 'CHAR-HUM-005': 90, 'CHAR-HUM-003': 90}"
+    },
+    {
+      "area": "animation S03",
+      "check": "lip sync keyed from phonemes",
+      "status": "PASS",
+      "detail": "{'L07': 30, 'L08': 15, 'L09': 22, 'L10': 28, 'L11': 19}"
+    },
+    {
+      "area": "animation S03",
+      "check": "no foot sliding (< 2 cm per planted frame)",
+      "status": "PASS",
+      "detail": "worst 0.95 cm"
+    },
+    {
+      "area": "render S03",
+      "check": "every frame present and CRC-valid",
+      "status": "PASS",
+      "detail": "463"
+    },
+    {
+      "area": "audio S03",
+      "check": "mix: no clipping",
+      "status": "PASS",
+      "detail": "{'sr': 48000, 'channels': 2, 'duration': 19.292, 'rms': 0.11546, 'peak': 0.8954, 'clipped_samples': 0, 'longest_silence_s': 0.0}"
+    },
+    {
+      "area": "audio S03",
+      "check": "mix: no accidental silence (> 1.5 s)",
+      "status": "PASS",
+      "detail": "0.0"
+    },
+    {
+      "area": "video",
+      "check": "MP4 exists",
+      "status": "PASS",
+      "detail": "/home/user/requirements.txt/humanverse/project/movie/the-kite-that-came-home.mp4 (14304619 bytes)"
+    },
+    {
+      "area": "video",
+      "check": "decodes end to end",
+      "status": "PASS",
+      "detail": "clean"
+    },
+    {
+      "area": "video",
+      "check": "H.264 + yuv420p",
+      "status": "PASS",
+      "detail": "('h264', 'yuv420p')"
+    },
+    {
+      "area": "video",
+      "check": "resolution 1920x1080",
+      "status": "PASS",
+      "detail": "(1920, 1080)"
+    },
+    {
+      "area": "video",
+      "check": "frame rate 24",
+      "status": "PASS",
+      "detail": "24.0"
+    },
+    {
+      "area": "video",
+      "check": "duration matches the edit (±0.2 s)",
+      "status": "PASS",
+      "detail": "57.125 vs 57.12"
+    },
+    {
+      "area": "audio",
+      "check": "AAC stream present",
+      "status": "PASS",
+      "detail": "aac"
+    },
+    {
+      "area": "audio",
+      "check": "A/V in sync (stream lengths within 0.1 s)",
+      "status": "PASS",
+      "detail": "audio 57.125 video 57.125"
+    },
+    {
+      "area": "audio",
+      "check": "loudness -16.0 LUFS ±1, true peak <= -1.0",
+      "status": "PASS",
+      "detail": "{'input_i': -16.35, 'input_tp': -1.46, 'input_lra': 12.3, 'input_thresh': -27.17, 'target_offset': 0.1}"
+    },
+    {
+      "area": "video",
+      "check": "no black gaps > 1 s",
+      "status": "PASS",
+      "detail": "[]"
+    },
+    {
+      "area": "video",
+      "check": "subtitle track",
+      "status": "PASS",
+      "detail": "mov_text"
+    },
+    {
+      "area": "audio",
+      "check": "every dialogue cue inside the movie",
+      "status": "PASS",
+      "detail": "11"
+    }
+  ],
+  "not_tested": [
+    "visual appeal and acting quality (human judgement)",
+    "lip shapes against a real phoneme recogniser"
+  ]
+}
