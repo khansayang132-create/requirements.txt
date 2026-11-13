@@ -1,0 +1,13 @@
+# runtime home: keep only the evidence that docs/milestones.md cites
+data/*
+!data/reports/
+!data/productions/
+data/productions/*/*.wav
+data/productions/*/stems/
+!data/gate4/
+data/gate4/*
+!data/gate4/gate4_report.json
+!data/gate4/spec.json
+!data/gate4/scene_report.json
+!data/gate4/*.mp4
+*.egg-info/

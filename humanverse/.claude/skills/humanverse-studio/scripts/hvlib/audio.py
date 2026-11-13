@@ -163,7 +163,8 @@ def mix_scene(seconds: float, fps: int, cues: list[dict], mood: str, ambience_ki
     # duck music + ambience under dialogue (smoothed envelope, ~10 dB)
     env = np.abs(dialog)
     k = int(0.25 * SR)
-    env = np.convolve(env, np.ones(k) / k, mode="same")
+    c = np.cumsum(np.concatenate([np.zeros(k // 2 + 1), env, np.zeros(k - k // 2)]))
+    env = ((c[k:] - c[:-k]) / k)[: len(env)]                      # O(n) moving average (was an O(n*k) convolution)
     duck = 1.0 - 0.68 * np.clip(env / (env.max() + 1e-9) * 3, 0, 1)
     left = dialog * 1.0 + foley * 0.9 + mus * duck * 0.55 + amb * duck * 0.5
     right = dialog * 1.0 + foley * 0.9 + mus * duck * 0.55 + np.roll(amb, 2400) * duck * 0.5

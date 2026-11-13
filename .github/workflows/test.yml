@@ -282,6 +282,26 @@ jobs:
       - name: Installer copies the skill and 18 subagents
         run: ./install.sh /tmp/hv-install && test "$(ls /tmp/hv-install/.claude/agents | wc -l)" = 18
 
+  auravox:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: auravox
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - run: sudo apt-get update -q && sudo apt-get install -y -q ffmpeg
+      - run: pip install -e ".[piper,test]" && pip check
+      - run: python -m pytest -q
+      - name: Agents generated from one source match the committed files (21 Claude + 21 Codex)
+        run: |
+          python tools/gen_agents.py && git diff --exit-code -- .claude/agents .codex/agents
+          test "$(ls .claude/agents/avx-*.md | wc -l)" = 21 && test "$(ls .codex/agents/avx-*.toml | wc -l)" = 21
+      - name: Real Piper voice download (MD5-verified), synthesis and objective checks
+        run: AVX_HOME=/tmp/avx python tools/ci_piper.py en_US-lessac-low
+
   youtube:
     strategy:
       fail-fast: false

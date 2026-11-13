@@ -1,0 +1,164 @@
+{
+  "scene_id": "AVX_S01",
+  "environment": "park",
+  "seed": 3,
+  "frames": 379,
+  "light_center": [
+    0,
+    0,
+    0.9
+  ],
+  "characters": [
+    {
+      "id": "CHAR-HUM-001",
+      "start": [
+        -1.1,
+        0.0,
+        18
+      ],
+      "expression": "neutral",
+      "blend": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-001/CHAR-HUM-001.blend"
+    },
+    {
+      "id": "CHAR-HUM-002",
+      "start": [
+        0.0,
+        0.0,
+        0
+      ],
+      "expression": "neutral",
+      "blend": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-002/CHAR-HUM-002.blend"
+    },
+    {
+      "id": "CHAR-HUM-004",
+      "start": [
+        1.1,
+        0.0,
+        -18
+      ],
+      "expression": "neutral",
+      "blend": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-004/CHAR-HUM-004.blend"
+    }
+  ],
+  "performance": [
+    {
+      "char": "CHAR-HUM-001",
+      "op": "idle",
+      "f0": 1,
+      "f1": 379,
+      "energy": 0.5
+    },
+    {
+      "char": "CHAR-HUM-002",
+      "op": "idle",
+      "f0": 1,
+      "f1": 379,
+      "energy": 0.5
+    },
+    {
+      "char": "CHAR-HUM-004",
+      "op": "idle",
+      "f0": 1,
+      "f1": 379,
+      "energy": 0.5
+    },
+    {
+      "char": "CHAR-HUM-001",
+      "op": "say",
+      "line_id": "L01",
+      "f": 13,
+      "base": "excited",
+      "gesture": true
+    },
+    {
+      "char": "CHAR-HUM-002",
+      "op": "look",
+      "f": 9,
+      "yaw": -30,
+      "pitch": 0
+    },
+    {
+      "char": "CHAR-HUM-004",
+      "op": "look",
+      "f": 9,
+      "yaw": -30,
+      "pitch": 0
+    },
+    {
+      "char": "CHAR-HUM-002",
+      "op": "say",
+      "line_id": "L02",
+      "f": 125,
+      "base": "happy",
+      "gesture": true
+    },
+    {
+      "char": "CHAR-HUM-001",
+      "op": "look",
+      "f": 121,
+      "yaw": 30,
+      "pitch": 0
+    },
+    {
+      "char": "CHAR-HUM-004",
+      "op": "look",
+      "f": 121,
+      "yaw": -30,
+      "pitch": 0
+    },
+    {
+      "char": "CHAR-HUM-004",
+      "op": "say",
+      "line_id": "L03",
+      "f": 221,
+      "base": "neutral",
+      "gesture": true
+    },
+    {
+      "char": "CHAR-HUM-001",
+      "op": "look",
+      "f": 217,
+      "yaw": 30,
+      "pitch": 0
+    },
+    {
+      "char": "CHAR-HUM-002",
+      "op": "look",
+      "f": 217,
+      "yaw": 30,
+      "pitch": 0
+    }
+  ],
+  "props": [],
+  "fps": 24,
+  "resolution": [
+    960,
+    540
+  ],
+  "samples": 4,
+  "shots": [
+    {
+      "shot_id": "AVX_SH01",
+      "f0": 1,
+      "f1": 379,
+      "cam": {
+        "loc": [
+          0.0,
+          -3.3,
+          1.3
+        ],
+        "target": [
+          0.0,
+          0.0,
+          1.12
+        ],
+        "lens": 38,
+        "focus": [
+          0,
+          0,
+          1.2
+        ]
+      }
+    }
+  ]
+}

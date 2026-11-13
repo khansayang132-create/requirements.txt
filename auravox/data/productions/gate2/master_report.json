@@ -1,0 +1,32 @@
+{
+  "master_wav": "/home/user/requirements.txt/auravox/data/productions/gate2/master.wav",
+  "master_mp3": "/home/user/requirements.txt/auravox/data/productions/gate2/master.mp3",
+  "stems": [
+    "/home/user/requirements.txt/auravox/data/productions/gate2/stems/ambience.wav",
+    "/home/user/requirements.txt/auravox/data/productions/gate2/stems/dialogue.wav",
+    "/home/user/requirements.txt/auravox/data/productions/gate2/stems/dialogue_CHAR-HUM-001_L01.wav",
+    "/home/user/requirements.txt/auravox/data/productions/gate2/stems/dialogue_CHAR-HUM-001_L04.wav",
+    "/home/user/requirements.txt/auravox/data/productions/gate2/stems/dialogue_CHAR-HUM-002_L02.wav",
+    "/home/user/requirements.txt/auravox/data/productions/gate2/stems/dialogue_CHAR-HUM-002_L06.wav",
+    "/home/user/requirements.txt/auravox/data/productions/gate2/stems/dialogue_CHAR-HUM-004_L03.wav",
+    "/home/user/requirements.txt/auravox/data/productions/gate2/stems/dialogue_CHAR-HUM-004_L05.wav",
+    "/home/user/requirements.txt/auravox/data/productions/gate2/stems/music.wav",
+    "/home/user/requirements.txt/auravox/data/productions/gate2/stems/sfx.wav"
+  ],
+  "loudness": {
+    "before_lufs": -22.31,
+    "after_lufs": -16.09,
+    "after_true_peak": -1.5
+  },
+  "pans": {
+    "CHAR-HUM-001": -0.35,
+    "CHAR-HUM-002": 0.0,
+    "CHAR-HUM-004": 0.35
+  },
+  "sfx_events": [
+    {
+      "t": 14.65,
+      "sfx": "whoosh"
+    }
+  ]
+}

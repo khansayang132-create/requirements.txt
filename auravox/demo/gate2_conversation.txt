@@ -1,0 +1,8 @@
+# SCENE S01
+CHAR-HUM-001 (excited): Grandpa, Teo, look! I fixed the dragon kite all by *myself*!
+CHAR-HUM-002 (happy): Not bad, little inventor. Does it actually fly?
+CHAR-HUM-004 (calm): Every kite flies, Teo. Some just need a patient wind.
+# SCENE S02
+CHAR-HUM-001 (worried): What if the string breaks again?
+CHAR-HUM-004 (happy): Then we tie a better knot... and we try again.
+CHAR-HUM-002 (laughing): Okay, okay. Last one to the hill carries the snacks!

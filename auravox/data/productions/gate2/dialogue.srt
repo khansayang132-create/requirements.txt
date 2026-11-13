@@ -1,0 +1,24 @@
+1
+00:00:00,000 --> 00:00:04,320
+CHAR-HUM-001: Grandpa, Teo, look! I fixed the dragon kite all by *myself*!
+
+2
+00:00:04,670 --> 00:00:08,310
+CHAR-HUM-002: Not bad, little inventor. Does it actually fly?
+
+3
+00:00:08,660 --> 00:00:14,200
+CHAR-HUM-004: Every kite flies, Teo. Some just need a patient wind.
+
+4
+00:00:14,550 --> 00:00:16,750
+CHAR-HUM-001: What if the string breaks again?
+
+5
+00:00:17,100 --> 00:00:20,520
+CHAR-HUM-004: Then we tie a better knot... and we try again.
+
+6
+00:00:20,870 --> 00:00:24,590
+CHAR-HUM-002: Okay, okay. Last one to the hill carries the snacks!
+

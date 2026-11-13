@@ -1,0 +1,59 @@
+{
+  "scene_id": "AVX_S01",
+  "blend": "/home/user/requirements.txt/auravox/data/gate4/scene.blend",
+  "frames": 379,
+  "fps": 24,
+  "resolution": [
+    960,
+    540
+  ],
+  "characters": [
+    "CHAR-HUM-001",
+    "CHAR-HUM-002",
+    "CHAR-HUM-004"
+  ],
+  "shots": [
+    {
+      "shot_id": "AVX_SH01",
+      "f0": 1,
+      "f1": 379,
+      "camera": "CAM_AVX_SH01"
+    }
+  ],
+  "cues": [
+    {
+      "type": "dialogue",
+      "line_id": "L01",
+      "frame": 13,
+      "char": "CHAR-HUM-001",
+      "wav": "/home/user/requirements.txt/auravox/data/takes/L01/L01_final.wav",
+      "visemes_keyed": 51,
+      "duration": 4.32
+    },
+    {
+      "type": "dialogue",
+      "line_id": "L02",
+      "frame": 125,
+      "char": "CHAR-HUM-002",
+      "wav": "/home/user/requirements.txt/auravox/data/takes/L02/L02_final.wav",
+      "visemes_keyed": 40,
+      "duration": 3.64
+    },
+    {
+      "type": "dialogue",
+      "line_id": "L03",
+      "frame": 221,
+      "char": "CHAR-HUM-004",
+      "wav": "/home/user/requirements.txt/auravox/data/takes/L03/L03_final.wav",
+      "visemes_keyed": 43,
+      "duration": 5.54
+    }
+  ],
+  "tears": 0,
+  "foot_slide_cm": {},
+  "actions": {
+    "CHAR-HUM-001": 90,
+    "CHAR-HUM-002": 90,
+    "CHAR-HUM-004": 90
+  }
+}

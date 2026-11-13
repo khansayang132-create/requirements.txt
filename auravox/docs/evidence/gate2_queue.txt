@@ -1,0 +1,13 @@
+AVX-JOB-000001  succeeded  1  production.root    gate2                                        
+AVX-JOB-000002  succeeded  1  dialogue.line      gate2 L01 CHAR-HUM-001                       
+AVX-JOB-000003  succeeded  1  dialogue.line      gate2 L02 CHAR-HUM-002                       
+AVX-JOB-000004  succeeded  1  dialogue.line      gate2 L03 CHAR-HUM-004                       
+AVX-JOB-000005  succeeded  1  dialogue.line      gate2 L04 CHAR-HUM-001                       
+AVX-JOB-000006  succeeded  1  dialogue.line      gate2 L05 CHAR-HUM-004                       
+AVX-JOB-000007  succeeded  1  dialogue.line      gate2 L06 CHAR-HUM-002                       
+AVX-JOB-000008  succeeded  1  dialogue.assemble  gate2 assemble                               
+AVX-JOB-000009  succeeded  1  audio.master       gate2 master                                 
+AVX-JOB-000010  succeeded  1  lipsync.validate   gate2 lip-sync report                        
+{
+  "succeeded": 10
+}
