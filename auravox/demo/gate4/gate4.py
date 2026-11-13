@@ -28,6 +28,19 @@ BASE = {"calm": "neutral", "whisper": "neutral"}         # AURAVOX emotions HUMA
 CAMERA = {1: {"loc": [0.0, -1.9, 1.42], "target": [0.0, 0.0, 1.3], "lens": 50, "focus": [0, 0, 1.35]},   # head and shoulders
           2: {"loc": [0.0, -2.8, 1.32], "target": [0.0, 0.0, 1.15], "lens": 40, "focus": [0, 0, 1.25]},
           3: {"loc": [0.0, -3.3, 1.3], "target": [0.0, 0.0, 1.12], "lens": 38, "focus": [0, 0, 1.2]}}
+def camera(speakers, char_dir: Path) -> dict:
+    """Single speaker: frame head and shoulders from the character's measured height (its build report), so a tall
+    adult and a small child both fill the shot with eye-room above. Groups use the fixed wider framings."""
+    cam = dict(CAMERA[len(speakers)])
+    rep = char_dir / speakers[0] / "build_report.json"
+    if len(speakers) == 1 and rep.is_file():
+        h = json.loads(rep.read_text())["height_m"]
+        eye = 0.91 * h                                        # eye line of these rigs, measured from the build
+        cam = {"loc": [0.0, -1.75, round(eye + 0.06, 3)], "target": [0.0, 0.0, round(eye - 0.04, 3)], "lens": 50,
+               "focus": [0, 0, round(eye, 3)]}
+    return cam
+
+
 LEAD = 0.5                                                   # master.wav starts the dialogue 0.5 s in
 
 
@@ -94,7 +107,7 @@ def main():
     spec = {"scene_id": f"AVX_{a.scene}", "environment": "park", "seed": 3, "frames": frames, "light_center": [0, 0, 0.9],
             "characters": chars, "performance": perf, "props": [], "fps": FPS, "resolution": [w, h], "samples": a.samples,
             "shots": [{"shot_id": "AVX_SH01", "f0": 1, "f1": frames,
-                       "cam": CAMERA[len(speakers)]}]}
+                       "cam": camera(speakers, Path(a.character_dir))}]}
     (out / "spec.json").write_text(json.dumps(spec, indent=2))
 
     blend = out / "scene.blend"
@@ -115,10 +128,11 @@ def main():
 
     audio = out / "audio.wav"
     subprocess.run(["ffmpeg", "-y", "-v", "error", "-ss", f"{t0:.3f}", "-t", f"{frames / FPS:.3f}", "-i", str(prod / "master.wav"),
-                    "-af", "afade=t=out:st=%.2f:d=0.5" % (frames / FPS - 0.5), str(audio)], check=True)
+                    "-af", "apad,afade=t=out:st=%.2f:d=0.5" % (frames / FPS - 0.5), "-t", f"{frames / FPS:.3f}", str(audio)], check=True)
+    # audio is padded with silence to exactly the rendered length, so no rendered frame is ever cut
     mp4 = out / f"{'gate4_' if not a.out else ''}{a.production}_{a.scene}.mp4"
     subprocess.run(["ffmpeg", "-y", "-v", "error", "-framerate", str(FPS), "-i", str(out / "frames/%04d.png"), "-i", str(audio),
-                    "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "20", "-c:a", "aac", "-b:a", "192k", "-shortest",
+                    "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "20", "-c:a", "aac", "-b:a", "192k", "-t", f"{frames / FPS:.3f}",
                     "-movflags", "+faststart", str(mp4)], check=True)
     probe = json.loads(subprocess.run(["ffprobe", "-v", "error", "-show_streams", "-show_format", "-of", "json", str(mp4)],
                                       capture_output=True, text=True, check=True).stdout)
