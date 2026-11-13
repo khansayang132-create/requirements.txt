@@ -294,6 +294,9 @@ def test_autoproduce_plans_only_approved_unproduced_episodes_and_never_duplicate
     assert autoproduce.status(store)["events"][0]["kind"] == "idle"       # waits for the owner; invents nothing
     jobs = [r["job"] for r in store.db.execute("SELECT job FROM productions")]
     assert len(jobs) == len(set(jobs)) == 2
+    # another seed of a named plot is the same story (plots are fixed scripts), so it is not produced again
+    concepts.write_text(json.dumps({"concepts": [{"universe": "u", "plot": "kite", "seed": "2", "approved": True}]}))
+    assert autoproduce.pending(store, tb, concepts) == [] and autoproduce.plan_next(store, tb, concepts) is None
 
 
 def test_autoproduce_disk_guard(repo, monkeypatch, tmp_path):

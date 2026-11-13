@@ -54,12 +54,19 @@ def _studio_done(root: Path) -> set[str]:
     return done
 
 
+def _story(episode: str) -> str:
+    """The story an episode id names: universe and plot, without the seed. Cartoon Studio's named plots are fixed
+    scripts (the seed only picks a plot when none is named), so `u-kite-2` is the same story as `u-kite-1`."""
+    return episode.rsplit("-", 1)[0]
+
+
 def pending(store: Store, toolbox: Toolbox, concept_file: Path = CONCEPTS) -> list[str]:
     """Approved concepts that have not been produced or queued yet, in order."""
     store.db.executescript(SCHEMA)
     done = _produced(store) | _studio_done(toolbox.root)
+    stories = {_story(e) for e in done}
     eps = [f"{c['universe']}-{c['plot']}-{c.get('seed', '1')}" for c in concepts(concept_file)]
-    return [e for e in eps if e not in done]
+    return [e for e in eps if _story(e) not in stories]
 
 
 def _produced(store: Store) -> set[str]:
@@ -104,10 +111,11 @@ def plan_next(store: Store, toolbox: Toolbox, concept_file: Path = CONCEPTS) -> 
         _log(store, "blocked", f"only {free:.1f} GB free (< {MIN_FREE_GB} GB); nothing planned")
         return None
     done = _produced(store) | _studio_done(toolbox.root)
+    stories = {_story(e) for e in done}
     studio = toolbox.root / "cartoon-studio"
     for c in concepts(concept_file):
         episode = f"{c['universe']}-{c['plot']}-{c.get('seed', '1')}"
-        if episode in done:
+        if _story(episode) in stories:             # same story already made or queued (another seed is not new)
             continue
         job = _next_job(store, studio)
         mid = orch.plan(store, toolbox, "cartoon", params={"job": job, "universe": c["universe"], "episode": episode,
