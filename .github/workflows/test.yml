@@ -272,7 +272,11 @@ jobs:
         with:
           python-version: "3.11"
       - run: sudo apt-get update -q && sudo apt-get install -y -q ffmpeg
-      - run: pip install "bpy==4.5.*" espeakng-loader Pillow pytest && pip check
+      - name: Install (pip check minus bpy's wheel platform tag, which pip misreports on the runner)
+        run: |
+          pip install "bpy==4.5.*" espeakng-loader Pillow pytest
+          out=$(pip check || true); echo "$out"
+          ! echo "$out" | grep -v -e "^No broken requirements" -e "^bpy [0-9.]* is not supported on this platform" | grep -q .
       - run: python -m pytest -q .claude/skills/humanverse-studio/tests
       - name: Real character build in headless Blender (mesh, rig, weights, deformation test, GLB/FBX export)
         run: |
