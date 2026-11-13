@@ -1,0 +1,128 @@
+{
+  "scene_id": "S01",
+  "blend": "/home/user/requirements.txt/humanverse/project/scenes/S01/S01.blend",
+  "frames": 341,
+  "fps": 24,
+  "resolution": [
+    1280,
+    720
+  ],
+  "characters": [
+    "CHAR-HUM-001",
+    "CHAR-HUM-004"
+  ],
+  "shots": [
+    {
+      "shot_id": "S01_SH01",
+      "f0": 1,
+      "f1": 77,
+      "camera": "CAM_S01_SH01"
+    },
+    {
+      "shot_id": "S01_SH02",
+      "f0": 78,
+      "f1": 248,
+      "camera": "CAM_S01_SH02"
+    },
+    {
+      "shot_id": "S01_SH03",
+      "f0": 249,
+      "f1": 341,
+      "camera": "CAM_S01_SH03"
+    }
+  ],
+  "cues": [
+    {
+      "type": "dialogue",
+      "line_id": "L01",
+      "frame": 83,
+      "char": "CHAR-HUM-001",
+      "wav": "/home/user/requirements.txt/humanverse/project/audio/lines/L01.wav",
+      "visemes_keyed": 27,
+      "duration": 2.777
+    },
+    {
+      "type": "dialogue",
+      "line_id": "L02",
+      "frame": 160,
+      "char": "CHAR-HUM-004",
+      "wav": "/home/user/requirements.txt/humanverse/project/audio/lines/L02.wav",
+      "visemes_keyed": 33,
+      "duration": 3.543
+    },
+    {
+      "type": "dialogue",
+      "line_id": "L03",
+      "frame": 276,
+      "char": "CHAR-HUM-001",
+      "wav": "/home/user/requirements.txt/humanverse/project/audio/lines/L03.wav",
+      "visemes_keyed": 13,
+      "duration": 1.441
+    },
+    {
+      "type": "footstep",
+      "frame": 12,
+      "char": "CHAR-HUM-001",
+      "side": "L"
+    },
+    {
+      "type": "footstep",
+      "frame": 29,
+      "char": "CHAR-HUM-001",
+      "side": "L"
+    },
+    {
+      "type": "footstep",
+      "frame": 46,
+      "char": "CHAR-HUM-001",
+      "side": "L"
+    },
+    {
+      "type": "footstep",
+      "frame": 62,
+      "char": "CHAR-HUM-001",
+      "side": "L"
+    },
+    {
+      "type": "footstep",
+      "frame": 12,
+      "char": "CHAR-HUM-001",
+      "side": "R"
+    },
+    {
+      "type": "footstep",
+      "frame": 21,
+      "char": "CHAR-HUM-001",
+      "side": "R"
+    },
+    {
+      "type": "footstep",
+      "frame": 37,
+      "char": "CHAR-HUM-001",
+      "side": "R"
+    },
+    {
+      "type": "footstep",
+      "frame": 54,
+      "char": "CHAR-HUM-001",
+      "side": "R"
+    },
+    {
+      "type": "footstep",
+      "frame": 71,
+      "char": "CHAR-HUM-001",
+      "side": "R"
+    }
+  ],
+  "tears": 0,
+  "foot_slide_cm": {
+    "CHAR-HUM-001": {
+      "L": 0.89,
+      "R": 0.11
+    }
+  },
+  "actions": {
+    "CHAR-HUM-001": 90,
+    "CHAR-HUM-004": 90
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "id": "CHAR-HUM-001",
+  "name": "Amara Vale",
+  "age": 9,
+  "category": "child",
+  "role": "lead",
+  "personality": [
+    "curious",
+    "brave",
+    "impatient"
+  ],
+  "motivation": "wants to fly the kite her grandmother made, all by herself",
+  "backstory": "Builds gadgets from cardboard and keeps a notebook of every cloud shape she sees.",
+  "appearance": {
+    "height": 1.25,
+    "head_ratio": 0.235,
+    "leg_ratio": 0.5,
+    "shoulder_width": 0.1,
+    "hip_width": 0.07,
+    "thickness": 1.05,
+    "head_width": 0.95,
+    "eye_size": 1.2,
+    "cheeks": 1.2,
+    "hair_style": "ponytail",
+    "sleeve": "short",
+    "shorts": false,
+    "palette": {
+      "skin": "#A86B47",
+      "hair": "#2A1B14",
+      "iris": "#5B3A1E",
+      "shirt": "#F2B134",
+      "pants": "#3E6FB0",
+      "shoes": "#E4573D",
+      "accent": "#E4573D"
+    }
+  },
+  "voice": {
+    "espeak_voice": "en-us+f4",
+    "rate": 158,
+    "pitch": 82,
+    "range": 75
+  },
+  "animation": {
+    "walk_speed": 0.95,
+    "energy": 1.2,
+    "signature": "bounces on her toes when excited"
+  }
+}

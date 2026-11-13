@@ -1,0 +1,15 @@
+{
+  "height": 1.64,
+  "head_ratio": 0.165,
+  "leg_ratio": 0.56,
+  "shoulder_width": 0.11,
+  "hip_width": 0.08,
+  "thickness": 1.0,
+  "head_width": 0.9,
+  "eye_size": 0.95,
+  "cheeks": 1.0,
+  "hair_style": "bun",
+  "hairline": 0.55,
+  "apron": true,
+  "sleeve": "long"
+}

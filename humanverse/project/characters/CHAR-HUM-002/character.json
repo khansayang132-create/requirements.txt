@@ -1,0 +1,14 @@
+{
+  "id": "CHAR-HUM-002",
+  "name": "Teo Vale",
+  "age": 15,
+  "category": "teenager",
+  "role": "older brother",
+  "personality": [
+    "laid-back",
+    "protective",
+    "funny"
+  ],
+  "motivation": "acts cool but never leaves his sister alone when she is sad",
+  "backstory": "Skateboards everywhere and fixes his friends' bikes for free."
+}

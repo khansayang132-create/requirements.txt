@@ -1,0 +1,51 @@
+{
+  "id": "CHAR-HUM-005",
+  "name": "Noor Haddad",
+  "age": 45,
+  "category": "adult",
+  "role": "neighbour and science teacher",
+  "personality": [
+    "precise",
+    "kind",
+    "curious"
+  ],
+  "motivation": "turns every small event into a lesson about wind and weather",
+  "backstory": "Keeps a weather station on her roof and a lemon tree in her front garden.",
+  "appearance": {
+    "height": 1.68,
+    "head_ratio": 0.16,
+    "leg_ratio": 0.56,
+    "shoulder_width": 0.11,
+    "hip_width": 0.076,
+    "thickness": 0.95,
+    "head_width": 0.88,
+    "eye_size": 0.95,
+    "hair_style": "bob",
+    "hairline": 0.58,
+    "glasses": true,
+    "tie": false,
+    "sleeve": "long",
+    "palette": {
+      "skin": "#D9A27E",
+      "hair": "#1C1C1C",
+      "iris": "#2F4A3A",
+      "shirt": "#2E7D8C",
+      "pants": "#3C3C46",
+      "shoes": "#2B2B2B",
+      "accent": "#F2B134",
+      "frame": "#8C2F39",
+      "lips": "#A3484D"
+    }
+  },
+  "voice": {
+    "espeak_voice": "en-us+f3",
+    "rate": 146,
+    "pitch": 50,
+    "range": 55
+  },
+  "animation": {
+    "walk_speed": 0.85,
+    "energy": 0.8,
+    "signature": "taps her glasses when thinking"
+  }
+}

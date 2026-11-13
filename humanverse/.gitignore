@@ -1,0 +1,9 @@
+.venv/
+__pycache__/
+.pytest_cache/
+# regenerable / heavy: rendered frames, per-image references (contact sheets are kept), edit scratch, logs
+project/scenes/*/frames/
+project/characters/*/refs/
+project/movie/work/
+project/reports/*.log
+*.tmp.png

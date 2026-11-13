@@ -1,0 +1,366 @@
+{
+  "scene_id": "S01",
+  "environment": "park",
+  "seed": 1,
+  "frames": 341,
+  "light_center": [
+    0,
+    0,
+    0.9
+  ],
+  "characters": [
+    {
+      "id": "CHAR-HUM-001",
+      "start": [
+        -3.0,
+        0.5,
+        90
+      ],
+      "expression": "happy",
+      "blend": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-001/CHAR-HUM-001.blend"
+    },
+    {
+      "id": "CHAR-HUM-004",
+      "start": [
+        0.75,
+        0.15,
+        -35
+      ],
+      "expression": "neutral",
+      "blend": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-004/CHAR-HUM-004.blend"
+    }
+  ],
+  "performance": [
+    {
+      "char": "CHAR-HUM-001",
+      "op": "walk",
+      "f": 12,
+      "path": [
+        [
+          -3.0,
+          0.5
+        ],
+        [
+          -0.65,
+          0.0
+        ]
+      ],
+      "heading": 55
+    },
+    {
+      "char": "CHAR-HUM-001",
+      "op": "expression",
+      "f": 12,
+      "name": "excited"
+    },
+    {
+      "char": "CHAR-HUM-004",
+      "op": "idle",
+      "f0": 1,
+      "f1": 277,
+      "energy": 0.6
+    },
+    {
+      "char": "CHAR-HUM-004",
+      "op": "look",
+      "f": 47,
+      "yaw": 35,
+      "pitch": 0
+    },
+    {
+      "char": "CHAR-HUM-001",
+      "op": "wave",
+      "f0": 79,
+      "f1": 117,
+      "side": "L"
+    },
+    {
+      "char": "CHAR-HUM-001",
+      "op": "say",
+      "line_id": "L01",
+      "f": 83,
+      "base": "excited",
+      "gesture": false
+    },
+    {
+      "char": "CHAR-HUM-004",
+      "op": "expression",
+      "f": 152,
+      "name": "happy"
+    },
+    {
+      "char": "CHAR-HUM-004",
+      "op": "nod",
+      "f": 154
+    },
+    {
+      "char": "CHAR-HUM-004",
+      "op": "say",
+      "line_id": "L02",
+      "f": 160,
+      "base": "happy",
+      "hand": "R"
+    },
+    {
+      "char": "CHAR-HUM-001",
+      "op": "look",
+      "f": 250,
+      "yaw": 10,
+      "pitch": 30
+    },
+    {
+      "char": "CHAR-HUM-004",
+      "op": "look",
+      "f": 254,
+      "yaw": -10,
+      "pitch": 28
+    },
+    {
+      "char": "CHAR-HUM-001",
+      "op": "expression",
+      "f": 258,
+      "name": "laughing"
+    },
+    {
+      "char": "CHAR-HUM-001",
+      "op": "say",
+      "line_id": "L03",
+      "f": 276,
+      "base": "laughing",
+      "gesture": false
+    },
+    {
+      "char": "CHAR-HUM-001",
+      "op": "cheer",
+      "f0": 276,
+      "f1": 321
+    }
+  ],
+  "props": [
+    {
+      "type": "kite",
+      "keys": [
+        {
+          "f": 1,
+          "loc": [
+            0.95,
+            -0.25,
+            1.05
+          ],
+          "rot": [
+            0,
+            0,
+            20
+          ]
+        },
+        {
+          "f": 240,
+          "loc": [
+            0.95,
+            -0.25,
+            1.1
+          ],
+          "rot": [
+            0,
+            0,
+            20
+          ]
+        },
+        {
+          "f": 264,
+          "loc": [
+            1.6,
+            2.0,
+            2.6
+          ],
+          "rot": [
+            20,
+            10,
+            -10
+          ]
+        },
+        {
+          "f": 306,
+          "loc": [
+            2.4,
+            5.0,
+            4.6
+          ],
+          "rot": [
+            5,
+            -8,
+            15
+          ]
+        },
+        {
+          "f": 341,
+          "loc": [
+            2.6,
+            5.2,
+            4.9
+          ],
+          "rot": [
+            5,
+            10,
+            -12
+          ]
+        }
+      ]
+    }
+  ],
+  "shots": [
+    {
+      "shot_id": "S01_SH01",
+      "scene_id": "S01",
+      "f0": 1,
+      "f1": 77,
+      "cam": {
+        "loc": [
+          0.2,
+          -7.2,
+          1.6
+        ],
+        "target": [
+          0,
+          0.3,
+          0.9
+        ],
+        "lens": 30
+      },
+      "character_ids": [
+        "CHAR-HUM-001",
+        "CHAR-HUM-004"
+      ],
+      "location": "Fernmoor Park",
+      "action": "Amara runs in from the left towards Grandpa, who holds the dragon kite",
+      "emotion": "excited anticipation",
+      "camera_angle": "wide, eye level",
+      "camera_movement": "static",
+      "lens": "30mm",
+      "lighting": "late-morning sun, warm key from camera right, cool sky fill",
+      "duration": 3.21,
+      "dialogue": [],
+      "sound_effects": [
+        "footsteps on grass",
+        "birdsong",
+        "light wind"
+      ],
+      "continuity_notes": "Kite in Grandpa's hands; Amara enters frame left"
+    },
+    {
+      "shot_id": "S01_SH02",
+      "scene_id": "S01",
+      "f0": 78,
+      "f1": 248,
+      "cam": {
+        "loc": [
+          0.1,
+          -3.7,
+          1.15
+        ],
+        "target": [
+          0.1,
+          0,
+          0.95
+        ],
+        "lens": 36,
+        "focus": [
+          0,
+          0,
+          1.0
+        ]
+      },
+      "character_ids": [
+        "CHAR-HUM-001",
+        "CHAR-HUM-004"
+      ],
+      "location": "Fernmoor Park",
+      "action": "Amara waves; Grandpa nods and readies the kite",
+      "emotion": "joy, warmth",
+      "camera_angle": "medium two-shot",
+      "camera_movement": "slow push-in",
+      "lens": "36mm",
+      "lighting": "same sun; rim light separates both from the trees",
+      "duration": 7.12,
+      "dialogue": [
+        "L01",
+        "L02"
+      ],
+      "sound_effects": [
+        "wind gust"
+      ],
+      "continuity_notes": "Amara screen left, Grandpa screen right",
+      "end": {
+        "loc": [
+          0.1,
+          -3.2,
+          1.12
+        ],
+        "target": [
+          0.1,
+          0,
+          0.95
+        ],
+        "lens": 36
+      }
+    },
+    {
+      "shot_id": "S01_SH03",
+      "scene_id": "S01",
+      "f0": 249,
+      "f1": 341,
+      "cam": {
+        "loc": [
+          -1.7,
+          -2.6,
+          0.45
+        ],
+        "target": [
+          0.6,
+          2.5,
+          2.6
+        ],
+        "lens": 26
+      },
+      "character_ids": [
+        "CHAR-HUM-001",
+        "CHAR-HUM-004"
+      ],
+      "location": "Fernmoor Park",
+      "action": "The kite climbs; Amara laughs and cheers, both look up",
+      "emotion": "wonder, delight",
+      "camera_angle": "low angle looking up",
+      "camera_movement": "slow tilt up",
+      "lens": "26mm",
+      "lighting": "backlit kite against the sky",
+      "duration": 3.88,
+      "dialogue": [
+        "L03"
+      ],
+      "sound_effects": [
+        "kite flapping",
+        "wind"
+      ],
+      "continuity_notes": "Kite rises screen right to upper frame",
+      "end": {
+        "loc": [
+          -1.7,
+          -2.6,
+          0.4
+        ],
+        "target": [
+          0.9,
+          3.5,
+          3.4
+        ],
+        "lens": 26
+      }
+    }
+  ],
+  "fps": 24,
+  "resolution": [
+    1280,
+    720
+  ],
+  "samples": 8
+}

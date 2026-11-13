@@ -1,0 +1,10 @@
+{
+  "shirt": "#2E7D8C",
+  "sleeve": "long",
+  "pants": "#3C3C46",
+  "shorts": false,
+  "shoes": "#2B2B2B",
+  "extras": [
+    "glasses"
+  ]
+}

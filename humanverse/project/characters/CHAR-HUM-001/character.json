@@ -1,0 +1,14 @@
+{
+  "id": "CHAR-HUM-001",
+  "name": "Amara Vale",
+  "age": 9,
+  "category": "child",
+  "role": "lead",
+  "personality": [
+    "curious",
+    "brave",
+    "impatient"
+  ],
+  "motivation": "wants to fly the kite her grandmother made, all by herself",
+  "backstory": "Builds gadgets from cardboard and keeps a notebook of every cloud shape she sees."
+}

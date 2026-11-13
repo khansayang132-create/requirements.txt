@@ -1,0 +1,14 @@
+{
+  "id": "CHAR-HUM-003",
+  "name": "Rosa Vale",
+  "age": 38,
+  "category": "adult",
+  "role": "mother",
+  "personality": [
+    "warm",
+    "organised",
+    "quietly funny"
+  ],
+  "motivation": "wants her family to keep their small traditions",
+  "backstory": "Runs the bakery on the corner; knows every neighbour by their favourite bread."
+}

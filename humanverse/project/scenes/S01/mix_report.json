@@ -1,0 +1,18 @@
+{
+  "placed": {
+    "dialogue": 3,
+    "footsteps": 9
+  },
+  "seconds": 14.208333333333334,
+  "mood": "warm",
+  "ambience": "park",
+  "stats": {
+    "sr": 48000,
+    "channels": 2,
+    "duration": 14.208,
+    "rms": 0.10695,
+    "peak": 0.8981,
+    "clipped_samples": 0,
+    "longest_silence_s": 0.0
+  }
+}

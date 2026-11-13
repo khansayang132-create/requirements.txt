@@ -1,0 +1,18 @@
+{
+  "placed": {
+    "dialogue": 5,
+    "footsteps": 28
+  },
+  "seconds": 19.291666666666668,
+  "mood": "joyful",
+  "ambience": "street",
+  "stats": {
+    "sr": 48000,
+    "channels": 2,
+    "duration": 19.292,
+    "rms": 0.11546,
+    "peak": 0.8954,
+    "clipped_samples": 0,
+    "longest_silence_s": 0.0
+  }
+}

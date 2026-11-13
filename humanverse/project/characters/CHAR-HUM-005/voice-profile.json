@@ -1,0 +1,8 @@
+{
+  "espeak_voice": "en-us+f3",
+  "rate": 146,
+  "pitch": 50,
+  "range": 55,
+  "engine": "espeak-ng",
+  "consent": "synthetic voice; no real person cloned"
+}

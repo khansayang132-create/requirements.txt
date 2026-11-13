@@ -1,0 +1,280 @@
+{
+  "scene_id": "S03",
+  "blend": "/home/user/requirements.txt/humanverse/project/scenes/S03/S03.blend",
+  "frames": 463,
+  "fps": 24,
+  "resolution": [
+    1280,
+    720
+  ],
+  "characters": [
+    "CHAR-HUM-001",
+    "CHAR-HUM-002",
+    "CHAR-HUM-004",
+    "CHAR-HUM-005",
+    "CHAR-HUM-003"
+  ],
+  "shots": [
+    {
+      "shot_id": "S03_SH01",
+      "f0": 1,
+      "f1": 98,
+      "camera": "CAM_S03_SH01"
+    },
+    {
+      "shot_id": "S03_SH02",
+      "f0": 99,
+      "f1": 158,
+      "camera": "CAM_S03_SH02"
+    },
+    {
+      "shot_id": "S03_SH03",
+      "f0": 159,
+      "f1": 232,
+      "camera": "CAM_S03_SH03"
+    },
+    {
+      "shot_id": "S03_SH04",
+      "f0": 233,
+      "f1": 463,
+      "camera": "CAM_S03_SH04"
+    }
+  ],
+  "cues": [
+    {
+      "type": "dialogue",
+      "line_id": "L07",
+      "frame": 100,
+      "char": "CHAR-HUM-005",
+      "wav": "/home/user/requirements.txt/humanverse/project/audio/lines/L07.wav",
+      "visemes_keyed": 30,
+      "duration": 2.402
+    },
+    {
+      "type": "dialogue",
+      "line_id": "L08",
+      "frame": 164,
+      "char": "CHAR-HUM-001",
+      "wav": "/home/user/requirements.txt/humanverse/project/audio/lines/L08.wav",
+      "visemes_keyed": 15,
+      "duration": 1.996
+    },
+    {
+      "type": "dialogue",
+      "line_id": "L09",
+      "frame": 220,
+      "char": "CHAR-HUM-005",
+      "wav": "/home/user/requirements.txt/humanverse/project/audio/lines/L09.wav",
+      "visemes_keyed": 22,
+      "duration": 1.741
+    },
+    {
+      "type": "dialogue",
+      "line_id": "L10",
+      "frame": 270,
+      "char": "CHAR-HUM-003",
+      "wav": "/home/user/requirements.txt/humanverse/project/audio/lines/L10.wav",
+      "visemes_keyed": 28,
+      "duration": 3.242
+    },
+    {
+      "type": "dialogue",
+      "line_id": "L11",
+      "frame": 354,
+      "char": "CHAR-HUM-004",
+      "wav": "/home/user/requirements.txt/humanverse/project/audio/lines/L11.wav",
+      "visemes_keyed": 19,
+      "duration": 2.446
+    },
+    {
+      "type": "footstep",
+      "frame": 10,
+      "char": "CHAR-HUM-001",
+      "side": "L"
+    },
+    {
+      "type": "footstep",
+      "frame": 27,
+      "char": "CHAR-HUM-001",
+      "side": "L"
+    },
+    {
+      "type": "footstep",
+      "frame": 44,
+      "char": "CHAR-HUM-001",
+      "side": "L"
+    },
+    {
+      "type": "footstep",
+      "frame": 60,
+      "char": "CHAR-HUM-001",
+      "side": "L"
+    },
+    {
+      "type": "footstep",
+      "frame": 77,
+      "char": "CHAR-HUM-001",
+      "side": "L"
+    },
+    {
+      "type": "footstep",
+      "frame": 10,
+      "char": "CHAR-HUM-001",
+      "side": "R"
+    },
+    {
+      "type": "footstep",
+      "frame": 19,
+      "char": "CHAR-HUM-001",
+      "side": "R"
+    },
+    {
+      "type": "footstep",
+      "frame": 35,
+      "char": "CHAR-HUM-001",
+      "side": "R"
+    },
+    {
+      "type": "footstep",
+      "frame": 52,
+      "char": "CHAR-HUM-001",
+      "side": "R"
+    },
+    {
+      "type": "footstep",
+      "frame": 69,
+      "char": "CHAR-HUM-001",
+      "side": "R"
+    },
+    {
+      "type": "footstep",
+      "frame": 85,
+      "char": "CHAR-HUM-001",
+      "side": "R"
+    },
+    {
+      "type": "footstep",
+      "frame": 18,
+      "char": "CHAR-HUM-002",
+      "side": "L"
+    },
+    {
+      "type": "footstep",
+      "frame": 35,
+      "char": "CHAR-HUM-002",
+      "side": "L"
+    },
+    {
+      "type": "footstep",
+      "frame": 52,
+      "char": "CHAR-HUM-002",
+      "side": "L"
+    },
+    {
+      "type": "footstep",
+      "frame": 68,
+      "char": "CHAR-HUM-002",
+      "side": "L"
+    },
+    {
+      "type": "footstep",
+      "frame": 18,
+      "char": "CHAR-HUM-002",
+      "side": "R"
+    },
+    {
+      "type": "footstep",
+      "frame": 27,
+      "char": "CHAR-HUM-002",
+      "side": "R"
+    },
+    {
+      "type": "footstep",
+      "frame": 43,
+      "char": "CHAR-HUM-002",
+      "side": "R"
+    },
+    {
+      "type": "footstep",
+      "frame": 60,
+      "char": "CHAR-HUM-002",
+      "side": "R"
+    },
+    {
+      "type": "footstep",
+      "frame": 77,
+      "char": "CHAR-HUM-002",
+      "side": "R"
+    },
+    {
+      "type": "footstep",
+      "frame": 14,
+      "char": "CHAR-HUM-004",
+      "side": "L"
+    },
+    {
+      "type": "footstep",
+      "frame": 44,
+      "char": "CHAR-HUM-004",
+      "side": "L"
+    },
+    {
+      "type": "footstep",
+      "frame": 74,
+      "char": "CHAR-HUM-004",
+      "side": "L"
+    },
+    {
+      "type": "footstep",
+      "frame": 103,
+      "char": "CHAR-HUM-004",
+      "side": "L"
+    },
+    {
+      "type": "footstep",
+      "frame": 14,
+      "char": "CHAR-HUM-004",
+      "side": "R"
+    },
+    {
+      "type": "footstep",
+      "frame": 29,
+      "char": "CHAR-HUM-004",
+      "side": "R"
+    },
+    {
+      "type": "footstep",
+      "frame": 59,
+      "char": "CHAR-HUM-004",
+      "side": "R"
+    },
+    {
+      "type": "footstep",
+      "frame": 88,
+      "char": "CHAR-HUM-004",
+      "side": "R"
+    }
+  ],
+  "tears": 0,
+  "foot_slide_cm": {
+    "CHAR-HUM-001": {
+      "L": 0.91,
+      "R": 0.05
+    },
+    "CHAR-HUM-002": {
+      "L": 0.95,
+      "R": 0.02
+    },
+    "CHAR-HUM-004": {
+      "L": 0.73,
+      "R": 0.58
+    }
+  },
+  "actions": {
+    "CHAR-HUM-001": 84,
+    "CHAR-HUM-002": 84,
+    "CHAR-HUM-004": 84,
+    "CHAR-HUM-005": 90,
+    "CHAR-HUM-003": 90
+  }
+}

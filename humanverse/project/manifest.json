@@ -1,0 +1,522 @@
+{
+  "schema": 1,
+  "state": "SOUND",
+  "history": [
+    {
+      "from": "IDEA",
+      "to": "RESEARCH",
+      "at": "2026-11-13T03:09:28Z",
+      "note": "environment inspected",
+      "criteria": {},
+      "evidence": [
+        {
+          "path": "/home/user/requirements.txt/humanverse/project/reports/environment-report.md",
+          "sha256": "fe3335a444ee6c0ffe988704a8eb94c58694901ae2dbf5a943d869534a8455ab",
+          "bytes": 654
+        },
+        {
+          "path": "/home/user/requirements.txt/humanverse/project/reports/capability-report.md",
+          "sha256": "6974641e642d5039734301ac008a2ac23f0ca3861aeb96aa306cf6cbd376439c",
+          "bytes": 786
+        },
+        {
+          "path": "/home/user/requirements.txt/humanverse/project/reports/dependency-report.md",
+          "sha256": "9eeeeab7daacb7f08718a3f9faa8f7c938423a7b15b9db1970f9c3cbb8d608f3",
+          "bytes": 459
+        }
+      ]
+    },
+    {
+      "from": "RESEARCH",
+      "to": "DESIGN",
+      "at": "2026-11-13T03:09:28Z",
+      "note": "screenplay and cast validated",
+      "criteria": {
+        "five_characters": true,
+        "screenplay_valid": true
+      },
+      "evidence": [
+        {
+          "path": "/home/user/requirements.txt/humanverse/project/story/screenplay.json",
+          "sha256": "1736aebd4d7ac27d3f3d07d166c49ea2f581d5f201ac9300bea5214eb75de7fe",
+          "bytes": 3986
+        },
+        {
+          "path": "/home/user/requirements.txt/humanverse/project/cast/CHAR-HUM-001.json",
+          "sha256": "0e4d1b4c2a5090c43d8e2153de7dcc62eaa935a98db52b75144919371188e3e3",
+          "bytes": 1069
+        },
+        {
+          "path": "/home/user/requirements.txt/humanverse/project/cast/CHAR-HUM-002.json",
+          "sha256": "9f67fbd2f6bba897200d631619801ef154a51327d39ab741ef46d60137126c37",
+          "bytes": 1091
+        },
+        {
+          "path": "/home/user/requirements.txt/humanverse/project/cast/CHAR-HUM-003.json",
+          "sha256": "e7e29a7c2fd0607f312efed1c14f06d1337ec30ce4ec9fc533adc6886db73918",
+          "bytes": 1103
+        },
+        {
+          "path": "/home/user/requirements.txt/humanverse/project/cast/CHAR-HUM-004.json",
+          "sha256": "4c3b1a8c412200e89016ac41df29487df9653f3898cc3caea3f7280897ae870d",
+          "bytes": 1201
+        },
+        {
+          "path": "/home/user/requirements.txt/humanverse/project/cast/CHAR-HUM-005.json",
+          "sha256": "c840665fbc3e2c475a95d9118716f108f50e7733c4142bf6e61c0ef119da477b",
+          "bytes": 1154
+        }
+      ]
+    },
+    {
+      "from": "DESIGN",
+      "to": "CHARACTER_DEVELOPMENT",
+      "at": "2026-11-13T03:09:28Z",
+      "note": "identity files written for every character",
+      "criteria": {},
+      "evidence": [
+        {
+          "path": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-001/character-bible.md",
+          "sha256": "fa3465784ab92c84ed8fc2c5350ac6d3b4e25e8bb5832fa3cf002ac1d20489e0",
+          "bytes": 933
+        },
+        {
+          "path": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-002/character-bible.md",
+          "sha256": "fab66b4dc4eac0d61b242169f303ac165af3d57dd23e62d1b1f0bef2844d1e84",
+          "bytes": 928
+        },
+        {
+          "path": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-003/character-bible.md",
+          "sha256": "ac6f52fc4eee46b7aba8265ff43dbc15e3b51c89bc22ff8dd33b22eccc6fab57",
+          "bytes": 941
+        },
+        {
+          "path": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-004/character-bible.md",
+          "sha256": "fd2f6d2c479c8cf90e9be54234326ed5386fa69df0b4bfb8ee69a7a27a137b31",
+          "bytes": 977
+        },
+        {
+          "path": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-005/character-bible.md",
+          "sha256": "d7239977f521f45f9a3f7e425f973784ca653cb7a6c66f9453b4cfb3d456fb65",
+          "bytes": 983
+        }
+      ]
+    },
+    {
+      "from": "CHARACTER_DEVELOPMENT",
+      "to": "MODELING",
+      "at": "2026-11-13T03:09:32Z",
+      "note": "models built and exported",
+      "criteria": {
+        "all_blend": true,
+        "all_glb": true,
+        "geometry": true
+      },
+      "evidence": [
+        {
+          "path": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-001/CHAR-HUM-001.blend",
+          "sha256": "79b3bdf3c88f737e2e0ee32135bc2bd5f8f7b58a06f1846ce16c807175b52efd",
+          "bytes": 2399632
+        },
+        {
+          "path": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-002/CHAR-HUM-002.blend",
+          "sha256": "d16ef7fd7c32a48c1994baaefe0083d41c8f326e78e94767b717406a65aae96c",
+          "bytes": 2418148
+        },
+        {
+          "path": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-003/CHAR-HUM-003.blend",
+          "sha256": "75f9c809b7eb65e30911c586ab244eda028259fe4be1e22a1ebc70f9ca60be5a",
+          "bytes": 2389516
+        },
+        {
+          "path": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-004/CHAR-HUM-004.blend",
+          "sha256": "f02b4238cabe761e6059058d0cca238af00444b1d8bb2ccbc252ecab88807e79",
+          "bytes": 2434560
+        },
+        {
+          "path": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-005/CHAR-HUM-005.blend",
+          "sha256": "9cf79af4693199f08cb00253b86747b0710af3042f2a1524bd358ac5a13501c9",
+          "bytes": 2497795
+        },
+        {
+          "path": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-001/CHAR-HUM-001.glb",
+          "sha256": "59bb22e215ba31bf0d762007a918432db2d35a1c92da88b555ccc0312a7164ab",
+          "bytes": 789896
+        },
+        {
+          "path": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-002/CHAR-HUM-002.glb",
+          "sha256": "811d92910c80b8d2b0e7a7d39d4931c696bd5a833cbe1a81cf5bd6041ec1bc5d",
+          "bytes": 804672
+        },
+        {
+          "path": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-003/CHAR-HUM-003.glb",
+          "sha256": "14855e8cae5f3399d5f80a813de088f4eb96226280d4cc2e775613509ce7c2cf",
+          "bytes": 774020
+        },
+        {
+          "path": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-004/CHAR-HUM-004.glb",
+          "sha256": "2b892c3f3543589d248cb2ac0ffd30e2925eec4f7e1e4b2152e16cb4c14281a2",
+          "bytes": 838176
+        },
+        {
+          "path": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-005/CHAR-HUM-005.glb",
+          "sha256": "36424f829e8c6ce7ea461fbce841fe6de20825875cccc7ad0ac5bf5ca37bd877",
+          "bytes": 889768
+        }
+      ]
+    },
+    {
+      "from": "MODELING",
+      "to": "RIGGING",
+      "at": "2026-11-13T03:09:32Z",
+      "note": "rigs, weights and deformation tests",
+      "criteria": {
+        "CHAR-HUM-001": true,
+        "CHAR-HUM-002": true,
+        "CHAR-HUM-003": true,
+        "CHAR-HUM-004": true,
+        "CHAR-HUM-005": true
+      },
+      "evidence": [
+        {
+          "path": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-001/build_report.json",
+          "sha256": "794dfa03d010ad5498cf1d9b9922a00304c0cc4a30756d98d987faf1ad9dbc3b",
+          "bytes": 2937
+        },
+        {
+          "path": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-002/build_report.json",
+          "sha256": "7d5ea64146837bdd0fee149a9c3e1d3413c39e014d529be730a45bcc76252f7e",
+          "bytes": 2939
+        },
+        {
+          "path": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-003/build_report.json",
+          "sha256": "72803ec1dac18f73754fddc7c60f20f857678bc9ca3c6f18121ebe884263c82d",
+          "bytes": 2936
+        },
+        {
+          "path": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-004/build_report.json",
+          "sha256": "48f958ce81dd2533ebeab1aded95d4d7ba1ccc2954e1d2d78c1e138260e375b2",
+          "bytes": 2935
+        },
+        {
+          "path": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-005/build_report.json",
+          "sha256": "300c65f1e2c1b766d9fad7aed0e85077e672166dfcaeea8348e78dfd67e085ba",
+          "bytes": 2937
+        }
+      ]
+    },
+    {
+      "from": "RIGGING",
+      "to": "ANIMATION",
+      "at": "2026-11-13T03:09:32Z",
+      "note": "facial expression library and body animation library tested",
+      "criteria": {
+        "CHAR-HUM-001": true,
+        "CHAR-HUM-002": true,
+        "CHAR-HUM-003": true,
+        "CHAR-HUM-004": true,
+        "CHAR-HUM-005": true
+      },
+      "evidence": [
+        {
+          "path": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-001/refs/expr_crying.png",
+          "sha256": "9a1d5ee3b657144e198c7a2823daccf86749ef959827d493718dc1794c86832f",
+          "bytes": 227703
+        },
+        {
+          "path": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-002/refs/expr_crying.png",
+          "sha256": "844fed8d99c66ac552967352cf857b14bd5e3ad4d9ca5944b9b1d45e8f383795",
+          "bytes": 223560
+        },
+        {
+          "path": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-003/refs/expr_crying.png",
+          "sha256": "6c59c1ee7058797a28c4b5300c547e4492c69c2c41e834bfcb06688e180e6448",
+          "bytes": 219585
+        },
+        {
+          "path": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-004/refs/expr_crying.png",
+          "sha256": "2c1b29a423579370e48db6c47df435f8fc11a7fff650473cfa7db3a0b0b5c536",
+          "bytes": 219101
+        },
+        {
+          "path": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-005/refs/expr_crying.png",
+          "sha256": "aba4fab658dffc807195c012f1fad0491e84ec225e7500d708570c9c672c6fe8",
+          "bytes": 225646
+        }
+      ]
+    },
+    {
+      "from": "ANIMATION",
+      "to": "STORYBOARD",
+      "at": "2026-11-13T03:12:51Z",
+      "note": "approved by Executive Director agent (Claude), after shot-by-shot review",
+      "criteria": {},
+      "evidence": [
+        {
+          "path": "/home/user/requirements.txt/humanverse/project/storyboard/storyboard.json",
+          "sha256": "acb42d246996b85c9683ff1873498039f3b6e7c2ff7efa8ca432fb3330718bc8",
+          "bytes": 8927
+        },
+        {
+          "path": "/home/user/requirements.txt/humanverse/project/storyboard/storyboard.md",
+          "sha256": "697dc61045f19ac5b7257b27e90273866d774785890285b71c4238806655c8bb",
+          "bytes": 3530
+        }
+      ]
+    },
+    {
+      "from": "STORYBOARD",
+      "to": "SCENE_PRODUCTION",
+      "at": "2026-11-13T03:13:54Z",
+      "note": "scenes built",
+      "criteria": {
+        "scenes_at_least_3": true,
+        "foot_slide_under_2cm (worst 0.95)": true
+      },
+      "evidence": [
+        {
+          "path": "/home/user/requirements.txt/humanverse/project/scenes/S01/S01.blend",
+          "sha256": "13f17060da09b604ad7eb22f0e11416dacb0fca4e43c14fcc7ce8beb17472002",
+          "bytes": 6314261
+        },
+        {
+          "path": "/home/user/requirements.txt/humanverse/project/scenes/S02/S02.blend",
+          "sha256": "e64322ea96c7ac5addf567436cb4d6801da9c90b4ff70f34cb8d4febb34ffa8d",
+          "bytes": 6367053
+        },
+        {
+          "path": "/home/user/requirements.txt/humanverse/project/scenes/S03/S03.blend",
+          "sha256": "dc5c9fb9a328bae5299d07b62a56399de10ecc8688799bc9f10f00b6da8b0a5c",
+          "bytes": 12169193
+        }
+      ]
+    },
+    {
+      "from": "SCENE_PRODUCTION",
+      "to": "VOICE",
+      "at": "2026-11-13T03:13:54Z",
+      "note": "dialogue rendered",
+      "criteria": {
+        "all_lines_non_silent": true
+      },
+      "evidence": [
+        {
+          "path": "/home/user/requirements.txt/humanverse/project/audio/lines/lines.json",
+          "sha256": "4849eed82d0305c65c4b52145e16f565cbcd11bdb2aa424c3b11c0c631a0c35a",
+          "bytes": 20184
+        },
+        {
+          "path": "/home/user/requirements.txt/humanverse/project/audio/lines/L01.wav",
+          "sha256": "3e2591402d0f844518fbf7bf655ef8657b951e3aebb2c9c7e21db23241d4a355",
+          "bytes": 266670
+        },
+        {
+          "path": "/home/user/requirements.txt/humanverse/project/audio/lines/L02.wav",
+          "sha256": "4ccf2ccd5d858c70f0ad4ada598c60e27f45c7d96ae23027eea83456590c4e50",
+          "bytes": 340218
+        },
+        {
+          "path": "/home/user/requirements.txt/humanverse/project/audio/lines/L03.wav",
+          "sha256": "9e9ee12a229a64e7d979afcddc3c3b4707cdbc6166d0fd3c3775cd4fd489421a",
+          "bytes": 138388
+        },
+        {
+          "path": "/home/user/requirements.txt/humanverse/project/audio/lines/L04.wav",
+          "sha256": "e3363fb8e58bd2fbffb7ddd3be0ccf37afa771680c9267a4c6dd0e046a210b91",
+          "bytes": 287020
+        },
+        {
+          "path": "/home/user/requirements.txt/humanverse/project/audio/lines/L05.wav",
+          "sha256": "9add35b21e2b0a1cb2078bbef9ee46a7e030cb93af715f606b6e3911e382c204",
+          "bytes": 388532
+        },
+        {
+          "path": "/home/user/requirements.txt/humanverse/project/audio/lines/L06.wav",
+          "sha256": "e2c293dc314b29957b3c781a07dc7699b0a68e1cac7302a8eb89db19bd2093be",
+          "bytes": 235462
+        },
+        {
+          "path": "/home/user/requirements.txt/humanverse/project/audio/lines/L07.wav",
+          "sha256": "45ca1943ad450cfeb4d239521083b3c523a6f5231433f36543d56a97586b7b60",
+          "bytes": 230618
+        },
+        {
+          "path": "/home/user/requirements.txt/humanverse/project/audio/lines/L08.wav",
+          "sha256": "401b220c7d10dd74f71343a84893451e3f18c41ccd1c696c38acea76d570797e",
+          "bytes": 191660
+        },
+        {
+          "path": "/home/user/requirements.txt/humanverse/project/audio/lines/L09.wav",
+          "sha256": "108c8517628b64bb9e9a1be24a00b215cfbff7875315e6ee0d79a0d7781e0430",
+          "bytes": 167210
+        },
+        {
+          "path": "/home/user/requirements.txt/humanverse/project/audio/lines/L10.wav",
+          "sha256": "abcd99ddce7e0a36b4dce55a7536593203be05e12634beaec2597514c51089bf",
+          "bytes": 311318
+        },
+        {
+          "path": "/home/user/requirements.txt/humanverse/project/audio/lines/L11.wav",
+          "sha256": "e0f9189b139abd008f6edb3b32f0a4311c45939f4daeacbe93078ced70709b7a",
+          "bytes": 234848
+        }
+      ]
+    },
+    {
+      "from": "VOICE",
+      "to": "SOUND",
+      "at": "2026-11-13T03:21:07Z",
+      "note": "scene mixes (dialogue, footsteps on animation contacts, music, ambience)",
+      "criteria": {},
+      "evidence": [
+        {
+          "path": "/home/user/requirements.txt/humanverse/project/scenes/S01/mix.wav",
+          "sha256": "48844c6ff6f82827a2ef141e84207cb50fc269f09b65ef8fcea6f54a7dad7460",
+          "bytes": 2728044
+        },
+        {
+          "path": "/home/user/requirements.txt/humanverse/project/scenes/S02/mix.wav",
+          "sha256": "758f230b9a9e997d40b45d4b2f836d0c2100ce358c37a65f93b12cfde043ba6c",
+          "bytes": 3000044
+        },
+        {
+          "path": "/home/user/requirements.txt/humanverse/project/scenes/S03/mix.wav",
+          "sha256": "4b48afff1f0a1d9d87fd2c75d2adc8c52a029d44ceb664676a3adc24df9f548d",
+          "bytes": 3704044
+        }
+      ]
+    }
+  ],
+  "assets": {
+    "blend:CHAR-HUM-001": {
+      "path": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-001/CHAR-HUM-001.blend",
+      "sha256": "79b3bdf3c88f737e2e0ee32135bc2bd5f8f7b58a06f1846ce16c807175b52efd",
+      "owner": "character-modeling-engineer",
+      "at": "2026-11-13T03:11:18Z"
+    },
+    "glb:CHAR-HUM-001": {
+      "path": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-001/CHAR-HUM-001.glb",
+      "sha256": "59bb22e215ba31bf0d762007a918432db2d35a1c92da88b555ccc0312a7164ab",
+      "owner": "character-modeling-engineer",
+      "at": "2026-11-13T03:11:18Z"
+    },
+    "fbx:CHAR-HUM-001": {
+      "path": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-001/CHAR-HUM-001.fbx",
+      "sha256": "966989fdedfc2ee0b94231ffde58a623917ebd1b9f5df763cad78f746e88bf09",
+      "owner": "character-modeling-engineer",
+      "at": "2026-11-13T03:11:18Z"
+    },
+    "blend:CHAR-HUM-002": {
+      "path": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-002/CHAR-HUM-002.blend",
+      "sha256": "d73cb15c265f56d9d2bbd780e37d08ff646663f38d9920954cc9060ba40c3a3e",
+      "owner": "character-modeling-engineer",
+      "at": "2026-11-13T03:12:41Z"
+    },
+    "glb:CHAR-HUM-002": {
+      "path": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-002/CHAR-HUM-002.glb",
+      "sha256": "44be977c3c75dd659329709e2ad23a0fa7b36e3c67bf56452a043a4f15777df5",
+      "owner": "character-modeling-engineer",
+      "at": "2026-11-13T03:12:41Z"
+    },
+    "fbx:CHAR-HUM-002": {
+      "path": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-002/CHAR-HUM-002.fbx",
+      "sha256": "fee0331a17d4a38d6dd9d9e2308d723e76c88f1dc1a54aa5bc6fd04d9a2fcec3",
+      "owner": "character-modeling-engineer",
+      "at": "2026-11-13T03:12:41Z"
+    },
+    "blend:CHAR-HUM-003": {
+      "path": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-003/CHAR-HUM-003.blend",
+      "sha256": "019e062094ded47828e1d7ea6f0b5c130fdcbf37fd431e2b6a86e2361edad100",
+      "owner": "character-modeling-engineer",
+      "at": "2026-11-13T03:12:42Z"
+    },
+    "glb:CHAR-HUM-003": {
+      "path": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-003/CHAR-HUM-003.glb",
+      "sha256": "4e379c19f690a4346117eb5c7a460f690066c9c9c6808cd6b55f7b1daaa863c8",
+      "owner": "character-modeling-engineer",
+      "at": "2026-11-13T03:12:42Z"
+    },
+    "fbx:CHAR-HUM-003": {
+      "path": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-003/CHAR-HUM-003.fbx",
+      "sha256": "f06cc6acde41d2d97a87f774ba0a35371bf48ca75bf5739132d0c12b870c72fa",
+      "owner": "character-modeling-engineer",
+      "at": "2026-11-13T03:12:42Z"
+    },
+    "blend:CHAR-HUM-004": {
+      "path": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-004/CHAR-HUM-004.blend",
+      "sha256": "f02b4238cabe761e6059058d0cca238af00444b1d8bb2ccbc252ecab88807e79",
+      "owner": "character-modeling-engineer",
+      "at": "2026-11-13T03:12:43Z"
+    },
+    "glb:CHAR-HUM-004": {
+      "path": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-004/CHAR-HUM-004.glb",
+      "sha256": "2b892c3f3543589d248cb2ac0ffd30e2925eec4f7e1e4b2152e16cb4c14281a2",
+      "owner": "character-modeling-engineer",
+      "at": "2026-11-13T03:12:43Z"
+    },
+    "fbx:CHAR-HUM-004": {
+      "path": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-004/CHAR-HUM-004.fbx",
+      "sha256": "c0c9d5631b277821b6868a11ef684fd0ddc2c0122897aeeae2571551c1cb7419",
+      "owner": "character-modeling-engineer",
+      "at": "2026-11-13T03:12:43Z"
+    },
+    "blend:CHAR-HUM-005": {
+      "path": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-005/CHAR-HUM-005.blend",
+      "sha256": "9cf79af4693199f08cb00253b86747b0710af3042f2a1524bd358ac5a13501c9",
+      "owner": "character-modeling-engineer",
+      "at": "2026-11-13T03:12:43Z"
+    },
+    "glb:CHAR-HUM-005": {
+      "path": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-005/CHAR-HUM-005.glb",
+      "sha256": "36424f829e8c6ce7ea461fbce841fe6de20825875cccc7ad0ac5bf5ca37bd877",
+      "owner": "character-modeling-engineer",
+      "at": "2026-11-13T03:12:43Z"
+    },
+    "fbx:CHAR-HUM-005": {
+      "path": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-005/CHAR-HUM-005.fbx",
+      "sha256": "f14f410659d9efc1fb4e1d4f5fee80ffb6eab3aa13f345f1970d13fb2f6ae4b1",
+      "owner": "character-modeling-engineer",
+      "at": "2026-11-13T03:12:43Z"
+    },
+    "scene:S01": {
+      "path": "/home/user/requirements.txt/humanverse/project/scenes/S01/S01.blend",
+      "sha256": "fdce9390885b02985b247ef7710c978ba351ec8b9b5d2229d7f67e9b075ca270",
+      "owner": "executive-director",
+      "at": "2026-11-13T03:17:48Z"
+    },
+    "scene:S02": {
+      "path": "/home/user/requirements.txt/humanverse/project/scenes/S02/S02.blend",
+      "sha256": "12ad51054c3400eb3160e934709278dbaa3bba8e8ffba11d5c1cd9f9d0473eb2",
+      "owner": "executive-director",
+      "at": "2026-11-13T03:17:50Z"
+    },
+    "scene:S03": {
+      "path": "/home/user/requirements.txt/humanverse/project/scenes/S03/S03.blend",
+      "sha256": "64e8e01b405beb398c7c7357595e913476cbc6aee63deb4ab784487ffa30700b",
+      "owner": "executive-director",
+      "at": "2026-11-13T03:20:48Z"
+    }
+  },
+  "owners": {
+    "blend:CHAR-HUM-001": "character-modeling-engineer",
+    "glb:CHAR-HUM-001": "character-modeling-engineer",
+    "fbx:CHAR-HUM-001": "character-modeling-engineer",
+    "blend:CHAR-HUM-002": "character-modeling-engineer",
+    "glb:CHAR-HUM-002": "character-modeling-engineer",
+    "fbx:CHAR-HUM-002": "character-modeling-engineer",
+    "blend:CHAR-HUM-003": "character-modeling-engineer",
+    "glb:CHAR-HUM-003": "character-modeling-engineer",
+    "fbx:CHAR-HUM-003": "character-modeling-engineer",
+    "blend:CHAR-HUM-004": "character-modeling-engineer",
+    "glb:CHAR-HUM-004": "character-modeling-engineer",
+    "fbx:CHAR-HUM-004": "character-modeling-engineer",
+    "blend:CHAR-HUM-005": "character-modeling-engineer",
+    "glb:CHAR-HUM-005": "character-modeling-engineer",
+    "fbx:CHAR-HUM-005": "character-modeling-engineer",
+    "scene:S01": "executive-director",
+    "scene:S02": "executive-director",
+    "scene:S03": "executive-director"
+  },
+  "created": "2026-11-13T03:09:28Z",
+  "updated": "2026-11-13T03:21:07Z"
+}

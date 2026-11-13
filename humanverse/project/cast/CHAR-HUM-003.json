@@ -1,0 +1,50 @@
+{
+  "id": "CHAR-HUM-003",
+  "name": "Rosa Vale",
+  "age": 38,
+  "category": "adult",
+  "role": "mother",
+  "personality": [
+    "warm",
+    "organised",
+    "quietly funny"
+  ],
+  "motivation": "wants her family to keep their small traditions",
+  "backstory": "Runs the bakery on the corner; knows every neighbour by their favourite bread.",
+  "appearance": {
+    "height": 1.64,
+    "head_ratio": 0.165,
+    "leg_ratio": 0.56,
+    "shoulder_width": 0.11,
+    "hip_width": 0.08,
+    "thickness": 1.0,
+    "head_width": 0.9,
+    "eye_size": 0.95,
+    "cheeks": 1.0,
+    "hair_style": "bun",
+    "hairline": 0.55,
+    "apron": false,
+    "sleeve": "long",
+    "palette": {
+      "skin": "#C68A62",
+      "hair": "#4A2A1A",
+      "iris": "#3B2414",
+      "shirt": "#E07A5F",
+      "pants": "#4B4453",
+      "shoes": "#6B4A32",
+      "accent": "#F4EDE0",
+      "lips": "#B5534C"
+    }
+  },
+  "voice": {
+    "espeak_voice": "en-us+f2",
+    "rate": 148,
+    "pitch": 58,
+    "range": 60
+  },
+  "animation": {
+    "walk_speed": 0.9,
+    "energy": 1.0,
+    "signature": "hands on hips when she has an idea"
+  }
+}

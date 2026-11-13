@@ -1,0 +1,55 @@
+{
+  "id": "CHAR-HUM-004",
+  "name": "Idris Vale",
+  "age": 72,
+  "category": "elderly",
+  "role": "grandfather",
+  "personality": [
+    "patient",
+    "playful",
+    "nostalgic"
+  ],
+  "motivation": "keeps his late wife's kite flying every spring",
+  "backstory": "Retired ship's carpenter who tells a story about every knot he ties.",
+  "appearance": {
+    "height": 1.66,
+    "head_ratio": 0.16,
+    "leg_ratio": 0.53,
+    "shoulder_width": 0.115,
+    "hip_width": 0.08,
+    "thickness": 1.05,
+    "belly": 0.012,
+    "head_width": 0.95,
+    "jaw_taper": 0.12,
+    "eye_size": 0.85,
+    "nose": 1.35,
+    "ears": 1.2,
+    "hair_style": "balding",
+    "beard": true,
+    "mustache": true,
+    "glasses": true,
+    "sleeve": "long",
+    "palette": {
+      "skin": "#9C6A4A",
+      "hair": "#DADADA",
+      "brow": "#CFCFCF",
+      "iris": "#3B2A1E",
+      "shirt": "#8C6A4F",
+      "pants": "#5B5B5B",
+      "shoes": "#3B2A1E",
+      "accent": "#8C6A4F",
+      "frame": "#3A3A3A"
+    }
+  },
+  "voice": {
+    "espeak_voice": "en-us+m1",
+    "rate": 128,
+    "pitch": 32,
+    "range": 50
+  },
+  "animation": {
+    "walk_speed": 0.7,
+    "energy": 0.6,
+    "signature": "slow nod before he answers"
+  }
+}

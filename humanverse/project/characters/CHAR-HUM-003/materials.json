@@ -1,0 +1,6 @@
+{
+  "skin": "#C68A62",
+  "hair": "#4A2A1A",
+  "iris": "#3B2414",
+  "shader": "Principled BSDF; skin with subsurface 0.15; glossy eyes with emissive catch-light"
+}

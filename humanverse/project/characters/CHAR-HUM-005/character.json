@@ -1,0 +1,14 @@
+{
+  "id": "CHAR-HUM-005",
+  "name": "Noor Haddad",
+  "age": 45,
+  "category": "adult",
+  "role": "neighbour and science teacher",
+  "personality": [
+    "precise",
+    "kind",
+    "curious"
+  ],
+  "motivation": "turns every small event into a lesson about wind and weather",
+  "backstory": "Keeps a weather station on her roof and a lemon tree in her front garden."
+}

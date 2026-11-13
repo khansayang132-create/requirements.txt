@@ -1,0 +1,14 @@
+{
+  "id": "CHAR-HUM-004",
+  "name": "Idris Vale",
+  "age": 72,
+  "category": "elderly",
+  "role": "grandfather",
+  "personality": [
+    "patient",
+    "playful",
+    "nostalgic"
+  ],
+  "motivation": "keeps his late wife's kite flying every spring",
+  "backstory": "Retired ship's carpenter who tells a story about every knot he ties."
+}

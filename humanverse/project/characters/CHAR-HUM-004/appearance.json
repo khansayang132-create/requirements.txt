@@ -1,0 +1,19 @@
+{
+  "height": 1.66,
+  "head_ratio": 0.16,
+  "leg_ratio": 0.53,
+  "shoulder_width": 0.115,
+  "hip_width": 0.08,
+  "thickness": 1.05,
+  "belly": 0.012,
+  "head_width": 0.95,
+  "jaw_taper": 0.12,
+  "eye_size": 0.85,
+  "nose": 1.35,
+  "ears": 1.2,
+  "hair_style": "balding",
+  "beard": true,
+  "mustache": true,
+  "glasses": true,
+  "sleeve": "long"
+}

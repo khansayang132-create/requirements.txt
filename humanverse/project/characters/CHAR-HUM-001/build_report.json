@@ -1,0 +1,144 @@
+{
+  "id": "CHAR-HUM-001",
+  "height_m": 1.25,
+  "objects": 24,
+  "vertices": 17567,
+  "polygons": 18120,
+  "materials": [
+    "CHAR-HUM-001_accent",
+    "CHAR-HUM-001_brow",
+    "CHAR-HUM-001_eyewhite",
+    "CHAR-HUM-001_glint",
+    "CHAR-HUM-001_hair",
+    "CHAR-HUM-001_iris",
+    "CHAR-HUM-001_lips",
+    "CHAR-HUM-001_mouth",
+    "CHAR-HUM-001_pants",
+    "CHAR-HUM-001_pupil",
+    "CHAR-HUM-001_shirt",
+    "CHAR-HUM-001_shoes",
+    "CHAR-HUM-001_skin"
+  ],
+  "bones": 41,
+  "deform_bones": 27,
+  "ik": [
+    "shin.L",
+    "shin.R",
+    "forearm.L (off)",
+    "forearm.R (off)"
+  ],
+  "mouth_shape_keys": [
+    "Basis",
+    "open",
+    "smile",
+    "frown",
+    "wide",
+    "round",
+    "closed"
+  ],
+  "face_controls": [
+    "open",
+    "smile",
+    "frown",
+    "wide",
+    "round",
+    "closed"
+  ],
+  "skinning": [
+    {
+      "object": "body",
+      "method": "bone_heat",
+      "unweighted_pct": 0.0,
+      "leak_pct": 0.0,
+      "vertices": 5154,
+      "masked_under_clothes": 1357
+    },
+    {
+      "object": "shirt",
+      "method": "bone_heat",
+      "unweighted_pct": 0.0,
+      "leak_pct": 0.0,
+      "vertices": 714
+    },
+    {
+      "object": "pants",
+      "method": "bone_heat",
+      "unweighted_pct": 0.0,
+      "leak_pct": 0.0,
+      "vertices": 586
+    }
+  ],
+  "exports": [
+    "glb",
+    "fbx"
+  ],
+  "blend": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-001/CHAR-HUM-001.blend",
+  "build_seconds": 0.7,
+  "deformation": {
+    "rest": {
+      "max_stretch": 1.0,
+      "min_stretch": 1.0,
+      "edges_over_limit": 0,
+      "edges": 7492,
+      "finite": true,
+      "status": "PASS"
+    },
+    "shoulders_raise": {
+      "max_stretch": 1.088,
+      "min_stretch": 0.514,
+      "edges_over_limit": 0,
+      "edges": 7492,
+      "finite": true,
+      "status": "PASS"
+    },
+    "arms_forward": {
+      "max_stretch": 1.453,
+      "min_stretch": 0.771,
+      "edges_over_limit": 0,
+      "edges": 7492,
+      "finite": true,
+      "status": "PASS"
+    },
+    "elbows_bend": {
+      "max_stretch": 1.67,
+      "min_stretch": 0.441,
+      "edges_over_limit": 0,
+      "edges": 7492,
+      "finite": true,
+      "status": "PASS"
+    },
+    "wrists_fingers": {
+      "max_stretch": 2.092,
+      "min_stretch": 0.287,
+      "edges_over_limit": 0,
+      "edges": 7492,
+      "finite": true,
+      "status": "PASS"
+    },
+    "hips_twist_bend": {
+      "max_stretch": 1.0,
+      "min_stretch": 1.0,
+      "edges_over_limit": 0,
+      "edges": 7492,
+      "finite": true,
+      "status": "PASS"
+    },
+    "knees_bend": {
+      "max_stretch": 1.0,
+      "min_stretch": 1.0,
+      "edges_over_limit": 0,
+      "edges": 7492,
+      "finite": true,
+      "status": "PASS"
+    },
+    "head_turn_tilt": {
+      "max_stretch": 1.358,
+      "min_stretch": 0.573,
+      "edges_over_limit": 0,
+      "edges": 7492,
+      "finite": true,
+      "status": "PASS"
+    }
+  },
+  "deformation_status": "PASS"
+}

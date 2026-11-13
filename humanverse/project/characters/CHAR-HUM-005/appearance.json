@@ -1,0 +1,15 @@
+{
+  "height": 1.68,
+  "head_ratio": 0.16,
+  "leg_ratio": 0.56,
+  "shoulder_width": 0.11,
+  "hip_width": 0.076,
+  "thickness": 0.95,
+  "head_width": 0.88,
+  "eye_size": 0.95,
+  "hair_style": "bob",
+  "hairline": 0.58,
+  "glasses": true,
+  "tie": false,
+  "sleeve": "long"
+}
