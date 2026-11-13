@@ -1,0 +1,66 @@
+{
+  "id": "07-wadle",
+  "name": "Wadle",
+  "style": "07-chibi",
+  "species": "elephant",
+  "age": "child",
+  "build": "tall",
+  "colors": {
+    "body": "#F5F0B8",
+    "belly": "#FFFFFF",
+    "inner_ear": "#FFB4C3",
+    "accent": "#D0F4DE",
+    "nose": "#FE88AC"
+  },
+  "clothing": {
+    "accessory": "scarf",
+    "color": "#D0F4DE"
+  },
+  "personality": [
+    "sparkly",
+    "bossy",
+    "shy"
+  ],
+  "quirk": "collects shiny pebbles",
+  "seed": 1,
+  "proportions": {
+    "age": "child",
+    "build": "tall"
+  },
+  "style_name": "Chibi",
+  "render_spec": {
+    "id": "07-wadle",
+    "name": "Wadle",
+    "species": "elephant",
+    "colors": {
+      "body": "#F5F0B8",
+      "belly": "#FFFFFF",
+      "inner_ear": "#FFB4C3",
+      "accent": "#D0F4DE",
+      "nose": "#FE88AC"
+    },
+    "clothing": {
+      "accessory": "scarf",
+      "color": "#D0F4DE"
+    },
+    "style": {
+      "mode": 0,
+      "head": 1.42,
+      "body": [
+        0.718,
+        0.739,
+        0.718
+      ],
+      "eye": 1.2,
+      "outline": 1.25,
+      "noise": 0.35,
+      "noise_scale": 0.05,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.789,
+    "scale": 1.167
+  }
+}

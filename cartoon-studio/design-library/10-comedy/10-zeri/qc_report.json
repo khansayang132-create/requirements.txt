@@ -1,0 +1,49 @@
+{
+  "character": "10-zeri",
+  "name": "Zeri",
+  "style": "10-comedy",
+  "status": "PASS",
+  "checks": {
+    "files": {
+      "status": "PASS",
+      "detail": "all present and readable"
+    },
+    "high_res_sheet": {
+      "status": "PASS",
+      "detail": "character sheet 3000x2200"
+    },
+    "transparent_png": {
+      "status": "PASS",
+      "detail": "RGBA with alpha 0 background on all views"
+    },
+    "visual_quality": {
+      "status": "PASS",
+      "detail": "figure present, not cropped, no black/garbage regions"
+    },
+    "turnaround_scale": {
+      "status": "PASS",
+      "detail": "view heights {'front': 1151, 'three-quarter': 1162, 'side': 1163, 'back': 1134} (spread 2.5%, limit 10%: ears and tails foreshorten by angle)"
+    },
+    "character_consistency": {
+      "status": "PASS",
+      "detail": "front vs three-quarter colour histogram correlation 1.00 (min 0.60)"
+    },
+    "symmetry": {
+      "status": "PASS",
+      "detail": "front silhouette mirror IoU 0.79 (min 0.72; bow is one-sided)"
+    },
+    "proportions": {
+      "status": "PASS",
+      "detail": "head:body 0.62 (valid 0.3-0.86; big-head styles need >= 0.42)"
+    },
+    "color_consistency": {
+      "status": "PASS",
+      "detail": "nearest-pixel CIELAB distance {'body': 6.2, 'accent': 1.9} (limit 28.0)"
+    },
+    "style_signature": {
+      "status": "PASS",
+      "detail": "{'render_mode_matches': True, 'outline_setting_matches': True, 'silhouette_ink_reported': 0.744, 'texture': 3.16} (mode 0, outline 1.15)"
+    }
+  },
+  "not_tested": "appeal and acting quality (human review of the sheets)"
+}

@@ -1,0 +1,113 @@
+{
+  "style": "08-clay",
+  "name": "Clay Animation",
+  "summary": "Matte plasticine with thumb-pressed surface variation, no outlines, warm tabletop light.",
+  "accepted": 5,
+  "wanted": 5,
+  "status": "PASS",
+  "characters": [
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/08-clay/08-karra",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.592,
+      "id": "08-karra",
+      "name": "Karra",
+      "seconds": 15.0
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/08-clay/08-keri",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.562,
+      "id": "08-keri",
+      "name": "Keri",
+      "seconds": 12.4
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/08-clay/08-bobie",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.593,
+      "id": "08-bobie",
+      "name": "Bobie",
+      "seconds": 14.1
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/08-clay/08-joquin",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.659,
+      "id": "08-joquin",
+      "name": "Joquin",
+      "seconds": 16.7
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/08-clay/08-tazzy",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.625,
+      "id": "08-tazzy",
+      "name": "Tazzy",
+      "seconds": 15.0
+    }
+  ],
+  "rejected": [],
+  "environment": "/home/user/requirements.txt/cartoon-studio/design-library/08-clay/environment_concept.png",
+  "lineup": "/home/user/requirements.txt/cartoon-studio/design-library/08-clay/style_lineup.png"
+}

@@ -1,0 +1,123 @@
+{
+  "style": "05-cute-baby",
+  "name": "Cute Baby Cartoon",
+  "summary": "Round oversized head, huge eyes, tiny body, pastel palette, very soft bright light.",
+  "accepted": 5,
+  "wanted": 5,
+  "status": "PASS",
+  "characters": [
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/05-cute-baby/05-findo",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.85,
+      "id": "05-findo",
+      "name": "Findo",
+      "seconds": 15.6
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/05-cute-baby/05-plolix",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.84,
+      "id": "05-plolix",
+      "name": "Plolix",
+      "seconds": 17.6
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/05-cute-baby/05-boto",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.84,
+      "id": "05-boto",
+      "name": "Boto",
+      "seconds": 15.8
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/05-cute-baby/05-tabie",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.795,
+      "id": "05-tabie",
+      "name": "Tabie",
+      "seconds": 22.6
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/05-cute-baby/05-wafer",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.84,
+      "id": "05-wafer",
+      "name": "Wafer",
+      "seconds": 17.7
+    }
+  ],
+  "rejected": [
+    {
+      "id": "05-plozzy",
+      "name": "Plozzy",
+      "attempt": 1,
+      "failed": {
+        "color_consistency": "nearest-pixel CIELAB distance {'body': 0.0, 'accent': 56.4} (limit 28.0)"
+      },
+      "kept_at": "/home/user/requirements.txt/cartoon-studio/design-library/rejected/05-cute-baby/05-plozzy-attempt1"
+    }
+  ],
+  "environment": "/home/user/requirements.txt/cartoon-studio/design-library/05-cute-baby/environment_concept.png",
+  "lineup": "/home/user/requirements.txt/cartoon-studio/design-library/05-cute-baby/style_lineup.png"
+}

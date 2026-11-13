@@ -1,0 +1,66 @@
+{
+  "id": "15-nofer",
+  "name": "Nofer",
+  "style": "15-educational",
+  "species": "elephant",
+  "age": "teen",
+  "build": "standard",
+  "colors": {
+    "body": "#479BDE",
+    "belly": "#EAF4FC",
+    "inner_ear": "#FFBCCF",
+    "accent": "#FFD23F",
+    "nose": "#F599AD"
+  },
+  "clothing": {
+    "accessory": "bandana",
+    "color": "#FFD23F"
+  },
+  "personality": [
+    "helpful",
+    "encouraging",
+    "bold"
+  ],
+  "quirk": "keeps a pocket notebook",
+  "seed": 1,
+  "proportions": {
+    "age": "teen",
+    "build": "standard"
+  },
+  "style_name": "Educational Cartoon",
+  "render_spec": {
+    "id": "15-nofer",
+    "name": "Nofer",
+    "species": "elephant",
+    "colors": {
+      "body": "#479BDE",
+      "belly": "#EAF4FC",
+      "inner_ear": "#FFBCCF",
+      "accent": "#FFD23F",
+      "nose": "#F599AD"
+    },
+    "clothing": {
+      "accessory": "bandana",
+      "color": "#FFD23F"
+    },
+    "style": {
+      "mode": 0,
+      "head": 1.053,
+      "body": [
+        1.018,
+        1.018,
+        1.018
+      ],
+      "eye": 1.064,
+      "outline": 0.9,
+      "noise": 0.35,
+      "noise_scale": 0.05,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.622,
+    "scale": 1.373
+  }
+}

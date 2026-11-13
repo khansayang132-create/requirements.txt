@@ -1,0 +1,66 @@
+{
+  "id": "15-bovel",
+  "name": "Bovel",
+  "style": "15-educational",
+  "species": "cat",
+  "age": "teen",
+  "build": "stocky",
+  "colors": {
+    "body": "#E9456E",
+    "belly": "#FDE3E9",
+    "inner_ear": "#FCBDC9",
+    "accent": "#3BCEAC",
+    "nose": "#FA88B4"
+  },
+  "clothing": {
+    "accessory": "bow",
+    "color": "#3BCEAC"
+  },
+  "personality": [
+    "question-asker",
+    "counting-champion",
+    "bold"
+  ],
+  "quirk": "sleeps with one ear up",
+  "seed": 1,
+  "proportions": {
+    "age": "teen",
+    "build": "stocky"
+  },
+  "style_name": "Educational Cartoon",
+  "render_spec": {
+    "id": "15-bovel",
+    "name": "Bovel",
+    "species": "cat",
+    "colors": {
+      "body": "#E9456E",
+      "belly": "#FDE3E9",
+      "inner_ear": "#FCBDC9",
+      "accent": "#3BCEAC",
+      "nose": "#FA88B4"
+    },
+    "clothing": {
+      "accessory": "bow",
+      "color": "#3BCEAC"
+    },
+    "style": {
+      "mode": 0,
+      "head": 1.053,
+      "body": [
+        1.17,
+        0.895,
+        1.14
+      ],
+      "eye": 1.064,
+      "outline": 0.9,
+      "noise": 0.35,
+      "noise_scale": 0.05,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.658,
+    "scale": 1.9
+  }
+}

@@ -97,9 +97,38 @@ class Healer:
         return [{"worker": h["worker"], "age_s": round(now - h["at"])} for h in self.store.heartbeats()
                 if now - h["at"] > STALE_WORKER]
 
+    def _dead_local_owners(self) -> set[str]:
+        """Lease owners ("host:pid") on this machine whose process is gone. Their leases can be long (a tool's whole
+        timeout, hours for a render), so waiting for expiry would stall the queue; a dead local process is certain."""
+        import os
+        import socket
+
+        host, dead = socket.gethostname(), set()
+        rows = self.store.db.execute("SELECT DISTINCT lease_owner FROM tasks WHERE state='RUNNING' AND lease_owner IS NOT NULL")
+        for r in rows:
+            owner = r["lease_owner"]
+            h, _, pid = owner.rpartition(":")
+            if h != host or not pid.isdigit():
+                continue
+            try:
+                os.kill(int(pid), 0)
+            except ProcessLookupError:
+                dead.add(owner)
+            except PermissionError:
+                pass
+        return dead
+
     def watchdog(self) -> list[str]:
-        """Re-queue tasks whose runner died (lease expired)."""
+        """Re-queue tasks whose runner died: lease expired, or its local process no longer exists."""
         recovered = []
+        dead = self._dead_local_owners()
+        for t in self.store.db.execute("SELECT * FROM tasks WHERE state='RUNNING'").fetchall():
+            if t["lease_owner"] in dead:
+                self.store.move_task(t["id"], State.READY, f"runner {t['lease_owner']} is gone (process exited); re-queued",
+                                     lease_owner=None, lease_expires_at=None)
+                self._log("transient", "requeued", f"runner process {t['lease_owner']} died; task back to READY",
+                          self.store.task(t["id"]))
+                recovered.append(t["id"])
         for m in self.store.db.execute("SELECT DISTINCT mission_id FROM tasks WHERE state='RUNNING' AND "
                                        "(lease_expires_at IS NULL OR lease_expires_at < ?)", (self.clock(),)).fetchall():
             for tid in self.store.recover(m["mission_id"]):

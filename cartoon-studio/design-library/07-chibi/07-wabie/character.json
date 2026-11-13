@@ -1,0 +1,66 @@
+{
+  "id": "07-wabie",
+  "name": "Wabie",
+  "style": "07-chibi",
+  "species": "duck",
+  "age": "child",
+  "build": "round",
+  "colors": {
+    "body": "#FE8DC7",
+    "belly": "#FFF0F6",
+    "inner_ear": "#FABBC1",
+    "accent": "#A9DEF9",
+    "nose": "#FFA128"
+  },
+  "clothing": {
+    "accessory": "boots",
+    "color": "#A9DEF9"
+  },
+  "personality": [
+    "snack-obsessed",
+    "bossy",
+    "careful"
+  ],
+  "quirk": "names every cloud",
+  "seed": 1,
+  "proportions": {
+    "age": "child",
+    "build": "round"
+  },
+  "style_name": "Chibi",
+  "render_spec": {
+    "id": "07-wabie",
+    "name": "Wabie",
+    "species": "duck",
+    "colors": {
+      "body": "#FE8DC7",
+      "belly": "#FFF0F6",
+      "inner_ear": "#FABBC1",
+      "accent": "#A9DEF9",
+      "nose": "#FFA128"
+    },
+    "clothing": {
+      "accessory": "boots",
+      "color": "#A9DEF9"
+    },
+    "style": {
+      "mode": 0,
+      "head": 1.42,
+      "body": [
+        0.874,
+        0.607,
+        0.858
+      ],
+      "eye": 1.2,
+      "outline": 1.25,
+      "noise": 0.35,
+      "noise_scale": 0.05,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.835,
+    "scale": 1.373
+  }
+}

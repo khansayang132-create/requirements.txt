@@ -1,0 +1,49 @@
+{
+  "character": "10-zanppa",
+  "name": "Zanppa",
+  "style": "10-comedy",
+  "status": "PASS",
+  "checks": {
+    "files": {
+      "status": "PASS",
+      "detail": "all present and readable"
+    },
+    "high_res_sheet": {
+      "status": "PASS",
+      "detail": "character sheet 3000x2200"
+    },
+    "transparent_png": {
+      "status": "PASS",
+      "detail": "RGBA with alpha 0 background on all views"
+    },
+    "visual_quality": {
+      "status": "PASS",
+      "detail": "figure present, not cropped, no black/garbage regions"
+    },
+    "turnaround_scale": {
+      "status": "PASS",
+      "detail": "view heights {'front': 586, 'three-quarter': 599, 'side': 608, 'back': 582} (spread 4.3%, limit 10%: ears and tails foreshorten by angle)"
+    },
+    "character_consistency": {
+      "status": "PASS",
+      "detail": "front vs three-quarter colour histogram correlation 0.99 (min 0.60)"
+    },
+    "symmetry": {
+      "status": "PASS",
+      "detail": "front silhouette mirror IoU 1.00 (min 0.82)"
+    },
+    "proportions": {
+      "status": "PASS",
+      "detail": "head:body 0.68 (valid 0.3-0.86; big-head styles need >= 0.42)"
+    },
+    "color_consistency": {
+      "status": "PASS",
+      "detail": "nearest-pixel CIELAB distance {'body': 0.6, 'accent': 2.4} (limit 28.0)"
+    },
+    "style_signature": {
+      "status": "PASS",
+      "detail": "{'render_mode_matches': True, 'outline_setting_matches': True, 'silhouette_ink_reported': 0.804, 'texture': 3.02} (mode 0, outline 1.15)"
+    }
+  },
+  "not_tested": "appeal and acting quality (human review of the sheets)"
+}

@@ -1,0 +1,113 @@
+{
+  "style": "10-comedy",
+  "name": "Comedy Cartoon",
+  "summary": "Squat wide bodies, huge eyes and heads for big reactions, loud primary colours.",
+  "accepted": 5,
+  "wanted": 5,
+  "status": "PASS",
+  "characters": [
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/10-comedy/10-lundo",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.62,
+      "id": "10-lundo",
+      "name": "Lundo",
+      "seconds": 14.0
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/10-comedy/10-kebie",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.711,
+      "id": "10-kebie",
+      "name": "Kebie",
+      "seconds": 12.1
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/10-comedy/10-safer",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.673,
+      "id": "10-safer",
+      "name": "Safer",
+      "seconds": 13.6
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/10-comedy/10-zanppa",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.679,
+      "id": "10-zanppa",
+      "name": "Zanppa",
+      "seconds": 16.4
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/10-comedy/10-zeri",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.619,
+      "id": "10-zeri",
+      "name": "Zeri",
+      "seconds": 15.3
+    }
+  ],
+  "rejected": [],
+  "environment": "/home/user/requirements.txt/cartoon-studio/design-library/10-comedy/environment_concept.png",
+  "lineup": "/home/user/requirements.txt/cartoon-studio/design-library/10-comedy/style_lineup.png"
+}

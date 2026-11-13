@@ -1,0 +1,66 @@
+{
+  "id": "10-zanppa",
+  "name": "Zanppa",
+  "style": "10-comedy",
+  "species": "elephant",
+  "age": "child",
+  "build": "tall",
+  "colors": {
+    "body": "#FF006F",
+    "belly": "#FFE0EE",
+    "inner_ear": "#FFB5C1",
+    "accent": "#FFBE0B",
+    "nose": "#FF94A8"
+  },
+  "clothing": {
+    "accessory": "bandana",
+    "color": "#FFBE0B"
+  },
+  "personality": [
+    "over-confident",
+    "panicky",
+    "funny"
+  ],
+  "quirk": "always shares the last snack",
+  "seed": 1,
+  "proportions": {
+    "age": "child",
+    "build": "tall"
+  },
+  "style_name": "Comedy Cartoon",
+  "render_spec": {
+    "id": "10-zanppa",
+    "name": "Zanppa",
+    "species": "elephant",
+    "colors": {
+      "body": "#FF006F",
+      "belly": "#FFE0EE",
+      "inner_ear": "#FFB5C1",
+      "accent": "#FFBE0B",
+      "nose": "#FF94A8"
+    },
+    "clothing": {
+      "accessory": "bandana",
+      "color": "#FFBE0B"
+    },
+    "style": {
+      "mode": 0,
+      "head": 1.22,
+      "body": [
+        1.049,
+        0.963,
+        1.012
+      ],
+      "eye": 1.28,
+      "outline": 1.15,
+      "noise": 0.35,
+      "noise_scale": 0.05,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.679,
+    "scale": 1.167
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "id": "15-zanrra",
+  "name": "Zanrra",
+  "style": "15-educational",
+  "species": "bunny",
+  "age": "teen",
+  "build": "round",
+  "colors": {
+    "body": "#A57FC8",
+    "belly": "#F2ECF8",
+    "inner_ear": "#FEB7BE",
+    "accent": "#FFD23F",
+    "nose": "#F989AA"
+  },
+  "clothing": {
+    "accessory": "bow",
+    "color": "#FFD23F"
+  },
+  "personality": [
+    "counting-champion",
+    "question-asker",
+    "shy"
+  ],
+  "quirk": "names every cloud",
+  "seed": 1,
+  "proportions": {
+    "age": "teen",
+    "build": "round"
+  },
+  "style_name": "Educational Cartoon",
+  "render_spec": {
+    "id": "15-zanrra",
+    "name": "Zanrra",
+    "species": "bunny",
+    "colors": {
+      "body": "#A57FC8",
+      "belly": "#F2ECF8",
+      "inner_ear": "#FEB7BE",
+      "accent": "#FFD23F",
+      "nose": "#F989AA"
+    },
+    "clothing": {
+      "accessory": "bow",
+      "color": "#FFD23F"
+    },
+    "style": {
+      "mode": 0,
+      "head": 1.053,
+      "body": [
+        1.14,
+        0.936,
+        1.119
+      ],
+      "eye": 1.064,
+      "outline": 0.9,
+      "noise": 0.35,
+      "noise_scale": 0.05,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.646,
+    "scale": 1.9
+  }
+}

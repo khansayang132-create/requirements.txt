@@ -1,0 +1,66 @@
+{
+  "id": "07-ruto",
+  "name": "Ruto",
+  "style": "07-chibi",
+  "species": "bunny",
+  "age": "child",
+  "build": "standard",
+  "colors": {
+    "body": "#B1E3EE",
+    "belly": "#F2FAFF",
+    "inner_ear": "#F5AECE",
+    "accent": "#E4C1F9",
+    "nose": "#FF88AF"
+  },
+  "clothing": {
+    "accessory": "bandana",
+    "color": "#E4C1F9"
+  },
+  "personality": [
+    "sparkly",
+    "hyper",
+    "playful"
+  ],
+  "quirk": "collects shiny pebbles",
+  "seed": 1,
+  "proportions": {
+    "age": "child",
+    "build": "standard"
+  },
+  "style_name": "Chibi",
+  "render_spec": {
+    "id": "07-ruto",
+    "name": "Ruto",
+    "species": "bunny",
+    "colors": {
+      "body": "#B1E3EE",
+      "belly": "#F2FAFF",
+      "inner_ear": "#F5AECE",
+      "accent": "#E4C1F9",
+      "nose": "#FF88AF"
+    },
+    "clothing": {
+      "accessory": "bandana",
+      "color": "#E4C1F9"
+    },
+    "style": {
+      "mode": 0,
+      "head": 1.42,
+      "body": [
+        0.78,
+        0.66,
+        0.78
+      ],
+      "eye": 1.2,
+      "outline": 1.25,
+      "noise": 0.35,
+      "noise_scale": 0.05,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.816,
+    "scale": 1.373
+  }
+}

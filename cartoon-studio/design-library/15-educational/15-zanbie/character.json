@@ -1,0 +1,66 @@
+{
+  "id": "15-zanbie",
+  "name": "Zanbie",
+  "style": "15-educational",
+  "species": "bear",
+  "age": "adult",
+  "build": "tall",
+  "colors": {
+    "body": "#40D0AE",
+    "belly": "#E6FAF5",
+    "inner_ear": "#FFB1BD",
+    "accent": "#EE4266",
+    "nose": "#FE8EA3"
+  },
+  "clothing": {
+    "accessory": "scarf",
+    "color": "#EE4266"
+  },
+  "personality": [
+    "counting-champion",
+    "helpful",
+    "playful"
+  ],
+  "quirk": "collects shiny pebbles",
+  "seed": 1,
+  "proportions": {
+    "age": "adult",
+    "build": "tall"
+  },
+  "style_name": "Educational Cartoon",
+  "render_spec": {
+    "id": "15-zanbie",
+    "name": "Zanbie",
+    "species": "bear",
+    "colors": {
+      "body": "#40D0AE",
+      "belly": "#E6FAF5",
+      "inner_ear": "#FFB1BD",
+      "accent": "#EE4266",
+      "nose": "#FE8EA3"
+    },
+    "clothing": {
+      "accessory": "scarf",
+      "color": "#EE4266"
+    },
+    "style": {
+      "mode": 0,
+      "head": 1.008,
+      "body": [
+        0.989,
+        1.204,
+        0.989
+      ],
+      "eye": 0.986,
+      "outline": 0.9,
+      "noise": 0.35,
+      "noise_scale": 0.05,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.564,
+    "scale": 1.9
+  }
+}

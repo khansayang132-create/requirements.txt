@@ -1,0 +1,66 @@
+{
+  "id": "15-drilo",
+  "name": "Drilo",
+  "style": "15-educational",
+  "species": "duck",
+  "age": "child",
+  "build": "tall",
+  "colors": {
+    "body": "#FFD43C",
+    "belly": "#FFF8DB",
+    "inner_ear": "#FCB3C3",
+    "accent": "#540D6E",
+    "nose": "#FFAB2C"
+  },
+  "clothing": {
+    "accessory": "scarf",
+    "color": "#540D6E"
+  },
+  "personality": [
+    "encouraging",
+    "helpful",
+    "playful"
+  ],
+  "quirk": "always shares the last snack",
+  "seed": 1,
+  "proportions": {
+    "age": "child",
+    "build": "tall"
+  },
+  "style_name": "Educational Cartoon",
+  "render_spec": {
+    "id": "15-drilo",
+    "name": "Drilo",
+    "species": "duck",
+    "colors": {
+      "body": "#FFD43C",
+      "belly": "#FFF8DB",
+      "inner_ear": "#FCB3C3",
+      "accent": "#540D6E",
+      "nose": "#FFAB2C"
+    },
+    "clothing": {
+      "accessory": "scarf",
+      "color": "#540D6E"
+    },
+    "style": {
+      "mode": 0,
+      "head": 1.12,
+      "body": [
+        0.883,
+        1.075,
+        0.883
+      ],
+      "eye": 1.12,
+      "outline": 0.9,
+      "noise": 0.35,
+      "noise_scale": 0.05,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.627,
+    "scale": 1.9
+  }
+}

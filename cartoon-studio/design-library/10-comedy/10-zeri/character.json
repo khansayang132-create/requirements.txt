@@ -1,0 +1,66 @@
+{
+  "id": "10-zeri",
+  "name": "Zeri",
+  "style": "10-comedy",
+  "species": "bunny",
+  "age": "adult",
+  "build": "tall",
+  "colors": {
+    "body": "#812BE5",
+    "belly": "#EFE3FF",
+    "inner_ear": "#FFB4CD",
+    "accent": "#06D6A0",
+    "nose": "#F597B2"
+  },
+  "clothing": {
+    "accessory": "bow",
+    "color": "#06D6A0"
+  },
+  "personality": [
+    "panicky",
+    "slapstick",
+    "shy"
+  ],
+  "quirk": "names every cloud",
+  "seed": 1,
+  "proportions": {
+    "age": "adult",
+    "build": "tall"
+  },
+  "style_name": "Comedy Cartoon",
+  "render_spec": {
+    "id": "10-zeri",
+    "name": "Zeri",
+    "species": "bunny",
+    "colors": {
+      "body": "#812BE5",
+      "belly": "#EFE3FF",
+      "inner_ear": "#FFB4CD",
+      "accent": "#06D6A0",
+      "nose": "#F597B2"
+    },
+    "clothing": {
+      "accessory": "bow",
+      "color": "#06D6A0"
+    },
+    "style": {
+      "mode": 0,
+      "head": 1.098,
+      "body": [
+        1.175,
+        1.079,
+        1.133
+      ],
+      "eye": 1.126,
+      "outline": 1.15,
+      "noise": 0.35,
+      "noise_scale": 0.05,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.619,
+    "scale": 1.615
+  }
+}

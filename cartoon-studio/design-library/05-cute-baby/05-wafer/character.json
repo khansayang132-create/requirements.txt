@@ -1,0 +1,66 @@
+{
+  "id": "05-wafer",
+  "name": "Wafer",
+  "style": "05-cute-baby",
+  "species": "bunny",
+  "age": "baby",
+  "build": "round",
+  "colors": {
+    "body": "#F2C3F0",
+    "belly": "#FBF5FF",
+    "inner_ear": "#FABBC6",
+    "accent": "#FFD670",
+    "nose": "#F792A7"
+  },
+  "clothing": {
+    "accessory": "bow",
+    "color": "#FFD670"
+  },
+  "personality": [
+    "sleepy",
+    "cuddly",
+    "bold"
+  ],
+  "quirk": "always shares the last snack",
+  "seed": 204,
+  "proportions": {
+    "age": "baby",
+    "build": "round"
+  },
+  "style_name": "Cute Baby Cartoon",
+  "render_spec": {
+    "id": "05-wafer",
+    "name": "Wafer",
+    "species": "bunny",
+    "colors": {
+      "body": "#F2C3F0",
+      "belly": "#FBF5FF",
+      "inner_ear": "#FABBC6",
+      "accent": "#FFD670",
+      "nose": "#F792A7"
+    },
+    "clothing": {
+      "accessory": "bow",
+      "color": "#FFD670"
+    },
+    "style": {
+      "mode": 1,
+      "head": 1.475,
+      "body": [
+        0.79,
+        0.618,
+        0.776
+      ],
+      "eye": 1.45,
+      "outline": 0.45,
+      "noise": 0.35,
+      "noise_scale": 0.05,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.84,
+    "scale": 1.373
+  }
+}

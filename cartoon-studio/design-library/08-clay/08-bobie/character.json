@@ -1,0 +1,66 @@
+{
+  "id": "08-bobie",
+  "name": "Bobie",
+  "style": "08-clay",
+  "species": "bear",
+  "age": "child",
+  "build": "tall",
+  "colors": {
+    "body": "#E2AF57",
+    "belly": "#F7E6BF",
+    "inner_ear": "#FBB0C1",
+    "accent": "#5B4E77",
+    "nose": "#FD8FB5"
+  },
+  "clothing": {
+    "accessory": "bandana",
+    "color": "#5B4E77"
+  },
+  "personality": [
+    "warm",
+    "tinkering",
+    "kind"
+  ],
+  "quirk": "never walks past a puddle",
+  "seed": 1,
+  "proportions": {
+    "age": "child",
+    "build": "tall"
+  },
+  "style_name": "Clay Animation",
+  "render_spec": {
+    "id": "08-bobie",
+    "name": "Bobie",
+    "species": "bear",
+    "colors": {
+      "body": "#E2AF57",
+      "belly": "#F7E6BF",
+      "inner_ear": "#FBB0C1",
+      "accent": "#5B4E77",
+      "nose": "#FD8FB5"
+    },
+    "clothing": {
+      "accessory": "bandana",
+      "color": "#5B4E77"
+    },
+    "style": {
+      "mode": 2,
+      "head": 1.02,
+      "body": [
+        0.957,
+        1.098,
+        0.957
+      ],
+      "eye": 0.9,
+      "outline": 0,
+      "noise": 0.8,
+      "noise_scale": 0.05,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.593,
+    "scale": 1.9
+  }
+}

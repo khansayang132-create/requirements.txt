@@ -304,3 +304,22 @@ def test_autoproduce_disk_guard(repo, monkeypatch, tmp_path):
     monkeypatch.setattr(autoproduce, "MIN_FREE_GB", 10 ** 9)
     assert autoproduce.plan_next(store, tb, concepts) is None
     assert autoproduce.status(store)["events"][0]["kind"] == "blocked"
+
+
+def test_watchdog_recovers_a_long_lease_held_by_a_dead_local_process(repo, monkeypatch):
+    """Found live: a container restart killed the worker mid-render; its 3-hour lease would have stalled the queue."""
+    import socket
+    store, tb, clock = clocked(repo)
+    monkeypatch.setitem(orch.PLAYBOOKS, "t", orch.Playbook("t", (Step("a", "a", "qa", "py_compile", {"paths": ["ok.py"]}),)))
+    mid = orch.plan(store, tb, "t")
+    store.move_mission(mid, orch.State.RUNNING, "runner")
+    dead = subprocess.Popen(["true"])
+    dead.wait()                                                # a pid that no longer exists
+    store.move_task(f"{mid}.a", orch.State.RUNNING, "runner", lease_owner=f"{socket.gethostname()}:{dead.pid}",
+                    lease_expires_at=clock.t + 3 * 3600)       # lease still valid for hours
+    h = Healer(store)
+    assert h.heal()["requeued"] == [f"{mid}.a"]
+    assert store.task(f"{mid}.a")["state"] == "READY"
+    store.move_task(f"{mid}.a", orch.State.RUNNING, "live", lease_owner=f"{socket.gethostname()}:{os.getpid()}",
+                    lease_expires_at=clock.t + 3 * 3600)       # a live owner is left alone
+    assert h.heal()["requeued"] == []

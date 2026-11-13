@@ -129,3 +129,27 @@ def previews(root: Path, width: int = 1600) -> list[Path]:
         im.save(dst, quality=82, optimize=True)
         made.append(dst)
     return made
+
+
+def reindex(root: Path) -> dict:
+    """Rebuild library.json from every style on disk, re-running the current QC on each accepted character, so the
+    index never mixes verdicts from older rules. A character that now fails is reported, not hidden."""
+    styles = {}
+    for rp in sorted(root.glob("*/style_report.json")):
+        rep = json.loads(rp.read_text())
+        chars = []
+        for c in rep["characters"]:
+            d = Path(c["dir"])
+            q = qc.check_character(d)
+            chars.append({"id": c["id"], "name": c["name"], "qc": q["status"],
+                          "files": {f: _sha(d / f) for f in c["files"]}})
+        ok = sum(ch["qc"] == "PASS" for ch in chars)
+        styles[rep["style"]] = {"name": rep["name"], "summary": rep["summary"], "accepted": ok, "wanted": rep["wanted"],
+                                "status": "PASS" if ok == rep["wanted"] else "FAIL", "characters": chars,
+                                "rejected_during_build": len(rep["rejected"])}
+    done = {sid: [{"dir": str(root / sid / c["id"])} for c in v["characters"]] for sid, v in styles.items()}
+    names = [c["name"] for v in styles.values() for c in v["characters"]]
+    lib = {"styles": styles, "unique_names": len(names) == len(set(names)), "characters": len(names),
+           "distinctness": qc.style_distinctness(done)}
+    (root / "library.json").write_text(json.dumps(lib, indent=2))
+    return lib

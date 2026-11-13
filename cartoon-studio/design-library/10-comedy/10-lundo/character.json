@@ -1,0 +1,66 @@
+{
+  "id": "10-lundo",
+  "name": "Lundo",
+  "style": "10-comedy",
+  "species": "cat",
+  "age": "adult",
+  "build": "tall",
+  "colors": {
+    "body": "#FFCB12",
+    "belly": "#FFF3C4",
+    "inner_ear": "#FFBBCC",
+    "accent": "#3A86FF",
+    "nose": "#F596A2"
+  },
+  "clothing": {
+    "accessory": "bow",
+    "color": "#3A86FF"
+  },
+  "personality": [
+    "over-confident",
+    "panicky",
+    "funny"
+  ],
+  "quirk": "names every cloud",
+  "seed": 1,
+  "proportions": {
+    "age": "adult",
+    "build": "tall"
+  },
+  "style_name": "Comedy Cartoon",
+  "render_spec": {
+    "id": "10-lundo",
+    "name": "Lundo",
+    "species": "cat",
+    "colors": {
+      "body": "#FFCB12",
+      "belly": "#FFF3C4",
+      "inner_ear": "#FFBBCC",
+      "accent": "#3A86FF",
+      "nose": "#F596A2"
+    },
+    "clothing": {
+      "accessory": "bow",
+      "color": "#3A86FF"
+    },
+    "style": {
+      "mode": 0,
+      "head": 1.098,
+      "body": [
+        1.175,
+        1.079,
+        1.133
+      ],
+      "eye": 1.126,
+      "outline": 1.15,
+      "noise": 0.35,
+      "noise_scale": 0.05,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.62,
+    "scale": 1.9
+  }
+}

@@ -1,0 +1,113 @@
+{
+  "style": "07-chibi",
+  "name": "Chibi",
+  "summary": "Head bigger than the body, stubby limbs, bold outlines and candy colours.",
+  "accepted": 5,
+  "wanted": 5,
+  "status": "PASS",
+  "characters": [
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/07-chibi/07-wabie",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.835,
+      "id": "07-wabie",
+      "name": "Wabie",
+      "seconds": 13.2
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/07-chibi/07-wadle",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.789,
+      "id": "07-wadle",
+      "name": "Wadle",
+      "seconds": 16.3
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/07-chibi/07-ruto",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.816,
+      "id": "07-ruto",
+      "name": "Ruto",
+      "seconds": 15.2
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/07-chibi/07-tando",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.844,
+      "id": "07-tando",
+      "name": "Tando",
+      "seconds": 14.1
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/07-chibi/07-kerra",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.789,
+      "id": "07-kerra",
+      "name": "Kerra",
+      "seconds": 13.1
+    }
+  ],
+  "rejected": [],
+  "environment": "/home/user/requirements.txt/cartoon-studio/design-library/07-chibi/environment_concept.png",
+  "lineup": "/home/user/requirements.txt/cartoon-studio/design-library/07-chibi/style_lineup.png"
+}

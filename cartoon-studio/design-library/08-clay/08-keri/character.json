@@ -1,0 +1,66 @@
+{
+  "id": "08-keri",
+  "name": "Keri",
+  "style": "08-clay",
+  "species": "duck",
+  "age": "adult",
+  "build": "standard",
+  "colors": {
+    "body": "#94AF75",
+    "belly": "#E3EBD3",
+    "inner_ear": "#F7B7D0",
+    "accent": "#C1403D",
+    "nose": "#FAA22E"
+  },
+  "clothing": {
+    "accessory": "bow",
+    "color": "#C1403D"
+  },
+  "personality": [
+    "warm",
+    "tinkering",
+    "kind"
+  ],
+  "quirk": "never walks past a puddle",
+  "seed": 1,
+  "proportions": {
+    "age": "adult",
+    "build": "standard"
+  },
+  "style_name": "Clay Animation",
+  "render_spec": {
+    "id": "08-keri",
+    "name": "Keri",
+    "species": "duck",
+    "colors": {
+      "body": "#94AF75",
+      "belly": "#E3EBD3",
+      "inner_ear": "#F7B7D0",
+      "accent": "#C1403D",
+      "nose": "#FAA22E"
+    },
+    "clothing": {
+      "accessory": "bow",
+      "color": "#C1403D"
+    },
+    "style": {
+      "mode": 2,
+      "head": 0.918,
+      "body": [
+        1.165,
+        1.098,
+        1.165
+      ],
+      "eye": 0.792,
+      "outline": 0,
+      "noise": 0.8,
+      "noise_scale": 0.05,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.562,
+    "scale": 1.9
+  }
+}

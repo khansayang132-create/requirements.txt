@@ -1,0 +1,66 @@
+{
+  "id": "08-karra",
+  "name": "Karra",
+  "style": "08-clay",
+  "species": "bunny",
+  "age": "child",
+  "build": "tall",
+  "colors": {
+    "body": "#E2845F",
+    "belly": "#F2D0B5",
+    "inner_ear": "#F6BCBD",
+    "accent": "#3E6990",
+    "nose": "#F691A3"
+  },
+  "clothing": {
+    "accessory": "scarf",
+    "color": "#3E6990"
+  },
+  "personality": [
+    "warm",
+    "tinkering",
+    "careful"
+  ],
+  "quirk": "always shares the last snack",
+  "seed": 1,
+  "proportions": {
+    "age": "child",
+    "build": "tall"
+  },
+  "style_name": "Clay Animation",
+  "render_spec": {
+    "id": "08-karra",
+    "name": "Karra",
+    "species": "bunny",
+    "colors": {
+      "body": "#E2845F",
+      "belly": "#F2D0B5",
+      "inner_ear": "#F6BCBD",
+      "accent": "#3E6990",
+      "nose": "#F691A3"
+    },
+    "clothing": {
+      "accessory": "scarf",
+      "color": "#3E6990"
+    },
+    "style": {
+      "mode": 2,
+      "head": 1.02,
+      "body": [
+        0.957,
+        1.098,
+        0.957
+      ],
+      "eye": 0.9,
+      "outline": 0,
+      "noise": 0.8,
+      "noise_scale": 0.05,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.592,
+    "scale": 1.615
+  }
+}

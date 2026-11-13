@@ -1,0 +1,66 @@
+{
+  "id": "10-kebie",
+  "name": "Kebie",
+  "style": "10-comedy",
+  "species": "duck",
+  "age": "child",
+  "build": "standard",
+  "colors": {
+    "body": "#FF510B",
+    "belly": "#FFE5D6",
+    "inner_ear": "#F5AFC1",
+    "accent": "#8338EC",
+    "nose": "#F69D28"
+  },
+  "clothing": {
+    "accessory": "bow",
+    "color": "#8338EC"
+  },
+  "personality": [
+    "dramatic",
+    "prankster",
+    "shy"
+  ],
+  "quirk": "hums when nervous",
+  "seed": 1,
+  "proportions": {
+    "age": "child",
+    "build": "standard"
+  },
+  "style_name": "Comedy Cartoon",
+  "render_spec": {
+    "id": "10-kebie",
+    "name": "Kebie",
+    "species": "duck",
+    "colors": {
+      "body": "#FF510B",
+      "belly": "#FFE5D6",
+      "inner_ear": "#F5AFC1",
+      "accent": "#8338EC",
+      "nose": "#F69D28"
+    },
+    "clothing": {
+      "accessory": "bow",
+      "color": "#8338EC"
+    },
+    "style": {
+      "mode": 0,
+      "head": 1.22,
+      "body": [
+        1.14,
+        0.86,
+        1.1
+      ],
+      "eye": 1.28,
+      "outline": 1.15,
+      "noise": 0.35,
+      "noise_scale": 0.05,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.711,
+    "scale": 1.615
+  }
+}

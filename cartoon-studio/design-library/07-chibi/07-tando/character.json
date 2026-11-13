@@ -1,0 +1,66 @@
+{
+  "id": "07-tando",
+  "name": "Tando",
+  "style": "07-chibi",
+  "species": "bear",
+  "age": "child",
+  "build": "stocky",
+  "colors": {
+    "body": "#CFE9D6",
+    "belly": "#F6FFF9",
+    "inner_ear": "#F5B6C0",
+    "accent": "#FF99C8",
+    "nose": "#FF93A6"
+  },
+  "clothing": {
+    "accessory": "overalls",
+    "color": "#FF99C8"
+  },
+  "personality": [
+    "sparkly",
+    "clumsy",
+    "careful"
+  ],
+  "quirk": "sleeps with one ear up",
+  "seed": 1,
+  "proportions": {
+    "age": "child",
+    "build": "stocky"
+  },
+  "style_name": "Chibi",
+  "render_spec": {
+    "id": "07-tando",
+    "name": "Tando",
+    "species": "bear",
+    "colors": {
+      "body": "#CFE9D6",
+      "belly": "#F6FFF9",
+      "inner_ear": "#F5B6C0",
+      "accent": "#FF99C8",
+      "nose": "#FF93A6"
+    },
+    "clothing": {
+      "accessory": "overalls",
+      "color": "#FF99C8"
+    },
+    "style": {
+      "mode": 0,
+      "head": 1.42,
+      "body": [
+        0.897,
+        0.581,
+        0.874
+      ],
+      "eye": 1.2,
+      "outline": 1.25,
+      "noise": 0.35,
+      "noise_scale": 0.05,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.844,
+    "scale": 1.373
+  }
+}

@@ -1,0 +1,113 @@
+{
+  "style": "15-educational",
+  "name": "Educational Cartoon",
+  "summary": "Clear friendly shapes, primary colours, even classroom light and readable outlines.",
+  "accepted": 5,
+  "wanted": 5,
+  "status": "PASS",
+  "characters": [
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/15-educational/15-nofer",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.622,
+      "id": "15-nofer",
+      "name": "Nofer",
+      "seconds": 14.7
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/15-educational/15-zanbie",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.564,
+      "id": "15-zanbie",
+      "name": "Zanbie",
+      "seconds": 12.7
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/15-educational/15-drilo",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.627,
+      "id": "15-drilo",
+      "name": "Drilo",
+      "seconds": 11.8
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/15-educational/15-bovel",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.658,
+      "id": "15-bovel",
+      "name": "Bovel",
+      "seconds": 12.1
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/15-educational/15-zanrra",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.646,
+      "id": "15-zanrra",
+      "name": "Zanrra",
+      "seconds": 14.0
+    }
+  ],
+  "rejected": [],
+  "environment": "/home/user/requirements.txt/cartoon-studio/design-library/15-educational/environment_concept.png",
+  "lineup": "/home/user/requirements.txt/cartoon-studio/design-library/15-educational/style_lineup.png"
+}

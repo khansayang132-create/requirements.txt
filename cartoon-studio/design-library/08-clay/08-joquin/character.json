@@ -1,0 +1,66 @@
+{
+  "id": "08-joquin",
+  "name": "Joquin",
+  "style": "08-clay",
+  "species": "elephant",
+  "age": "child",
+  "build": "stocky",
+  "colors": {
+    "body": "#B17268",
+    "belly": "#E8D2C2",
+    "inner_ear": "#FFAFC5",
+    "accent": "#4E8098",
+    "nose": "#FF90B0"
+  },
+  "clothing": {
+    "accessory": "bandana",
+    "color": "#4E8098"
+  },
+  "personality": [
+    "tinkering",
+    "warm",
+    "shy"
+  ],
+  "quirk": "names every cloud",
+  "seed": 1,
+  "proportions": {
+    "age": "child",
+    "build": "stocky"
+  },
+  "style_name": "Clay Animation",
+  "render_spec": {
+    "id": "08-joquin",
+    "name": "Joquin",
+    "species": "elephant",
+    "colors": {
+      "body": "#B17268",
+      "belly": "#E8D2C2",
+      "inner_ear": "#FFAFC5",
+      "accent": "#4E8098",
+      "nose": "#FF90B0"
+    },
+    "clothing": {
+      "accessory": "bandana",
+      "color": "#4E8098"
+    },
+    "style": {
+      "mode": 2,
+      "head": 1.02,
+      "body": [
+        1.196,
+        0.862,
+        1.165
+      ],
+      "eye": 0.9,
+      "outline": 0,
+      "noise": 0.8,
+      "noise_scale": 0.05,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.659,
+    "scale": 1.615
+  }
+}

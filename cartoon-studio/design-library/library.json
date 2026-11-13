@@ -1,0 +1,1613 @@
+{
+  "styles": {
+    "01-cinematic-3d": {
+      "name": "Cinematic 3D (Pixar-inspired)",
+      "summary": "Soft global-light look, glossy highlights, warm subsurface, no outlines, emotional faces.",
+      "accepted": 5,
+      "wanted": 5,
+      "status": "PASS",
+      "characters": [
+        {
+          "id": "01-wamo",
+          "name": "Wamo",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "98fde811e0ad784ea83cc6d837498c3621597be1c0865b5b996a77ce0537b5a0",
+            "views/three-quarter.png": "6d3aef10dbfdee743769ef1e07bb33025586dbdafe767b2d875585f7a9192682",
+            "views/side.png": "7b390e9a139287087aa54529d7b2cdaecbc0593ac36e22d36f4ef96ecc377e94",
+            "views/back.png": "439045db563ffaed82ae8b7817d52b5b4ea6fe1e00718f73b85bf415ba481e2b",
+            "turnaround.png": "cd331726ee500069112354e401c53ed37ffaba44431ae06daafb82fe28ec94f6",
+            "expression_sheet.png": "e5f543fed911de622937960297b0e7b946664a0e544b47e324d1d1418d297350",
+            "proportions.png": "e97753d1a017aeacdc139a9ab1279ae764839fd9083705e11b625fee2a973ed0",
+            "palette.png": "9b5027495033fd3f29a2ba4eb1e5df24b2da801a3470c6619b62174ba9351d3d",
+            "pose_sheet.png": "f2aa24be765fdc8b7644588fa5096b9f864d8b638582571683b1fbfa39833fd5",
+            "character_sheet.png": "0b669c388453b12e0caf2ca4d5f7a40250651c2136a105563787d0a9be074ef0",
+            "character.json": "f435c035d0490fd9e83e9566d401be057f958b56106e2971806ac586b154f78c"
+          }
+        },
+        {
+          "id": "01-fibie",
+          "name": "Fibie",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "cd205d069e56ef92809fffacc1c4e65bf000be27b24832a41a664c11d6199ef5",
+            "views/three-quarter.png": "c12ed6bc8c5e7b9d3656059520403a802d72e3480dd642ae5981b4c8d3de928e",
+            "views/side.png": "f5ac00f28ab6386d0e17467193f2298c0a1a7fa516437d164c228bdb393d1a16",
+            "views/back.png": "862af4e75aebf309040480facd0dc82a092ca0e83c0cf3af0e64f5d51b48d7ab",
+            "turnaround.png": "37055083dd68cf5ac88f0f3d8479903d60346aacea2390ad8860d6fb2007febb",
+            "expression_sheet.png": "dd90c4693bc45365b8bfc931a193b1d9fb41811c7af5092d88a821bd41fa790d",
+            "proportions.png": "5d483ca61823a7c9415e5296c9ba878805ff9148ec7ae45ce98306b9cab4fed9",
+            "palette.png": "6c8ba3b49cdbf88d7e7766cd81cb0022ac6ef3558988e604bfe4102e0de47f18",
+            "pose_sheet.png": "29331ced8c1330c75e4c07d2c7218a3376dca2a8a6823d6baff84b45cb756772",
+            "character_sheet.png": "0ebdd9dc9028683cda7a8ba6f6ed8103a1529ec2722d8022d81905f7320b0cc0",
+            "character.json": "0b34ec9607f4ffefe3b924a6f59d60712e30d5c3f685cfc73dbc079ed232c447"
+          }
+        },
+        {
+          "id": "01-luppa",
+          "name": "Luppa",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "90288e5d78eea1fdfe6147528e7933759e01cce31563ee06b4d337fa4bcf9941",
+            "views/three-quarter.png": "4f881c8b1d309c468c5036df52d9b7a6449033c51c98b123ac999d0c57b1ae35",
+            "views/side.png": "7f8f48a8725452c6bb6095aef7cee565a99b6e0ff10cb21bfb21cbf671be4bd0",
+            "views/back.png": "760fb1657045ba39079cf87872dea59617d944dc17f797c67772eae6f09b3e42",
+            "turnaround.png": "c860ced69ad184524a2e9f41cfbd235e594d169a9d1cec83b309248a70666c62",
+            "expression_sheet.png": "5bb5e49871344de4a317354511585ed431220ee1cdaffe1012f4e9225d42acd6",
+            "proportions.png": "156b96eebf933191dd28a678a4c38c0e203eaa357bbb31f01103ca7cc1110abe",
+            "palette.png": "b4e8612494a288577e0e71788a0b45ec7bc188617d0c2ab34dd816166452c21b",
+            "pose_sheet.png": "55e3edb895c5b303a2bb8736c0f26fceaa334680533ead8d98b61157c21e25f6",
+            "character_sheet.png": "545209e186c4c0254e93fba032bbc94ea191a4385c7d909569e90b7039aefe87",
+            "character.json": "46021ccd3ad1bb13be256a106fab93659f76bc665799ca072b822d8454fb15d1"
+          }
+        },
+        {
+          "id": "01-kequin",
+          "name": "Kequin",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "04c677cde2ba47ab77954ebab16d3cb4d4aae3a72c380e9431a0b0f91d030411",
+            "views/three-quarter.png": "69770b32036a3377206df90e82e06c5da4ac64d3ed496221185fd8b2c077153d",
+            "views/side.png": "da0806cde1872d9acee7836bd6f6e0c1b463f37e507b2b523832759008698128",
+            "views/back.png": "52d76d52f011885aa6a7c83a5a5ddcce4d2f9df96bfcfb88e289e16da5833b0b",
+            "turnaround.png": "37f5503d96032f0fd70a25d08aec83822f3484099aed0aa880f4d254411f258e",
+            "expression_sheet.png": "3ae19c46e5fe9dbe5a7c6e51827b742d20612a2475c452e741afda90d3a6e4a1",
+            "proportions.png": "dfe741e103eb63aadd7b09f5ef77c2c8b7bf41c7ac18b796ced141776f5e70b3",
+            "palette.png": "8ee9a063039ba5653c579a44b8979af74b922a729703db398fb43d6ac636087d",
+            "pose_sheet.png": "fec3af8762809d938eadc0ef3ac50320e5233bfc27476371a3219b3c3ce793cd",
+            "character_sheet.png": "f9959d5fbb97d4330aa8112fc51f0dd2236a10e9c221d18b26c91dd62444007a",
+            "character.json": "6b3ac68a942d5e6635ace8f2063afb4d3c46c25cb5dd155380116ed450ebf27a"
+          }
+        },
+        {
+          "id": "01-moppa",
+          "name": "Moppa",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "811d0296bf1de850ce707aa99e1daddf09a33d93d401b6789344b39887810357",
+            "views/three-quarter.png": "d4d20baf69089ba67f127df40ae7f7d483c31491da25d22a2b4653f8cea6943f",
+            "views/side.png": "1fd0ba10775dfe8f8a45cf9e45be554c1f41a9d1537703615b93fb39243acdc8",
+            "views/back.png": "b832d33d3f8779154811a7b4ee656ac28fd2c530abf4eccc1c94c1571fd73375",
+            "turnaround.png": "67d365ff7876ca672018ccdd37f744028cac4c18a3587a55a4e1828df1e5091e",
+            "expression_sheet.png": "52f11687f3270666b9903365537a755407ca7792d36bcc7ba3033925c58309d6",
+            "proportions.png": "21a863d7790d1452e33b94f875423a1f59299588396769b77cd0540a2af080e1",
+            "palette.png": "dc48678cfda728be91ce8dd84c3f734c1aad16c39c67a7c7fad83696c7571a82",
+            "pose_sheet.png": "551897625b23677b5525f69bea4a44e26654b0cbf4901339a0afbd8763aeae67",
+            "character_sheet.png": "d9d709105830d236b7766827e79db0ff6c681b8f58917b26d0781e5ec09b90a4",
+            "character.json": "a89468d3ba22e426891a225eff18e888609b1a254daf9496af74361ebb064879"
+          }
+        }
+      ],
+      "rejected_during_build": 0
+    },
+    "02-dynamic-3d": {
+      "name": "Dynamic 3D (DreamWorks-inspired)",
+      "summary": "Stockier, wider build, bigger head, stronger contrast and specular punch for exaggerated attitude.",
+      "accepted": 5,
+      "wanted": 5,
+      "status": "PASS",
+      "characters": [
+        {
+          "id": "02-jobie",
+          "name": "Jobie",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "1386eef8163455fbfd396666484e66ee264b36fdb32b0f4b3d5e8e66cf4552b3",
+            "views/three-quarter.png": "fa002892811ad2628b69a9de60de79911784eb7f6c372feec281c5e166c00825",
+            "views/side.png": "f6e7da07217253aa1d083d6fcb54175b88372608c955ac127c65a895bafeb2c1",
+            "views/back.png": "3b04642f3e57571face65a244b0e4e7bdb677a6e910ea40c5f0bd92be805dd6c",
+            "turnaround.png": "15db1e89108bee3455d3fee8a0feda4024d67bd16ff3b4ccfb2530c43a7508c8",
+            "expression_sheet.png": "7464228659972bebf5f859eceae04b99df5f8bbf85b563a3b01cf15bfc40f04e",
+            "proportions.png": "2d5f35e4bc642a1f78b77ef59ff096644352c084050a4f1008d9d0752fe6acad",
+            "palette.png": "0ba0551ae197d86b5313467cd9fc7012b44cc3c78641dc1f7c2cd760c2d2de0d",
+            "pose_sheet.png": "b4d7c92f0df06e68fec91f381dff63f80273bbe8e530389710895b8243d9f685",
+            "character_sheet.png": "1225c78bc547882c25b130ad4703e2b7af26aad751ceb6b855f8aba6ebe3a970",
+            "character.json": "e0d0f532ae23a7141f794373fc40eb8aafb8742508df7be3a574032ec129d70d"
+          }
+        },
+        {
+          "id": "02-nondo",
+          "name": "Nondo",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "3e315d0968c915d95041af742eef2acde7d2aedfc517841228415d1845112c5e",
+            "views/three-quarter.png": "d8a6cd9967a9ec625f6ae1eace74e8cc3b41a6f8cfffe0df251b28490c9061b3",
+            "views/side.png": "5c125aa83589123a64b4d433c1034dcbaef03a14a8bac774eabb0b19c53f4823",
+            "views/back.png": "e30b13cf5fc660225910bdc432e399814fdb27e8731fbad271c1d7e11705b886",
+            "turnaround.png": "072879a7d5111113507d0175e5b539018bec48fa377e41c709741659ae4654f4",
+            "expression_sheet.png": "3a2e43617c213541e56147f860afc344e5c745b099de94beebf7d54977e7cb4a",
+            "proportions.png": "36f07d383db7b964df652c6e6dd62f255fbed939dac0aec2a2e8fdfe5bd8a770",
+            "palette.png": "779eacadab5c9f6f5357bc7f99e8f4e57a0242d87118ecfeda268d4e79b3e106",
+            "pose_sheet.png": "7778424606bf2d530b5ad086e45f0f78c13ca2cbb18f05aa634a15d76996ae95",
+            "character_sheet.png": "a3c2342ac99ea39c1387b91a4b0c979dac6621287a17cd180fe1daf6210a6237",
+            "character.json": "8767060e7cb0cc16a73fb05b15e4137cecf2077fd697e21e9cb3f229c4ea981b"
+          }
+        },
+        {
+          "id": "02-bori",
+          "name": "Bori",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "5b9dcbf963b995a66ae656ade4921ee029d65d86261dbb39ccf6644bfd704f89",
+            "views/three-quarter.png": "74f23a4f67baac6c4d2a8555db5428ab16bae3809e141059e0e328203fd40526",
+            "views/side.png": "a33ec20cdb4ca73dc948e2ba4e4e7374cd0392cf344820143517eed45c9d161a",
+            "views/back.png": "0455d64f95d82833df159a805b39e61bb45e460ce52b37cfc5f6521dbd75664e",
+            "turnaround.png": "1108ed3b42639f475b1f8aee6c344d83b7b8e0b89f7599d6052393d7c8b58038",
+            "expression_sheet.png": "e7f6b48abab4f672efbbd21c89a67d897241000944299a155801df27a6865fd6",
+            "proportions.png": "8853e4adde4396b73982ece53d2f946ac0e51f9b9c8933c2394c128f948225c9",
+            "palette.png": "fdc0e4c675cdd7017c306d40ff5c0ec0b0facf90fe9e3d0a843777985921a402",
+            "pose_sheet.png": "b9ab445d940b2c52aa02164704569c2a4946d2b6f1e9731c770f086901a3e822",
+            "character_sheet.png": "cb7764744dddd0abe46aaafbc5ad3147c4e42610df24bb743dd05a4d29055680",
+            "character.json": "01beb7448a9b36744f9a59a3627bb5dc140cde635be9bc8b0ee64a8da15181df"
+          }
+        },
+        {
+          "id": "02-ruzzy",
+          "name": "Ruzzy",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "54c3c14ad282b70788e74574afa422f7de1988a0820a31f16024c56f354bbade",
+            "views/three-quarter.png": "1ed8c5341276fb2a7b9d13455182e78e00c31c49220fca2ed9ad49e27c9e2872",
+            "views/side.png": "84a4bf03b4ef24e40eb0f1c49755968a4189d1129260715c376282941a1cea5d",
+            "views/back.png": "65c0fae86c130b21d2682557a232e528b719e00980e33d1d01d263018e4a6697",
+            "turnaround.png": "7390bdfbc3c69a6a6e72f89b9b2583f560c0b9a453f94d8fd7d60fda747ec9e9",
+            "expression_sheet.png": "b6f6e4f73c70d5fc7818b24ee51d76b88b3572612275f08c1f9a2ac6b5275b9b",
+            "proportions.png": "0da6a9831907e120751f9c0e85018d2b450d22387836796b66b62b78c9b07eee",
+            "palette.png": "a28666e556ea10d944236ed70895a68088ccc24b9f1e7c9c86bba6c91aa5780e",
+            "pose_sheet.png": "0148c11389883a9eac9b031f9c81205347558fcded96ac5d275c7e1f93975862",
+            "character_sheet.png": "03a8df970277b13e996a3d2d4297838da6f22f907e08cdeb70e90473f79a11d7",
+            "character.json": "e8eefe65a754203a17aec5e42d5ded9c4a21b814b899a844e73bd8cd2e16d2bc"
+          }
+        },
+        {
+          "id": "02-vilix",
+          "name": "Vilix",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "0768a11b8d3c2bafa47ace97f65675b4f096a894737c7bd9639d46a747c36e69",
+            "views/three-quarter.png": "ef61e52975c8d3bca3275c38ef5bfa9d49a4d4c3eae06917896414d99df186d4",
+            "views/side.png": "e2eb6e1c23f476f559ee54bfa1a76006969f565223c3d547a1b37359d3edef98",
+            "views/back.png": "34e5c7d0a890e46f9abcf87d10154b38f326a9d625eba538291f8021eab0045a",
+            "turnaround.png": "0c501332ef6f3fdcf63e0d0264e5aacd1e5a130f28077ec453b22d8bb76df7e1",
+            "expression_sheet.png": "aa4ff784759c8a876b8d0599b964e0a60eaf02c4a2e846a232a4b7489fb42893",
+            "proportions.png": "5c30fef3d9e640e6ccff08b38b0e2146897dbda5bcdc207670143c140a35c8ac",
+            "palette.png": "31c3b3ce5960be662b36480d8dcf035c1e0cfa23b7d8424af2b752f644cbdfa5",
+            "pose_sheet.png": "a368b3a5db196d894615861230ad532e4e11b3329483e06cf95ae2286929e4c4",
+            "character_sheet.png": "b53c53714fbb324564bb2ef49f243966daf3aed8f0ed45332fa1930d21f45208",
+            "character.json": "a42fc7ce951f95031b10237adcf4e2a4aa728caa9d4736fb8c6dd22d3e727b8c"
+          }
+        }
+      ],
+      "rejected_during_build": 0
+    },
+    "03-fairytale": {
+      "name": "Fairytale (Disney-inspired)",
+      "summary": "Graceful taller build, large sparkling eyes, pastel jewel palette, soft magical lighting.",
+      "accepted": 5,
+      "wanted": 5,
+      "status": "PASS",
+      "characters": [
+        {
+          "id": "03-filix",
+          "name": "Filix",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "94e829df9c7eb28b4784d4c727a473959a2048ac79cce889271d85d78e87f07d",
+            "views/three-quarter.png": "960d1de61df6281ea5b770e2697e485dd930b3f2aab0d20e9962ca7f5a037a35",
+            "views/side.png": "9f4cbe2866fbe3537363e2eb67e725f70199996f7a2b4057e71da26096ba4b94",
+            "views/back.png": "9080e290125b8579d0d78acd0278e3cfa7261aac4f274da94d3ac394cf3a028a",
+            "turnaround.png": "14d91fb05ac067b63541d506396d6084b6deb639787b75c0c2a49679a14e76aa",
+            "expression_sheet.png": "295d9eeee51333e6e3776c390a7cedc60a5ab3cefaaaa0261d01aa390e80bdc8",
+            "proportions.png": "02d2cb83fb2a900b39c19bb68e0a3b047caa0b39bfcc78f258c8791e297ed64b",
+            "palette.png": "329194323e76d0c26df7ec1e917de4a947b96ca95de9df33a72b89d4bcbfd7c3",
+            "pose_sheet.png": "9e098e68c49b482b27cbc4f6c9d6d6a184bc194482df8284f19d6f09f2ba4d1b",
+            "character_sheet.png": "d5ae8dd024d8cfa472a3893f5874a81e82b5603a2ed1530518a8d80cec0b45af",
+            "character.json": "d4413fd306cb2d48cd00507dfca55ea8d72b51c676b9999b008145dc938d1acb"
+          }
+        },
+        {
+          "id": "03-zerra",
+          "name": "Zerra",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "cea75f5b45e69274be556f01ce267bcd6e03e8ec1a7980601a45691e8288cb08",
+            "views/three-quarter.png": "7b772dd8c2b16e630387fa5108584e36672d088c9b23ac08458e5987a910d7e8",
+            "views/side.png": "756f125c389c5cac9e9c325d2258b0325200d9f1e6e3a9ff434f9687f7331c89",
+            "views/back.png": "f019852e26bf54e714f842d75557a614beb3fed656a6c1254f99c0b3a67172c9",
+            "turnaround.png": "7c15e39495b640e8b0d1f672e670cefbee2819a8a95b70d7dd7bad404a1fcde2",
+            "expression_sheet.png": "ff2c167c4955f3952dc9fb90547b627998b4493e747017a86edeee42f3a20322",
+            "proportions.png": "ebddf4694bcf7e0b84a440722eeabfac81dca95865acb0ec5275cd93e3112749",
+            "palette.png": "46af937038ff5f0798b2947d3fb9c03edf6054fa18063b18ad4fd5b4180ee6c3",
+            "pose_sheet.png": "a6e09eed1599cf0ebac1e0ac6884c508ce3eba0bc43d47e3244bcd86f07f0c6e",
+            "character_sheet.png": "e4a092a512fecb0bd0164dbb18eb80018b6eb1e05ae2efcf61e8be92431edbda",
+            "character.json": "8de4496aa20b3f6f00a05a56ff0d986afb309230049b04b58b06ea2ce62b3904"
+          }
+        },
+        {
+          "id": "03-mondo",
+          "name": "Mondo",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "2b3160fc973f21153536feda5d35430fdd1e0082ce0fefeb878aba263103af55",
+            "views/three-quarter.png": "1080b548264c9235b647d72977d19fc4f6edb8a848acbc6145a2b99c7aefa7fd",
+            "views/side.png": "3854f49b38d62e3d00ff201c98633e95f854eb97a28c7d458979095e5cf15cf2",
+            "views/back.png": "3df7c89f05741bb2df5bbd71e61e1668ab596c76deccbbd8fba04310f442281a",
+            "turnaround.png": "b808e07f9e80749a17fa826a1373e2645f8e38e9fdd883be197fb57a7d82aa4d",
+            "expression_sheet.png": "1b4fd23c041aeccf8dac03c91c5d5d2b15d13c915918ebc06e951a3dd92f02d2",
+            "proportions.png": "5d779800c22242b22288c5fce07c18cd228f1622b8e2560a0ceea21c9da500e4",
+            "palette.png": "2cb302fdbf2486a2d2c3ee5c624e3d6aa4bb28ca92ab39a3402f34cc440b33a6",
+            "pose_sheet.png": "864c65d311a6265a67070e3a34527da6750a5cb0540db4fca1a2dab09fb8444c",
+            "character_sheet.png": "8299c26f6bcd8e3af7eafdd532f7ec3538a5d37a7b1442b0ed88f00542232242",
+            "character.json": "20db40ba1881323f3cb93e38b3ae6d7a0d420f2b828f7c17d27670357a4577cc"
+          }
+        },
+        {
+          "id": "03-lubin",
+          "name": "Lubin",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "0d708cd85cc5c5afbcbe11dd95cb6a4480d84fb877ef4c44c52c26a249c4440a",
+            "views/three-quarter.png": "84f1295dd35ee03a4fdf57d07701f9d7477a9867847f8f36435f822c088d575e",
+            "views/side.png": "92c8aaefd63cc9cec755b346150cfd66929f1ab00f474af35826aae0f0b5f406",
+            "views/back.png": "0e374559f1f447fa14e38cb731ff60b603918528dfce78aad519a94753f8ac7b",
+            "turnaround.png": "4c67ec96ed1af6f18b7b735e7e080375117ee3020001275405d9e1ac2cf71254",
+            "expression_sheet.png": "6698be8e126a933475e6d35eefad0f34975eac37cca3a44a73467e27c0b21a73",
+            "proportions.png": "e163b8dd3099c67ea95a877b4c1e8bbbfdb00f80902bc776849e3d5d7fff84fa",
+            "palette.png": "4fb617685120ef67b39c805dc2bb158397106f9ab617ee1898cbc0ef478c78bb",
+            "pose_sheet.png": "e160b25574869d3140eaa9eb6e02344504c9aa0c2a8aafdda14ba6d147df5579",
+            "character_sheet.png": "9c7ab1e0d1940f1060cece6783583d11732a0ab05ff8104c8a251d79f787e86c",
+            "character.json": "e9e98db4acbffbab6704ecc9c4a746516edd140eeb70e95c800530644692d09b"
+          }
+        },
+        {
+          "id": "03-fimble",
+          "name": "Fimble",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "9e638783c22e4dbb3da8591223840666568d98f90932b754d7b4d7cc10b9bc4a",
+            "views/three-quarter.png": "fb694a6e38f5d547def30568bf2e1c754a42ae0a0d0a8682139c37ef5463dcd2",
+            "views/side.png": "f899fed7ac5053655c26a9d256d5ae089a706387764c2c6d380202fe6b1ad303",
+            "views/back.png": "10a6b82b9c20811c7ee7d94e45de4c0a6bf7561182fd9890611c0efdcf307e67",
+            "turnaround.png": "28c53f967caefd1921b2160d913385c34a768178186da20456cb7ddce7dfb6d2",
+            "expression_sheet.png": "1c4cf33368548a996e96b16a5e1ab0e6cb4b9831965a880640d0081228f44a74",
+            "proportions.png": "c59936be21c0b38543da9c525cb17277b88a37f211a38ca7dde476ebd4622c19",
+            "palette.png": "0b1922c55685f617d0f6a8c39755819bafe2546e88cc9d3997a81301c20c2777",
+            "pose_sheet.png": "0c362cb480ffe108474415b4fd578a1447cdb9e005059426eed0174ce07ae087",
+            "character_sheet.png": "010921b2190ba1b3a2d60fbbfc7e747d16acdb042afb5005d3543cf219be8cce",
+            "character.json": "ed85e0d8555f54c0f139cedc3937e67a5874e50a60ad63f15d04a01d37ae6024"
+          }
+        }
+      ],
+      "rejected_during_build": 0
+    },
+    "04-hyperreal": {
+      "name": "Hyperrealistic 3D Cartoon",
+      "summary": "Natural fur tones with micro surface texture, sheen and deep subsurface; filmic, low-saturation grade.",
+      "accepted": 5,
+      "wanted": 5,
+      "status": "PASS",
+      "characters": [
+        {
+          "id": "04-molix",
+          "name": "Molix",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "d06e5ceab9d7d623f00ac5d247152b01bbb89a91b57267e6def6ae93417ed65d",
+            "views/three-quarter.png": "010ec3971ee435cc4beca88960291b832f9d6974f9da06aca9b964f28a223d48",
+            "views/side.png": "ef9fb804c4a11e90cc8c34ecf00649b71686bf2a66a91aacae50b1bdf52706db",
+            "views/back.png": "0a77bac88e115607d034590452b27e5fe0240d52ca48f4d3d7b7d3e0a52d7eb8",
+            "turnaround.png": "46c2d21a11930c92a09a7cd13e87419318569d13f5897c50db1b2efc211e0e38",
+            "expression_sheet.png": "0f27cfb7276b59e63ba86506c758d181911b0e1f7af4840b6d217ccb57921da2",
+            "proportions.png": "ea3117d5a86ffcd4f7ebc5af954e1cfd828989bfaf94893a4b964fc2baaadebb",
+            "palette.png": "6a6a67c1b8f4664aed5e059db2af52bec8d4a63b7e5d3e38811d94dd6dafc7f5",
+            "pose_sheet.png": "2879c8dba17c5a15a2268f3c98bded74bf5a71e6da0178285c96fd9a39595d81",
+            "character_sheet.png": "e83bebdde75dcf2573246c1c80c6232bfb56f8f8c579c2840cee363bf85083ae",
+            "character.json": "7a33ddf9bb2fe33488985d50f3c80e1003abe785b9d793d63e2e1b67b1d1936b"
+          }
+        },
+        {
+          "id": "04-bomo",
+          "name": "Bomo",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "c0614cdd66fe82513534a81ca059cbbc4f51c944c3dfc9583b2ebb824da16aa9",
+            "views/three-quarter.png": "43d3d413ef278aa1dae2018457d3f30606bb43a9cea3b600f796412f1daf300d",
+            "views/side.png": "4355f21db6d4d71363e1d71dc9169c9c95f7d3e7331d4337c721ec55007fcc75",
+            "views/back.png": "5b326c8c919f2a29509abe03db96553b9be1ff4b51874d598cdba008da12242b",
+            "turnaround.png": "8989f06f7f27f79025082728270a3bdbdc33ae05071d7085c1ba8013853ed15c",
+            "expression_sheet.png": "51490d2d054b36bf89d84523d5084b6b056a47122c9acbc74629cf958f0d0242",
+            "proportions.png": "36f0b2df769462fa130d9003b5723d6eeaf9c92d8423c9eaecdac55e5eb90567",
+            "palette.png": "3c121820e115e085375f3e2853e115529015935ea7afb9c8d75ee00cbe2eeb44",
+            "pose_sheet.png": "72025b67032e82d5e50fbb774f3a24717b0bc9e6c1433152d4171fc3d7a35c1c",
+            "character_sheet.png": "cd49b6a7fe113d8fbb02147cf210c17dd3475dd550fa5149c716042b8c1e62fa",
+            "character.json": "724b68b071832aad4e549cba331d1e6b82161484dd0a4c8c4577b7cf1f15e5f6"
+          }
+        },
+        {
+          "id": "04-samo",
+          "name": "Samo",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "22791ae381680666b5fefd202a2347bd4505be8fa4dc42fdc7867de19d2d4086",
+            "views/three-quarter.png": "817e2dc7e88ad2239e31aade697eb1720e1cc592d77c45afa4c17a0cfc415795",
+            "views/side.png": "b7464a226ed46027ae03d068db41b3230f22a963c90a4b20adb5b837f3d13aa6",
+            "views/back.png": "f43e9a61a868670df9133701e6d939bcf2446f0f7ff01f5ea673122e7bdda30c",
+            "turnaround.png": "56838ac66dca84247b0506182db3c1dfaf51b7eb7482511744147a79e2ddde2f",
+            "expression_sheet.png": "5fcbbb221ff778b6c703a6245d78f210ff0a3db0c14df588856387ad20a531fa",
+            "proportions.png": "bda1ca6588a7efed33242ef803680e686fddc9cd7bceca291dc194f0e6e75739",
+            "palette.png": "ea97204bd2701cd1ea263cfdfa3d310aef74501b9a763b50ba432dc578db9d41",
+            "pose_sheet.png": "4031c83709947ef6ca15f2458c6dbcd4a9fedc7e0f0f39983ee66c6dbcfe9030",
+            "character_sheet.png": "0ece1b086957efb0e05d49b18167605fa88476df1f2f0dc92209d93f5099db83",
+            "character.json": "d32e246ff67610d090955474fc2e05df8127132611957b7b65e3bef0183c3933"
+          }
+        },
+        {
+          "id": "04-nobie",
+          "name": "Nobie",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "a33b7c57cd43c768ec47cac8cffc6da790bcee46a3123653c98507c6e3b58a44",
+            "views/three-quarter.png": "288eda52d8852615e1a2606320e7eae9593fa15aecf5a459ea96555660529e52",
+            "views/side.png": "92c6d5d7bee1c8c1c7e6b4df6310137a3dcaec13edd20569128482db4331e851",
+            "views/back.png": "61277d83d5236e1ffb7194e0d9a85b541087db0abae9049027b56c66dbefc604",
+            "turnaround.png": "24f637b87fb217db8d04d45fb0596bbd89b93b0bf2d44825d1f410d9e311f246",
+            "expression_sheet.png": "d815b4be82069088fa9c40b51d58ea56537c282fb769519f39c967caa885c492",
+            "proportions.png": "c8c37dcf7a362169de76994d7af4abdb5a12408c147dc6a3b67bfcf77d72a2aa",
+            "palette.png": "f849a2d73a837a040d98e52baad62a5c2bbf1cbcf180e52d4e96355af8b6f35f",
+            "pose_sheet.png": "3346104535fcd5076fb139ce001acdfd42780ce4ca2a9f9ee6dd3139f4ff8d25",
+            "character_sheet.png": "c17a28cfb483abf071b1c9d7c8976567449eb6e0f1ddb042fd63ececc1d2f00d",
+            "character.json": "9699aa6816f5a6c5d1d7d68a23776833bbab7451083d93197f819cbb3e8d6410"
+          }
+        },
+        {
+          "id": "04-rulo",
+          "name": "Rulo",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "b2b7ac955a476a890628ea3be64c1cdb074ba622ff53b999ffd0de24e013101f",
+            "views/three-quarter.png": "e15ca897e66bd459773dbf79e24ba20da35f13115d9e5b1bd793363afab0e229",
+            "views/side.png": "12d92947f6778b932431b45632d61d0d50df603e155ab889a5f3262e2f59dedf",
+            "views/back.png": "0ba434e13e950c2a126f8277e7fb0e98c36dfbaea158a9346fdcd8158f1eb7b9",
+            "turnaround.png": "c66aaeef697e452a124c8b088fa7a96896e895f02224ccd60766cb26d0d49c2d",
+            "expression_sheet.png": "fc61161a7fa68b444325f4bf65b462aad04a91abfd6209095ceb5aade2c476ef",
+            "proportions.png": "4c50fd05ee72f5ee46087a765830a8d638e93db67a7894d4e79e45c01f2bbd75",
+            "palette.png": "a258ac7aa502e25084d5701b1dc680e465c613b6d283dfbf7584f4bee011b880",
+            "pose_sheet.png": "a4eeadccdd0ee1515730363a3237744246388a43592c1c53a3d6bc8e99e3fb8b",
+            "character_sheet.png": "0643b46ea3606c8f58d88b9632a19c9124bec962da87e9f64eb099b736ea60c9",
+            "character.json": "f8d06e21e7b6d08aa2e9e7f30a7fe6e67bc2837d6c159cc9017bdb28aa17f0ab"
+          }
+        }
+      ],
+      "rejected_during_build": 0
+    },
+    "05-cute-baby": {
+      "name": "Cute Baby Cartoon",
+      "summary": "Round oversized head, huge eyes, tiny body, pastel palette, very soft bright light.",
+      "accepted": 5,
+      "wanted": 5,
+      "status": "PASS",
+      "characters": [
+        {
+          "id": "05-findo",
+          "name": "Findo",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "1fb5339af247c3d47761e681e83a3ad1564eeb6475e7f1648eec59410c733074",
+            "views/three-quarter.png": "14a92c642f38baf76242e504bed6286ebf1ce024bb08e6e9b55b4c6952b548c2",
+            "views/side.png": "aa44fb8602bbc0f00aaf02b11ecd32e70ba7cfa55a764cced7b4d33c865276bd",
+            "views/back.png": "8badfa441c28bb4c2e08cb5d364ea20b5a993929220b331e4e59aaf2f862039e",
+            "turnaround.png": "736e60a4750bfa839ccf543cf1f15c85b51f9f4f0dc2b76acbffaaea42d6e630",
+            "expression_sheet.png": "6726171f7d6148de080bf4b3fec910e887fb0ad2d0338b9baeef9692c89dbe65",
+            "proportions.png": "8d1236f71445645899d136cc0648e53b8259c2be8511b0272fc557b2e958aa9e",
+            "palette.png": "b44a2b6e7e2a2f3388e2915440b90f80bd96fb61074ef40f5306f58898aa7479",
+            "pose_sheet.png": "dbc329e9f04618510976dc0b1c5a7967c5673813997cc4c07e0e6c6c8b0d8207",
+            "character_sheet.png": "ae498d7566f0fa06569af18e2f5f0b847fadba3abbfcc15f2deb7342bdbe9640",
+            "character.json": "e89cb17ac66c37c69781c979a3995596813636e5272d72313c7c242b1599ebc0"
+          }
+        },
+        {
+          "id": "05-plolix",
+          "name": "Plolix",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "90273fff017a19abefe30b0b59ebab0a975df1350ccebf3df8943e69af683efe",
+            "views/three-quarter.png": "21e14dae34e165eb92bc1139eebb4fc75c81dec864c83db02ddc2aa68b1a7db9",
+            "views/side.png": "a710dba1be772f7f9aea64c04862077ee9dab44eef957ac00cf9d40877818785",
+            "views/back.png": "f110ef0883271cc9866f3ef193c5c22d4f876eb0f871e88a25c13b9237ea5f15",
+            "turnaround.png": "1c479be30bfe5a03a45f87fe11e9c05d1d82a22e82e59c382b8e6ebc5a24c3b8",
+            "expression_sheet.png": "601e51adf2ba076ad878f321941159540f24545fb3d924034b2d5c41830b99da",
+            "proportions.png": "494889e5bfd3831db566adbc208d525cff05930a27ca4d38c9305d219cbf6575",
+            "palette.png": "794d77f14894a5750d6b19a3f2b1bdb5c5c1e4d02df3dd96174eaecde53fe64f",
+            "pose_sheet.png": "5bfdefc3dc34df9fc6f850139662cb1db0c67d98bdd04339c24c276357503c03",
+            "character_sheet.png": "6a6c65aadfb88e4123942f7407a016f0392525c2d6517df03164795ac0908e77",
+            "character.json": "d0475003f54e6d6ddcf4cfce4c46b0e8fa0c52f517c3380dfdc9b9912606fa01"
+          }
+        },
+        {
+          "id": "05-boto",
+          "name": "Boto",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "6e2944c11f3c39d3a43969bc7e6495ec15316538c7fb3c4b95bf9f8a8cde755a",
+            "views/three-quarter.png": "f98fb4da18ca0ef190147c6ec134d8121dc230185c49086afa6037df516f4729",
+            "views/side.png": "76cb4baa26e7774922004ba2c853d94bffdab5fbab0d691563975c3db7bae447",
+            "views/back.png": "698c09528e57628b03d2bb83a8e54ccebd503e5896addd59efd7478ba27bb62f",
+            "turnaround.png": "163595aa9a784db247c41bcb273e8dc09516deadc8773b2a6e776431aa2f867d",
+            "expression_sheet.png": "cbb242dba2b04c460f49834d6c477f1a0d30e245f795a6e403d65573f954a8b5",
+            "proportions.png": "2ff1329eea56c56336e9021f22c5e01a013232172e5c5953c85303b56571af8a",
+            "palette.png": "ae63182996989e55e8f59a8a0c0c1aeda6c02ed408835be2433f573484be0d05",
+            "pose_sheet.png": "97b30f0ef8d2a7013dfcf8fad5daeea3d6db2ba6ac3a8ace16f91e858c4b0ed0",
+            "character_sheet.png": "05f607930728eca8618b290226edf148d7bec7e916a670b1646c30133f3d341b",
+            "character.json": "173820f8b5204f4d8976077efa06f267a29361664b6c3538b270af8019499316"
+          }
+        },
+        {
+          "id": "05-tabie",
+          "name": "Tabie",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "2b1c4c40ca988ab3e788defd97cebe5807226071343d766372125ab26effb399",
+            "views/three-quarter.png": "0d7d1b1048c0b1c93fde7e47a8c5ebc58940448ab3d9692afe709a6e3b3a8a2a",
+            "views/side.png": "3b8d5e7936db69ddc24eb9271374bfc885065168af2c152173bf70ab792df272",
+            "views/back.png": "4880f7a73e260f75dce066c106135225f4e524b09ed64491ed856d1c180c574d",
+            "turnaround.png": "15511ed6090766a1da2eb8348239b023fdebf76fe095cc857a7adf870705f259",
+            "expression_sheet.png": "e24308e4e3c701ce3e7fa7c3f49a8b24dac5e7cb9aa28fd403e07d0f60e32b58",
+            "proportions.png": "64a8f75424a676892ad00e960a2b72aa7ee98b8ac05524fcafa1b354cc509707",
+            "palette.png": "57cfaf113ce6fab3c19ae4eb54b27ce9136e73b96bd143de28446169764c7c16",
+            "pose_sheet.png": "aaff8ee3de3ae7de4fe516adf54e66fade4a6b940c4f9febd8dfb3c5fbd7f74e",
+            "character_sheet.png": "2f6c9a7962c9a8a4945ddc63551d867aafb3a10cbbb22cf9525a4864380c064f",
+            "character.json": "733f0fc91267797b98ff7352eb41175c2fea44964064c8df9efa7e81327a3823"
+          }
+        },
+        {
+          "id": "05-wafer",
+          "name": "Wafer",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "57d3dfc610a58ff69accf42dfaab8a56fae83376772c770d5d34d8f59ddb619e",
+            "views/three-quarter.png": "3558fc372c7a6d0b388117b49a1aff65cb484ce404174b45e3c34deaf9137ee7",
+            "views/side.png": "72e27c23a6599881a56710e026f9ce90b37f14ad756b20019db9e67802a73f8f",
+            "views/back.png": "e496cf28b186dccd0f8f8b140cf841218dd82aa6c32c3a6344db7b5a8eb07bfc",
+            "turnaround.png": "102dc37f0208d6e383b30d4a385787bae6176fc4561ffe5b45441d5be99fb580",
+            "expression_sheet.png": "a1989b6795a2aac27ca5939b9ca20a19356ae80ab1c939d78dbbb87bf058a7ef",
+            "proportions.png": "d18e9da8e6575eec46b634ecd53b6980f9d22b0f58e0695862b2a02b38b5d0cd",
+            "palette.png": "32768b9415b673daf967a4ae5200681380148c1386a16599ab1e2e08e86aaad9",
+            "pose_sheet.png": "4cfaec87e80785b250bebe36328a16617eb959e5bf60fbb69aa827716111dd25",
+            "character_sheet.png": "0409f6552829143a10b4219a1ab9b87aa3df9b45b374014bb9bd470e6b44f80f",
+            "character.json": "3c140c3280f43a44bab51bae988e9f23fc6e52d9ddbca0eaa318386291bbc185"
+          }
+        }
+      ],
+      "rejected_during_build": 1
+    },
+    "06-anime": {
+      "name": "Anime",
+      "summary": "Hard two-tone cel shading, crisp highlight, thin dark linework, saturated sky-blue world.",
+      "accepted": 5,
+      "wanted": 5,
+      "status": "PASS",
+      "characters": [
+        {
+          "id": "06-tari",
+          "name": "Tari",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "d0ded883e8fa772a85fae489dff9adf56d2ee6c38f9acd3042915f950e3e6809",
+            "views/three-quarter.png": "f6529b693f7a4bf50ca9e0fd8102335e460da05fbc873b249246c67c7fb8acca",
+            "views/side.png": "19452d3c784299750a47c3dc257166adc88765ded69fb82aca2d2f83ef3eeb1b",
+            "views/back.png": "bb04aa7f87e5c0622d8339dcf3d659421efe3ddb781662eb34f2bafe475d516d",
+            "turnaround.png": "5b870672953dbf69e29554e8d6faa030f4240c917c4beb185ec2daa3ab098987",
+            "expression_sheet.png": "988a34608d746bf70db64d9dba210c88aaf8fb34a38ae69da2644d0942b3fb80",
+            "proportions.png": "8afb77f3f86b7fd9d5967b054ab809a80982cf9402b6259aa1f73a055475f939",
+            "palette.png": "35819de54944267119368b4235f5c0309fc8fc5feddac48f13086c7a0f757350",
+            "pose_sheet.png": "cf22d8871af422deef3b77d517525cf931935e750fcc725b63732187af1accf0",
+            "character_sheet.png": "c444f0fed59ae5b7299f678b0059756df2d9a7d4ed25c67fe6bf22dbe9cab98c",
+            "character.json": "6e7069b4bf3a1e4fbe4cd1b9db6730bee89597a4dce52c9f437c90b41658ed31"
+          }
+        },
+        {
+          "id": "06-zeto",
+          "name": "Zeto",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "848a555a09932c9a97e91a5ea57b664c9d09f2f249066c0df3903ccb8fbe8d09",
+            "views/three-quarter.png": "2bd6051ed5fc1af3d5dc70d4faf22c6bee41f6d132c5b190e6123bcba4df0773",
+            "views/side.png": "69223547915db10d39f174148c2aae58ed371f5a3a7bde9eb63874e9272555e7",
+            "views/back.png": "57dee4afc91009c685010ba29cc8d94ffe570e5b3d9a50bfdbd9745ebbe000ae",
+            "turnaround.png": "a1faecf9a714b8ca5e1d803e981c5c50437760271ec23fcb8bbdd8a1550a7dc9",
+            "expression_sheet.png": "72d426cbee27bf7d2a80a63eeae9d1e934b4526c3f1f12269b4d3e1bc45133dc",
+            "proportions.png": "3a746611c5d2ac346d6f2d961c543bd11b9088b56b83298487c0dd95f99acd85",
+            "palette.png": "7e3a6b7d339133a4694c10f17ec5bd1309f2bf7e9fdca03ddcc08f97463e7ece",
+            "pose_sheet.png": "1cd2b2ed9aee23c873b04585e770f225dce742d3f18916495e01b3deab8722ee",
+            "character_sheet.png": "b1ae962b2fa1571e0cf76508bb08067494b2b5931c697da8e9b0f6e203657419",
+            "character.json": "18cd891a5aacdfd9c77562b32050a70376b9a4bfc6967ac39c97b9d44925dc9b"
+          }
+        },
+        {
+          "id": "06-mofer",
+          "name": "Mofer",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "804cc75639cc04c5a320a6f9128f0c329030f2727d7c19105ac4a35db6af6dc5",
+            "views/three-quarter.png": "b24e319c8d2d3dcb365d451a60c6342aaa07367eb11d4fa9eb2694bad1d707ef",
+            "views/side.png": "02e7e7b84530cb4f64c85fd6bc4e79c6b0e3a345d9abea5ac30078fdcbb42323",
+            "views/back.png": "8efc9a9b3b5a6860a1bf66f00252ddefc4e194821995d7973ae65ceb57c4754a",
+            "turnaround.png": "98e0dc304a880a6d79130c47c06ee177c72a5e48a8b468ac548e2260987642c6",
+            "expression_sheet.png": "ee3ffa31a8442e193e0f78445a94d89cfaf51b575d83b37ea2eac9ecf7b6fa14",
+            "proportions.png": "548bc172e973e1e2455f071dfc6b402fb405e2c5ba030280a3d2bb1ed557aab6",
+            "palette.png": "88edebf494a148253c9950e7187b7cd46145db610184de9d5e7be102d6ffd836",
+            "pose_sheet.png": "2ebf2934c3b60f8f67e142ca8b1f793dbe3080a3af09e462e65da6772d3b6d75",
+            "character_sheet.png": "e10868b3d993be1f2371a3c3336f9a00b9dc87859b6cbb03cee9ccaa37d2b67c",
+            "character.json": "92fb8c4707be023576deac6682c891da395a260b042b1f3b1210b5a2c2642860"
+          }
+        },
+        {
+          "id": "06-zanto",
+          "name": "Zanto",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "4383f46e32c4b77007d73b753bc73b92b2ca954ed1fcdf40600a4936b1763380",
+            "views/three-quarter.png": "650d626e876e97e5c3f070e396f144cdc211acbbefbac5536d976123977846bd",
+            "views/side.png": "4a1d7315de6eb5e2a7fe91f50cc0aabc03948a33f4be2ca87510855592764d44",
+            "views/back.png": "d0c2c959d864c9bdcbd6e5b681a932060b2305531ab9fd72376eb59ac3a807b9",
+            "turnaround.png": "8bc5b4e123b27690a7ad50befa7f1b1995f3a08fa83130e69604277a29b9a173",
+            "expression_sheet.png": "041e1d2f17c67fec2cdf3b2b392be4de5e8b78c5624197fd45dc013c5ed324e5",
+            "proportions.png": "b2f4c03d30074fc1e70e4ee0b55248286e8d1719b31c26f98377f7a59a106e0a",
+            "palette.png": "7bdc8635adf379f16e2d64195f4c48fdfd19e2545697b916460ad47a71b7cc0d",
+            "pose_sheet.png": "8d37150a023c773e316b747e5a90e1857f5eb1cb69744b1a0de816841683fd03",
+            "character_sheet.png": "1e80669f4bb8679fc4d2d7920c55bf4d97d3d4a528c00f38992c1fb30d06eefa",
+            "character.json": "f28c7a147ccc2bb94c4cf0ac5d7e9edd01d06bc7ee07ae60890ae15f9e0273e6"
+          }
+        },
+        {
+          "id": "06-pibie",
+          "name": "Pibie",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "64d9565c947449a5662c122b0f71ba9b1d01cde7331e0a1abb94ad4e2d866c0c",
+            "views/three-quarter.png": "11fea6eacc58e9b78321d4d11b1bd8b1138f7c690a858fbf7134e06c41e96ea9",
+            "views/side.png": "87ae15bc896df98fec86e2430a638f29eb4d9ec702ba79011901847b5754334a",
+            "views/back.png": "480f2fa03c9ab9baee918fa07a04c5aca6989b4b955af84fc68ded044d8fe112",
+            "turnaround.png": "21d9e31922d4aa706c10854d5a7325e4b58bfa8094f49166cde4e43d085833b7",
+            "expression_sheet.png": "e537851e56e3ea2d47fc1175edff46ac291606fc1ba6da0f62a88c14415f6250",
+            "proportions.png": "06d8dba5721e300f9afba835109d4204130124323c0e826ac1b0507fff358057",
+            "palette.png": "15b0b896b9b5d8ac952a1bfeb3d281bd095f4bab61fe81db112bdeba4864c788",
+            "pose_sheet.png": "f739ce23eb299b406211359c5a8f8386ac0632c6fc69f6312e4a1151e2f66eb1",
+            "character_sheet.png": "19fa41f94a7360db32e4a8cb1b079b08d02b4dad93dc9b3d4f9419e3f39cf9dd",
+            "character.json": "8dce0acf6f187a864ad781db6e7f0b15d005478f8d8336916dd675e20fdf4b63"
+          }
+        }
+      ],
+      "rejected_during_build": 0
+    },
+    "07-chibi": {
+      "name": "Chibi",
+      "summary": "Head bigger than the body, stubby limbs, bold outlines and candy colours.",
+      "accepted": 5,
+      "wanted": 5,
+      "status": "PASS",
+      "characters": [
+        {
+          "id": "07-wabie",
+          "name": "Wabie",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "2ded500238c8f1aeafeef9c3f3627af892551f151784042a8c74b9fa373ea71d",
+            "views/three-quarter.png": "d0bdf5aa3e53c1693f9e51b1661436ad871c0893ac689093307b9a338b7ef6d4",
+            "views/side.png": "d9a368f536d92754e7a755e9922fd8e791580b5b17d0ccca13fe7e3155aad9e2",
+            "views/back.png": "bb94fd0d933812c3494f4a5539bef8ff56d16b8872010c04bda3e2be35351c78",
+            "turnaround.png": "8f47fac71dfafbed822661953856e6118dd334e3fa0aa370bdd3ccbf755d58e8",
+            "expression_sheet.png": "eea9b44f926ee5954e6de8bf443b05dddb0380b57ed96e00182084bbaac0de31",
+            "proportions.png": "e3eed3e1b09d78a16bf3c9c4a1edd7c204e6bbb02cdf00d5b3c36cc5afdbda0f",
+            "palette.png": "a6434e83f7bac77d6bd467da0b42e2b155d29b2a8227c421160c815a491fea4e",
+            "pose_sheet.png": "18c06be67dab3c2187f9fb0f975518114821d90367b9762dcb5ff63a82d69179",
+            "character_sheet.png": "5e8d5b3ce578cfc82ec299e4fcd95bc76a71436f1d63ba9aae8096a91aaa8005",
+            "character.json": "865916c57b8f5e788fba568880d601f7f85882512187487b67263329d1ec92c9"
+          }
+        },
+        {
+          "id": "07-wadle",
+          "name": "Wadle",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "078abf82ebc8b4e777f16202596f5dd9e73f5975207f422aef308498c3d7ac64",
+            "views/three-quarter.png": "9a9feb5814e4cc8b576d9237832e26e7cf571ec3ab7b3abc628a281914b04db4",
+            "views/side.png": "efd09a6a3217713ecdc5f2d85dea2788505e244e902f0b25f4916dd583d3bbc9",
+            "views/back.png": "59312003895d4af078d36f8ce7d221b0ba6888a679f3a969770c9b06379718b8",
+            "turnaround.png": "c092a7466f9d5db14a7db74773377ff404ddaf8b4f7fb88a19e2a523758461bf",
+            "expression_sheet.png": "aa21f0b5e9d4cb638eb9679a7cdddf2cf28c22ae07a2a6d34f92505ae1bab0fc",
+            "proportions.png": "42be5846b2de0d12b8e79e48701e6ea3add9800cbea37d2a3fb1cf332fc5326e",
+            "palette.png": "a4f071514882559bcaaeb8cb1602984d213a2a072b2f63540ee37ee330a41781",
+            "pose_sheet.png": "b6004bd3d995f125e3ad2243ab8976497bc24ddfcc065a7b8c67de7b20e3fa00",
+            "character_sheet.png": "0b00744276dd96652d03bb886482a558022ad61f85164c3f5df81d9e51844c13",
+            "character.json": "a0a27bde34686ddf8900351c816dd2de359f3a9e6165098f7476c4e488726392"
+          }
+        },
+        {
+          "id": "07-ruto",
+          "name": "Ruto",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "676071947c6096bb5b384d273a096a55e65b4a476f9b9f938965918e799ad9c9",
+            "views/three-quarter.png": "6db1d3a9e07d6d66ab02dc49c2e4d07556d2236e89ce87a2c0a145ccbf06873a",
+            "views/side.png": "3fff1a8ce89ca57f3932797bdd929e675dfe17f4f7ea08be30d79b951a582b45",
+            "views/back.png": "7322405977ff9666d7dbe530ccdf75108f5398cd350f231e10a830a28ca09bc7",
+            "turnaround.png": "0c09122cc682c39a3cf8746bb603aab80241134148e8d801869473cc9787f2e4",
+            "expression_sheet.png": "d922009e3b08ec7688f1f8bd62e5d4a07b8824e0bf09be0d7fcf13ac8a441dfb",
+            "proportions.png": "99af7faf832bf4c7ee17404e3fbdd5737cb950ae0b54800f991469fd66a2adec",
+            "palette.png": "28159ffb982290fab299c60f30f6c0b3101e9c43ea6f6e31cf0a9bb01a30c9c0",
+            "pose_sheet.png": "a1a353066de4214605e1594e3d2f4f007c62ebfe0472d4009b59cb94cdf11b17",
+            "character_sheet.png": "7b74ebb13d2b39bd5dd457fb54fe74bf37af6685d5480d86e5011895585652a4",
+            "character.json": "80268eb8194358eb814ec9e21e75ceff208421becc8a59eeeb276d13037eabfc"
+          }
+        },
+        {
+          "id": "07-tando",
+          "name": "Tando",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "2b41d2734dc756225ff41ee424ba4857a82972ab423b5830ccc841bd4932285a",
+            "views/three-quarter.png": "caaac1ff22468e75ea6a7f663e74c88bfcd867620b978083ee386c135848ab4d",
+            "views/side.png": "63d49034e6c1a0f6758346de9273d020abc44022ac2d955baf5fa46e2940a4c2",
+            "views/back.png": "791a6a5019606cfc2eccedbffef9dbe09b05be159cf22faf1e06e7bc26aaa20b",
+            "turnaround.png": "eeb085241cd493b76084a6f1ab4988ebc3d5c0e2f139cd23cddb79b530f52dae",
+            "expression_sheet.png": "c1e6a4c635c74182a5833f66d8ba632cbb2cb29d12bc22dc6cd833c4a37fbe4d",
+            "proportions.png": "3c9ac56ef6834bd4a4b0ddbe37dba8381339ecce733c33a273a1ab25c3896e6f",
+            "palette.png": "eb73fd567f0030961e04c5cc1ba9e8900a36c8de07a6cba5f7f22378978fd9b6",
+            "pose_sheet.png": "351c27f6206bf27cbe80958ae32e1f478c1841464b6cbe48bc7ccd6e51d11949",
+            "character_sheet.png": "6d3b2dcabf4a00fe960dc976c79347c15da6d2a2b154d93396ab32382626e993",
+            "character.json": "c79bfa6cdef0e04cd76acf3e952d8a4701c7be00681dab3826f7b568eed274ae"
+          }
+        },
+        {
+          "id": "07-kerra",
+          "name": "Kerra",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "a22b53a8a5966db123e7b5259207b3878779520df9ac5247473ab16ef7276d43",
+            "views/three-quarter.png": "4442c9ffb4fc840edc718c412bed2b271b36be553af44920b37e0f90ed8b39b9",
+            "views/side.png": "685d8f876265e332a8a71d45568d94dbee4261046744782d8304c3816392ab81",
+            "views/back.png": "67f26de1392f90c74a0bbe65bfb043c821a914672b5f891c85d54cb10d870de7",
+            "turnaround.png": "e7728630a7e5eeb44f3ec2597f1a8a71d92b2e20b444501496c450f6a2f0e536",
+            "expression_sheet.png": "1d7ac2f80cf289b8c22d0600287cf3686f04e9c296977a1fbfeadb8ee18f8818",
+            "proportions.png": "1150ca363acd131a26f40b56600aaf39d055dd3b5e401b665634e42365283dcd",
+            "palette.png": "397ce7d53c1581d0eb44b3fa087d28f8eff33343031c7af55893007494e4e334",
+            "pose_sheet.png": "b48d5504d8a9cfa26d8946fd8eaf7b30776b724e698df0c4651ead7f0286bbad",
+            "character_sheet.png": "622405448d99e590655c8326b54d827e98c987ec795278d9118ad4f8eefd381e",
+            "character.json": "f34097ec0d7a5da0ae759458e9e44b74c126c973efd22552daa820185381ed62"
+          }
+        }
+      ],
+      "rejected_during_build": 0
+    },
+    "08-clay": {
+      "name": "Clay Animation",
+      "summary": "Matte plasticine with thumb-pressed surface variation, no outlines, warm tabletop light.",
+      "accepted": 5,
+      "wanted": 5,
+      "status": "PASS",
+      "characters": [
+        {
+          "id": "08-karra",
+          "name": "Karra",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "76c73e05bb618294ba30feeb58be35123e7e05cbf0e6c387839284e5d562f351",
+            "views/three-quarter.png": "9631c35ac5b9db2ab1093f9147c62467334ba09e6d813832cc04d1cad6aa51bf",
+            "views/side.png": "fc4f7c5624e8599d5e5df9b28f9a5b952924f8bae46cd67bb35c4e02595dfb13",
+            "views/back.png": "7e69d02fa41795e17dc19d025f4e407749d2be55eb76bb1d66f110f7f626e250",
+            "turnaround.png": "bf0d566206d529e143819afbaa14ec2067e536b62bb08e5ada91d360f5177f97",
+            "expression_sheet.png": "4d0ef5bb2e2bdb1a590def72513a7b1bcfafe3d0783679af014e9fc597432402",
+            "proportions.png": "878ea44c7f8c70282d0131887868e5b742b1950b8cdbd238d4ede5202d079b91",
+            "palette.png": "cbb438bba75c8fe79a75b8e5d6b055ec7ac7cda8404ae2c68b27f8166c1fcb97",
+            "pose_sheet.png": "cf4f6e3fa82c180f91a02e463b9a21620da318fcad3e4d506a1353d148806f3a",
+            "character_sheet.png": "4ed00244731f26ace36119f28850d4bcb0388bd46fec57e98721cd446aab8470",
+            "character.json": "fc164d25208ccbcd961fb614899ca7ba40ee3eebc8c44bf0a2deeb30e5add255"
+          }
+        },
+        {
+          "id": "08-keri",
+          "name": "Keri",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "8481b22a97f5a3ff5298e2921744c8b5785a1b64fce6aa31a68fdafc5e05e653",
+            "views/three-quarter.png": "50aef66e32e0621447b1567fc29ac14176ee9f5274748b244ffc7daabf1b2077",
+            "views/side.png": "e4704f47a89af9d72c4e106e2e68953003fe52f49311376754f619f01b78e2f8",
+            "views/back.png": "0bf5cb5247bac225ea3d90a65cd5045c0ed4ed9f84af74071d7d5bf1c3f84510",
+            "turnaround.png": "e2f31ed97bab845d45cdb5b8a218cae4043c145bae08acbaf28b9d029094dcb3",
+            "expression_sheet.png": "d378bf5ce35e14a8627f893ae997e6fce4ab29ac8d0b926224fc1a7c6f1c98aa",
+            "proportions.png": "97a47b93af0131c7b0d0e13fa60fa4793070bbb65c4a4fd50a043699279d53ed",
+            "palette.png": "970f19b1d7fb2649b8b17025ab12af6a0dc70c351a9f36cc20df2a3951f54c44",
+            "pose_sheet.png": "da5323805f60a9c0a714fb718c576cd7888aff0cdd957914aa3098fa08686bd0",
+            "character_sheet.png": "400f4e628223780f7f5064ca3562faa944ffd4e40c280c22f54596d1c8044531",
+            "character.json": "8cbd101dec8186152455958c97387529e056e8f6141cc1e93fcb0712551f876a"
+          }
+        },
+        {
+          "id": "08-bobie",
+          "name": "Bobie",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "a9f977ba70aca2ffad29d1e806138d45286c1be0997857aef947ec81defd394c",
+            "views/three-quarter.png": "870e22bccf9a933443831a1295faa02d8b0719599c4830ec55d19d487affc321",
+            "views/side.png": "d4571e2a3ca9d408d697fa2602a861d7d832b3c75ee5104d52aece19d34e6d7c",
+            "views/back.png": "9c6bafa4efe9a5679dadae7ff007fa2a22e07b59fecc149573b32f5e89d2aa99",
+            "turnaround.png": "fd532042082096970634d67432d0cc6a4e3325d7d72149067393cc8fbc1aab6c",
+            "expression_sheet.png": "265f14c8a651dab1052cf85c9f36ef427d7e539afd85f83529f99e6889b8ac31",
+            "proportions.png": "a3a14a80f55b09a0b9cb10346e4bf083d6ee17dc444941e6c7c151f8f5716d45",
+            "palette.png": "b8cc7b4f9ad8af24b72c8c769bd10237cc596509fd0779201003c0323334acb5",
+            "pose_sheet.png": "5c29533b1af47dace99e163a12b86ad4e6f8d5eb53999175185ba7d57e9a56fa",
+            "character_sheet.png": "71f14a0ebe0c20a397d60e13296ed255b44c15360dab6f01e310080d87c87a7b",
+            "character.json": "6e8ab790882f3e71471cb583806e15aff2736da0a2a795307d4d8d2f0987b2fb"
+          }
+        },
+        {
+          "id": "08-joquin",
+          "name": "Joquin",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "dcb9cbf9bdc174409a83328b53fe1c18440f3a57f26c5b1f417de9857b2e8348",
+            "views/three-quarter.png": "1cb42fa7afc7b4775254dcfebd9320e939ff6ad0db2241ac4d84b99eb0ae25e9",
+            "views/side.png": "69979b59e02511973d730d7ccbecd6e80ca497c597498444bda7abe3de5a8c96",
+            "views/back.png": "19eb1ecb5eb10ec00e1df251c55cae50cd8a3797c42494b4489c101864167c8a",
+            "turnaround.png": "2ae40c4dd5a871572bbcbc68d745cdf82522378554bc4f0bb10d00f22bb877d2",
+            "expression_sheet.png": "489e6d4b6ffc4f32eeed3545b2a83291b1c445ffdbbe671470df0a7f8be9f627",
+            "proportions.png": "2c0913da24d0003ac946ce4cbdfb69efd6ef3bbcfc1a785f6e50e68df166e9ba",
+            "palette.png": "b73d8c9a3c3c453dfa695b8a8ae47965f56a26e550e4f88276690e6206326ed9",
+            "pose_sheet.png": "330180cdea8b40c5e5a290ae5fbc3dbcfd7c7e9d39e8e1c8793a74fef455dfaa",
+            "character_sheet.png": "429aa0daf8796ca731efa0471c9a3b520dd9b328aa82da434bef72eeae81df24",
+            "character.json": "1be83a11813c185d3703d256e6ed3e83e88dd9704f6f02b227c7c7b69774d619"
+          }
+        },
+        {
+          "id": "08-tazzy",
+          "name": "Tazzy",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "aa7426126bf2d92a3dd78acf6b247173853e206978b4390824c063e7163bfd18",
+            "views/three-quarter.png": "7730554d08d49b919e4a1b12a2cf42dcc9e68dcb61c532d901e17ffd3dded3ce",
+            "views/side.png": "6a926b0481ea39095822851247e8c9747cc6f615de40236e74b7b2514b6296ab",
+            "views/back.png": "0e575c0d6eb24359c2b90c1209fb2fd719a14af8e16612bc543a458b2b170ff8",
+            "turnaround.png": "b10de26af0d36f889f693d26703c1bae4fe4611164d4fd6f7ff14a148e2f2b8a",
+            "expression_sheet.png": "b42ad4ab28aca01de233e69a32339a63169ae5ab41ec97c0aea13e5573f84da9",
+            "proportions.png": "d6aca440311fb817cad6867cb619c54de73ee766f0d855cefc8df2f8c2b1ab15",
+            "palette.png": "b6dcecec8330790670c321821bbdf1eb2178c7b67f9fe5df10e68094fb3edf32",
+            "pose_sheet.png": "804464bc109f288648f2f613880035fd0b61b83a13a9f255f8296120bf1d4af9",
+            "character_sheet.png": "785ad8fe0a1597c70a383ba64a06faf04d7dc7b3561653342bad02f748d3df0c",
+            "character.json": "813f7b81c2ea5b2e11a51771fa80b00cc1e29bc010b533536002974c9678bdac"
+          }
+        }
+      ],
+      "rejected_during_build": 0
+    },
+    "09-storybook": {
+      "name": "2D Storybook",
+      "summary": "Two painted tones with paper grain and warm brown ink, like a picture-book illustration.",
+      "accepted": 5,
+      "wanted": 5,
+      "status": "PASS",
+      "characters": [
+        {
+          "id": "09-kato",
+          "name": "Kato",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "0cffce05e1eb52f123a28d18b6c7460ac6df137d6f1e1ee0c3db5131e66121c1",
+            "views/three-quarter.png": "ee19f8bb18c0d662a751cb03874f8e42c6d3b859f35886cd30f2385fbea32212",
+            "views/side.png": "9d42339fe4ca1eec5a8dc17d56638be508f579e81dd4509a5607f183bd713641",
+            "views/back.png": "6a1d954a1e1012858e770f11bfd456406f5d59b08ac98721a281625f6e3a4698",
+            "turnaround.png": "5700d9a2b65064bbee26d604fb5022fa9ca7fe6e7ebeaf89701e4e4cebe9531f",
+            "expression_sheet.png": "08d76f7dd1b634719ff1e77d81f51e20aec6527537876492a74de6cdb438045c",
+            "proportions.png": "9562b8261e2cfb25a16637c156686d632c57a307fb7a76f788730b04c301e3c8",
+            "palette.png": "6144e33040adcf80a24967d13d709cc993aff9003862af903a85ff34aa42641d",
+            "pose_sheet.png": "ce9cd4d9c24a82d48a229642410b56362a187ba021abccc9e1798c19bd1be1c4",
+            "character_sheet.png": "874050b8856b37b2d30aa52932d5101575d11ede547e1246bf52881d681b5b51",
+            "character.json": "870bf4b8abc3f698c4546a5b5a8088258a96d1fac495bb47b175415f0d04b65b"
+          }
+        },
+        {
+          "id": "09-kebin",
+          "name": "Kebin",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "698c9254094e2b5662d50e2c902dc6246548f8e6165736750cb9ee547c332d67",
+            "views/three-quarter.png": "5512dbb76bbd9d5e4cb1f3cc2b1adbe45044f28e655ceeb005200379ccbec64e",
+            "views/side.png": "25639641ff9c2f0842320081bdadc9d752350984bb79b08d58c1607b42a2625d",
+            "views/back.png": "6cf1486111061560d1c5f0ee65ca386812983d63ac7810121ec4b5e4e24601f7",
+            "turnaround.png": "ee7b4b99838a347c107575461f74ade20868df5c4cc4a41c5c520651c308de04",
+            "expression_sheet.png": "819c901de7ae3f1db0351ec94ae49e74628bd9f8209a33781edeb53c4f43501b",
+            "proportions.png": "3a58dd31daf7e009490c0b7cb38194497a302d5fac6f5146e02f6d5cf204a1c9",
+            "palette.png": "d16e3deed7888a6540f8f15457b344b6c3537d0d35ee11a0e134f5ffed084e78",
+            "pose_sheet.png": "c5cbeac251758a4ea427f377eb548d643abce6a559edfa9bb9e671fef19a4c77",
+            "character_sheet.png": "66a54c19fbb69f89b65493cc7863d9297db582d7feb0906f429e8b2cd9fa1e3c",
+            "character.json": "c177fd05e29c3ace482d5d663f5f8770e130636855fa80722602335f8acf1f4b"
+          }
+        },
+        {
+          "id": "09-kendo",
+          "name": "Kendo",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "f0b87cc8bdb63bc39868a9486835e45a5ccd4c684593540636f81892f6e55eef",
+            "views/three-quarter.png": "6a2c78d5de1921fbe9445f7fd52b8fa3e84eae5bc3139eef899480e13e705b64",
+            "views/side.png": "dba96106fbefa79cf4d676f966a207de14ea007d31ece2ad5a0da240c462ad35",
+            "views/back.png": "bc5be898edd3541cb1946e65198b0cf79ba9e6aa146c5536ff5ee59273f9aa5c",
+            "turnaround.png": "c03125acc4ea9840b808ca366ff9abad3fad9e15012747a36ab361bf65688107",
+            "expression_sheet.png": "baeb983ec80800aad344012212b9cbfb2f0c60a60d0ab1a6c1474128f73c904e",
+            "proportions.png": "390ac4cd86cbfea41bb0f90c1c74e29e1dd67c8f60ba6a8a94542cece06db1f3",
+            "palette.png": "70ced220e1bd298d80c4f749119f92702574e8af961867c3a1fb51a23089fd31",
+            "pose_sheet.png": "4a473d4e0df6ed5ba539e4d04bc0c4e47fed156739043739146cacdac97a3e1b",
+            "character_sheet.png": "6d897c424075d601e2b8cb3f55354faa24d819bae67b355edae4698f218034f8",
+            "character.json": "7f9dd15a48bafba24383e2c105e2c9f75c2e7e142f856f8bb8afe82a92ea1d25"
+          }
+        },
+        {
+          "id": "09-dridle",
+          "name": "Dridle",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "9b1deaeac6a69079b14bcec4038f75ac1ec949b3ad99f8142d65f5a3895d7a6c",
+            "views/three-quarter.png": "edd69b6355b96458062dcca0b7f65a41c2138dfee0c63abb1e3978648fb6d7ed",
+            "views/side.png": "be5f22c01a5518745abbafbe0956f4bed1c4fc0ee8469cb9daa02a9b7c9f3837",
+            "views/back.png": "df31105f05288b6556b16660316446aedd34832aedd6bf183c51d4257ce7b0f7",
+            "turnaround.png": "5a00dd66090c3c84f800e46379d010978c385f98a674ad637cfa2d1caca6902a",
+            "expression_sheet.png": "b843b3b7f832e16f5da000534bd2a9b5471073617712b5d80dec22af2e665a88",
+            "proportions.png": "1e126b891884cf55f4ddc9b40c7d0b8a03256c8b362cab81d83a51fb7f2e74d9",
+            "palette.png": "f066149995e67b188333460bb869ca2d8fae9ff3063ee5bbb5b3d3a0eba2a09a",
+            "pose_sheet.png": "078eef8f302cc87b5a3f911a8a971e8e1fe2d53004a7f7840c57fb363abd4f96",
+            "character_sheet.png": "19b866ceec5438241cd7a6423487f665dfc087c3245085d24770703185c12774",
+            "character.json": "084fb50eddd1efe1ec6978979395d1537be9b798192dac6ded64ab1d0cd65b21"
+          }
+        },
+        {
+          "id": "09-zanmble",
+          "name": "Zanmble",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "dec68e7e336e5fc64f6f461a94865c87fe004e995c7421bc54c631acc27ecec1",
+            "views/three-quarter.png": "5eaa431256abc6552e39164340fdc38f3db0554947bd82e406ce9ad07291f39a",
+            "views/side.png": "88fdd62a86e1a10adf86a8b9907d2623af6565cb87b1fc2cb7b009e1cbe1c9cd",
+            "views/back.png": "4221a1e834fe5cfb969c83a0d2529b5741c11fc918290bc1938311bedc83f36c",
+            "turnaround.png": "7c845ad24b69a796f80fee6594fb839e68a28228db2ebb547da06d9d35dc9e79",
+            "expression_sheet.png": "ef062dcfc2a4bd230fe9e348e622fed625fa6807a3b37dee346d747ed8cedd7c",
+            "proportions.png": "39b638283cc9eb2d868c008a07a0120a23bf97fca0737fbc945aa128464057fb",
+            "palette.png": "de2a6b6da0f6fd33f383528e192a0eadf5e8886d56f41db9183977fbdf3e289b",
+            "pose_sheet.png": "450d4c6f7b55edea8d5a904ac00552b06a5b2ac1ae077d475782563ffff4f1c4",
+            "character_sheet.png": "c2f162e2de2f57b4c2a88efc144de2c1d45a45b389eab395a22d5446734754b3",
+            "character.json": "f7c42ea0b2ac7f168655e195512c0b6b9e80599a276b32e905a00b38e0b7757d"
+          }
+        }
+      ],
+      "rejected_during_build": 0
+    },
+    "10-comedy": {
+      "name": "Comedy Cartoon",
+      "summary": "Squat wide bodies, huge eyes and heads for big reactions, loud primary colours.",
+      "accepted": 5,
+      "wanted": 5,
+      "status": "PASS",
+      "characters": [
+        {
+          "id": "10-lundo",
+          "name": "Lundo",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "491b96475f5310ca71e7cea743fe73dc35601e60dd9637dfe205b890db34d6c2",
+            "views/three-quarter.png": "a77b40e9fb3ad8de39454cf27d1f8e9fc1eee47921a13ced2ec574217804ef53",
+            "views/side.png": "26842a2e50db72b16f90fe9e02ec1c41984ba972f2a511cc341c220f866a7eb4",
+            "views/back.png": "12d339063b1c0460f761b9464c1c836924e8685f4b3e1823aea73f7f786876fd",
+            "turnaround.png": "351359d85f44d5cd13694e6e57126eea3c65fb71050dea17aef36d40b782c086",
+            "expression_sheet.png": "f3281b3b2c91499bf5baf662b32acb8ec8bbefbc899fe0c1f92cffe1ee1ee8f1",
+            "proportions.png": "7076352b9d350e174420e8965fb686c14069570e5e9d1af3ff1fca32e20f21c1",
+            "palette.png": "60aeb566134fe2dfb18ea8ffdd728f49ba7abc2111e191012fa0d1f950972d33",
+            "pose_sheet.png": "eaeea1a0c238db4497a1d68bf074c26ca19ab6f46ef8ea10dec734fb21ca1711",
+            "character_sheet.png": "464ecf76cb14a3374065ba4ce81a9f59d4ac48bfb5b560cbd957a243edb30f93",
+            "character.json": "086818ba6102d0d2ee3ebd2144b07113ace608bf15dc1e5776e33fbe4874cd07"
+          }
+        },
+        {
+          "id": "10-kebie",
+          "name": "Kebie",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "6b9d776674ce7fed1bf1b270357be902ccce1e50e847a0b969858d00390bb42d",
+            "views/three-quarter.png": "903f735dbfc3c5df87b65eec81e959b5cf53ae899876ed13affd56b8d8077dda",
+            "views/side.png": "15338fbdd325a3f52d544f6bb72af4999979d2d6e66c0a10231fa1bc8cf0feb0",
+            "views/back.png": "63d936d38e1291575ceb909a5d84d170b0e4a6b4c362335e83ff80438209149a",
+            "turnaround.png": "7dcc27775208228cdde3c7d6cb3b1ddfb4a02652f71fcdd2bd0231a33efdf47a",
+            "expression_sheet.png": "2903988efcedeab03c695817a8775981c8a1b98b4b181226be77deaeb404f0c9",
+            "proportions.png": "0c8c05ab85bbd3aaa5ebeca43ae7faf0b5b864d454ec1ab4447cd9d0ff0f5948",
+            "palette.png": "3417f1ccd57b87cb0ccc717db2e455e070d74672868b155451a7ac6ce9f74499",
+            "pose_sheet.png": "94b0fad7ddf8174c3864d65ef212db8e2b5baed8801e7084d690e7fcbef82851",
+            "character_sheet.png": "56a89641f7128f00f5aad4f9ef5c001cf16ddf4b5e63cf05bdd10bbfaf4a63a2",
+            "character.json": "e3ab5692f82e4fae5520a8f4da38756283c2b375418dcf424af1c9edc120d7a5"
+          }
+        },
+        {
+          "id": "10-safer",
+          "name": "Safer",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "005ba68cf5433c80a40483ce915fdd2d6e47cd2d6832e485bc7dc6f1862c5082",
+            "views/three-quarter.png": "a30f7abfb24247886808cceaff9dc83710f6d8dda47858fa620b1194a1e02596",
+            "views/side.png": "ac6882a4e52202c5264174ed7349304092e436e982e49d3c2557a431694c83f0",
+            "views/back.png": "09f8f358558d60d4a99ce4d0abb638bae6a76c236980a4033e3e304d37f20267",
+            "turnaround.png": "ea53ea64277e85804523e06fbb7d81fce0f787cdfb5bb59b9b875f8487897e51",
+            "expression_sheet.png": "a522ad4e46aafce22158e3cd388e845f2c016a22cd830dc6bced9eaec485d110",
+            "proportions.png": "27dc2addf2ac5a826b6e84ae390845b62237489cd98e4106f72e074e4e7d3174",
+            "palette.png": "b54a156fbe8d3ecbcf7118d0c08d6c5876827f9c83f3d62301d5f5328f955492",
+            "pose_sheet.png": "c671e5f4eab7353c2f46fd8bb5a3768d1dea6de8b6b65505e492f5de086d5726",
+            "character_sheet.png": "e77f9c7ee4d2ebdff01587a207822863ad56ae43929530c3d6fb0e2e7e49bf75",
+            "character.json": "7f5a8e20fdd64537c4c516a3de3c144195e3a582328950f1c1f351970c7f4173"
+          }
+        },
+        {
+          "id": "10-zanppa",
+          "name": "Zanppa",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "91da95d08bfb7b018ef40e9e0e2fe3533757cff1826f397b4cc1bc469d5405a3",
+            "views/three-quarter.png": "ca30c4d4c9a0894435c9d7023a3c85e9bd3c70b6bfd7e9f8db249fb8459da6b1",
+            "views/side.png": "7910f0d4efeb2ce419dc05d57fbb922ed07dce91d802d21e7e389948eceb2d04",
+            "views/back.png": "c1401b95142c5c046b8ba87fb603982992257be6024227f7680203f8b8ce9f32",
+            "turnaround.png": "c254cff5168f3d51634a711eaec36d88563209035c19ab52ed199cd725282b43",
+            "expression_sheet.png": "621c73951a6e113f473331aad348a89c3bcac50ce45a38665fb9fc357ac9c640",
+            "proportions.png": "ffbb5a9fef14cf47679c26953842a96d82d22d874c0bc9d2f70e2ae074d593eb",
+            "palette.png": "cb49a3270dba48bc0eb8a6e7fc7566b01dc16d3896aee31dadac463c4d7cc4f1",
+            "pose_sheet.png": "fe318b34f576bbc2f756939cc4af2a69ad816ab11493f2c4ab5c5074ca4ee882",
+            "character_sheet.png": "062f6a61ab0f7ce94b5683bc153b55ac98a9fc730385bddaf1608acd897bec90",
+            "character.json": "e135b0652c499ab08b67fa63728dc27b662fdf541b87a859dd435a82e0a045db"
+          }
+        },
+        {
+          "id": "10-zeri",
+          "name": "Zeri",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "2dce4f37a8ab24ca252b5df4c52624939979de1653877a3a7a4e2280bc69d2e9",
+            "views/three-quarter.png": "2d81ba29a67ddb00c84494edd8e9b5b3b66b744844d4b77beadf493537767f5a",
+            "views/side.png": "7c281d8e37c0993362bfa3215f031e05e9d61594c9ef505905806899d0c47920",
+            "views/back.png": "cff282b0f8338039e53e7793f3c532225bb6926795b5b17ede7bae279d895518",
+            "turnaround.png": "059166b38a890114617f741679fa57cf46792dadddc10cc1e077fecfad67b949",
+            "expression_sheet.png": "83276532a6af2802e06179497f845a2754ab02b486d06aaa1700f72dfd14857a",
+            "proportions.png": "e4dc9532eb599e029c038e572f2ea5fbb6a9fda7e5528b9a752e5e7ba47d18dc",
+            "palette.png": "c337037c92f2f5bf10ff6ef1cfe0ef074ce17f1564910e311e153b34b3fdb96e",
+            "pose_sheet.png": "ac52213d81abaf8efc5a1848726fec4abecd087dc7aa524b717678a9dc889aef",
+            "character_sheet.png": "a94da306a3d4b5a05c796e69d58e39195a82fa736e95eea77f4a0ac780029a75",
+            "character.json": "984b4d285452f3e90d04a8569b2d2d7cd444c17cfcd91abd813bf994bf781123"
+          }
+        }
+      ],
+      "rejected_during_build": 0
+    },
+    "11-animal-adventure": {
+      "name": "Animal Adventure",
+      "summary": "Anthropomorphic animals with natural fur texture and explorer gear tones, warm golden light.",
+      "accepted": 5,
+      "wanted": 5,
+      "status": "PASS",
+      "characters": [
+        {
+          "id": "11-noquin",
+          "name": "Noquin",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "3b55701f6a56152abb3b4a702e070735bff8432e62951e432b0e769759822c12",
+            "views/three-quarter.png": "60389d0f8e36182f7f128c6dcbc9a83dec50c5978b50642a09c28951d08afa5d",
+            "views/side.png": "935c09dee355ec27332be2af89dae299cff9170730496b34e44a7101b18a63ff",
+            "views/back.png": "9585eba8e0bd236b9b88d9c1f645ab48af2847160863f09c15284c6104ab5325",
+            "turnaround.png": "166a805f81c698fbe8e0706ba6f598bff7d7c7fc014311efffb11aeb1d18e6b9",
+            "expression_sheet.png": "e4b9f66cc1ac4b796cd973728afc2c3750954da22b7bba21a5eaa6106c29325f",
+            "proportions.png": "a4b36f7c718800cdce2eb46f79be25acd94fa99b0766fa2e119c1db272bf5b88",
+            "palette.png": "ae8f4a4edbb14b698c16a0b86ffd77548b08e85c46a857372f445cdddececb4c",
+            "pose_sheet.png": "3c8e8f3971c8fb3e5533bbaa194995e052cb5abd0cf81f2e80addc33cb39c00d",
+            "character_sheet.png": "edd37a064ec630dd58fab2c801196066c37b72f114b3692f2c32b93a153d1954",
+            "character.json": "4c458292adc606ce1366c6973b30d9160b227ba472fd5731727008e78ed14dd6"
+          }
+        },
+        {
+          "id": "11-pippa",
+          "name": "Pippa",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "68257b326a271550e74a2711b4d227be48555ea7cfac499d7dce51c7c47d191c",
+            "views/three-quarter.png": "ea8440c11004060d5a6748abb6d818840aef2f1f1dabd22e40206526a5c96c46",
+            "views/side.png": "eb9599874e34a14133423f3cafdd507e82232f0027d7d65fae7f554537844515",
+            "views/back.png": "2407c29f3dabe2ee3733e1743bd0dc1dc6f3b4f9cfffe30c7f1d34d32e8e1d8d",
+            "turnaround.png": "c793f3abce345bd90bed30b7ee5714829d4bddb0ec5381ca99fba766b6c5efde",
+            "expression_sheet.png": "f9490e4362510484db3b7a5e22c956b79a5f8f776efa9f5404ab4e1ee6523eb9",
+            "proportions.png": "e1b3309670ee0632dfd28418e103eb114ae4c0196563cca52f7df33244c9f850",
+            "palette.png": "892e5f933b32bf6493ed3a6cda0bbc4f73b2aeb1cbe6ab241d4e32bd0329066f",
+            "pose_sheet.png": "ef775fde35ad505e8e85df53513cedef0925fc883fd732315953919313d74ae4",
+            "character_sheet.png": "752123d92f6f1f1600d83b387d7a128691d3b4262c4dbede04e370118de1807c",
+            "character.json": "b2a20e91f0ced546675ce4c209247be45d073eb2db4dcd4ec979ec005ca1b0da"
+          }
+        },
+        {
+          "id": "11-kezzy",
+          "name": "Kezzy",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "9dc07d014cfd9f99b6456d6250cafdef08e58bd016b9e50dac6eb4b084ce92ae",
+            "views/three-quarter.png": "c6ef72154cb4fdd4d71c672614367693cab8d92bcf5756f521d9f3da99c30f77",
+            "views/side.png": "fb65171bc5bcbb13c15987e385e806b7bc7b36450cf31fca8b13f4cfba828e58",
+            "views/back.png": "555b3ecc8542b1a43d08b863dbdc4935b810fa4ee4e2d9c10bab9b46fc2d509b",
+            "turnaround.png": "916c4b972e6387eac65f54e442d3390d22383efe9775e3f38660740d3fad364c",
+            "expression_sheet.png": "be37de00df79f85a61cafb2f2ed75b790527272e5efa33c6e3074dd03aec8f52",
+            "proportions.png": "b3bcc61c5231e0377d968b2ed0e8709d5241aa88a9a261387fb648425f606ab3",
+            "palette.png": "50dc61df39f08e3499de5f14aa4e51c0c6039f81dda392496b6d3d0b1c53b895",
+            "pose_sheet.png": "ec99f3667849e371d88c20f380a47510fe51bdfacf1aa62f988140c125490b6e",
+            "character_sheet.png": "8e3cefe92f2c34edd881da346dfd64843b6bd67fde04c21ac11143e64e6fa738",
+            "character.json": "03ad51690574e4b72f3c5bf9390b64ffb079558f639e2d019ce3d2f279ef8e8c"
+          }
+        },
+        {
+          "id": "11-driri",
+          "name": "Driri",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "4216c1208afeb600ea64ea422b9d281b14bb35efa8094dd7fb52845685b4f92d",
+            "views/three-quarter.png": "1ca29076fe8511f7099a286106fca117dd697381bb98e718a17a11a16a833aaa",
+            "views/side.png": "0abfad30a3a4509f63ffe2fa690c801d662e3634424802a12f0236ef99066ff5",
+            "views/back.png": "24dac64871d451d2a5d193974e5227f228e22daa6d11b88bdd41ddabc17097b0",
+            "turnaround.png": "de292ddedcabd3cdbb4dc179d31a629fcaf38ebdb43aeb8af3a73ac9896adeda",
+            "expression_sheet.png": "7679c98432a03df9871fd705069b61cba94aab1cc6a29cdaf38dd002efccc12f",
+            "proportions.png": "198bd4fb33a67bf8680627055c02714a19bea0ba5c68e8bfb0c8818b0a69132c",
+            "palette.png": "957f4fa8755f6a30c24704c373916dc05bf87da73f36bec71c7a8c3fc580fe16",
+            "pose_sheet.png": "ada805e1a7586f784e08ffe1dd19b4bac848f224287a2ae134e9c8849ad11a31",
+            "character_sheet.png": "38b1f48b918b45c60b0e4522aabe279a81da809314efb4267a1b04b85c614c0d",
+            "character.json": "9d746439249feaa5af87dd8de66c07ec83979539bdf2470e12183fcdf537aa35"
+          }
+        },
+        {
+          "id": "11-piri",
+          "name": "Piri",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "6dc47223347b9fe579331a30bbc0eb0df18acfc97df2d14ac3075d7518386964",
+            "views/three-quarter.png": "6b4735715c0a85d780c70a22165cc89d0707867da867ec9cc1bb935b2c7e0d29",
+            "views/side.png": "a4f2f00c228266add2c40f62f9ed00a80485bcbe778c4c6100b728db30f9b7e9",
+            "views/back.png": "55668d56038ec62f073809662503cab36a2481b5f3139d1c882ddb936aba69cc",
+            "turnaround.png": "9940cbb97bf50b3e6771d7a9a4e4ad003cbb50ea7d756e6dc4321de5871c3429",
+            "expression_sheet.png": "7d63d6910d8a7f2ec9ad6f560c827dd90320059e2ec8f133b038d4683260f0b6",
+            "proportions.png": "514ffb268bbb03b5bcaef1f0d2d4d91780797cb8d6118650e40964a8c9bda6ea",
+            "palette.png": "c859b77bec25dcfcd5152c68fb51f9a04c36a72220cef1a6e3d997c01d7ebd33",
+            "pose_sheet.png": "aae6c4ba366223931fa2e90a4bd226c0837ddc7f4fa6ffdc75bf5b3394f44e67",
+            "character_sheet.png": "2f2de8c3da38b7d77545d1dd9b55f8227d3eb651c8b9b730259f409376c7540c",
+            "character.json": "3f8a737f0d17becc20c64205af5a39faeb59376b6e1629b87543b64ea93cd8a8"
+          }
+        }
+      ],
+      "rejected_during_build": 0
+    },
+    "12-miniature": {
+      "name": "Miniature 3D World",
+      "summary": "Toy-like painted surfaces, macro tilt-shift depth of field and saturated miniature sets.",
+      "accepted": 5,
+      "wanted": 5,
+      "status": "PASS",
+      "characters": [
+        {
+          "id": "12-rundo",
+          "name": "Rundo",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "7674a3c31d31478180d1f56c34169367a98383c06d971354c6170fe9624edf30",
+            "views/three-quarter.png": "d6b37ba2142fe856f3b516630d094823d3c78f121fcc358876c052f175834450",
+            "views/side.png": "e32aa8aecdc28e618431024282e776da733d042dd2af153609cdaf0629345e78",
+            "views/back.png": "35cf953325ce70aed63f055deb652268d9095c403229ca274c9d9f1c8c769ece",
+            "turnaround.png": "3d46c38e12d194c831e6860e69b7fd695897df4b2b288290d91e386be51548e6",
+            "expression_sheet.png": "81bd27877b15f26354a1cfe54155ffd1cac970051ecd958af066a01f9a344a6e",
+            "proportions.png": "ea7386c624fc7c53d3e9b3da359b306d45addb69c285e68adeed0ec09a96b9f0",
+            "palette.png": "ce51e44e19c7b18a14d74c920002f02c25b51d51dac9f280ae7b61067d7a9e4f",
+            "pose_sheet.png": "5dde5d8f2eac1ae5aeabe1a91fffc6d305f7132662481b16ab1d936ac819d5e9",
+            "character_sheet.png": "094865816a0b349c93b6daeacdf39e2c3920672cdd7376147305bc551b1fbe7b",
+            "character.json": "19fe3a47605feba1cd4cb3c496535f218fb4b950cd367be7b445b7b71ff59a27"
+          }
+        },
+        {
+          "id": "12-norra",
+          "name": "Norra",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "275a6d2b3d96f44a9b45bdf2a15254ae57484ac13feefece9a5c867cc6508096",
+            "views/three-quarter.png": "ba69027c6aecb9db69ad0fd314c4fc373da6fe3cb85ea737689f9faf6e7771af",
+            "views/side.png": "71076feb1352bf6482d155e51a0a5ddf27b1e208e9b2ae634d7c3bd43afb4d5e",
+            "views/back.png": "89f565df655b49c7cbe7807838503398ad99824cd46d1648ea5878c3225ded3e",
+            "turnaround.png": "c047b74f12158af53c226fe83843ea0867545c28b691217b26e183dc56463919",
+            "expression_sheet.png": "b8cbd87407916dd4450f229572982b3f391d2df23f9a70972f5dfa2b53ee4adb",
+            "proportions.png": "d1f5b89c0894e00374955f30817e08fc5c112b062ce969be384570499889ed88",
+            "palette.png": "784fe84daff633c1447a31cc86feeb329065a5868fd347b35e073f21c479da47",
+            "pose_sheet.png": "b26a74c3d00ed46f7a2179a66d07eeccd3e580d1e888077afbbba127688b3372",
+            "character_sheet.png": "6cbcb357e76083d7b5d5ff0d1b283d1e326665f66fea8f2e75618e19462c190e",
+            "character.json": "5664567fb30505e99697ad58162c14df84a75b65ee2162eece331514515fe993"
+          }
+        },
+        {
+          "id": "12-nolix",
+          "name": "Nolix",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "5999772e89dcf0803a4d0167598bed7c0c2c099c6770182fcfa165dfebdfe103",
+            "views/three-quarter.png": "9cf8f8be0d13c5ebb550eb99842edb73b4b90b604a3c15655a93783b48092ece",
+            "views/side.png": "0cd2a757ac08cc1f52aa0a185abdadf9ce3acb3da97487f8eac53c64c29608c5",
+            "views/back.png": "812b573db144ce83a602293915748cc3b605a50e1faefdca80241944ab11ccb3",
+            "turnaround.png": "0d27d14c427699138075b893c55a90f4920cc1a88a1faa6fd25d66e7bdf8cd3f",
+            "expression_sheet.png": "45351aa48039cb4bbd1effc88e84aed123340c0172053af0806eb0523296f5cb",
+            "proportions.png": "ee2c20fcdffd4d39dbce798deb1c6f5e5ad69ed1ec5cd3bc6fb33ff3c73530b9",
+            "palette.png": "224517094131aade4ba4b84bd196e775373714d979645c9df1eb2a03beec0053",
+            "pose_sheet.png": "c0a34c8b0ca2805a11aecfa0365143ba93a33ab4093f297b4147aa0e33452fca",
+            "character_sheet.png": "96fde5182de05da82e02da40489c85f635a4bd4ecd88772c952b677ef83f461b",
+            "character.json": "eac3ccc84552fd3fd32e7ba194bc409c68b010c5b381778694ffbf055a51855f"
+          }
+        },
+        {
+          "id": "12-nomo",
+          "name": "Nomo",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "12a168a3a2c3d25ca76565fe28b3831f0e435f4ceab1c4dedcd9974501ae53f4",
+            "views/three-quarter.png": "23cc2b29672912b0344ad9fb1764bea6e885fc8b91ae89875f1efd0fd24c8537",
+            "views/side.png": "c4c272d1a08d8c97808bbeb065a429d87810be815bf613f2dac80a2bf78478d6",
+            "views/back.png": "fee2dd403331ad011e2e1561c9e8af55e0dc1eb5e0bbc646349171a715deaf0e",
+            "turnaround.png": "ed18dc78e5586876254328504171ac47cfa124e894d8826fc428de6759f0c59d",
+            "expression_sheet.png": "f985e289aa39a70255064317b04d3602fd381acecce3b787ddc92911bc8d741f",
+            "proportions.png": "0b994ab7625dc629ad15764ec7349bc213dfd39fd5901b755f6ed6dfd4e9a47e",
+            "palette.png": "4bc7a474fc08bc370eea9e159dfe3a651633ca5eed32878bef5d9abe6c4890d0",
+            "pose_sheet.png": "fb0195abe64318545c49508d912ddd8362a78e3bb893077f4471adb28389b0b3",
+            "character_sheet.png": "19a47aa956492bf7245eab41a3dbb08f216cb371588751f9d81bb7c6b4525774",
+            "character.json": "071ad2c03e7016aa201dc8c4698e7e5692ff77a1d83693e4be7c6caa99883322"
+          }
+        },
+        {
+          "id": "12-tappa",
+          "name": "Tappa",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "25b5f43b4bffd20800f7f620f5972cfa6be75bb186ef5a0ed523a89ec4abc775",
+            "views/three-quarter.png": "f80db5f668ad96c7c216d28e0e82cdfd1e060582532134c06c94e33c67195d8f",
+            "views/side.png": "f59fe0a16ca8fcb63ae7f210b592f38c40540b85c74a04cd25ad7604e13dc980",
+            "views/back.png": "75574dfcdda1c1e9a1963768dd49d97849043a23aadc388ce567162cf9a518ef",
+            "turnaround.png": "456e94d68307b43ec7dc53565ad3e497b3019429e82e8224da406e058f00dc48",
+            "expression_sheet.png": "73dd619a71baf3afd14c403782e4e25a6c6070c85ab2649c9379f6b149539e54",
+            "proportions.png": "80afd5a4372009a93b43d5ee23d2ddbeece225e203e410ae44248f756ea8ce04",
+            "palette.png": "52ee484b1ff90d3f3cf638cfc84fd7c84228ae3808ea186e5fdb1f74bd4e3618",
+            "pose_sheet.png": "517f8155f9b7c9641c16b190669071dae661fc4fcaf8658853edb635df84ec38",
+            "character_sheet.png": "d79bec3effef38e0e927bcdd5aa3bad87db7da58b7c777d6ec6acaa07edcb95c",
+            "character.json": "dc6f54800a2997ad9db7c5935a3f87ddec23ecd185c27936b2e4921d28a50090"
+          }
+        }
+      ],
+      "rejected_during_build": 1
+    },
+    "13-scifi": {
+      "name": "Futuristic Sci-Fi",
+      "summary": "Dark metallic bodies with glowing neon edges, cool night lighting and a neon-teal grade.",
+      "accepted": 5,
+      "wanted": 5,
+      "status": "PASS",
+      "characters": [
+        {
+          "id": "13-wavel",
+          "name": "Wavel",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "dfd5883127cecb24c8615cb33b0db1d7bf4403952535c349af1cb7fa7fb3a611",
+            "views/three-quarter.png": "dc4d372ffee2c864b05f2ba5fdd32875e93ed148d66c91c51887bb4c0b0cabb4",
+            "views/side.png": "e39604e8ba272109b8fb8fcccdc1b021ba5022e51e7ec476c6b12590037465e7",
+            "views/back.png": "fca2fc3be8d3d7db26f2d8f8aabf3cfa5391c4e6f322986cfea5bf08d8dcf226",
+            "turnaround.png": "2fb476094d68f867a5db7d5c4aeebd5aba69a2b3607488c536f1f1f5a878cbf6",
+            "expression_sheet.png": "cd9b279e71cec6efa7b18bc94927598d62915c875c76d3e8c9c002e7cedf459b",
+            "proportions.png": "8c61d4f69a7456398d97f411c46e4379d521e1973148dc0cdebcc92053d9f43c",
+            "palette.png": "0b3f706aa821852cf14d0adc82919950ace4fdd5277bbfdfe8951ca57c869617",
+            "pose_sheet.png": "37532fb136d0bcf343faf9a59d1a2a9b5b9d3a717e5e6f2dfeed17502014f1fc",
+            "character_sheet.png": "a0ad2ae29fd4d39c3681a8ddf8a74e0d06dec5a1c6cf2c5b900c7415727df9e3",
+            "character.json": "1fd325f9e7e6c97feb1f7e874034d4df4c3ae5fd8045f12d6c974e68ddebd8d8"
+          }
+        },
+        {
+          "id": "13-tarra",
+          "name": "Tarra",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "77c81064a56cf55aa1f56c8a912ac06a7c1525c3905c78055d4863f9274262b1",
+            "views/three-quarter.png": "1ce1225ea1de921e16237f2b7b843dc7be840f27699d2d9835c3129b54f9b225",
+            "views/side.png": "6dfebffa919deb35b8aaf56f145bca64d84c35a5c761e4242738c75a704e39c3",
+            "views/back.png": "2d7d4734526e9eafe213dd6f48c59721e4eaefbf4cc84a0293144cd6eb3102b1",
+            "turnaround.png": "15bc62dba8d1a56f509b67c10eb00af72089e6c27c8c612189f1aec3087d5ab9",
+            "expression_sheet.png": "1f360d3b8f39371770a837c266cd46621ad47d73e364accfa9a02bb768b128b6",
+            "proportions.png": "2210e5fa4d9e3f13376066da4953c250c680bc798737ad21839274e3eb040902",
+            "palette.png": "1317a9f838bf72c69002a06ab01b9861d6fb5d331974f97dc2c7c29875eb6aab",
+            "pose_sheet.png": "1a870b2c2ff63c483d77b7bf7cc2d7fd1ccdae0262d89e0b71f891e52c2e1345",
+            "character_sheet.png": "b57b19b4c32a8ae955ecc1b6e6d5a5ca54fed6d5f3760e351deaf5624e9b56ba",
+            "character.json": "f2a416d806cdcfa791c127729fcd8e796fe2fafd1cc6486c2fdbf8a7b2e3aa97"
+          }
+        },
+        {
+          "id": "13-ruppa",
+          "name": "Ruppa",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "96d60dfd6d2d5a929ce070db1c92cbcdb49bab3af0ad6b64c30bd7fb92e7524b",
+            "views/three-quarter.png": "d51ca721b97daaeb968790a76c125338e19b96b3a91d4e61d4008fe7bb37d1cd",
+            "views/side.png": "b3fa214cf80191067d531ecf2b8dd47634effc2484224f2bbaaf96a27d0fdbc2",
+            "views/back.png": "88b4462495b97fc3546b0021db9258ee0c06685f36fb1783651c05192e54d797",
+            "turnaround.png": "b77c4de7633b6c41d0d42f7e8f759eadd2d9a0ff1841f630ed90b94788735287",
+            "expression_sheet.png": "3dec57e4ca2685af1a0d036a88530b756f77863a4966a67faf0c0cae4cb3f67b",
+            "proportions.png": "f74b10aa01f9b536971f5ee0d19180938f0ed8a55ed9deebce3849a68968fbf1",
+            "palette.png": "85d8b24e00de6888e62508ed30a71855939d76b82b9c04bab7a9f057464ac3e7",
+            "pose_sheet.png": "dc6842b05162303c7ba684eecbc425227c75107f353ad20dee8fe2e8354529f2",
+            "character_sheet.png": "655d550a3d1bc50ab486c95cc76dbea8ed6f66a2b8aa986d5c0f7d8c26854204",
+            "character.json": "d466bdb692de0e8f2c6882a1690d610eed4f14c9d63dabdf70cae7fdf863c701"
+          }
+        },
+        {
+          "id": "13-vito",
+          "name": "Vito",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "56515009e8f02e755c04f8134a349947735978c2f42a4b6130ab24334e32ecdd",
+            "views/three-quarter.png": "2d8373b7d7d38b0544ce02e52a8b18bb853047dd0ffd86e3ddd067c26ffb7c37",
+            "views/side.png": "2a86d004fbaaa7e2e1145c78acbcd95ba815b0bc56b2dc3863a998b823d23e1f",
+            "views/back.png": "57027f79f85b694fee892650af3158b83f97d0bc431ac2e88b633c7d1a942ed5",
+            "turnaround.png": "605995324a881649f19f536fbe1fef66e1441c59f8be4fab1c675c742f1d28e9",
+            "expression_sheet.png": "d2ab46a088692181681a107b3bb58c1696bd2ef57c51df36dfa2000e23c75624",
+            "proportions.png": "79d63931c04ab2f52c1f343d1c7f2492847d8fb712384f6c70596e758851816f",
+            "palette.png": "c576a2172cd5fd7a305eab7206e6cc721ad5c0204548630313fb6a3a378bfaf8",
+            "pose_sheet.png": "6f58a858c71746856f94ebce30f78afda92bad7a59f8e76e2fbcd4b5906bf1e5",
+            "character_sheet.png": "0f97d7b8eae08be6d0f114c152d84edf7ff9dc72c64cbd5db204a1b9588c2c86",
+            "character.json": "68800b1800177d67ea50c22dc04b1a4d7703f6a4c0c9249937caa4ad3b7a828a"
+          }
+        },
+        {
+          "id": "13-fidle",
+          "name": "Fidle",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "ca8e8be8e2d48bce6f61075a16302551c72e3f966a2ef5a093b0af542e96ef50",
+            "views/three-quarter.png": "d09022689bdc066c93ebb503ac76d935db16fbe951032f809e13c5d00c1255bd",
+            "views/side.png": "fad562b2ed015941126e4832d83f07e05e903b5fc76b8e87a5ff9b0f08de5bab",
+            "views/back.png": "386193766f9dafac810ce27b120c4f16b578c2cfe6463a233791957d4b2537de",
+            "turnaround.png": "81ce71300be21732a7fc7e651593bbde6c8c8260693404767bbd9da40972805d",
+            "expression_sheet.png": "1ffaecb16158b9af33132066fe5315c6e670245107b431e41df20afec8af5e35",
+            "proportions.png": "0e5985c06713961e699807f6b36380617ee38abd5a332e86db63cc65a2192837",
+            "palette.png": "609fb6c798d82359637f9c309abd9e98374f8575bdfef6e7f62a52df20fc088a",
+            "pose_sheet.png": "0802bc430de5a33cddcc4047f5a4c77766afd5d5bf7be6bde9c0bc16ddce3ae0",
+            "character_sheet.png": "f05fd4289dc2e4a5c21dcf4bcb02796123853bd432f8988780d6ba062b1d537f",
+            "character.json": "5c94dfa9c290097b7ef56136bfb313b8836504a7bb389cf6e34d36b2907fef83"
+          }
+        }
+      ],
+      "rejected_during_build": 0
+    },
+    "14-fantasy": {
+      "name": "Fantasy Adventure",
+      "summary": "Enchanted-forest jewel tones, violet rim light and a glowing magical atmosphere.",
+      "accepted": 5,
+      "wanted": 5,
+      "status": "PASS",
+      "characters": [
+        {
+          "id": "14-pifer",
+          "name": "Pifer",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "34b95d848fdc32b8e699fe32046492a5ff7db891f5a78a1d7ec35c557c0e8711",
+            "views/three-quarter.png": "0118431ecea20c437c08583d97ba16b3bb38b17910d22e53ada105d489a54074",
+            "views/side.png": "a37e799d99d13345fdad9d7cfebae9db1d7aa064c243d516948d34a6332e4f27",
+            "views/back.png": "39c76c202e30e9ac9c11ce96e1d878a540d08b32df45525bc887eb574d2755bf",
+            "turnaround.png": "76db7c463828ec1c203ee5e48a679faa137693ff7006fb788f922fe35e251c44",
+            "expression_sheet.png": "cd1eb2065b2fb53572bfd062d41ecbff2b92e8bdeef5b7429632aac0b7f8b80b",
+            "proportions.png": "c6583faba4d528b55bbf092a9f4a6aa519cb374103b554e883f441ea69950599",
+            "palette.png": "2da83581b114ccca04c1853bfbc3ffadc9c5a1764226ed9be46a0d85008ae0a7",
+            "pose_sheet.png": "d8a8ba5532d77caac5b45e9b0bcc64e4e05f12cc89ba0c696b5a16ecf90feaf1",
+            "character_sheet.png": "d264058d6e5589dd22b9147f102a97b74b29b75daef022b0184d86ae7d701c71",
+            "character.json": "8928f1aa167eb6c46968fbd8074131b7342afb3a929e15d8ee402f6adc12dd62"
+          }
+        },
+        {
+          "id": "14-bomble",
+          "name": "Bomble",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "cd445b7d48e40bcc4c6de9f49e4951a9357b30b037b9333924c923c0d39f429b",
+            "views/three-quarter.png": "6e94b21f2ee890c09ba8937830c6434348fd5f7d7a81e9395e881015d4681d43",
+            "views/side.png": "76a2c13e4027395fe72e7f3e794c805f808401346e010cb832e7989e43b1a114",
+            "views/back.png": "4741734e3ce3b07bd1a997b67c1a69ba371e828ae4026a71119a0e9784ab75c2",
+            "turnaround.png": "c7ad5a538cff6ed6459a38224781aa49acbb1166220d92d7c4aa9fea1d3379c2",
+            "expression_sheet.png": "87ad19fb1e010724b84955dd7c07e0027a0ae344aeb8e1059511b3b9a18552e3",
+            "proportions.png": "0ad88dbd259aff7583fb9b4bd75e4e50a27e0bf2dded559248dd3ff22cf69f70",
+            "palette.png": "08b70f001dd8692d820c058098b08247d65267fe098e6fe852217dfb7afe116a",
+            "pose_sheet.png": "aac5e58a6302dca6879d04d3e7ff965ba26f99132747e19ef6d0096534910a86",
+            "character_sheet.png": "17b37013b041b42d51962b45b33a7f6dbc6c3dbe6d013241c7392fb94b810556",
+            "character.json": "b0b98c3efb257b55738b781e16e66e63d0d4c0b3b9a66bb781d417e772300852"
+          }
+        },
+        {
+          "id": "14-talo",
+          "name": "Talo",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "45a345adf48125f0d70755b65653b2308473c95fdf04271ac815f36a8a1a7191",
+            "views/three-quarter.png": "3c604034b86ea2535b796ab6f28c013eff23598aa5b987cb08fe22365c84053e",
+            "views/side.png": "44c71f4723ac88f1e2527649f366108e2246d9751e67d2ff3cd328d84e002daa",
+            "views/back.png": "4bd8494567fc2ed550aeff8c4be8a0d88047cd2accf4d414aed5fae4be264e36",
+            "turnaround.png": "6fb326f8e04815a83a63e434ed12c6e2b4604b2f53769d819784d7380c435e95",
+            "expression_sheet.png": "a81bc9b9541eecc9f682fddecc04675cc1fbf0367c14c639c1a55baa5908c36f",
+            "proportions.png": "edae6e444a0ebe7aab2f40bf4d94974cd24dea2d7c1cc72e17f8ad3086dd4138",
+            "palette.png": "da86cd0307988a360ddf494875f6a1b5968e606010c762e36dc3c0253cb4d3d9",
+            "pose_sheet.png": "9bd9b16fc3de35b4bd7e7af4b17603e6b1686db6f55aa3032c587b1cd78db944",
+            "character_sheet.png": "f8a03e132a5c33111ba357158b999593d4bba4ea6ab3255dede8236d0cb91539",
+            "character.json": "a59d1c02f03998f0335e68b57f8ff3032ece1f46609c67e13c735f38fcbda1d9"
+          }
+        },
+        {
+          "id": "14-nozzy",
+          "name": "Nozzy",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "68f1a303ea2672b3a523c780048bf7494dc823b406a461c0601036dffec6028d",
+            "views/three-quarter.png": "56f1698aedd3d59a00ff27cc65c94abaaedefbea3041ddf8fd22d0143133de95",
+            "views/side.png": "897a3d545b02d620a96451985458c4bc8bed629aae53df3e3654ab53062e2da9",
+            "views/back.png": "87c5cfa4e728db64cfa7c480c51a1cf177d46989875672bf209a8434da6b575a",
+            "turnaround.png": "5999efed4d39393b5d026177f4b48a6e0e88042410388c19704d70ce8364ae88",
+            "expression_sheet.png": "5f0b06124f61c692e08bd0016750180951a8f81049c1303340007a8cf4bc304a",
+            "proportions.png": "cd3bed6e5ee421dff874e9ee8e08225ef85ac504fae8fdc563d5cdafdbcf2fae",
+            "palette.png": "6d96711c1a6c73533588518d1035dca6dd83a1b486b54f20fb45dec15245da15",
+            "pose_sheet.png": "52336f53ab75b4960a3a5dc9b3a4759e661f2f436f56db5eb6567a647b703b9e",
+            "character_sheet.png": "dcc187c2cd81a06172e834bce3942bd3af6820b6e5a544b6d43fa7cb0e99edfd",
+            "character.json": "2f40bfb5bc98cc72efb3ffaa2c1b213e7726d20ce27a55edc0c11f40a2439f31"
+          }
+        },
+        {
+          "id": "14-drimo",
+          "name": "Drimo",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "d2dd3cb6df607ba5f2e03e8a23cbf11e22ad4a3bccd2550404f890daac938947",
+            "views/three-quarter.png": "c652be8078438fc119487c9fe761c319cbde8e7baf98ed98f3b09134978a6b32",
+            "views/side.png": "c55596d5cfa05e4577b8117fe31e463e650d8c9292550f67799bc6f1591bf972",
+            "views/back.png": "f37c6e8adcef08284c6d8a6a28b69a4f63e8d6b34a02fc818e0bca912c83dc5e",
+            "turnaround.png": "e49e8e3b641b8342265ea4240af0bd3a58793bc6e9f7bce6794bb5e5c7b198a7",
+            "expression_sheet.png": "1344d03d47b617123f0bf3d21fe7510ac5fec172adee851c1838186b4731ea3f",
+            "proportions.png": "c283246657e3c4eb88e1ccc99e5b80449e82c1fab58604ba662421de0ad246c5",
+            "palette.png": "07a2ab46d2592ca249b0f48051cb070c96d10cae72b80e850bc5f9be43f5749f",
+            "pose_sheet.png": "9db11dd5d2b7d9d887eb1a91df084ac65688fd06c0311472c3b9e7bdcdbe5571",
+            "character_sheet.png": "2bd32cd0983e6596d0b60e08fd79fbe740d02976766ca142945356e7bba383e8",
+            "character.json": "5b990379eaa8d6cbd343530ee2833bf4dc970f4d30849043d36f3b11391f9c2d"
+          }
+        }
+      ],
+      "rejected_during_build": 0
+    },
+    "15-educational": {
+      "name": "Educational Cartoon",
+      "summary": "Clear friendly shapes, primary colours, even classroom light and readable outlines.",
+      "accepted": 5,
+      "wanted": 5,
+      "status": "PASS",
+      "characters": [
+        {
+          "id": "15-nofer",
+          "name": "Nofer",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "33ff4c748075dc786b4eefc38ff97637a925ab761093d218b19d527aa6dcca70",
+            "views/three-quarter.png": "edb37d14f209ae83a940d5943f92046c0ed7d405bcf0d2327c606366e402600c",
+            "views/side.png": "86103703fa42b88c50b3a1fd1add5d61d6bf3b9a6f756cdcbff777fe2a438f3f",
+            "views/back.png": "380b0efd2370638f92759c558080e8ad9974d51bec5a6806a279197f12025c57",
+            "turnaround.png": "036830740aa5001e6c95d1ac21b5ac40d1203b860e2d79cfcc817872f205e001",
+            "expression_sheet.png": "63b995ff6ccf9f5bbe44d4b185d8d9519c59edfec978185f63bf21c23c96c34a",
+            "proportions.png": "512b0f44989d6625930b13bdaeaa82cb2a0b13a1560a4dcbb1066fdf44555523",
+            "palette.png": "b07bf1714922446154ef358000343ecbd0777d9f7dc112eaf850f099d8b47b90",
+            "pose_sheet.png": "d2f32e347864843ba903bda3db2272156aded34870d425f41cbb50d7331c6d22",
+            "character_sheet.png": "f2afd8130a6b34635192f045f8f852081c997c332575482f0af84bd089902ccc",
+            "character.json": "b435aefdeb7433074c5ee5c779c696b610361c2a45ec38e34056534cca4450a8"
+          }
+        },
+        {
+          "id": "15-zanbie",
+          "name": "Zanbie",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "69f30bef0c95bfae66d893afa3c96afc97f7e43ce27593d7c7a1b00dbd5b277a",
+            "views/three-quarter.png": "8b27be9f6384af4ee83cc70e5df954c985f427e86f1101cb46a39b6acbe079f9",
+            "views/side.png": "a37f35a87e9494b7d6a76d0df2d737f2dbac0832fa7752d6bb599bbb0e5667a5",
+            "views/back.png": "72c6a7bdb1a3dfb10ad5620c0146dc8ee0a139f984307b90e90282aa62809672",
+            "turnaround.png": "d8debd080b1a04cabfbc60e29ee4ad9a9bf9c55af096660080db916f3773ea59",
+            "expression_sheet.png": "ad26bb634130eb5d8dbab4f61ee920c0db64c92f3eed3c456ae02f41986bec79",
+            "proportions.png": "a5b6c47adb6920f65972c41843b0987002cedb2ec47ee323dd4fd661ed4f2454",
+            "palette.png": "ee6ac11bc00a19595eb5d99fdce9695860343e6f6a26cb67124eb7faad937acd",
+            "pose_sheet.png": "03f982ee69550b4ad3e5f0b0d08bcbf067d28223dd66f1ce1241ff3a4a1c0efc",
+            "character_sheet.png": "9d7d0be6f7eebf99c9b020c4dd9cd250fb4b553576d20ac5f33659cde7972ac3",
+            "character.json": "65a62ffa75b6f801c750a8175178b7b771a7cbe1ddb5d694c593b7844c0cdd0d"
+          }
+        },
+        {
+          "id": "15-drilo",
+          "name": "Drilo",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "efc367f25601391c2cdc86a58019b772806eb49c7ace93b39637ccfc642fc3f5",
+            "views/three-quarter.png": "116057512621927a1f5166eadf6cb21012cb4445a98840c24394e9d7019e9f35",
+            "views/side.png": "29a3658dfb0377279b3166e69c1a0db09135c7581ea64349d161f1561f2b6420",
+            "views/back.png": "fb1c181429920f55b3d385a80feee08513e1b400e62fac85257f528455a5f394",
+            "turnaround.png": "c9da3581d46a21f4cab77eb2cb64fcfe86a4b4ec7a00c23e05a62524b8756d56",
+            "expression_sheet.png": "4957c7c1a0a2d9c2df55bd03ac347f6e10b2674ea7c3093924fec73ebe34770b",
+            "proportions.png": "df6c6950813ccc858162b870daec4799ab2a94910d729a16def257ea95f71ba9",
+            "palette.png": "e393fc1693d8ae8be1c6460ca73a651911ccbe4c0d87d87e2b155914f177efbf",
+            "pose_sheet.png": "c8a913a87f7a862ebd94460569343846f2c2e2e20b878fa7099ac08ff8ce6f65",
+            "character_sheet.png": "19580b740be748cb0b44ee9cf3bfcaa6aa10612859afecb2c5159f9e10a21af1",
+            "character.json": "ef1b377e12749f6b9ce5e5072679a0d39dd19643758bed9e0524f04eaf3c029c"
+          }
+        },
+        {
+          "id": "15-bovel",
+          "name": "Bovel",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "73037c55ef32d84dfbc52ff99de499285f963eec9c239772d63ef58ec07ecab3",
+            "views/three-quarter.png": "735b8fea37747c4c44ce613866ce795ca7c7cb87ad91d02e118816af48878b22",
+            "views/side.png": "953b3504c75b7d198786b374ea5eb8594774f882a473156cd637a1938e1edd21",
+            "views/back.png": "682c10aa44a9655b0b00bf2f030f999ef65b0945e724f14477b46a1c8a7a518c",
+            "turnaround.png": "12678c3565b596a67d4ac7c408d031cbca3806fa4f1f10ef889ca1f2e3dcdd4c",
+            "expression_sheet.png": "34162379336afef70e58d79e351a22be07b281b544f45de32c3814d994f79211",
+            "proportions.png": "60617ce7792b50119fd45819e2d599a4e7a69dbddbe8dfa630be8da8be32376b",
+            "palette.png": "a3532e4719b0011910fca03d9128cd1f7ef1cc83a63d44240a5dc2148e4d0f2e",
+            "pose_sheet.png": "1c7bc79be6d930153df6245d4af09568c832523e61f1cb5b827d3349f061fe1e",
+            "character_sheet.png": "b17a7fc556e4874df9fe6c2e56c25ace1ede3c77250eaede86c6442f1cf91848",
+            "character.json": "d1784e6fbf755f111deb50b77b15d2daa65969d58c20c43ffce5bfaca0cee494"
+          }
+        },
+        {
+          "id": "15-zanrra",
+          "name": "Zanrra",
+          "qc": "PASS",
+          "files": {
+            "views/front.png": "7c965b456ef2df1a1551dd180786eb864daef7b94b8542e5c93e4df292aa3b07",
+            "views/three-quarter.png": "d93a5766c2adf8e0e9e2f7912767cc4553122765c79cd8c8ad4b6c8fe820b3d7",
+            "views/side.png": "7a4f1636e09d5bcdd7ac6aed18e24374c105696acbaf5c48ba56dd8932bc2027",
+            "views/back.png": "f30ea022db23bd2bf09a95c2afecbaa3cad3e3008e0f6db0ee97c25ea7560aa4",
+            "turnaround.png": "6b97f8ca51bdd2572b2934903b02273c8a860dd9943f8b72406a1c6ac508e5d3",
+            "expression_sheet.png": "13cc75980868817d9efe1e0cae869719056a642828646d5996261d447827733a",
+            "proportions.png": "75d3a4654be280ff15859b1b1835a84935533aacaebaa17d4dbc93e0abf5a19f",
+            "palette.png": "72389ffb33a01de6884054255a87d205c4032f42b1e0e13c15a425274451b99d",
+            "pose_sheet.png": "53691fd6e67b993cb6e884451f90f933dea00f2b30db8017b2faec3ecdd5f9a3",
+            "character_sheet.png": "3a0d3ec9df194106842deb0d77626c48eb75278a150db3c0eb431055c70fb816",
+            "character.json": "7c638560888e9888eea39b339e3179384eefbdc3535898ce915c4f52f941a424"
+          }
+        }
+      ],
+      "rejected_during_build": 0
+    }
+  },
+  "unique_names": true,
+  "characters": 75,
+  "distinctness": {
+    "signatures": {
+      "01-cinematic-3d": [
+        0.326,
+        0.518,
+        0.116
+      ],
+      "02-dynamic-3d": [
+        0.446,
+        0.641,
+        0.133
+      ],
+      "03-fairytale": [
+        0.277,
+        0.594,
+        0.162
+      ],
+      "04-hyperreal": [
+        0.359,
+        0.541,
+        0.276
+      ],
+      "05-cute-baby": [
+        0.236,
+        0.585,
+        0.196
+      ],
+      "06-anime": [
+        0.348,
+        0.711,
+        0.192
+      ],
+      "07-chibi": [
+        0.233,
+        0.638,
+        0.227
+      ],
+      "08-clay": [
+        0.412,
+        0.488,
+        0.153
+      ],
+      "09-storybook": [
+        0.344,
+        0.503,
+        0.178
+      ],
+      "10-comedy": [
+        0.698,
+        0.788,
+        0.252
+      ],
+      "11-animal-adventure": [
+        0.405,
+        0.517,
+        0.251
+      ],
+      "12-miniature": [
+        0.348,
+        0.539,
+        0.137
+      ],
+      "13-scifi": [
+        0.539,
+        0.666,
+        0.169
+      ],
+      "14-fantasy": [
+        0.427,
+        0.562,
+        0.144
+      ],
+      "15-educational": [
+        0.498,
+        0.679,
+        0.233
+      ]
+    },
+    "closest_pairs": [
+      {
+        "distance": 0.037,
+        "a": "01-cinematic-3d",
+        "b": "12-miniature"
+      },
+      {
+        "distance": 0.055,
+        "a": "03-fairytale",
+        "b": "05-cute-baby"
+      },
+      {
+        "distance": 0.055,
+        "a": "09-storybook",
+        "b": "12-miniature"
+      },
+      {
+        "distance": 0.057,
+        "a": "04-hyperreal",
+        "b": "11-animal-adventure"
+      },
+      {
+        "distance": 0.062,
+        "a": "05-cute-baby",
+        "b": "07-chibi"
+      }
+    ],
+    "note": "signature = (mean saturation, luminance spread/64, texture/10) of the 5 characters; shape differences (proportions, outlines) are not in this number"
+  }
+}

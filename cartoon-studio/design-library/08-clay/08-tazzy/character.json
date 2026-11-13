@@ -1,0 +1,66 @@
+{
+  "id": "08-tazzy",
+  "name": "Tazzy",
+  "style": "08-clay",
+  "species": "cat",
+  "age": "teen",
+  "build": "stocky",
+  "colors": {
+    "body": "#87A2A8",
+    "belly": "#D8E8E6",
+    "inner_ear": "#FFAFC8",
+    "accent": "#E07A5F",
+    "nose": "#FF93B4"
+  },
+  "clothing": {
+    "accessory": "scarf",
+    "color": "#E07A5F"
+  },
+  "personality": [
+    "tinkering",
+    "stubborn",
+    "bold"
+  ],
+  "quirk": "laughs before the punchline",
+  "seed": 1,
+  "proportions": {
+    "age": "teen",
+    "build": "stocky"
+  },
+  "style_name": "Clay Animation",
+  "render_spec": {
+    "id": "08-tazzy",
+    "name": "Tazzy",
+    "species": "cat",
+    "colors": {
+      "body": "#87A2A8",
+      "belly": "#D8E8E6",
+      "inner_ear": "#FFAFC8",
+      "accent": "#E07A5F",
+      "nose": "#FF93B4"
+    },
+    "clothing": {
+      "accessory": "scarf",
+      "color": "#E07A5F"
+    },
+    "style": {
+      "mode": 2,
+      "head": 0.959,
+      "body": [
+        1.268,
+        0.914,
+        1.235
+      ],
+      "eye": 0.855,
+      "outline": 0,
+      "noise": 0.8,
+      "noise_scale": 0.05,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.625,
+    "scale": 1.9
+  }
+}

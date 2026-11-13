@@ -1,0 +1,66 @@
+{
+  "id": "10-safer",
+  "name": "Safer",
+  "style": "10-comedy",
+  "species": "bear",
+  "age": "adult",
+  "build": "round",
+  "colors": {
+    "body": "#04D395",
+    "belly": "#E2FBF3",
+    "inner_ear": "#FFB6C5",
+    "accent": "#EF476F",
+    "nose": "#F58AB0"
+  },
+  "clothing": {
+    "accessory": "bandana",
+    "color": "#EF476F"
+  },
+  "personality": [
+    "panicky",
+    "slapstick",
+    "funny"
+  ],
+  "quirk": "names every cloud",
+  "seed": 1,
+  "proportions": {
+    "age": "adult",
+    "build": "round"
+  },
+  "style_name": "Comedy Cartoon",
+  "render_spec": {
+    "id": "10-safer",
+    "name": "Safer",
+    "species": "bear",
+    "colors": {
+      "body": "#04D395",
+      "belly": "#E2FBF3",
+      "inner_ear": "#FFB6C5",
+      "accent": "#EF476F",
+      "nose": "#F58AB0"
+    },
+    "clothing": {
+      "accessory": "bandana",
+      "color": "#EF476F"
+    },
+    "style": {
+      "mode": 0,
+      "head": 1.098,
+      "body": [
+        1.43,
+        0.886,
+        1.355
+      ],
+      "eye": 1.126,
+      "outline": 1.15,
+      "noise": 0.35,
+      "noise_scale": 0.05,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.673,
+    "scale": 1.9
+  }
+}

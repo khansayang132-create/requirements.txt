@@ -42,7 +42,7 @@
     },
     "style_signature": {
       "status": "PASS",
-      "detail": "{'render_mode_matches': True, 'silhouette_ink': 0.004, 'texture': 1.7} (mode 3, outline 0.7)"
+      "detail": "{'render_mode_matches': True, 'outline_setting_matches': True, 'silhouette_ink_reported': 0.004, 'texture': 1.7} (mode 3, outline 0.7)"
     }
   },
   "not_tested": "appeal and acting quality (human review of the sheets)"
