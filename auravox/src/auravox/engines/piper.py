@@ -12,6 +12,9 @@ import numpy as np
 from .base import SR, Engine, EngineError, MissingModel, Synth, Unsupported, resample
 
 
+PEAK = 10 ** (-1 / 20)
+
+
 class PiperEngine(Engine):
     name = "piper"
     license = "GPL-3.0 (piper-tts 1.x runtime); each voice model has its own licence"
@@ -93,6 +96,9 @@ class PiperEngine(Engine):
         if not chunks:
             raise EngineError("Piper returned no audio")
         x = resample(np.concatenate(chunks).astype(np.float32), sr, SR)
+        peak = float(np.abs(x).max())
+        if peak > PEAK:                                       # Piper normalises to full scale; keep 1 dB of headroom
+            x *= PEAK / peak
         pre = int(controls.get("pause_before", 0) * SR)
         post = int(controls.get("pause_after", 0) * SR)
         x = np.concatenate([np.zeros(pre, np.float32), x, np.zeros(post, np.float32)])
