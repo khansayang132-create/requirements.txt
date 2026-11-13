@@ -1,0 +1,353 @@
+{
+  "scene_id": "S02",
+  "environment": "park",
+  "seed": 1,
+  "frames": 375,
+  "light_center": [
+    0,
+    0,
+    0.9
+  ],
+  "key": 0.85,
+  "characters": [
+    {
+      "id": "CHAR-HUM-001",
+      "start": [
+        -0.3,
+        0.0,
+        20
+      ],
+      "expression": "laughing",
+      "blend": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-001/CHAR-HUM-001.blend"
+    },
+    {
+      "id": "CHAR-HUM-002",
+      "start": [
+        3.4,
+        0.9,
+        -90
+      ],
+      "expression": "neutral",
+      "blend": "/home/user/requirements.txt/humanverse/project/characters/CHAR-HUM-002/CHAR-HUM-002.blend"
+    }
+  ],
+  "performance": [
+    {
+      "char": "CHAR-HUM-001",
+      "op": "look",
+      "f": 6,
+      "yaw": 15,
+      "pitch": 32
+    },
+    {
+      "char": "CHAR-HUM-001",
+      "op": "expression",
+      "f": 14,
+      "name": "surprised"
+    },
+    {
+      "char": "CHAR-HUM-001",
+      "op": "cry",
+      "f0": 40,
+      "f1": 230
+    },
+    {
+      "char": "CHAR-HUM-001",
+      "op": "look",
+      "f": 40,
+      "yaw": 0,
+      "pitch": -5
+    },
+    {
+      "char": "CHAR-HUM-001",
+      "op": "slump",
+      "f0": 40,
+      "f1": 200
+    },
+    {
+      "char": "CHAR-HUM-001",
+      "op": "say",
+      "line_id": "L04",
+      "f": 46,
+      "base": "crying",
+      "gesture": false
+    },
+    {
+      "char": "CHAR-HUM-002",
+      "op": "walk",
+      "f": 100,
+      "path": [
+        [
+          3.4,
+          0.9
+        ],
+        [
+          0.75,
+          0.1
+        ]
+      ],
+      "heading": -60
+    },
+    {
+      "char": "CHAR-HUM-002",
+      "op": "expression",
+      "f": 100,
+      "name": "worried"
+    },
+    {
+      "char": "CHAR-HUM-002",
+      "op": "say",
+      "line_id": "L05",
+      "f": 174,
+      "base": "worried",
+      "hand": "R"
+    },
+    {
+      "char": "CHAR-HUM-002",
+      "op": "reach",
+      "f0": 266,
+      "f1": 312,
+      "side": "R",
+      "fwd": 55,
+      "raise_": 10
+    },
+    {
+      "char": "CHAR-HUM-001",
+      "op": "look",
+      "f": 262,
+      "yaw": -25,
+      "pitch": 8
+    },
+    {
+      "char": "CHAR-HUM-001",
+      "op": "expression",
+      "f": 276,
+      "name": "sad"
+    },
+    {
+      "char": "CHAR-HUM-002",
+      "op": "expression",
+      "f": 274,
+      "name": "happy"
+    },
+    {
+      "char": "CHAR-HUM-002",
+      "op": "say",
+      "line_id": "L06",
+      "f": 282,
+      "base": "happy",
+      "hand": "L"
+    },
+    {
+      "char": "CHAR-HUM-001",
+      "op": "expression",
+      "f": 337,
+      "name": "happy"
+    },
+    {
+      "char": "CHAR-HUM-001",
+      "op": "nod",
+      "f": 343
+    }
+  ],
+  "props": [
+    {
+      "type": "kite",
+      "keys": [
+        {
+          "f": 1,
+          "loc": [
+            2.4,
+            5.0,
+            4.6
+          ],
+          "rot": [
+            5,
+            -8,
+            15
+          ]
+        },
+        {
+          "f": 12,
+          "loc": [
+            2.8,
+            5.6,
+            4.9
+          ],
+          "rot": [
+            10,
+            20,
+            30
+          ]
+        },
+        {
+          "f": 60,
+          "loc": [
+            9.0,
+            14.0,
+            8.5
+          ],
+          "rot": [
+            40,
+            80,
+            120
+          ]
+        },
+        {
+          "f": 375,
+          "loc": [
+            30,
+            40,
+            12
+          ],
+          "rot": [
+            40,
+            80,
+            160
+          ]
+        }
+      ]
+    }
+  ],
+  "shots": [
+    {
+      "shot_id": "S02_SH01",
+      "scene_id": "S02",
+      "f0": 1,
+      "f1": 122,
+      "cam": {
+        "loc": [
+          -0.9,
+          -2.5,
+          0.75
+        ],
+        "target": [
+          0.6,
+          2.0,
+          1.9
+        ],
+        "lens": 30
+      },
+      "character_ids": [
+        "CHAR-HUM-001"
+      ],
+      "location": "Fernmoor Park",
+      "action": "The string snaps; the kite tumbles away; Amara's joy turns to tears",
+      "emotion": "shock, then grief",
+      "camera_angle": "low medium, looking past Amara to the sky",
+      "camera_movement": "static",
+      "lens": "30mm",
+      "lighting": "sun goes behind thin cloud: softer, cooler key",
+      "duration": 5.08,
+      "dialogue": [
+        "L04"
+      ],
+      "sound_effects": [
+        "string snap",
+        "wind gust",
+        "sniffles"
+      ],
+      "continuity_notes": "Tears start at frame 40; kite exits upper right"
+    },
+    {
+      "shot_id": "S02_SH02",
+      "scene_id": "S02",
+      "f0": 123,
+      "f1": 272,
+      "cam": {
+        "loc": [
+          0.1,
+          -5.0,
+          1.35
+        ],
+        "target": [
+          0.1,
+          0.3,
+          0.9
+        ],
+        "lens": 35
+      },
+      "character_ids": [
+        "CHAR-HUM-001",
+        "CHAR-HUM-002"
+      ],
+      "location": "Fernmoor Park",
+      "action": "Teo walks in and stops beside his sister",
+      "emotion": "concern",
+      "camera_angle": "wide two-shot",
+      "camera_movement": "static",
+      "lens": "35mm",
+      "lighting": "soft overcast key",
+      "duration": 6.25,
+      "dialogue": [
+        "L05"
+      ],
+      "sound_effects": [
+        "footsteps on grass"
+      ],
+      "continuity_notes": "Teo enters screen right"
+    },
+    {
+      "shot_id": "S02_SH03",
+      "scene_id": "S02",
+      "f0": 273,
+      "f1": 375,
+      "cam": {
+        "loc": [
+          0.25,
+          -2.9,
+          1.2
+        ],
+        "target": [
+          0.25,
+          0,
+          0.95
+        ],
+        "lens": 36,
+        "focus": [
+          0.2,
+          0,
+          1.0
+        ]
+      },
+      "character_ids": [
+        "CHAR-HUM-001",
+        "CHAR-HUM-002"
+      ],
+      "location": "Fernmoor Park",
+      "action": "Teo turns it into a plan; Amara wipes the tears and nods",
+      "emotion": "comfort, hope",
+      "camera_angle": "medium two-shot, eye level",
+      "camera_movement": "slow push-in",
+      "lens": "36mm",
+      "lighting": "warmth returns: key brightens slightly",
+      "duration": 4.29,
+      "dialogue": [
+        "L06"
+      ],
+      "sound_effects": [
+        "birdsong returns"
+      ],
+      "continuity_notes": "Tears stop; Amara ends on a small smile",
+      "end": {
+        "loc": [
+          0.25,
+          -2.55,
+          1.18
+        ],
+        "target": [
+          0.25,
+          0,
+          0.95
+        ],
+        "lens": 36
+      }
+    }
+  ],
+  "fps": 24,
+  "resolution": [
+    1280,
+    720
+  ],
+  "samples": 8
+}

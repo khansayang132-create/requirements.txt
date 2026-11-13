@@ -1,4 +1,4 @@
-[hook] Narrator: Whoosh! The wind is strong in Valley panorama today.
+[hook] Narrator: Whoosh! The wind is strong in the valley today.
 [hook] Pipkin: My red kite! It is flying away!
 [introduction] Brindle: Hi, Pipkin! I am Brindle. What is wrong?
 [introduction] Pipkin: The wind took my kite. I can't see it now.

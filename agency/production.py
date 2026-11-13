@@ -385,7 +385,11 @@ def build(tb) -> list[Tool]:
             return ToolResult("FAIL", f"episode {job}: studio QC exit {code2}",
                               out[-1500:] + "\n--- qc ---\n" + qc[-1500:], code2, {"media": str(final), "job": job})
         pkg = package_episode(job, cwd)
-        return ToolResult("PASS", f"episode {job}: studio QC passed; package {pkg['dir']}", qc[-1500:], code2,
+        if pkg["quality"]["media_audit"] != "PASS":                  # the frame/audio/playback audit gates delivery too
+            return ToolResult("FAIL", f"episode {job}: media audit failed: {pkg['quality']['media_audit_problems'][:3]}",
+                              qc[-1500:], 1,
+                              {"media": pkg["final"], "job": job, "package": pkg["dir"], "quality": pkg["quality"]})
+        return ToolResult("PASS", f"episode {job}: studio QC and media audit passed; package {pkg['dir']}", qc[-1500:], code2,
                           {"media": pkg["final"], "job": job, "package": pkg["dir"], "quality": pkg["quality"],
                            "backup": pkg.get("backup")})
 
@@ -434,7 +438,13 @@ def build(tb) -> list[Tool]:
         checks = sqc.get("checks", {})
         passed = sum(1 for v in checks.values() if (v.get("status") if isinstance(v, dict) else v) == "PASS")
         ok, probe = probe_media(tb, str(final), True)
+        from . import media_audit
+        audit = media_audit.audit(final)                       # every frame, the audio, and a real Chromium playback
+        sheets = media_audit.contact_sheets(final, d / "review")
+        (d / "review" / "media_audit.json").write_text(json.dumps(audit, indent=2, default=str))
         quality = {"studio_checks_passed": passed, "studio_checks_total": len(checks), "overlord_probe": "PASS" if ok else "FAIL",
+                   "media_audit": audit["status"], "media_audit_problems": audit["problems"],
+                   "playback": audit.get("playback", {}).get("status"), "contact_sheets": [str(x) for x in sheets],
                    "score_meaning": "share of the studio's technical QC checks that passed; it does not rate appeal or "
                                     "storytelling (human review)"}
         (d / "quality_report.json").write_text(json.dumps({"studio_qc": sqc, "overlord_probe": probe, "quality": quality,

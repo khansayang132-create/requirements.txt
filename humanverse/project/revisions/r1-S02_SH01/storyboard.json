@@ -1,0 +1,337 @@
+{
+  "title": "The Kite That Came Home",
+  "fps": 24,
+  "scene_ids": [
+    "S01",
+    "S02",
+    "S03"
+  ],
+  "shots": [
+    {
+      "shot_id": "S01_SH01",
+      "scene_id": "S01",
+      "character_ids": [
+        "CHAR-HUM-001",
+        "CHAR-HUM-004"
+      ],
+      "location": "Fernmoor Park",
+      "action": "Amara runs in from the left towards Grandpa, who holds the dragon kite",
+      "emotion": "excited anticipation",
+      "camera_angle": "wide, eye level",
+      "camera_movement": "static",
+      "lens": "30mm",
+      "lighting": "late-morning sun, warm key from camera right, cool sky fill",
+      "duration": 3.21,
+      "dialogue": [],
+      "sound_effects": [
+        "footsteps on grass",
+        "birdsong",
+        "light wind"
+      ],
+      "continuity_notes": "Kite in Grandpa's hands; Amara enters frame left",
+      "frames": [
+        1,
+        77
+      ]
+    },
+    {
+      "shot_id": "S01_SH02",
+      "scene_id": "S01",
+      "character_ids": [
+        "CHAR-HUM-001",
+        "CHAR-HUM-004"
+      ],
+      "location": "Fernmoor Park",
+      "action": "Amara waves; Grandpa nods and readies the kite",
+      "emotion": "joy, warmth",
+      "camera_angle": "medium two-shot",
+      "camera_movement": "slow push-in",
+      "lens": "36mm",
+      "lighting": "same sun; rim light separates both from the trees",
+      "duration": 7.12,
+      "dialogue": [
+        {
+          "line_id": "L01",
+          "character_id": "CHAR-HUM-001",
+          "text": "Grandpa! The wind is perfect today!"
+        },
+        {
+          "line_id": "L02",
+          "character_id": "CHAR-HUM-004",
+          "text": "Then let's wake up Grandma's old dragon kite."
+        }
+      ],
+      "sound_effects": [
+        "wind gust"
+      ],
+      "continuity_notes": "Amara screen left, Grandpa screen right",
+      "frames": [
+        78,
+        248
+      ]
+    },
+    {
+      "shot_id": "S01_SH03",
+      "scene_id": "S01",
+      "character_ids": [
+        "CHAR-HUM-001",
+        "CHAR-HUM-004"
+      ],
+      "location": "Fernmoor Park",
+      "action": "The kite climbs; Amara laughs and cheers, both look up",
+      "emotion": "wonder, delight",
+      "camera_angle": "low angle looking up",
+      "camera_movement": "slow tilt up",
+      "lens": "26mm",
+      "lighting": "backlit kite against the sky",
+      "duration": 3.88,
+      "dialogue": [
+        {
+          "line_id": "L03",
+          "character_id": "CHAR-HUM-001",
+          "text": "Look how high it goes!"
+        }
+      ],
+      "sound_effects": [
+        "kite flapping",
+        "wind"
+      ],
+      "continuity_notes": "Kite rises screen right to upper frame",
+      "frames": [
+        249,
+        341
+      ]
+    },
+    {
+      "shot_id": "S02_SH01",
+      "scene_id": "S02",
+      "character_ids": [
+        "CHAR-HUM-001"
+      ],
+      "location": "Fernmoor Park",
+      "action": "The string snaps; the kite tumbles away; Amara's joy turns to tears",
+      "emotion": "shock, then grief",
+      "camera_angle": "low medium, looking past Amara to the sky",
+      "camera_movement": "static",
+      "lens": "30mm",
+      "lighting": "sun goes behind thin cloud: softer, cooler key",
+      "duration": 5.08,
+      "dialogue": [
+        {
+          "line_id": "L04",
+          "character_id": "CHAR-HUM-001",
+          "text": "No... the string broke. It's gone!"
+        }
+      ],
+      "sound_effects": [
+        "string snap",
+        "wind gust",
+        "sniffles"
+      ],
+      "continuity_notes": "Tears start at frame 40; kite exits upper right",
+      "frames": [
+        1,
+        122
+      ]
+    },
+    {
+      "shot_id": "S02_SH02",
+      "scene_id": "S02",
+      "character_ids": [
+        "CHAR-HUM-001",
+        "CHAR-HUM-002"
+      ],
+      "location": "Fernmoor Park",
+      "action": "Teo walks in and stops beside his sister",
+      "emotion": "concern",
+      "camera_angle": "wide two-shot",
+      "camera_movement": "static",
+      "lens": "35mm",
+      "lighting": "soft overcast key",
+      "duration": 6.25,
+      "dialogue": [
+        {
+          "line_id": "L05",
+          "character_id": "CHAR-HUM-002",
+          "text": "Hey, don't cry. Kites can't fly far without wind."
+        }
+      ],
+      "sound_effects": [
+        "footsteps on grass"
+      ],
+      "continuity_notes": "Teo enters screen right",
+      "frames": [
+        123,
+        272
+      ]
+    },
+    {
+      "shot_id": "S02_SH03",
+      "scene_id": "S02",
+      "character_ids": [
+        "CHAR-HUM-001",
+        "CHAR-HUM-002"
+      ],
+      "location": "Fernmoor Park",
+      "action": "Teo turns it into a plan; Amara wipes the tears and nods",
+      "emotion": "comfort, hope",
+      "camera_angle": "medium two-shot, eye level",
+      "camera_movement": "slow push-in",
+      "lens": "36mm",
+      "lighting": "warmth returns: key brightens slightly",
+      "duration": 4.29,
+      "dialogue": [
+        {
+          "line_id": "L06",
+          "character_id": "CHAR-HUM-002",
+          "text": "Come on. We'll find it together."
+        }
+      ],
+      "sound_effects": [
+        "birdsong returns"
+      ],
+      "continuity_notes": "Tears stop; Amara ends on a small smile",
+      "frames": [
+        273,
+        375
+      ]
+    },
+    {
+      "shot_id": "S03_SH01",
+      "scene_id": "S03",
+      "character_ids": [
+        "CHAR-HUM-001",
+        "CHAR-HUM-002",
+        "CHAR-HUM-004",
+        "CHAR-HUM-005",
+        "CHAR-HUM-003"
+      ],
+      "location": "Maple Street",
+      "action": "The family walks up the street; Noor waits by her gate holding the kite, Rosa beside her",
+      "emotion": "hope",
+      "camera_angle": "wide, eye level",
+      "camera_movement": "slow truck right",
+      "lens": "30mm",
+      "lighting": "low golden sunset, long shadows, warm windows",
+      "duration": 4.08,
+      "dialogue": [],
+      "sound_effects": [
+        "footsteps on pavement",
+        "evening street hum"
+      ],
+      "continuity_notes": "Family enters screen left in age order",
+      "frames": [
+        1,
+        98
+      ]
+    },
+    {
+      "shot_id": "S03_SH02",
+      "scene_id": "S03",
+      "character_ids": [
+        "CHAR-HUM-005",
+        "CHAR-HUM-003"
+      ],
+      "location": "Maple Street",
+      "action": "Noor offers the kite",
+      "emotion": "playful",
+      "camera_angle": "medium over the family's shoulder",
+      "camera_movement": "static",
+      "lens": "50mm",
+      "lighting": "sunset rim on hair",
+      "duration": 2.5,
+      "dialogue": [
+        {
+          "line_id": "L07",
+          "character_id": "CHAR-HUM-005",
+          "text": "Is this little dragon looking for someone?"
+        }
+      ],
+      "sound_effects": [],
+      "continuity_notes": "Kite in Noor's hands",
+      "frames": [
+        99,
+        158
+      ]
+    },
+    {
+      "shot_id": "S03_SH03",
+      "scene_id": "S03",
+      "character_ids": [
+        "CHAR-HUM-001"
+      ],
+      "location": "Maple Street",
+      "action": "Amara's surprise becomes joy",
+      "emotion": "surprise to delight",
+      "camera_angle": "close-up",
+      "camera_movement": "static",
+      "lens": "55mm",
+      "lighting": "warm key on face, catchlights",
+      "duration": 3.08,
+      "dialogue": [
+        {
+          "line_id": "L08",
+          "character_id": "CHAR-HUM-001",
+          "text": "Our kite! You found it!"
+        }
+      ],
+      "sound_effects": [
+        "small gasp"
+      ],
+      "continuity_notes": "Amara frames left of centre",
+      "frames": [
+        159,
+        232
+      ]
+    },
+    {
+      "shot_id": "S03_SH04",
+      "scene_id": "S03",
+      "character_ids": [
+        "CHAR-HUM-001",
+        "CHAR-HUM-002",
+        "CHAR-HUM-004",
+        "CHAR-HUM-005",
+        "CHAR-HUM-003"
+      ],
+      "location": "Maple Street",
+      "action": "Everyone laughs; Grandpa invites Noor for tomorrow; Amara holds the kite up",
+      "emotion": "shared joy",
+      "camera_angle": "wide group shot",
+      "camera_movement": "slow pull-back",
+      "lens": "34mm",
+      "lighting": "sunset key, warm practical windows",
+      "duration": 9.62,
+      "dialogue": [
+        {
+          "line_id": "L09",
+          "character_id": "CHAR-HUM-005",
+          "text": "It landed in my lemon tree."
+        },
+        {
+          "line_id": "L10",
+          "character_id": "CHAR-HUM-003",
+          "text": "Good things find their way back to kind hearts."
+        },
+        {
+          "line_id": "L11",
+          "character_id": "CHAR-HUM-004",
+          "text": "Same time tomorrow, neighbour?"
+        }
+      ],
+      "sound_effects": [
+        "laughter",
+        "cheer"
+      ],
+      "continuity_notes": "All five in frame; kite ends above Amara",
+      "frames": [
+        233,
+        463
+      ]
+    }
+  ],
+  "approved": true,
+  "total_seconds": 49.12,
+  "approved_by": "Executive Director agent (Claude), after shot-by-shot review",
+  "approved_at": "2026-11-13T03:17:47Z"
+}

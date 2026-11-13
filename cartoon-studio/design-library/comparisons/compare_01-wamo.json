@@ -1,0 +1,39 @@
+{
+  "character": {
+    "id": "01-wamo",
+    "name": "Wamo",
+    "style": "01-cinematic-3d",
+    "species": "elephant",
+    "age": "child",
+    "build": "stocky",
+    "colors": {
+      "body": "#E5A271",
+      "belly": "#FFF1DE",
+      "inner_ear": "#F7ABC0",
+      "accent": "#3D7DD8",
+      "nose": "#FE8CA1"
+    },
+    "clothing": {
+      "accessory": "bandana",
+      "color": "#3D7DD8"
+    },
+    "personality": [
+      "hopeful",
+      "earnest",
+      "bold"
+    ],
+    "quirk": "sleeps with one ear up",
+    "seed": 1,
+    "proportions": {
+      "age": "child",
+      "build": "stocky"
+    }
+  },
+  "styles": [
+    "01-cinematic-3d",
+    "06-anime",
+    "08-clay",
+    "09-storybook",
+    "13-scifi"
+  ]
+}

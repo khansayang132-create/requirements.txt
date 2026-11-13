@@ -407,7 +407,7 @@ class Renderer:
             p = poses[a.id]
             if layer is None:
                 draw_character(c, self.specs[a.id], p, shadow_color=env.shadow)
-            if a.hold:
+            if a.hold and not self._receiving(shot, a, t):
                 self._held(c, a, p, tg)
 
         for it in shot.items:
@@ -474,6 +474,18 @@ class Renderer:
             if y < GROUND_Y - 40:
                 draw_prop(c, it.name, x, y, it.size or 34, it.color, tg, rot=40 * math.sin(tg * 1.7 + ph))
 
+    @staticmethod
+    def _receiving(shot: Shot, a: Actor, t: float) -> bool:
+        """The receiver of a hand-off already holds the prop in the story data; it is drawn in their hand only once it
+        has arrived, so the prop is never on screen twice (found in ep004/ep006: a second kite during the hand-off)."""
+        tr = shot.transfer
+        return bool(tr and tr.get("to") == a.id and (a.hold or {}).get("name") == tr["name"] and t < tr.get("end", 1.6))
+
+    @staticmethod
+    def _lift(name: str, size: float) -> float:
+        """How far above the hand a prop is drawn: kites and balloons float on their string."""
+        return size * (1.72 if name in ("balloon", "kite") else 0.9 if name == "umbrella" else 0.35)
+
     def _held(self, c, a: Actor, p: Pose, tg) -> None:
         h = a.hold
         side = h.get("side", 1)
@@ -494,11 +506,13 @@ class Renderer:
             return
         ax, ay = self._hand(tr["from"], a, 1 if b.x > a.x else -1)
         bx, by = self._hand(tr["to"], b, -1 if b.x > a.x else 1)
+        if t >= tr.get("end", 1.6):
+            return                                    # arrived: the receiver's held prop takes over
         k = ease_in_out((t - tr.get("start", 0.5)) / max(0.1, tr.get("end", 1.6) - tr.get("start", 0.5)))
         x = ax + (bx - ax) * k
         y = ay + (by - ay) * k - 26 * math.sin(k * math.pi)
         size = tr.get("size", 56)
-        draw_prop(c, tr["name"], x, y - size * 0.35, size, tr.get("color"), tg)
+        draw_prop(c, tr["name"], x, y - self._lift(tr["name"], size), size, tr.get("color"), tg)
 
     def _fx(self, c, shot: Shot, poses, t, tg) -> None:
         if shot.fx == "sparkle":

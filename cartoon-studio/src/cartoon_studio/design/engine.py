@@ -363,7 +363,15 @@ def compare(c: Character, style_ids: list[str], out: Path) -> Path:
         st = STYLES[sid]
         r = Renderer([c], st)
         try:
-            im = _fit(r.render(c.id, yaw=30.0), 580, 820)
+            scale = SCALE
+            for _ in range(5):                  # big-eared species (elephant) need a smaller scale to stay in frame
+                im = r.render(c.id, yaw=30.0, scale=scale)
+                if not r.clipped:
+                    break
+                scale *= 0.85
+            else:
+                raise RuntimeError(f"{c.id} in {sid}: still cut off at scale {scale:.2f}")
+            im = _fit(im, 580, 820)
         finally:
             r.close()
         panel = _backdrop(st, 620, 1040)

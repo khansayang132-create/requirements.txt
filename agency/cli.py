@@ -89,7 +89,25 @@ def main(argv: list[str] | None = None) -> int:
     w.add_argument("--poll", type=float, default=30, help="seconds between checks for resumable missions")
     w.add_argument("--once", action="store_true", help="one iteration, then exit")
     w.add_argument("--autoproduce", action="store_true", help="when idle, produce the next approved, unproduced episode")
+    am = sub.add_parser("audit-media", help="frame-by-frame, audio and Chromium playback audit of a finished video")
+    am.add_argument("path")
+    am.add_argument("--out", help="write the JSON report here")
+    am.add_argument("--edit-report", help="an edit report whose fades and title/credit cards are intended")
+    am.add_argument("--sheets", help="also write contact sheets (a frame every 2 s) into this folder")
+    am.add_argument("--no-playback", action="store_true")
     args = ap.parse_args(argv)
+
+    if args.cmd == "audit-media":                      # needs no database or toolbox
+        from . import media_audit
+        exp = media_audit.expected_from_edit(json.loads(Path(args.edit_report).read_text())) if args.edit_report else None
+        rep = media_audit.audit(Path(args.path), do_playback=not args.no_playback, expected=exp)
+        if args.sheets:
+            rep["contact_sheets"] = [str(x) for x in media_audit.contact_sheets(Path(args.path), Path(args.sheets))]
+        text = json.dumps(rep, indent=2, default=str)
+        if args.out:
+            Path(args.out).write_text(text)
+        print(text if not args.out else f"{rep['status']}: {rep['problems'] or 'no problems'} -> {args.out}")
+        return 0 if rep["status"] == "PASS" else 1
 
     _load_env(args.root)
     toolbox = Toolbox(args.root)

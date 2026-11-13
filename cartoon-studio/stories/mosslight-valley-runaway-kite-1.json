@@ -21,7 +21,7 @@
       },
       "dialogue": {
         "speaker": "Narrator",
-        "text": "Whoosh! The wind is strong in Valley panorama today."
+        "text": "Whoosh! The wind is strong in the valley today."
       },
       "camera_angle": "wide establishing",
       "camera_movement": "slow push-in",
@@ -389,7 +389,7 @@
   "beats": [
     {
       "speaker": "narrator",
-      "text": "Whoosh! The wind is strong in Valley panorama today.",
+      "text": "Whoosh! The wind is strong in the valley today.",
       "env": "hilltop",
       "actors": [
         {

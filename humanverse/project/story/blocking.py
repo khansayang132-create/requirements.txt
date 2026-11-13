@@ -108,7 +108,7 @@ def scene2(lines):
     kite = {"type": "kite", "keys": [{"f": 1, "loc": [2.4, 5.0, 4.6], "rot": [5, -8, 15]}, {"f": 12, "loc": [2.8, 5.6, 4.9], "rot": [10, 20, 30]},
                                     {"f": 60, "loc": [9.0, 14.0, 8.5], "rot": [40, 80, 120]}, {"f": end, "loc": [30, 40, 12], "rot": [40, 80, 160]}]}
     shots = [
-        shot("S02_SH01", "S02", 1, e4 + 4, {"loc": [-0.9, -2.5, 0.75], "target": [0.6, 2.0, 1.9], "lens": 30}, [A], "Fernmoor Park",
+        shot("S02_SH01", "S02", 1, e4 + 4, {"loc": [-0.9, -2.5, 0.75], "target": [0.5, 2.0, 1.6], "lens": 30}, [A], "Fernmoor Park",
              "The string snaps; the kite tumbles away; Amara's joy turns to tears", "shock, then grief", "low medium, looking past Amara to the sky",
              "static", "sun goes behind thin cloud: softer, cooler key", ["L04"], ["string snap", "wind gust", "sniffles"],
              "Tears start at frame 40; kite exits upper right"),

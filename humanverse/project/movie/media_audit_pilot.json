@@ -1,0 +1,102 @@
+{
+  "file": "humanverse/project/movie/the-kite-that-came-home.mp4",
+  "bytes": 14304619,
+  "fps": 24.0,
+  "frames_decoded": 1371,
+  "frames_declared": 1371,
+  "resolution": [
+    1920,
+    1080
+  ],
+  "video": {
+    "black_runs": [],
+    "blank_runs": [],
+    "frozen_runs_over_3s": [],
+    "flash_glitches": [],
+    "median_frame_change": 0.26
+  },
+  "expected": [
+    {
+      "frames": [
+        72,
+        73
+      ],
+      "reason": "fade between segments at 3.00s"
+    },
+    {
+      "frames": [
+        413,
+        414
+      ],
+      "reason": "fade between segments at 17.21s"
+    },
+    {
+      "frames": [
+        788,
+        789
+      ],
+      "reason": "fade between segments at 32.83s"
+    },
+    {
+      "frames": [
+        1251,
+        1254
+      ],
+      "reason": "fade between segments at 52.12s"
+    },
+    {
+      "frames": [
+        72,
+        73
+      ],
+      "reason": "fade between segments at 3.00s"
+    },
+    {
+      "frames": [
+        413,
+        414
+      ],
+      "reason": "fade between segments at 17.21s"
+    },
+    {
+      "frames": [
+        788,
+        789
+      ],
+      "reason": "fade between segments at 32.83s"
+    },
+    {
+      "frames": [
+        1251,
+        1253
+      ],
+      "reason": "fade between segments at 52.12s"
+    },
+    {
+      "frames": [
+        1261,
+        1362
+      ],
+      "reason": "credits card"
+    }
+  ],
+  "audio": {
+    "seconds": 57.131,
+    "silent_runs_s": [],
+    "clipped_samples": 0,
+    "integrated_lufs": -16.2,
+    "true_peak_dbfs": -1.5,
+    "rms_dbfs_median": -25.9
+  },
+  "playback": {
+    "status": "PASS",
+    "readyState": 4,
+    "duration": 57.125,
+    "advanced": 2.458739,
+    "w": 1920,
+    "h": 1080
+  },
+  "status": "PASS",
+  "problems": [],
+  "not_measured": "visual and audio quality as a person judges them (see the contact sheets)"
+}

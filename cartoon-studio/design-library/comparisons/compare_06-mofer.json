@@ -1,0 +1,39 @@
+{
+  "character": {
+    "id": "06-mofer",
+    "name": "Mofer",
+    "style": "06-anime",
+    "species": "bunny",
+    "age": "child",
+    "build": "round",
+    "colors": {
+      "body": "#F8BEA8",
+      "belly": "#FFF0EB",
+      "inner_ear": "#FFB0BD",
+      "accent": "#3A86FF",
+      "nose": "#FF85AA"
+    },
+    "clothing": {
+      "accessory": "bandana",
+      "color": "#3A86FF"
+    },
+    "personality": [
+      "mysterious",
+      "rival-minded",
+      "kind"
+    ],
+    "quirk": "hums when nervous",
+    "seed": 1,
+    "proportions": {
+      "age": "child",
+      "build": "round"
+    }
+  },
+  "styles": [
+    "01-cinematic-3d",
+    "06-anime",
+    "08-clay",
+    "09-storybook",
+    "13-scifi"
+  ]
+}

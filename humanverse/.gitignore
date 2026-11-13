@@ -7,3 +7,5 @@ project/characters/*/refs/
 project/movie/work/
 project/reports/*.log
 *.tmp.png
+project/revisions/*/frames_v1/
+project/revisions/*/*.blend

@@ -1,0 +1,39 @@
+{
+  "character": {
+    "id": "04-samo",
+    "name": "Samo",
+    "style": "04-hyperreal",
+    "species": "bear",
+    "age": "teen",
+    "build": "tall",
+    "colors": {
+      "body": "#654444",
+      "belly": "#C9AE8C",
+      "inner_ear": "#F6ADBE",
+      "accent": "#2F4858",
+      "nose": "#F891A2"
+    },
+    "clothing": {
+      "accessory": "bandana",
+      "color": "#2F4858"
+    },
+    "personality": [
+      "quiet",
+      "proud",
+      "bold"
+    ],
+    "quirk": "hums when nervous",
+    "seed": 1,
+    "proportions": {
+      "age": "teen",
+      "build": "tall"
+    }
+  },
+  "styles": [
+    "01-cinematic-3d",
+    "06-anime",
+    "08-clay",
+    "09-storybook",
+    "13-scifi"
+  ]
+}
