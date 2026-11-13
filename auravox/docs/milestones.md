@@ -11,7 +11,7 @@ blocked in this sandbox (they are reachable from GitHub Actions).
 | 1. Working local engine | PASS | `avx doctor` → `data/reports/engines.md`: eSpeak NG spoke and was measured (114 languages). Indonesian line: 4.03 s, 40 engine phonemes, duration ratio 1.03. Router picked eSpeak for id/female/sad, rejected `tlh` (no such language) and Piper (BLOCKED), no substitution. |
 | 2. Three distinct voices + full conversation | PASS | 5 voices from the HUMANVERSE cast, 3 auditions each, approved with profile hashes; F0 285.7 / 115.7 / 233.0 / 92.0 / 194.3 Hz, minimum separation 0.199, no duplicate variants. Production `gate2`: 6 lines, 3 speakers, 2 scenes; jobs AVX-JOB-000001…010 succeeded (`docs/evidence/gate2_queue.txt`). Lip-sync report PASS (correlation 0.40–0.66, end offsets ≤ 0.09 s). Master −16.09 LUFS, true peak −1.5 dBTP (`data/productions/gate2/master_report.json`, `master.mp3`). |
 | 3. Queue, evaluation, retry, resume after restart | PASS | `tests/test_queue.py`: a worker process is SIGKILLed mid-job and a new worker recovers the expired lease and finishes; retries with back-off; dependency failure blocks dependants; pause/resume/cancel; memory guard; state survives reopening the database. Real use: the gate2 lip-sync job failed (pause-marker bug), was fixed and resumed with `avx queue retry`. 20 tests pass (`docs/evidence/pytest.txt`). |
-| 4. Blender lip-synced dialogue → playable MP4 | see Milestone J/L | `demo/gate4/gate4.py`, `data/gate4/gate4_report.json` |
+| 4. Blender lip-synced dialogue → playable MP4 | PASS | `data/gate4/gate4_gate2_S01.mp4` (960×540, 24 fps, 379 frames, 15.79 s, H.264 + AAC) made by `demo/gate4/gate4.py`; checks in `data/gate4/gate4_report.json`. See Milestones J and L. |
 
 ## Milestones
 
@@ -26,9 +26,9 @@ blocked in this sandbox (they are reachable from GitHub Actions).
 | G | Multi-speaker dialogue production | PASS | `production.py`: screenplay → job graph; per line 3 takes + corrective regeneration, best take selected, rejected kept; speaker-substitution guard (voice id + profile hash + file hash) tested. |
 | H | Audio intelligence and quality control | PASS | `analysis.py`: 12 defect codes, each with a fix; objective metrics kept apart from subjective notes. Tests: clean speech no defect, hiss flagged, clipping, silence, cut-off. |
 | I | Persistent queue and recovery | PASS | See Gate 3. |
-| J | Blender lip-sync integration | PENDING | Gate 4 render in progress. |
+| J | Blender lip-sync integration | PASS | AURAVOX gate2 lines exported in HUMANVERSE `lines.json` schema with engine phoneme timings; HUMANVERSE `build_scene.py` keyed visemes on the approved character rigs (L01 51, L02 40, L03 43 viseme keys, `data/gate4/scene_report.json`). Speech onset in the dialogue stem matches the keyed start frame for all 3 lines (offset 0 frames, measured). Close-up check: mouth closed before L01, opens and rounds while speaking. |
 | K | Production control center | PASS | `avx serve` (`server.py`): live DB/system state, pause/resume/cancel/retry, worker start, audio playback, export zip; `tests/test_server.py` drives the real endpoints; design-check 0 errors at 390/1440 px light/dark (`.claude/design-log.md`). |
-| L | End-to-end cartoon dialogue demonstration | PENDING | Gate 4 render in progress. |
+| L | End-to-end cartoon dialogue demonstration | PASS | Screenplay → 3 approved voices → takes, QA, retries → assemble → master (−16 LUFS) → Blender scene (3 characters, park) → Cycles render (379 frames, 4 samples) → MP4 that decodes without errors with matching frame count and both streams. Perceptual quality (acting, lip shapes as watched) NOT TESTED by machine; eSpeak voices sound robotic. |
 
 ## Agents
 

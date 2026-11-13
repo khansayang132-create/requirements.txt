@@ -1,0 +1,29 @@
+{
+  "status": "PASS",
+  "mp4": "/home/user/requirements.txt/auravox/data/gate4/gate4_gate2_S01.mp4",
+  "checks": {
+    "three_speakers": true,
+    "video_and_audio_streams": true,
+    "decodes_without_errors": true,
+    "frame_count": true,
+    "lipsync_keyed_every_line": true
+  },
+  "frames": 379,
+  "duration_s": 15.791667,
+  "resolution": [
+    960,
+    540
+  ],
+  "speakers": [
+    "CHAR-HUM-001",
+    "CHAR-HUM-002",
+    "CHAR-HUM-004"
+  ],
+  "lines": [
+    "L01",
+    "L02",
+    "L03"
+  ],
+  "lip_sync": "phoneme timings from AURAVOX takes keyed as visemes by HUMANVERSE",
+  "not_tested": "perceptual lip-sync and acting quality (needs a person to watch)"
+}
