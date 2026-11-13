@@ -51,6 +51,16 @@ Nothing here is described as production-ready.
 | Nightly workflow | **NOT TESTED** | First scheduled run happens after merge (or via "Run workflow"). |
 | Deployment / rollback | **NOT TESTED** | There is no deployment target; `deploy-check` covers health URLs you list in `agency.json`. |
 
+## Production verification (2026-11-13)
+
+| Gate | Result | Evidence |
+|---|---|---|
+| Finished videos decode, play and sound right | **PASS** | `media_audit.py` on ep003, ep004, ep005, ep006, dh-002 and the HUMANVERSE pilot: every frame decoded, no black/blank/frozen/flash frames outside declared fades and cards, no silence or clipped samples, loudness −14 LUFS (episodes) / −16.2 LUFS (pilot), Chromium played each one (readyState 4, time advancing). |
+| The auditor does not cry wolf | **PASS** | Two false alarms found and fixed: ep005's calm wide shot read as frozen (now counts changed pixels over 0.5 s), and a short clip had already autoplayed to its end before measuring (now rewinds). `tests/test_media_audit.py`, 7 tests. |
+| Episode delivery is gated on the audit | **PASS** | `cartoon_episode` returns FAIL if the media audit fails; ep006 went through it live: studio QC 24/25 (the 25th is a NOT TESTED visual-identity review for a person) + media audit PASS. |
+| A person looked at the frames | **PASS** | Contact sheets (a frame every 2 s) of ep005, ep006 and the pilot reviewed. That review found the double kite (fixed in `stage.py`, `test_handoff.py`) and the pilot's S02_SH01 framing (re-rendered). |
+| Appeal, acting, story quality | **NOT TESTED** | A person's judgement; contact sheets are written for it. |
+
 ## Known limits
 
 - History lives in `agency/out/agency.db`, which is gitignored, so each cloud session starts empty. The nightly

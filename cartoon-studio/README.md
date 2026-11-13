@@ -106,3 +106,30 @@ styles, glow on sci-fi). Not measured by machine: appeal and acting; the sheets 
 
 Species are the studio's five rigs (bunny, cat, elephant, bear, duck). Human characters come from HUMANVERSE (Blender)
 and are not part of this engine.
+
+### Library verification (2026-11-13)
+
+| Check | Result |
+|---|---|
+| Every file in `library.json` present, readable, sha256-identical | **PASS** — 825 / 825 files |
+| Current QC re-run on every accepted character | **PASS** — 75 / 75 characters, 15 / 15 styles |
+| Names unique across the library and the existing cast | **PASS** |
+| Human review of all 15 lineups (`design-library/previews/*style_lineup.jpg`) | **PASS** — every character whole, no clipping or broken geometry, style visibly applied |
+| Style comparisons (`previews/comparisons__*.jpg`: elephant, bear, bunny × 5 styles) | **PASS** — identity (palette, collar, markings) held; an elephant ear touching the panel edge was fixed by shrink-to-fit |
+
+Known limit: every style draws on the same five species rigs, so styles differ in shading, palette, proportions and
+accessories, not in new silhouettes. Appeal remains a person's judgement.
+
+## Episode verification
+
+Every packaged episode now gets `agency/media_audit.py`: all frames decoded (black, blank, frozen, flash), audio
+(silence, per-channel clipping, EBU R128), and a real playback in Chromium, plus contact sheets in
+`agency/out/production/episodes/<job>/review/`. An episode is PASS only if that audit passes as well as the studio QC.
+
+| Episode | Story | Frames | Loudness / true peak | Playback | Notes |
+|---|---|---|---|---|---|
+| ep003 | rainy-picnic | 1303 | −14.0 LUFS / −2.1 dBFS | PASS | |
+| ep004 | runaway-kite | 1570 | −14.0 / −2.4 | PASS | superseded: the set label "Valley panorama" spoken in the first line; kite drawn twice during the hand-off |
+| ep005 | nervous-drum | 1302 | −14.0 / −2.5 | PASS | reviewed frame by frame |
+| ep006 | runaway-kite | 1557 | −14.0 / −2.4 | PASS | caption fixed; still has the double kite (rendered before that fix) |
+| ep007 | runaway-kite | see `agency/out/production/episodes/ep007/` | | | both fixes |
