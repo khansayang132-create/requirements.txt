@@ -32,6 +32,7 @@ import time
 from concurrent.futures import FIRST_COMPLETED, Future, ThreadPoolExecutor, wait
 from dataclasses import dataclass, field
 
+from .production import INTEGRATIONS
 from .roles import ROLES, VERIFIER
 from .store import FINAL, State, Store
 from .tools import (
@@ -126,9 +127,33 @@ PLAYBOOKS: dict[str, Playbook] = {
         Step("llm-review", "LLM review of the diff", "ai_engineer", "llm_review", {}, ("diff",),
              {"diff": ("diff", "diff")}),
     )),
+    # ---------------------------------------------------------------- OVERLORD production departments
+    "integrations": Playbook("Integration audit: prove each tool works by doing real work with it", tuple(
+        Step(n.replace("_", "-"), f"Integration: {n}", {"blender": "humanverse", "espeak_ng": "audio", "piper": "audio"}
+             .get(n, "technical"), "integration_probe", {"name": n}) for n in INTEGRATIONS)),
+    "digital-human": Playbook("Digital human {character} speaking {screenplay} ({name})", (
+        Step("character", "Build rigged 3D human {character}", "humanverse", "build_character",
+             {"character": "{character}", "name": "{name}"}),
+        Step("voice", "Voice the screenplay with the approved, locked voices", "audio", "voice_dialogue",
+             {"screenplay": "{screenplay}", "name": "{name}"}),
+        Step("scene", "Lip-synced scene, Cycles render, muxed MP4", "video", "talking_scene",
+             {"production": "{name}", "name": "{name}", "res": "{res}", "samples": "{samples}"}, ("character", "voice"),
+             {"character_dir": ("character", "character_dir")}),
+        Step("verify", "Verify the delivered MP4 (streams, duration, full decode)", "qa", "media_verify",
+             {"need_audio": True}, ("scene",), {"path": ("scene", "media")}),
+    )),
+    "cartoon": Playbook("Cartoon episode {episode} as job {job}", (
+        Step("episode", "Cartoon Studio pipeline (idea to final MP4) with studio QC", "video", "cartoon_episode",
+             {"job": "{job}", "universe": "{universe}", "episode": "{episode}"}),
+        Step("verify", "Verify the episode MP4 (streams, duration, full decode)", "qa", "media_verify",
+             {"need_audio": True}, ("episode",), {"path": ("episode", "media")}),
+    )),
+    "production-tests": Playbook("Every production project's own test suite", tuple(
+        Step(p, f"{p} tests", "technical", "project_tests", {"project": p})
+        for p in ("auravox", "humanverse", "cartoon-studio", "digital-human-factory"))),
 }
 
-DEFAULT_PARAMS = {"patch": {"role": "fullstack"}}
+DEFAULT_PARAMS = {"patch": {"role": "fullstack"}, "digital-human": {"res": "960x540", "samples": "4"}}
 
 
 def dynamic_playbook(name: str, toolbox: Toolbox) -> Playbook | None:
@@ -322,6 +347,11 @@ def check_evidence(task, call, toolbox: Toolbox | None = None) -> tuple[bool, st
         else:
             ok = code != 0 or c["passed"] == 0 or c["failed"] > 0 or c["errors"] > 0
         return ok, f"exit {code}; {c['passed']} passed, {c['failed']} failed, {c['errors']} errors"
+    if toolbox is not None:  # a claimed media file is re-probed by the verifier, not taken on trust
+        from .production import recheck
+        rc = recheck(task, call, toolbox)
+        if rc is not None:
+            return rc
     if status == "PASS":
         return code in (0, None), f"exit {code}"
     return True, f"exit {code}; failure recorded"

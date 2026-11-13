@@ -15,6 +15,7 @@ import threading
 import time
 
 from . import orchestrator as orch
+from .healing import Healer
 from .store import InvalidTransition, Store
 from .tools import Toolbox
 
@@ -27,6 +28,8 @@ class Worker:
         self.clock = clock
         self.stop = threading.Event()
         self.last_scheduled = 0.0
+        self.healer = Healer(store)
+        self.last_heal: dict = {}
 
     def resumable(self) -> list[str]:
         """Approved READY/RUNNING missions that nobody else is working on: no task holds a live lease and no
@@ -41,6 +44,7 @@ class Worker:
     def tick(self) -> list[tuple[str, str]]:
         """One loop iteration. Returns (mission id, final state) for every mission it ran."""
         self.store.heartbeat(self.orch.worker, f"playbook={self.playbook} every={self.every}")
+        self.last_heal = self.healer.heal()  # watchdog, classification, bounded retries, escalations
         ran: list[tuple[str, str]] = []
         for mid in self.resumable():
             if self.stop.is_set():

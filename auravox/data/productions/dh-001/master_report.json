@@ -1,0 +1,20 @@
+{
+  "master_wav": "/home/user/requirements.txt/auravox/data/productions/dh-001/master.wav",
+  "master_mp3": "/home/user/requirements.txt/auravox/data/productions/dh-001/master.mp3",
+  "stems": [
+    "/home/user/requirements.txt/auravox/data/productions/dh-001/stems/ambience.wav",
+    "/home/user/requirements.txt/auravox/data/productions/dh-001/stems/dialogue.wav",
+    "/home/user/requirements.txt/auravox/data/productions/dh-001/stems/dialogue_CHAR-HUM-003_L01.wav",
+    "/home/user/requirements.txt/auravox/data/productions/dh-001/stems/music.wav",
+    "/home/user/requirements.txt/auravox/data/productions/dh-001/stems/sfx.wav"
+  ],
+  "loudness": {
+    "before_lufs": -20.93,
+    "after_lufs": -16.0,
+    "after_true_peak": -4.83
+  },
+  "pans": {
+    "CHAR-HUM-003": 0.0
+  },
+  "sfx_events": []
+}

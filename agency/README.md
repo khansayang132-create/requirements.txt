@@ -73,3 +73,45 @@ waiting for approval).
 - **A tool:** add it in `Toolbox._build()` with a schema, a timeout and an approval flag. Grant it to roles in
   `roles.py`. Add a test that it returns BLOCKED when its program or credential is missing.
 - **Anything that changes files, deploys or spends money** must set `requires_approval=True`.
+
+## OVERLORD: production departments, self-healing, film-editor queue
+
+The same orchestrator now runs the repository's production programs. It does not reimplement them: each department's
+tool calls an existing project's own program in that project's own environment, and the result is verified by a
+different role (QA re-probes any media file a task claims to have produced).
+
+| Department role | Tool | Runs | Output |
+|---|---|---|---|
+| `humanverse` | `build_character` | HUMANVERSE `build_character.py` (Blender) | rigged 3D human: geometry, skeleton, skin weights, facial rig, deformation test, GLB/FBX |
+| `audio` | `voice_dialogue` | AURAVOX `avx produce` + `avx work` | takes, QA, retries, master (−16 LUFS), lip-sync data |
+| `video` | `talking_scene` | `auravox/demo/gate4/gate4.py` → HUMANVERSE `build_scene.py` + `render.py` | lip-synced Cycles render muxed to MP4 |
+| `video` | `cartoon_episode` | Cartoon Studio `run` + `qc` (13-step resumable editor: storyboard, voices, animation, mix, assembly, 25-check QC, export) | `cartoon-studio/rendered-videos/<job>/final.mp4` |
+| `technical`, `qa` | `integration_probe`, `media_verify`, `project_tests` | real work per integration; ffprobe + full decode + black/silence detection; each project's tests | evidence with VERIFIED / FAILED / BLOCKED / NOT INSTALLED |
+
+| Command | What it does |
+|---|---|
+| `run integrations` | Proves 14 integrations by doing work (render a frame, encode/decode, speak and measure, free read-only API call with an existing key) |
+| `run digital-human --param character=CHAR-HUM-003 --param screenplay=FILE --param name=ID` | Build → voice → lip-synced render → verified MP4, into `agency/out/production/<ID>/` |
+| `run cartoon --param job=ep003 --param universe=U --param episode=E` | Cartoon Studio episode + independent MP4 verification |
+| `run production-tests` | Every production project's test suite in its own venv |
+| `agents` | The 37 named agents, their department, the role/tool that really does the work, and live state from the audit log |
+| `heal` / `diagnose` | One self-healing pass / failure categories and the recovery log |
+| `dashboard` | Now the OVERLORD Command Center: system status, integrations, MCP, production outputs, agents, error log, recovery history |
+
+**Self-healing** (`healing.py`, run by the worker every loop): watchdog re-queues tasks whose runner died (expired
+lease) and reports stalled workers; a classifier sorts each non-passing task into transient, missing_dependency,
+credential, approval, budget, dependency, check_failed or unknown; transient and missing-dependency failures are
+retried at most 3 times with exponential backoff (60 s / 600 s base); a FAIL verdict, a missing credential or an
+approval is never retried and is escalated once with what a person must do; the same step failing in 3 missions in a
+week is escalated as recurring. Every action is a row in `recoveries`.
+
+**Assets are never overwritten by two agents**: production tools write under `agency/out/production/<name>/` with an
+exclusive per-asset lock (a live holder → BLOCKED; a stale lock from a dead process is taken over so a retry resumes),
+and AURAVOX refuses to produce over an existing master.
+
+**Film-editor skill** (`.claude/skills/overlord-autonomous-film-editor/`, installed with `avx skills install`, scanned,
+host-tested): its queue maps onto this store. PENDING = READY mission, VALIDATING/INGESTING/EDITING/AUDIO/SUBTITLES/
+RENDERING = Cartoon Studio steps 01–13 inside the `episode` task (its own state file checkpoints each step),
+QC = studio QC + OVERLORD `media_verify`, RETRY_WAIT = a scheduled self-healing retry, REWORK = a human `retry` after a
+fix, BLOCKED / FAILED / CANCELLED = the same states here. Atomic claiming, leases, crash recovery, bounded retries,
+per-tool timeouts and the audit log are the store's.

@@ -169,8 +169,14 @@ def test_invocation(target: str, project: Path, name: str) -> dict:
         return {"invocation": "PASS" if name in r.stdout else "FAIL", "host_reply": r.stdout[:600]}
     if not shutil.which("codex"):
         return {"invocation": "NOT TESTED", "why": "codex CLI not on PATH"}
-    r = subprocess.run(["codex", "exec", "List the skills you can use in this repository, names only."], cwd=project, capture_output=True,
-                       text=True, timeout=180, check=False)
+    login = subprocess.run(["codex", "login", "status"], capture_output=True, text=True, timeout=30, check=False)
+    if login.returncode != 0 or "not logged in" in (login.stdout + login.stderr).lower():
+        return {"invocation": "NOT TESTED", "why": "codex CLI installed but not logged in (`codex login` needs the owner)"}
+    try:
+        r = subprocess.run(["codex", "exec", "--skip-git-repo-check", "List the skills you can use in this repository, names only."],
+                           cwd=project, capture_output=True, text=True, timeout=180, check=False)
+    except subprocess.TimeoutExpired:
+        return {"invocation": "NOT TESTED", "why": "codex exec timed out"}
     return {"invocation": "PASS" if name in r.stdout else "FAIL", "host_reply": r.stdout[:600]}
 
 

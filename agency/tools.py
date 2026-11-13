@@ -49,6 +49,8 @@ SECRET_PATTERNS = [
     ("private-key", re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----")),
 ]
 SECRET_ENV = re.compile(r"(KEY|TOKEN|SECRET|PASSWORD)$")
+# Test fixtures spell fake keys "sk-test-...": no provider issues that prefix, so the scan does not report it.
+FIXTURE_PREFIX = "sk-test-"
 
 
 def redact(text: str, env=None) -> str:
@@ -166,7 +168,8 @@ class Toolbox:
         self.env = dict(os.environ if env is None else env)
         self.config = load_config(self.root) if config is None else config
         self.cancel_event = threading.Event()  # set by the orchestrator when its mission is cancelled
-        self.tools: dict[str, Tool] = {t.name: t for t in self._build()}
+        from . import production  # departments' production tools (OVERLORD); imported here to avoid a cycle
+        self.tools: dict[str, Tool] = {t.name: t for t in [*self._build(), *production.build(self)]}
 
     # ----------------------------------------------------------------- policy
     def call(self, role, name: str, args: dict, approved: bool = False) -> ToolResult:
@@ -360,7 +363,7 @@ class Toolbox:
                 continue
             for lineno, line in enumerate(text.splitlines(), 1):
                 for name, pat in SECRET_PATTERNS:
-                    if pat.search(line):
+                    if any(not m.group(0).startswith(FIXTURE_PREFIX) for m in pat.finditer(line)):
                         findings.append(f"{rel}:{lineno}: looks like a {name}")
         ignored, _, _ = self._run(["git", "check-ignore", "-q", ".env"], self.root, 10)
         if ignored != 0:

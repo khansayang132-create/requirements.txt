@@ -22,8 +22,11 @@ import threading
 import urllib.parse
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
+from . import departments
 from . import orchestrator as orch
+from .healing import Healer
 from .orchestrator import PLAYBOOKS, verdict
+from .production import INTEGRATIONS
 from .report import usage
 from .roles import ROLES, VERIFIER, playbooks_using
 from .store import State, Store
@@ -47,11 +50,16 @@ th{font-size:12px;color:var(--muted);font-weight:600}.wrap{overflow-x:auto}
 .pill{font-size:12px;font-weight:600;padding:2px 8px;border-radius:999px;border:1px solid currentColor;white-space:nowrap}
 .COMPLETED,.PASS{color:var(--ok)}.FAILED,.CANCELLED,.FAIL{color:var(--bad)}
 .RUNNING,.READY,.REVIEWING,.VERIFYING,.BLOCKED,.NEEDS_APPROVAL{color:var(--warn)}
+.VERIFIED{color:var(--ok)}.ACTIVE,.escalated,.gave_up{color:var(--warn)}
+.NOT_INSTALLED,.NOT_TESTED,.NEVER_RUN,.IDLE,.BUILT-IN,.NOT_IMPLEMENTED{color:var(--muted)}
 pre{white-space:pre-wrap;word-break:break-word;background:var(--card);border:1px solid var(--line);
 border-radius:10px;padding:10px;max-height:340px;overflow:auto;font-size:12px}
 details{margin:6px 0}code{font-size:12px}
+@media (max-width:640px){.sm-hide{display:none}td,th{padding:8px 6px}}
 """
 e = html.escape
+HIDE = "<td class=sm-hide>"          # timestamp cells: hidden on phones so the evidence column gets the width
+AT = "<th class=sm-hide>At</th>"
 
 
 def _ts(t) -> str:
@@ -59,7 +67,7 @@ def _ts(t) -> str:
 
 
 def _pill(s: str) -> str:
-    return f"<span class='pill {e(s)}'>{e(s)}</span>"
+    return f"<span class='pill {e(s.replace(' ', '_'))}'>{e(s)}</span>"
 
 
 def _page(title: str, body: str) -> bytes:
@@ -73,6 +81,77 @@ def _form(token: str | None, action: str, label: str, extra: str = "") -> str:
         return ""
     return (f"<form method=post action='{e(action)}' style='display:inline'><input type=hidden name=csrf "
             f"value='{e(token)}'>{extra}<button>{e(label)}</button></form> ")
+
+
+def overlord(store: Store, toolbox: Toolbox) -> str:
+    """OVERLORD panels: system status, agents, integrations, MCP, production, errors, recoveries. All from the store."""
+    db = store.db
+    by_state = {r["state"]: r["n"] for r in db.execute("SELECT state, COUNT(*) n FROM tasks GROUP BY state")}
+    agents = departments.status(store)
+    acount: dict[str, int] = {}
+    for a in agents:
+        acount[a["state"]] = acount.get(a["state"], 0) + 1
+    healer = Healer(store)
+    stalled = healer.stalled_workers()
+    system = ("FAILED" if by_state.get("FAILED") else "BLOCKED" if by_state.get("BLOCKED") or stalled
+              else "RUNNING" if by_state.get("RUNNING") else "IDLE" if not by_state else "VERIFIED")
+    tiles = "".join(f"<div class=tile><span class='{e(k)}'>{e(label)}</span><b>{v}</b></div>" for label, k, v in [
+        ("Running tasks", "RUNNING", by_state.get("RUNNING", 0)), ("Completed tasks", "COMPLETED", by_state.get("COMPLETED", 0)),
+        ("Blocked tasks", "BLOCKED", by_state.get("BLOCKED", 0)), ("Failed tasks", "FAILED", by_state.get("FAILED", 0)),
+        ("Active agents", "ACTIVE", acount.get("ACTIVE", 0)), ("Idle agents", "IDLE", acount.get("IDLE", 0)),
+        ("Failed agents", "FAILED", acount.get("FAILED", 0)), ("Stalled workers", "BLOCKED", len(stalled))])
+    integ = []
+    for name in INTEGRATIONS:
+        c = db.execute("SELECT status, summary, finished_at, evidence FROM tool_calls WHERE tool='integration_probe' AND "
+                       "args LIKE ? ORDER BY id DESC LIMIT 1", (f'%"name": "{name}"%',)).fetchone()
+        st = json.loads(c["evidence"]).get("integration_status", "NOT TESTED") if c else "NOT TESTED"
+        integ.append(f"<tr><td><code>{e(name)}</code><br>{_pill(st)}</td><td>{e(c['summary']) if c else '—'}</td>"
+                     f"{HIDE}{_ts(c['finished_at']) if c else '—'}</td></tr>")
+    mcp = []
+    for server in toolbox.config.get("mcp_servers", {}):
+        c = db.execute("SELECT status, summary, finished_at FROM tool_calls WHERE tool='mcp_list_tools' AND args LIKE ? "
+                       "ORDER BY id DESC LIMIT 1", (f'%"{server}"%',)).fetchone()
+        st = {"PASS": "VERIFIED", "BLOCKED": "BLOCKED"}.get(c["status"], "FAILED") if c else "NOT TESTED"
+        mcp.append(f"<tr><td><code>{e(server)}</code></td><td>{_pill(st)}</td><td>{e(c['summary']) if c else '—'}</td></tr>")
+    arows = "".join(
+        f"<tr><td>{e(a['department'])}</td><td>{e(a['agent'])}</td><td>{_pill(a['state'])}</td>"
+        f"<td>{('<code>' + e(a['role'] + '/' + a['tool']) + '</code>') if a['tool'] else ''} "
+        f"<span class=muted>{e(a.get('last_summary') or a['note'])}</span></td></tr>" for a in agents)
+    prod = db.execute("SELECT mission_id, tool, status, summary, finished_at, evidence FROM tool_calls WHERE tool IN "
+                      "('talking_scene','cartoon_episode','media_verify','build_character','voice_dialogue') "
+                      "ORDER BY id DESC LIMIT 15").fetchall()
+    prows = "".join(
+        f"<tr><td><a href='/mission/{e(c['mission_id'])}'>{e(c['mission_id'])}</a></td><td><code>{e(c['tool'])}</code></td>"
+        f"<td>{_pill(c['status'])}</td><td>{e(c['summary'])}<br><span class=muted>"
+        f"{e(json.loads(c['evidence']).get('media') or json.loads(c['evidence']).get('dir') or '')}</span></td>"
+        f"{HIDE}{_ts(c['finished_at'])}</td></tr>" for c in prod)
+    errs = db.execute("SELECT mission_id, task_id, tool, status, summary, finished_at FROM tool_calls WHERE status != 'PASS' "
+                      "ORDER BY id DESC LIMIT 15").fetchall()
+    erows = "".join(f"<tr>{HIDE}{_ts(c['finished_at'])}</td><td><code>{e(c['task_id'])}</code></td><td>{_pill(c['status'])}</td>"
+                    f"<td>{e(c['summary'])}</td></tr>" for c in errs)
+    rec = "".join(f"<tr>{HIDE}{_ts(r['at'])}</td><td><code>{e(r['task_id'] or '-')}</code></td><td>{e(r['category'])}</td>"
+                  f"<td>{_pill(r['action'])}</td><td>{e(r['detail'])}</td></tr>" for r in healer.recent(20))
+
+    def table(head: str, rows: str, empty: str) -> str:
+        return f"<div class=wrap><table><tr>{head}</tr>{rows}</table></div>" if rows else f"<p class=muted>{e(empty)}</p>"
+    return (f"<h2>System status {_pill(system)}</h2><div class=grid>{tiles}</div>"
+            "<h2>Integrations</h2>"
+            + table("<th>Integration / status</th><th>Evidence</th><th class=sm-hide>Checked</th>", "".join(integ), "")
+            + "<p class=muted>VERIFIED means real work was done (frame rendered, clip decoded, speech measured, "
+              "authenticated read-only call). NOT TESTED means never probed: run "
+              "<code>python -m agency run integrations</code>.</p>"
+            + "<h2>MCP servers (agency.json allowlist)</h2>" + table("<th>Server</th><th>Status</th><th>Evidence</th>",
+                                                                       "".join(mcp), "no MCP server allowlisted")
+            + "<h2>Production outputs</h2>" + table("<th>Mission</th><th>Tool</th><th>Result</th><th>Output</th>" + AT,
+                                                    prows, "no production run yet")
+            + f"<h2>Agents ({len(agents)})</h2>" + table("<th>Department</th><th>Agent</th><th>State</th><th>Does the work</th>",
+                                                       arows, "")
+            + "<h2>Error log (latest non-passing tool calls)</h2>"
+            + table(AT + "<th>Task</th><th>Status</th><th>Why</th>",
+                                                                          erows, "no errors recorded")
+            + "<h2>Recovery history (self-healing)</h2>"
+            + table(AT + "<th>Task</th><th>Category</th><th>Action</th>"
+                                                                "<th>Detail</th>", rec, "no recovery actions yet"))
 
 
 def overview(store: Store, toolbox: Toolbox, token: str | None = None) -> bytes:
@@ -98,10 +177,11 @@ def overview(store: Store, toolbox: Toolbox, token: str | None = None) -> bytes:
                     for h in store.heartbeats())
     options = "".join(f"<option>{e(n)}</option>" for n in STARTABLE)
     run_form = _form(token, "/run", "Run", f"<select name=playbook>{options}</select> ")
-    body = (f"<h1>Engineering Command Center</h1><p class=muted>Read from {e(str(store.path))}. "
+    body = (f"<h1>OVERLORD Command Center</h1><p class=muted>Read from {e(str(store.path))}. "
             + ("Actions enabled (CSRF-protected, 127.0.0.1 only)." if token else
                "Read-only. Start with <code>--actions</code> for buttons, or use <code>python -m agency --help</code>.")
             + "</p>" + (f"<h2>Start</h2><p>{run_form}</p>" if token else "")
+            + overlord(store, toolbox)
             + f"<h2>Workers</h2><ul>{beats or '<li class=muted>no worker heartbeat recorded</li>'}</ul>"
             f"<h2>Missions</h2><div class=grid>{tiles or '<span class=muted>no missions yet</span>'}</div>"
             f"<div class=wrap><table><tr><th>Mission</th><th>Playbook</th><th>State</th><th>Title</th><th>Updated</th>"
@@ -113,7 +193,7 @@ def overview(store: Store, toolbox: Toolbox, token: str | None = None) -> bytes:
             f"<h2>Tools</h2><div class=wrap><table><tr><th>Tool</th><th>What</th><th>Permission</th><th>Timeout</th>"
             f"<th>Approval</th></tr>{trows}</table></div>"
             "<p class=muted>What is verified and what isn't: agency/STATUS.md.</p>")
-    return _page("Engineering Command Center", body)
+    return _page("OVERLORD Command Center", body)
 
 
 def mission_page(store: Store, mission_id: str, token: str | None = None, prices: dict | None = None) -> bytes:

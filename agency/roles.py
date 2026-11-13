@@ -63,7 +63,8 @@ ROLES: dict[str, Role] = {r.id: r for r in [
           "Secret detection, dependency vulnerabilities, least privilege.",
           "secret_scan", "pip_audit", "dependency_inspect", "bandit"),
     _role("qa", "QA and Test Automation Engineer",
-          "Runs test suites and independently verifies other roles' evidence.", "run_tests", "py_compile", *CHANGE,
+          "Runs test suites and independently verifies other roles' evidence.", "run_tests", "py_compile",
+          "media_verify", "project_tests", *CHANGE,
           owns=("tests/*", "apex/tests/*")),
     _role("data", "Database and Data Engineer",
           "Schemas, migrations, backups and integrity checks.", *CHANGE,
@@ -86,6 +87,19 @@ ROLES: dict[str, Role] = {r.id: r for r in [
           "External APIs, SDKs and MCP servers, tested against mocks first.", "mcp_list_tools", "mcp_call"),
     _role("research", "Technical Research Engineer",
           "Official documentation, library comparison, licensing.", "pypi_info"),
+    # OVERLORD production departments: each runs a real production program through its tool.
+    _role("humanverse", "HUMANVERSE Digital Human Department",
+          "Builds rigged 3D humans (geometry, skeleton, skin weights, facial rig, deformation test, GLB/FBX).",
+          "build_character", "integration_probe"),
+    _role("audio", "Audio Department",
+          "Character voices, takes, QA, retries, mastering and lip-sync data through AURAVOX.",
+          "voice_dialogue", "integration_probe"),
+    _role("video", "Video Production Department",
+          "Scenes, lip-synced character animation, Cycles renders, editing and muxing to MP4; cartoon episodes.",
+          "talking_scene", "cartoon_episode", "media_verify"),
+    _role("technical", "Technical Department",
+          "Proves each integration by doing real work with it, and runs every production project's tests.",
+          "integration_probe", "project_tests", "media_verify"),
 ]}
 
 # Who checks whose work. QA verifies everyone except itself; code review verifies QA.

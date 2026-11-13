@@ -25,6 +25,9 @@ BL = HV / ".claude/skills/humanverse-studio/scripts/blender"
 BPY = HV / ".venv/bin/python"
 FPS = 24
 BASE = {"calm": "neutral", "whisper": "neutral"}         # AURAVOX emotions HUMANVERSE has no face for
+CAMERA = {1: {"loc": [0.0, -1.9, 1.42], "target": [0.0, 0.0, 1.3], "lens": 50, "focus": [0, 0, 1.35]},   # head and shoulders
+          2: {"loc": [0.0, -2.8, 1.32], "target": [0.0, 0.0, 1.15], "lens": 40, "focus": [0, 0, 1.25]},
+          3: {"loc": [0.0, -3.3, 1.3], "target": [0.0, 0.0, 1.12], "lens": 38, "focus": [0, 0, 1.2]}}
 LEAD = 0.5                                                   # master.wav starts the dialogue 0.5 s in
 
 
@@ -45,6 +48,9 @@ def main():
     ap.add_argument("--res", default="960x540")
     ap.add_argument("--samples", type=int, default=4)
     ap.add_argument("--threads", type=int, default=2)
+    ap.add_argument("--out", default="", help="output folder (default $AVX_HOME/gate4)")
+    ap.add_argument("--min-speakers", type=int, default=3)
+    ap.add_argument("--character-dir", default=str(HV / "project/characters"), help="folder of approved <ID>/<ID>.blend")
     ap.add_argument("--preview", default="", help="render only these frames (e.g. 1,120) to check framing, then stop")
     a = ap.parse_args()
 
@@ -55,23 +61,26 @@ def main():
     st = Studio(Path(os.environ.get("AVX_HOME", REPO / "auravox/data")))
     prod = st.home / "productions" / a.production
     meta = json.loads((prod / "dialogue.json").read_text())
-    out = st.home / "gate4"
+    out = Path(a.out) if a.out else st.home / "gate4"
     (out / "frames").mkdir(parents=True, exist_ok=True)
     log = out / "gate4.log"
 
     lines = [ln for ln in meta["lines"] if ln.get("scene_id") == a.scene]
-    if len({ln["character_id"] for ln in lines}) < 3:
-        sys.exit(f"BLOCKED: scene {a.scene} of {a.production} has fewer than 3 speakers")
+    if len({ln["character_id"] for ln in lines}) < a.min_speakers:
+        sys.exit(f"BLOCKED: scene {a.scene} of {a.production} has fewer than {a.min_speakers} speakers")
     lines_json = production.export_humanverse_lines({"lines": lines}, out / "lines.json")
 
     t0 = lines[0]["start_s"]
     end_s = max(ln["start_s"] + ln["duration_s"] for ln in lines) - t0
     frames = int((end_s + 2 * LEAD + 0.6) * FPS)
     speakers = list(dict.fromkeys(ln["character_id"] for ln in lines))
-    xs = {c: x for c, x in zip(speakers, (-1.1, 0.0, 1.1))}
-    heading = {c: h for c, h in zip(speakers, (18, 0, -18))}
+    if len(speakers) > 3:
+        sys.exit("BLOCKED: this scene layout frames at most 3 speakers")
+    layout = {1: ((0.0,), (0,)), 2: ((-0.6, 0.6), (12, -12)), 3: ((-1.1, 0.0, 1.1), (18, 0, -18))}[len(speakers)]
+    xs = dict(zip(speakers, layout[0]))
+    heading = dict(zip(speakers, layout[1]))
     chars = [{"id": c, "start": [xs[c], 0.0, heading[c]], "expression": "neutral",
-              "blend": str(HV / f"project/characters/{c}/{c}.blend")} for c in speakers]
+              "blend": str(Path(a.character_dir) / c / f"{c}.blend")} for c in speakers]
     perf = [{"char": c, "op": "idle", "f0": 1, "f1": frames, "energy": 0.5} for c in speakers]
     for ln in lines:
         f = int(round((ln["start_s"] - t0 + LEAD) * FPS)) + 1
@@ -85,7 +94,7 @@ def main():
     spec = {"scene_id": f"AVX_{a.scene}", "environment": "park", "seed": 3, "frames": frames, "light_center": [0, 0, 0.9],
             "characters": chars, "performance": perf, "props": [], "fps": FPS, "resolution": [w, h], "samples": a.samples,
             "shots": [{"shot_id": "AVX_SH01", "f0": 1, "f1": frames,
-                       "cam": {"loc": [0.0, -3.3, 1.3], "target": [0.0, 0.0, 1.12], "lens": 38, "focus": [0, 0, 1.2]}}]}
+                       "cam": CAMERA[len(speakers)]}]}
     (out / "spec.json").write_text(json.dumps(spec, indent=2))
 
     blend = out / "scene.blend"
@@ -107,7 +116,7 @@ def main():
     audio = out / "audio.wav"
     subprocess.run(["ffmpeg", "-y", "-v", "error", "-ss", f"{t0:.3f}", "-t", f"{frames / FPS:.3f}", "-i", str(prod / "master.wav"),
                     "-af", "afade=t=out:st=%.2f:d=0.5" % (frames / FPS - 0.5), str(audio)], check=True)
-    mp4 = out / f"gate4_{a.production}_{a.scene}.mp4"
+    mp4 = out / f"{'gate4_' if not a.out else ''}{a.production}_{a.scene}.mp4"
     subprocess.run(["ffmpeg", "-y", "-v", "error", "-framerate", str(FPS), "-i", str(out / "frames/%04d.png"), "-i", str(audio),
                     "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "20", "-c:a", "aac", "-b:a", "192k", "-shortest",
                     "-movflags", "+faststart", str(mp4)], check=True)
@@ -116,7 +125,7 @@ def main():
     decode = subprocess.run(["ffmpeg", "-v", "error", "-i", str(mp4), "-f", "null", "-"], capture_output=True, text=True)
     v = next(s for s in probe["streams"] if s["codec_type"] == "video")
     scene_rep = json.loads((out / "scene_report.json").read_text())
-    checks = {"three_speakers": len(speakers) >= 3, "video_and_audio_streams": {s["codec_type"] for s in probe["streams"]} == {"video", "audio"},
+    checks = {"enough_speakers": len(speakers) >= a.min_speakers, "video_and_audio_streams": {s["codec_type"] for s in probe["streams"]} == {"video", "audio"},
               "decodes_without_errors": decode.returncode == 0 and not decode.stderr.strip(),
               "frame_count": int(v["nb_frames"]) == frames,
               "lipsync_keyed_every_line": sum(c.get("type") == "dialogue" for c in scene_rep.get("cues", [])) == len(lines) and all(c.get("visemes_keyed", 0) >= 3 for c in scene_rep.get("cues", []) if c.get("type") == "dialogue")}

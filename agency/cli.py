@@ -20,9 +20,10 @@ import getpass
 import json
 from pathlib import Path
 
+from . import departments, planner
 from . import orchestrator as orch
-from . import planner
 from .dashboard import serve
+from .healing import Healer
 from .providers import ProviderError, ProviderUnavailable
 from .report import markdown
 from .roles import ROLES, VERIFIER, playbooks_using
@@ -76,7 +77,7 @@ def main(argv: list[str] | None = None) -> int:
         if name == "resume":
             p.add_argument("--concurrency", type=int, default=4)
     sub.add_parser("approve").add_argument("task")
-    for name in ("missions", "roles", "tools", "playbooks"):
+    for name in ("missions", "roles", "tools", "playbooks", "agents", "heal", "diagnose"):
         sub.add_parser(name)
     d = sub.add_parser("dashboard")
     d.add_argument("--host", default="127.0.0.1")
@@ -126,6 +127,19 @@ def main(argv: list[str] | None = None) -> int:
 
 
 def _stateful(args, store: Store, toolbox: Toolbox, who: str, prices: dict) -> int:
+    if args.cmd == "agents":
+        for row in departments.status(store):
+            tool = f"{row['role']}/{row['tool']}" if row["tool"] else (row["note"] or "built-in")
+            print(f"{row['department']:11} {row['state']:15} {row['agent']:32} {tool}")
+        return 0
+    if args.cmd == "heal":
+        print(json.dumps(Healer(store).heal(), indent=2, default=str))
+        return 0
+    if args.cmd == "diagnose":
+        print(json.dumps(Healer(store).diagnostics(), indent=2))
+        for r in Healer(store).recent(20):
+            print(f"{r['id']:5} {r['category']:18} {r['action']:10} {r['task_id'] or '-':30} {r['detail'][:90]}")
+        return 0
     if args.cmd == "missions":
         for m in store.missions():
             print(f"{m['id']}  {m['state']:15} {m['playbook']:12} {m['title']}")

@@ -67,7 +67,7 @@ def states(store, mid):
 # --------------------------------------------------------------------------- registry and planning
 def test_roles_are_distinct_and_tools_exist(repo):
     _, tb = make(repo)
-    assert len(ROLES) == 20
+    assert len(ROLES) == 24  # 20 engineering roles + 4 OVERLORD production departments
     assert len({r.tools for r in ROLES.values()}) > 5  # permissions actually differ between roles
     for role in ROLES.values():
         assert role.tools <= set(tb.tools), role.id
@@ -77,7 +77,8 @@ def test_roles_are_distinct_and_tools_exist(repo):
 def test_shipped_playbooks_are_valid(repo):
     tb = Toolbox(Path(__file__).resolve().parents[1])
     params = {"request": "x", "paths": "bot.py", "branch": "b", "patch": "x", "role": "fullstack",
-              "package": "pytest", "server": "headroom"}
+              "package": "pytest", "server": "headroom", "character": "CHAR-HUM-003", "screenplay": "agency/x.txt",
+              "name": "dh-1", "job": "ep1", "universe": "u", "episode": "e", "res": "960x540", "samples": "4"}
     for name in orch.playbook_names():
         pb = orch.PLAYBOOKS.get(name) or orch.dynamic_playbook(name, tb)
         orch.validate_playbook(orch.with_params(pb, params, tb), tb)
