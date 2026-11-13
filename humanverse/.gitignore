@@ -9,3 +9,4 @@ project/reports/*.log
 *.tmp.png
 project/revisions/*/frames_v1/
 project/revisions/*/*.blend
+project/revisions/*/*.mp4
