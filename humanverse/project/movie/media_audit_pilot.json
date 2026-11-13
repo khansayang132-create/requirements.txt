@@ -1,6 +1,6 @@
 {
   "file": "humanverse/project/movie/the-kite-that-came-home.mp4",
-  "bytes": 14310487,
+  "bytes": 14398879,
   "fps": 24.0,
   "frames_decoded": 1371,
   "frames_declared": 1371,
@@ -92,7 +92,7 @@
     "status": "PASS",
     "readyState": 4,
     "duration": 57.125,
-    "advanced": 2.460278,
+    "advanced": 2.460501,
     "w": 1920,
     "h": 1080
   },

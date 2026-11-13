@@ -1,4 +1,4 @@
-# QA report (2026-11-13T14:48:40Z)
+# QA report (2026-11-13T17:04:33Z)
 
 **Result: PASS** — {'PASS': 142, 'FAIL': 0, 'BLOCKED': 0, 'NOT TESTED': 0}
 
@@ -134,7 +134,7 @@
 | render S03 | every frame present and CRC-valid | PASS | 463 |
 | audio S03 | mix: no clipping | PASS | {'sr': 48000, 'channels': 2, 'duration': 19.292, 'rms': 0.11546, 'peak': 0.8954, 'clipped_samples': 0, 'longest_silence_s': 0.0} |
 | audio S03 | mix: no accidental silence (> 1.5 s) | PASS | 0.0 |
-| video | MP4 exists | PASS | /home/user/requirements.txt/humanverse/project/movie/the-kite-that-came-home.mp4 (14310487 bytes) |
+| video | MP4 exists | PASS | /home/user/requirements.txt/humanverse/project/movie/the-kite-that-came-home.mp4 (14398879 bytes) |
 | video | decodes end to end | PASS | clean |
 | video | H.264 + yuv420p | PASS | ('h264', 'yuv420p') |
 | video | resolution 1920x1080 | PASS | (1920, 1080) |

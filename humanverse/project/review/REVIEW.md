@@ -33,12 +33,16 @@ grandfather), Noor Haddad (45, neighbour). Three scenes: Fernmoor Park, the lost
   with the kite still escaping over the trees, and only the camera target changed. The 122 frames were
   re-rendered in Cycles, then the film was re-cut and re-checked. The previous version, its frames and the old
   settings are in `../revisions/r1-S02_SH01/`. The frames and the .blend are local only, not in git.
+- **The kite in S03 (33–51 s)** was keyed to fixed points, so in Noor's close-up it hung in front of her rather
+  than in her hand. Props can now be held: they're baked to the hand on every frame. Noor holds the kite, hands
+  it to Amara, and Amara holds it beside her until it rises over the group in the final cheer. S03 was
+  re-rendered (463 frames) and the film re-cut and re-checked; previous files are in `../revisions/r2-S03-kite/`.
 
 ## Please judge (no machine measures these)
 
 1. **Appeal and acting.** Faces are simple and stylised. Expressions read, but this is not feature-film animation.
 2. **Lip sync.** Mouth timing follows the dialogue. Mouth *shapes* were not checked against a phoneme recogniser.
-3. **The found kite (36–38 s)** is a flat diamond prop beside Noor, not held in her hand.
+3. **The kite** is a simple flat diamond, which is large in Noor's close-up.
 4. **Voices** are local text-to-speech, not actors.
 
 ## Approve and deliver (your decision)
