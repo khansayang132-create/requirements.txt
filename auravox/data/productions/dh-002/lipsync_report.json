@@ -1,0 +1,27 @@
+{
+  "status": "PASS",
+  "fps": 24,
+  "lines": [
+    {
+      "line_id": "L01",
+      "status": "PASS",
+      "alignment": "engine",
+      "phonemes": 86,
+      "visemes": [
+        "AA",
+        "CONS",
+        "E",
+        "FV",
+        "MBP",
+        "O",
+        "rest"
+      ],
+      "mouth_audio_correlation": 0.461,
+      "start_offset_s": -0.04,
+      "end_offset_s": -0.032,
+      "voiced_coverage": 0.813
+    }
+  ],
+  "method": "mouth-open curve from engine phoneme timing vs. RMS envelope; offsets vs. voiced region",
+  "not_tested": "perceptual lip-sync quality (human review of the rendered animation)"
+}

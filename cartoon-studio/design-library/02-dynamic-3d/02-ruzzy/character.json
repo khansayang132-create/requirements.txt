@@ -1,0 +1,66 @@
+{
+  "id": "02-ruzzy",
+  "name": "Ruzzy",
+  "style": "02-dynamic-3d",
+  "species": "cat",
+  "age": "child",
+  "build": "stocky",
+  "colors": {
+    "body": "#963D7B",
+    "belly": "#F9E0EE",
+    "inner_ear": "#F8AEC1",
+    "accent": "#F18F01",
+    "nose": "#FF8DAF"
+  },
+  "clothing": {
+    "accessory": "bow",
+    "color": "#F18F01"
+  },
+  "personality": [
+    "loud-hearted",
+    "scheming",
+    "kind"
+  ],
+  "quirk": "never walks past a puddle",
+  "seed": 1,
+  "proportions": {
+    "age": "child",
+    "build": "stocky"
+  },
+  "style_name": "Dynamic 3D (DreamWorks-inspired)",
+  "render_spec": {
+    "id": "02-ruzzy",
+    "name": "Ruzzy",
+    "species": "cat",
+    "colors": {
+      "body": "#963D7B",
+      "belly": "#F9E0EE",
+      "inner_ear": "#F8AEC1",
+      "accent": "#F18F01",
+      "nose": "#FF8DAF"
+    },
+    "clothing": {
+      "accessory": "bow",
+      "color": "#F18F01"
+    },
+    "style": {
+      "mode": 1,
+      "head": 1.12,
+      "body": [
+        1.242,
+        0.827,
+        1.165
+      ],
+      "eye": 0.92,
+      "outline": 0,
+      "noise": 0.35,
+      "noise_scale": 0.05,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.697,
+    "scale": 1.9
+  }
+}

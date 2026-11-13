@@ -1,0 +1,66 @@
+{
+  "id": "02-bori",
+  "name": "Bori",
+  "style": "02-dynamic-3d",
+  "species": "duck",
+  "age": "child",
+  "build": "standard",
+  "colors": {
+    "body": "#626F6F",
+    "belly": "#E8E9EB",
+    "inner_ear": "#FFB2C7",
+    "accent": "#FFB703",
+    "nose": "#FDA728"
+  },
+  "clothing": {
+    "accessory": "scarf",
+    "color": "#FFB703"
+  },
+  "personality": [
+    "big-talking",
+    "cocky",
+    "funny"
+  ],
+  "quirk": "collects shiny pebbles",
+  "seed": 1,
+  "proportions": {
+    "age": "child",
+    "build": "standard"
+  },
+  "style_name": "Dynamic 3D (DreamWorks-inspired)",
+  "render_spec": {
+    "id": "02-bori",
+    "name": "Bori",
+    "species": "duck",
+    "colors": {
+      "body": "#626F6F",
+      "belly": "#E8E9EB",
+      "inner_ear": "#FFB2C7",
+      "accent": "#FFB703",
+      "nose": "#FDA728"
+    },
+    "clothing": {
+      "accessory": "scarf",
+      "color": "#FFB703"
+    },
+    "style": {
+      "mode": 1,
+      "head": 1.12,
+      "body": [
+        1.08,
+        0.94,
+        1.04
+      ],
+      "eye": 0.92,
+      "outline": 0,
+      "noise": 0.35,
+      "noise_scale": 0.05,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.663,
+    "scale": 1.9
+  }
+}

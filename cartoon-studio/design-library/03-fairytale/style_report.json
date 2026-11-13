@@ -1,0 +1,113 @@
+{
+  "style": "03-fairytale",
+  "name": "Fairytale (Disney-inspired)",
+  "summary": "Graceful taller build, large sparkling eyes, pastel jewel palette, soft magical lighting.",
+  "accepted": 5,
+  "wanted": 5,
+  "status": "PASS",
+  "characters": [
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/03-fairytale/03-filix",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.649,
+      "id": "03-filix",
+      "name": "Filix",
+      "seconds": 24.2
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/03-fairytale/03-zerra",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.647,
+      "id": "03-zerra",
+      "name": "Zerra",
+      "seconds": 28.1
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/03-fairytale/03-mondo",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.615,
+      "id": "03-mondo",
+      "name": "Mondo",
+      "seconds": 19.5
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/03-fairytale/03-lubin",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.649,
+      "id": "03-lubin",
+      "name": "Lubin",
+      "seconds": 24.6
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/03-fairytale/03-fimble",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.52,
+      "id": "03-fimble",
+      "name": "Fimble",
+      "seconds": 22.2
+    }
+  ],
+  "rejected": [],
+  "environment": "/home/user/requirements.txt/cartoon-studio/design-library/03-fairytale/environment_concept.png",
+  "lineup": "/home/user/requirements.txt/cartoon-studio/design-library/03-fairytale/style_lineup.png"
+}

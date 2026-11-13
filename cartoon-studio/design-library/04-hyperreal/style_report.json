@@ -1,0 +1,113 @@
+{
+  "style": "04-hyperreal",
+  "name": "Hyperrealistic 3D Cartoon",
+  "summary": "Natural fur tones with micro surface texture, sheen and deep subsurface; filmic, low-saturation grade.",
+  "accepted": 5,
+  "wanted": 5,
+  "status": "PASS",
+  "characters": [
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/04-hyperreal/04-molix",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.575,
+      "id": "04-molix",
+      "name": "Molix",
+      "seconds": 27.2
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/04-hyperreal/04-bomo",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.608,
+      "id": "04-bomo",
+      "name": "Bomo",
+      "seconds": 22.3
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/04-hyperreal/04-samo",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.541,
+      "id": "04-samo",
+      "name": "Samo",
+      "seconds": 20.9
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/04-hyperreal/04-nobie",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.642,
+      "id": "04-nobie",
+      "name": "Nobie",
+      "seconds": 19.9
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/04-hyperreal/04-rulo",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.608,
+      "id": "04-rulo",
+      "name": "Rulo",
+      "seconds": 24.0
+    }
+  ],
+  "rejected": [],
+  "environment": "/home/user/requirements.txt/cartoon-studio/design-library/04-hyperreal/environment_concept.png",
+  "lineup": "/home/user/requirements.txt/cartoon-studio/design-library/04-hyperreal/style_lineup.png"
+}

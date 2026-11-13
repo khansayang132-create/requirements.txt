@@ -1,0 +1,66 @@
+{
+  "id": "02-jobie",
+  "name": "Jobie",
+  "style": "02-dynamic-3d",
+  "species": "bear",
+  "age": "teen",
+  "build": "round",
+  "colors": {
+    "body": "#679043",
+    "belly": "#E9F5DB",
+    "inner_ear": "#FFAACB",
+    "accent": "#BC4749",
+    "nose": "#F890A1"
+  },
+  "clothing": {
+    "accessory": "overalls",
+    "color": "#BC4749"
+  },
+  "personality": [
+    "scheming",
+    "unflappable",
+    "funny"
+  ],
+  "quirk": "collects shiny pebbles",
+  "seed": 1,
+  "proportions": {
+    "age": "teen",
+    "build": "round"
+  },
+  "style_name": "Dynamic 3D (DreamWorks-inspired)",
+  "render_spec": {
+    "id": "02-jobie",
+    "name": "Jobie",
+    "species": "bear",
+    "colors": {
+      "body": "#679043",
+      "belly": "#E9F5DB",
+      "inner_ear": "#FFAACB",
+      "accent": "#BC4749",
+      "nose": "#F890A1"
+    },
+    "clothing": {
+      "accessory": "overalls",
+      "color": "#BC4749"
+    },
+    "style": {
+      "mode": 1,
+      "head": 1.053,
+      "body": [
+        1.282,
+        0.917,
+        1.213
+      ],
+      "eye": 0.874,
+      "outline": 0,
+      "noise": 0.35,
+      "noise_scale": 0.05,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.652,
+    "scale": 1.9
+  }
+}

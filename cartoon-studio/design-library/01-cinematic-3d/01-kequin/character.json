@@ -1,0 +1,66 @@
+{
+  "id": "01-kequin",
+  "name": "Kequin",
+  "style": "01-cinematic-3d",
+  "species": "cat",
+  "age": "child",
+  "build": "tall",
+  "colors": {
+    "body": "#9795AA",
+    "belly": "#F3EEFA",
+    "inner_ear": "#F5ACC6",
+    "accent": "#F0B67F",
+    "nose": "#FF95A4"
+  },
+  "clothing": {
+    "accessory": "bow",
+    "color": "#F0B67F"
+  },
+  "personality": [
+    "curious",
+    "loyal",
+    "playful"
+  ],
+  "quirk": "keeps a pocket notebook",
+  "seed": 1,
+  "proportions": {
+    "age": "child",
+    "build": "tall"
+  },
+  "style_name": "Cinematic 3D (Pixar-inspired)",
+  "render_spec": {
+    "id": "01-kequin",
+    "name": "Kequin",
+    "species": "cat",
+    "colors": {
+      "body": "#9795AA",
+      "belly": "#F3EEFA",
+      "inner_ear": "#F5ACC6",
+      "accent": "#F0B67F",
+      "nose": "#FF95A4"
+    },
+    "clothing": {
+      "accessory": "bow",
+      "color": "#F0B67F"
+    },
+    "style": {
+      "mode": 1,
+      "head": 1.05,
+      "body": [
+        0.92,
+        1.12,
+        0.92
+      ],
+      "eye": 1.08,
+      "outline": 0,
+      "noise": 0.35,
+      "noise_scale": 0.05,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.596,
+    "scale": 1.9
+  }
+}

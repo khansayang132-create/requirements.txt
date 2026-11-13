@@ -1,0 +1,66 @@
+{
+  "id": "01-fibie",
+  "name": "Fibie",
+  "style": "01-cinematic-3d",
+  "species": "bear",
+  "age": "child",
+  "build": "standard",
+  "colors": {
+    "body": "#87BAEC",
+    "belly": "#F4F8FF",
+    "inner_ear": "#FAAFC0",
+    "accent": "#F2A541",
+    "nose": "#FF98AF"
+  },
+  "clothing": {
+    "accessory": "scarf",
+    "color": "#F2A541"
+  },
+  "personality": [
+    "earnest",
+    "determined",
+    "shy"
+  ],
+  "quirk": "hums when nervous",
+  "seed": 1,
+  "proportions": {
+    "age": "child",
+    "build": "standard"
+  },
+  "style_name": "Cinematic 3D (Pixar-inspired)",
+  "render_spec": {
+    "id": "01-fibie",
+    "name": "Fibie",
+    "species": "bear",
+    "colors": {
+      "body": "#87BAEC",
+      "belly": "#F4F8FF",
+      "inner_ear": "#FAAFC0",
+      "accent": "#F2A541",
+      "nose": "#FF98AF"
+    },
+    "clothing": {
+      "accessory": "scarf",
+      "color": "#F2A541"
+    },
+    "style": {
+      "mode": 1,
+      "head": 1.05,
+      "body": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "eye": 1.08,
+      "outline": 0,
+      "noise": 0.35,
+      "noise_scale": 0.05,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.627,
+    "scale": 1.9
+  }
+}

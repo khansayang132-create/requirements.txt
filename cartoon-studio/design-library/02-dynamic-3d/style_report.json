@@ -1,0 +1,113 @@
+{
+  "style": "02-dynamic-3d",
+  "name": "Dynamic 3D (DreamWorks-inspired)",
+  "summary": "Stockier, wider build, bigger head, stronger contrast and specular punch for exaggerated attitude.",
+  "accepted": 5,
+  "wanted": 5,
+  "status": "PASS",
+  "characters": [
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/02-dynamic-3d/02-jobie",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.652,
+      "id": "02-jobie",
+      "name": "Jobie",
+      "seconds": 24.4
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/02-dynamic-3d/02-nondo",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.569,
+      "id": "02-nondo",
+      "name": "Nondo",
+      "seconds": 23.2
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/02-dynamic-3d/02-bori",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.663,
+      "id": "02-bori",
+      "name": "Bori",
+      "seconds": 21.4
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/02-dynamic-3d/02-ruzzy",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.697,
+      "id": "02-ruzzy",
+      "name": "Ruzzy",
+      "seconds": 22.0
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/02-dynamic-3d/02-vilix",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.623,
+      "id": "02-vilix",
+      "name": "Vilix",
+      "seconds": 26.8
+    }
+  ],
+  "rejected": [],
+  "environment": "/home/user/requirements.txt/cartoon-studio/design-library/02-dynamic-3d/environment_concept.png",
+  "lineup": "/home/user/requirements.txt/cartoon-studio/design-library/02-dynamic-3d/style_lineup.png"
+}

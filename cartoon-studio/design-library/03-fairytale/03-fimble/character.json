@@ -1,0 +1,66 @@
+{
+  "id": "03-fimble",
+  "name": "Fimble",
+  "style": "03-fairytale",
+  "species": "cat",
+  "age": "adult",
+  "build": "tall",
+  "colors": {
+    "body": "#FED29A",
+    "belly": "#FFF8EE",
+    "inner_ear": "#FFADCC",
+    "accent": "#4361EE",
+    "nose": "#FF98A4"
+  },
+  "clothing": {
+    "accessory": "scarf",
+    "color": "#4361EE"
+  },
+  "personality": [
+    "kind-hearted",
+    "brave",
+    "funny"
+  ],
+  "quirk": "hums when nervous",
+  "seed": 1,
+  "proportions": {
+    "age": "adult",
+    "build": "tall"
+  },
+  "style_name": "Fairytale (Disney-inspired)",
+  "render_spec": {
+    "id": "03-fimble",
+    "name": "Fimble",
+    "species": "cat",
+    "colors": {
+      "body": "#FED29A",
+      "belly": "#FFF8EE",
+      "inner_ear": "#FFADCC",
+      "accent": "#4361EE",
+      "nose": "#FF98A4"
+    },
+    "clothing": {
+      "accessory": "scarf",
+      "color": "#4361EE"
+    },
+    "style": {
+      "mode": 1,
+      "head": 0.936,
+      "body": [
+        0.989,
+        1.305,
+        0.989
+      ],
+      "eye": 1.012,
+      "outline": 0.35,
+      "noise": 0.35,
+      "noise_scale": 0.05,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.52,
+    "scale": 1.9
+  }
+}

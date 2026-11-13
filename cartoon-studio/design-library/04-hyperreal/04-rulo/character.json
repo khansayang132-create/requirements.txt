@@ -1,0 +1,66 @@
+{
+  "id": "04-rulo",
+  "name": "Rulo",
+  "style": "04-hyperreal",
+  "species": "bunny",
+  "age": "teen",
+  "build": "stocky",
+  "colors": {
+    "body": "#D0BEA7",
+    "belly": "#F2EFE8",
+    "inner_ear": "#F8B0C7",
+    "accent": "#5A3E36",
+    "nose": "#FF87A4"
+  },
+  "clothing": {
+    "accessory": "bow",
+    "color": "#5A3E36"
+  },
+  "personality": [
+    "resourceful",
+    "quiet",
+    "shy"
+  ],
+  "quirk": "names every cloud",
+  "seed": 1,
+  "proportions": {
+    "age": "teen",
+    "build": "stocky"
+  },
+  "style_name": "Hyperrealistic 3D Cartoon",
+  "render_spec": {
+    "id": "04-rulo",
+    "name": "Rulo",
+    "species": "bunny",
+    "colors": {
+      "body": "#D0BEA7",
+      "belly": "#F2EFE8",
+      "inner_ear": "#F8B0C7",
+      "accent": "#5A3E36",
+      "nose": "#FF87A4"
+    },
+    "clothing": {
+      "accessory": "bow",
+      "color": "#5A3E36"
+    },
+    "style": {
+      "mode": 5,
+      "head": 0.921,
+      "body": [
+        1.219,
+        0.933,
+        1.187
+      ],
+      "eye": 0.902,
+      "outline": 0,
+      "noise": 0.35,
+      "noise_scale": 0.22,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.608,
+    "scale": 1.9
+  }
+}

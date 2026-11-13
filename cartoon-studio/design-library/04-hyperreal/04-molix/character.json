@@ -1,0 +1,66 @@
+{
+  "id": "04-molix",
+  "name": "Molix",
+  "style": "04-hyperreal",
+  "species": "elephant",
+  "age": "child",
+  "build": "tall",
+  "colors": {
+    "body": "#906A4C",
+    "belly": "#D9C3A5",
+    "inner_ear": "#F8B9C6",
+    "accent": "#3B5249",
+    "nose": "#FF94A6"
+  },
+  "clothing": {
+    "accessory": "bandana",
+    "color": "#3B5249"
+  },
+  "personality": [
+    "observant",
+    "proud",
+    "playful"
+  ],
+  "quirk": "names every cloud",
+  "seed": 1,
+  "proportions": {
+    "age": "child",
+    "build": "tall"
+  },
+  "style_name": "Hyperrealistic 3D Cartoon",
+  "render_spec": {
+    "id": "04-molix",
+    "name": "Molix",
+    "species": "elephant",
+    "colors": {
+      "body": "#906A4C",
+      "belly": "#D9C3A5",
+      "inner_ear": "#F8B9C6",
+      "accent": "#3B5249",
+      "nose": "#FF94A6"
+    },
+    "clothing": {
+      "accessory": "bandana",
+      "color": "#3B5249"
+    },
+    "style": {
+      "mode": 5,
+      "head": 0.98,
+      "body": [
+        0.92,
+        1.12,
+        0.92
+      ],
+      "eye": 0.95,
+      "outline": 0,
+      "noise": 0.35,
+      "noise_scale": 0.22,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.575,
+    "scale": 1.615
+  }
+}

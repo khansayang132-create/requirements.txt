@@ -1,0 +1,383 @@
+{
+  "episode": "mosslight-valley-runaway-kite-1",
+  "scenes": [
+    {
+      "number": 1,
+      "act": "hook",
+      "duration": 0.0,
+      "location": "Valley panorama",
+      "environment": "hilltop",
+      "characters": [
+        "Pipkin"
+      ],
+      "actions": {
+        "Pipkin": "nod"
+      },
+      "dialogue": {
+        "speaker": "Narrator",
+        "text": "Whoosh! The wind is strong in Valley panorama today."
+      },
+      "camera_angle": "wide establishing",
+      "camera_movement": "slow push-in",
+      "lighting": "warm key 45°, cool fill, teal/orange rims",
+      "background": "painted hilltop set",
+      "sound_effects": [
+        "whoosh"
+      ],
+      "music": "bright motif, light",
+      "transition": "cut"
+    },
+    {
+      "number": 2,
+      "act": "hook",
+      "duration": 0.0,
+      "location": "Valley panorama",
+      "environment": "hilltop",
+      "characters": [
+        "Pipkin"
+      ],
+      "actions": {
+        "Pipkin": "nod"
+      },
+      "dialogue": {
+        "speaker": "Pipkin",
+        "text": "My red kite! It is flying away!"
+      },
+      "camera_angle": "wide establishing",
+      "camera_movement": "slow push-in",
+      "lighting": "warm key 45°, cool fill, teal/orange rims",
+      "background": "painted hilltop set",
+      "sound_effects": [],
+      "music": "bright motif, light",
+      "transition": "cut"
+    },
+    {
+      "number": 3,
+      "act": "introduction",
+      "duration": 0.0,
+      "location": "Valley panorama",
+      "environment": "hilltop",
+      "characters": [
+        "Pipkin",
+        "Brindle"
+      ],
+      "actions": {
+        "Pipkin": "nod",
+        "Brindle": "wave"
+      },
+      "dialogue": {
+        "speaker": "Brindle",
+        "text": "Hi, Pipkin! I am Brindle. What is wrong?"
+      },
+      "camera_angle": "medium two-shot",
+      "camera_movement": "gentle pan",
+      "lighting": "warm key 45°, cool fill, teal/orange rims",
+      "background": "painted hilltop set",
+      "sound_effects": [],
+      "music": "theme, bouncy",
+      "transition": "cut"
+    },
+    {
+      "number": 4,
+      "act": "introduction",
+      "duration": 0.0,
+      "location": "Valley panorama",
+      "environment": "hilltop",
+      "characters": [
+        "Pipkin",
+        "Brindle"
+      ],
+      "actions": {
+        "Pipkin": "sad",
+        "Brindle": "nod"
+      },
+      "dialogue": {
+        "speaker": "Pipkin",
+        "text": "The wind took my kite. I can't see it now."
+      },
+      "camera_angle": "medium two-shot",
+      "camera_movement": "gentle pan",
+      "lighting": "warm key 45°, cool fill, teal/orange rims",
+      "background": "painted hilltop set",
+      "sound_effects": [],
+      "music": "theme, bouncy",
+      "transition": "cut"
+    },
+    {
+      "number": 5,
+      "act": "development",
+      "duration": 0.0,
+      "location": "Valley panorama",
+      "environment": "hilltop",
+      "characters": [
+        "Pipkin",
+        "Brindle"
+      ],
+      "actions": {
+        "Pipkin": "nod",
+        "Brindle": "think"
+      },
+      "dialogue": {
+        "speaker": "Narrator",
+        "text": "Pipkin feels sad. Brindle has an idea."
+      },
+      "camera_angle": "medium",
+      "camera_movement": "follow",
+      "lighting": "warm key 45°, cool fill, teal/orange rims",
+      "background": "painted hilltop set",
+      "sound_effects": [],
+      "music": "curious pizzicato",
+      "transition": "cut"
+    },
+    {
+      "number": 6,
+      "act": "development",
+      "duration": 0.0,
+      "location": "Valley panorama",
+      "environment": "hilltop",
+      "characters": [
+        "Pipkin",
+        "Brindle"
+      ],
+      "actions": {
+        "Pipkin": "nod",
+        "Brindle": "point"
+      },
+      "dialogue": {
+        "speaker": "Brindle",
+        "text": "Let's look for clues together. Kites follow the wind!"
+      },
+      "camera_angle": "medium",
+      "camera_movement": "follow",
+      "lighting": "warm key 45°, cool fill, teal/orange rims",
+      "background": "painted hilltop set",
+      "sound_effects": [],
+      "music": "curious pizzicato",
+      "transition": "cut"
+    },
+    {
+      "number": 7,
+      "act": "conflict",
+      "duration": 0.0,
+      "location": "Valley panorama",
+      "environment": "hilltop",
+      "characters": [
+        "Pipkin",
+        "Brindle"
+      ],
+      "actions": {
+        "Pipkin": "point",
+        "Brindle": "nod"
+      },
+      "dialogue": {
+        "speaker": "Narrator",
+        "text": "The leaves are blowing toward the trees. That is a clue!"
+      },
+      "camera_angle": "close-up",
+      "camera_movement": "slight dolly-in",
+      "lighting": "warm key 45°, cool fill, teal/orange rims",
+      "background": "painted hilltop set",
+      "sound_effects": [],
+      "music": "soft minor, slower",
+      "transition": "cut"
+    },
+    {
+      "number": 8,
+      "act": "conflict",
+      "duration": 0.0,
+      "location": "Valley panorama",
+      "environment": "hilltop",
+      "characters": [
+        "Pipkin",
+        "Brindle",
+        "Oakley"
+      ],
+      "actions": {
+        "Pipkin": "nod",
+        "Brindle": "idle",
+        "Oakley": "wave"
+      },
+      "dialogue": {
+        "speaker": "Oakley",
+        "text": "Hello! Is that red kite yours? It is in my tree."
+      },
+      "camera_angle": "close-up",
+      "camera_movement": "slight dolly-in",
+      "lighting": "warm key 45°, cool fill, teal/orange rims",
+      "background": "painted hilltop set",
+      "sound_effects": [],
+      "music": "soft minor, slower",
+      "transition": "cut"
+    },
+    {
+      "number": 9,
+      "act": "climax",
+      "duration": 0.0,
+      "location": "Valley panorama",
+      "environment": "hilltop",
+      "characters": [
+        "Pipkin",
+        "Brindle",
+        "Oakley"
+      ],
+      "actions": {
+        "Pipkin": "think",
+        "Brindle": "nod",
+        "Oakley": "idle"
+      },
+      "dialogue": {
+        "speaker": "Pipkin",
+        "text": "Yes! But it is so high. How can we get it?"
+      },
+      "camera_angle": "low-angle hero",
+      "camera_movement": "quick push-in",
+      "lighting": "warm key 45°, cool fill, teal/orange rims",
+      "background": "painted hilltop set",
+      "sound_effects": [],
+      "music": "build, drums",
+      "transition": "cut"
+    },
+    {
+      "number": 10,
+      "act": "climax",
+      "duration": 0.0,
+      "location": "Valley panorama",
+      "environment": "hilltop",
+      "characters": [
+        "Pipkin",
+        "Brindle",
+        "Oakley"
+      ],
+      "actions": {
+        "Pipkin": "nod",
+        "Brindle": "idle",
+        "Oakley": "tiptoe"
+      },
+      "dialogue": {
+        "speaker": "Oakley",
+        "text": "I am tall. Let me reach it, very gently."
+      },
+      "camera_angle": "low-angle hero",
+      "camera_movement": "quick push-in",
+      "lighting": "warm key 45°, cool fill, teal/orange rims",
+      "background": "painted hilltop set",
+      "sound_effects": [],
+      "music": "build, drums",
+      "transition": "cut"
+    },
+    {
+      "number": 11,
+      "act": "resolution",
+      "duration": 0.0,
+      "location": "Valley panorama",
+      "environment": "hilltop",
+      "characters": [
+        "Pipkin",
+        "Brindle",
+        "Oakley"
+      ],
+      "actions": {
+        "Pipkin": "cheer",
+        "Brindle": "clap",
+        "Oakley": "idle"
+      },
+      "dialogue": {
+        "speaker": "Narrator",
+        "text": "Up, up, up, and down. The kite is safe!"
+      },
+      "camera_angle": "medium wide",
+      "camera_movement": "slow pull-back",
+      "lighting": "warm key 45°, cool fill, teal/orange rims",
+      "background": "painted hilltop set",
+      "sound_effects": [
+        "ding"
+      ],
+      "music": "warm theme returns",
+      "transition": "cut"
+    },
+    {
+      "number": 12,
+      "act": "resolution",
+      "duration": 0.0,
+      "location": "Valley panorama",
+      "environment": "hilltop",
+      "characters": [
+        "Pipkin",
+        "Brindle",
+        "Oakley"
+      ],
+      "actions": {
+        "Pipkin": "hop",
+        "Brindle": "idle",
+        "Oakley": "idle"
+      },
+      "dialogue": {
+        "speaker": "Pipkin",
+        "text": "Thank you, Oakley! Thank you, Brindle!"
+      },
+      "camera_angle": "medium wide",
+      "camera_movement": "slow pull-back",
+      "lighting": "warm key 45°, cool fill, teal/orange rims",
+      "background": "painted hilltop set",
+      "sound_effects": [],
+      "music": "warm theme returns",
+      "transition": "cut"
+    },
+    {
+      "number": 13,
+      "act": "ending",
+      "duration": 0.0,
+      "location": "Valley panorama",
+      "environment": "hilltop",
+      "characters": [
+        "Pipkin",
+        "Brindle",
+        "Oakley"
+      ],
+      "actions": {
+        "Pipkin": "hug",
+        "Brindle": "hug",
+        "Oakley": "nod"
+      },
+      "dialogue": {
+        "speaker": "Narrator",
+        "text": "When we help each other, big problems get smaller."
+      },
+      "camera_angle": "wide",
+      "camera_movement": "crane up",
+      "lighting": "warm key 45°, cool fill, teal/orange rims",
+      "background": "painted hilltop set",
+      "sound_effects": [],
+      "music": "sting + end theme",
+      "transition": "cut"
+    },
+    {
+      "number": 14,
+      "act": "ending",
+      "duration": 0.0,
+      "location": "Valley panorama",
+      "environment": "hilltop",
+      "characters": [
+        "Pipkin",
+        "Brindle",
+        "Oakley"
+      ],
+      "actions": {
+        "Pipkin": "nod",
+        "Brindle": "wave",
+        "Oakley": "idle"
+      },
+      "dialogue": {
+        "speaker": "Brindle",
+        "text": "What would you do if your kite flew away?"
+      },
+      "camera_angle": "wide",
+      "camera_movement": "crane up",
+      "lighting": "warm key 45°, cool fill, teal/orange rims",
+      "background": "painted hilltop set",
+      "sound_effects": [],
+      "music": "sting + end theme",
+      "transition": "cut"
+    }
+  ]
+}

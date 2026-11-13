@@ -1,0 +1,66 @@
+{
+  "id": "03-mondo",
+  "name": "Mondo",
+  "style": "03-fairytale",
+  "species": "duck",
+  "age": "teen",
+  "build": "stocky",
+  "colors": {
+    "body": "#FAFFF6",
+    "belly": "#FFF7E6",
+    "inner_ear": "#FFB3C1",
+    "accent": "#E07A9F",
+    "nose": "#FFA526"
+  },
+  "clothing": {
+    "accessory": "scarf",
+    "color": "#E07A9F"
+  },
+  "personality": [
+    "dreamy",
+    "graceful",
+    "shy"
+  ],
+  "quirk": "laughs before the punchline",
+  "seed": 1,
+  "proportions": {
+    "age": "teen",
+    "build": "stocky"
+  },
+  "style_name": "Fairytale (Disney-inspired)",
+  "render_spec": {
+    "id": "03-mondo",
+    "name": "Mondo",
+    "species": "duck",
+    "colors": {
+      "body": "#FAFFF6",
+      "belly": "#FFF7E6",
+      "inner_ear": "#FFB3C1",
+      "accent": "#E07A9F",
+      "nose": "#FFA526"
+    },
+    "clothing": {
+      "accessory": "scarf",
+      "color": "#E07A9F"
+    },
+    "style": {
+      "mode": 1,
+      "head": 0.978,
+      "body": [
+        1.17,
+        0.97,
+        1.14
+      ],
+      "eye": 1.092,
+      "outline": 0.35,
+      "noise": 0.35,
+      "noise_scale": 0.05,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.615,
+    "scale": 1.9
+  }
+}

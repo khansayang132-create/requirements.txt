@@ -1,0 +1,66 @@
+{
+  "id": "02-nondo",
+  "name": "Nondo",
+  "style": "02-dynamic-3d",
+  "species": "bunny",
+  "age": "adult",
+  "build": "tall",
+  "colors": {
+    "body": "#EC8F3B",
+    "belly": "#FFF3E0",
+    "inner_ear": "#FDB7CB",
+    "accent": "#2D3047",
+    "nose": "#FF8CAE"
+  },
+  "clothing": {
+    "accessory": "bow",
+    "color": "#2D3047"
+  },
+  "personality": [
+    "loud-hearted",
+    "unflappable",
+    "careful"
+  ],
+  "quirk": "laughs before the punchline",
+  "seed": 1,
+  "proportions": {
+    "age": "adult",
+    "build": "tall"
+  },
+  "style_name": "Dynamic 3D (DreamWorks-inspired)",
+  "render_spec": {
+    "id": "02-nondo",
+    "name": "Nondo",
+    "species": "bunny",
+    "colors": {
+      "body": "#EC8F3B",
+      "belly": "#FFF3E0",
+      "inner_ear": "#FDB7CB",
+      "accent": "#2D3047",
+      "nose": "#FF8CAE"
+    },
+    "clothing": {
+      "accessory": "bow",
+      "color": "#2D3047"
+    },
+    "style": {
+      "mode": 1,
+      "head": 1.008,
+      "body": [
+        1.113,
+        1.179,
+        1.072
+      ],
+      "eye": 0.81,
+      "outline": 0,
+      "noise": 0.35,
+      "noise_scale": 0.05,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.569,
+    "scale": 1.615
+  }
+}

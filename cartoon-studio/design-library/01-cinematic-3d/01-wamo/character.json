@@ -1,0 +1,66 @@
+{
+  "id": "01-wamo",
+  "name": "Wamo",
+  "style": "01-cinematic-3d",
+  "species": "elephant",
+  "age": "child",
+  "build": "stocky",
+  "colors": {
+    "body": "#E5A271",
+    "belly": "#FFF1DE",
+    "inner_ear": "#F7ABC0",
+    "accent": "#3D7DD8",
+    "nose": "#FE8CA1"
+  },
+  "clothing": {
+    "accessory": "bandana",
+    "color": "#3D7DD8"
+  },
+  "personality": [
+    "hopeful",
+    "earnest",
+    "bold"
+  ],
+  "quirk": "sleeps with one ear up",
+  "seed": 1,
+  "proportions": {
+    "age": "child",
+    "build": "stocky"
+  },
+  "style_name": "Cinematic 3D (Pixar-inspired)",
+  "render_spec": {
+    "id": "01-wamo",
+    "name": "Wamo",
+    "species": "elephant",
+    "colors": {
+      "body": "#E5A271",
+      "belly": "#FFF1DE",
+      "inner_ear": "#F7ABC0",
+      "accent": "#3D7DD8",
+      "nose": "#FE8CA1"
+    },
+    "clothing": {
+      "accessory": "bandana",
+      "color": "#3D7DD8"
+    },
+    "style": {
+      "mode": 1,
+      "head": 1.05,
+      "body": [
+        1.15,
+        0.88,
+        1.12
+      ],
+      "eye": 1.08,
+      "outline": 0,
+      "noise": 0.35,
+      "noise_scale": 0.05,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.661,
+    "scale": 1.373
+  }
+}

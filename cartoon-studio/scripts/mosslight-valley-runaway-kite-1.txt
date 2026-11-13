@@ -1,0 +1,14 @@
+[hook] Narrator: Whoosh! The wind is strong in Valley panorama today.
+[hook] Pipkin: My red kite! It is flying away!
+[introduction] Brindle: Hi, Pipkin! I am Brindle. What is wrong?
+[introduction] Pipkin: The wind took my kite. I can't see it now.
+[development] Narrator: Pipkin feels sad. Brindle has an idea.
+[development] Brindle: Let's look for clues together. Kites follow the wind!
+[conflict] Narrator: The leaves are blowing toward the trees. That is a clue!
+[conflict] Oakley: Hello! Is that red kite yours? It is in my tree.
+[climax] Pipkin: Yes! But it is so high. How can we get it?
+[climax] Oakley: I am tall. Let me reach it, very gently.
+[resolution] Narrator: Up, up, up, and down. The kite is safe!
+[resolution] Pipkin: Thank you, Oakley! Thank you, Brindle!
+[ending] Narrator: When we help each other, big problems get smaller.
+[ending] Brindle: What would you do if your kite flew away?

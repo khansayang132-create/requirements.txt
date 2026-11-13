@@ -1,0 +1,66 @@
+{
+  "id": "03-zerra",
+  "name": "Zerra",
+  "style": "03-fairytale",
+  "species": "elephant",
+  "age": "child",
+  "build": "stocky",
+  "colors": {
+    "body": "#94C7FF",
+    "belly": "#F5F9FF",
+    "inner_ear": "#FFB3BE",
+    "accent": "#FFD166",
+    "nose": "#FC8FA6"
+  },
+  "clothing": {
+    "accessory": "scarf",
+    "color": "#FFD166"
+  },
+  "personality": [
+    "brave",
+    "graceful",
+    "bold"
+  ],
+  "quirk": "never walks past a puddle",
+  "seed": 1,
+  "proportions": {
+    "age": "child",
+    "build": "stocky"
+  },
+  "style_name": "Fairytale (Disney-inspired)",
+  "render_spec": {
+    "id": "03-zerra",
+    "name": "Zerra",
+    "species": "elephant",
+    "colors": {
+      "body": "#94C7FF",
+      "belly": "#F5F9FF",
+      "inner_ear": "#FFB3BE",
+      "accent": "#FFD166",
+      "nose": "#FC8FA6"
+    },
+    "clothing": {
+      "accessory": "scarf",
+      "color": "#FFD166"
+    },
+    "style": {
+      "mode": 1,
+      "head": 1.04,
+      "body": [
+        1.104,
+        0.915,
+        1.075
+      ],
+      "eye": 1.15,
+      "outline": 0.35,
+      "noise": 0.35,
+      "noise_scale": 0.05,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.647,
+    "scale": 1.373
+  }
+}

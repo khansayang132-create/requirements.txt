@@ -1,0 +1,66 @@
+{
+  "id": "01-moppa",
+  "name": "Moppa",
+  "style": "01-cinematic-3d",
+  "species": "bunny",
+  "age": "child",
+  "build": "round",
+  "colors": {
+    "body": "#6F9681",
+    "belly": "#EEF5EC",
+    "inner_ear": "#FFB2CC",
+    "accent": "#D1495B",
+    "nose": "#FF8FAB"
+  },
+  "clothing": {
+    "accessory": "bow",
+    "color": "#D1495B"
+  },
+  "personality": [
+    "earnest",
+    "hopeful",
+    "bold"
+  ],
+  "quirk": "sleeps with one ear up",
+  "seed": 1,
+  "proportions": {
+    "age": "child",
+    "build": "round"
+  },
+  "style_name": "Cinematic 3D (Pixar-inspired)",
+  "render_spec": {
+    "id": "01-moppa",
+    "name": "Moppa",
+    "species": "bunny",
+    "colors": {
+      "body": "#6F9681",
+      "belly": "#EEF5EC",
+      "inner_ear": "#FFB2CC",
+      "accent": "#D1495B",
+      "nose": "#FF8FAB"
+    },
+    "clothing": {
+      "accessory": "bow",
+      "color": "#D1495B"
+    },
+    "style": {
+      "mode": 1,
+      "head": 1.05,
+      "body": [
+        1.12,
+        0.92,
+        1.1
+      ],
+      "eye": 1.08,
+      "outline": 0,
+      "noise": 0.35,
+      "noise_scale": 0.05,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.65,
+    "scale": 1.9
+  }
+}

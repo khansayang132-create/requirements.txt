@@ -1,0 +1,66 @@
+{
+  "id": "02-vilix",
+  "name": "Vilix",
+  "style": "02-dynamic-3d",
+  "species": "elephant",
+  "age": "adult",
+  "build": "round",
+  "colors": {
+    "body": "#4778A6",
+    "belly": "#E3EEF8",
+    "inner_ear": "#F9AACE",
+    "accent": "#F2C14E",
+    "nose": "#FF95AC"
+  },
+  "clothing": {
+    "accessory": "scarf",
+    "color": "#F2C14E"
+  },
+  "personality": [
+    "scheming",
+    "cocky",
+    "bold"
+  ],
+  "quirk": "sleeps with one ear up",
+  "seed": 1,
+  "proportions": {
+    "age": "adult",
+    "build": "round"
+  },
+  "style_name": "Dynamic 3D (DreamWorks-inspired)",
+  "render_spec": {
+    "id": "02-vilix",
+    "name": "Vilix",
+    "species": "elephant",
+    "colors": {
+      "body": "#4778A6",
+      "belly": "#E3EEF8",
+      "inner_ear": "#F9AACE",
+      "accent": "#F2C14E",
+      "nose": "#FF95AC"
+    },
+    "clothing": {
+      "accessory": "scarf",
+      "color": "#F2C14E"
+    },
+    "style": {
+      "mode": 1,
+      "head": 1.008,
+      "body": [
+        1.355,
+        0.969,
+        1.281
+      ],
+      "eye": 0.81,
+      "outline": 0,
+      "noise": 0.35,
+      "noise_scale": 0.05,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.623,
+    "scale": 1.615
+  }
+}

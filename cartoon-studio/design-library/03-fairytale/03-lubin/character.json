@@ -1,0 +1,66 @@
+{
+  "id": "03-lubin",
+  "name": "Lubin",
+  "style": "03-fairytale",
+  "species": "bunny",
+  "age": "child",
+  "build": "stocky",
+  "colors": {
+    "body": "#D4ACCF",
+    "belly": "#FAF5FF",
+    "inner_ear": "#FFA9CF",
+    "accent": "#2A9D8F",
+    "nose": "#FF89AF"
+  },
+  "clothing": {
+    "accessory": "scarf",
+    "color": "#2A9D8F"
+  },
+  "personality": [
+    "kind-hearted",
+    "gentle",
+    "careful"
+  ],
+  "quirk": "hums when nervous",
+  "seed": 1,
+  "proportions": {
+    "age": "child",
+    "build": "stocky"
+  },
+  "style_name": "Fairytale (Disney-inspired)",
+  "render_spec": {
+    "id": "03-lubin",
+    "name": "Lubin",
+    "species": "bunny",
+    "colors": {
+      "body": "#D4ACCF",
+      "belly": "#FAF5FF",
+      "inner_ear": "#FFA9CF",
+      "accent": "#2A9D8F",
+      "nose": "#FF89AF"
+    },
+    "clothing": {
+      "accessory": "scarf",
+      "color": "#2A9D8F"
+    },
+    "style": {
+      "mode": 1,
+      "head": 1.04,
+      "body": [
+        1.104,
+        0.915,
+        1.075
+      ],
+      "eye": 1.15,
+      "outline": 0.35,
+      "noise": 0.35,
+      "noise_scale": 0.05,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.649,
+    "scale": 1.9
+  }
+}

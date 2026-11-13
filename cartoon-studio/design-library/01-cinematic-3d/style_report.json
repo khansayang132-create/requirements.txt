@@ -1,0 +1,113 @@
+{
+  "style": "01-cinematic-3d",
+  "name": "Cinematic 3D (Pixar-inspired)",
+  "summary": "Soft global-light look, glossy highlights, warm subsurface, no outlines, emotional faces.",
+  "accepted": 5,
+  "wanted": 5,
+  "status": "PASS",
+  "characters": [
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/01-cinematic-3d/01-wamo",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.661,
+      "id": "01-wamo",
+      "name": "Wamo",
+      "seconds": 26.4
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/01-cinematic-3d/01-fibie",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.627,
+      "id": "01-fibie",
+      "name": "Fibie",
+      "seconds": 23.9
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/01-cinematic-3d/01-luppa",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.593,
+      "id": "01-luppa",
+      "name": "Luppa",
+      "seconds": 24.9
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/01-cinematic-3d/01-kequin",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.596,
+      "id": "01-kequin",
+      "name": "Kequin",
+      "seconds": 26.5
+    },
+    {
+      "dir": "/home/user/requirements.txt/cartoon-studio/design-library/01-cinematic-3d/01-moppa",
+      "files": [
+        "views/front.png",
+        "views/three-quarter.png",
+        "views/side.png",
+        "views/back.png",
+        "turnaround.png",
+        "expression_sheet.png",
+        "proportions.png",
+        "palette.png",
+        "pose_sheet.png",
+        "character_sheet.png",
+        "character.json"
+      ],
+      "head_ratio": 0.65,
+      "id": "01-moppa",
+      "name": "Moppa",
+      "seconds": 28.8
+    }
+  ],
+  "rejected": [],
+  "environment": "/home/user/requirements.txt/cartoon-studio/design-library/01-cinematic-3d/environment_concept.png",
+  "lineup": "/home/user/requirements.txt/cartoon-studio/design-library/01-cinematic-3d/style_lineup.png"
+}

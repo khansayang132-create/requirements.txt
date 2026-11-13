@@ -1,0 +1,66 @@
+{
+  "id": "04-nobie",
+  "name": "Nobie",
+  "style": "04-hyperreal",
+  "species": "duck",
+  "age": "child",
+  "build": "stocky",
+  "colors": {
+    "body": "#A36A59",
+    "belly": "#E6D3B3",
+    "inner_ear": "#FAB8D1",
+    "accent": "#4A6741",
+    "nose": "#FF9D31"
+  },
+  "clothing": {
+    "accessory": "boots",
+    "color": "#4A6741"
+  },
+  "personality": [
+    "quiet",
+    "observant",
+    "kind"
+  ],
+  "quirk": "never walks past a puddle",
+  "seed": 1,
+  "proportions": {
+    "age": "child",
+    "build": "stocky"
+  },
+  "style_name": "Hyperrealistic 3D Cartoon",
+  "render_spec": {
+    "id": "04-nobie",
+    "name": "Nobie",
+    "species": "duck",
+    "colors": {
+      "body": "#A36A59",
+      "belly": "#E6D3B3",
+      "inner_ear": "#FAB8D1",
+      "accent": "#4A6741",
+      "nose": "#FF9D31"
+    },
+    "clothing": {
+      "accessory": "boots",
+      "color": "#4A6741"
+    },
+    "style": {
+      "mode": 5,
+      "head": 0.98,
+      "body": [
+        1.15,
+        0.88,
+        1.12
+      ],
+      "eye": 0.95,
+      "outline": 0,
+      "noise": 0.35,
+      "noise_scale": 0.22,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.642,
+    "scale": 1.9
+  }
+}

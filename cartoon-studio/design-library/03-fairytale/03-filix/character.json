@@ -1,0 +1,66 @@
+{
+  "id": "03-filix",
+  "name": "Filix",
+  "style": "03-fairytale",
+  "species": "bear",
+  "age": "child",
+  "build": "stocky",
+  "colors": {
+    "body": "#FFD0E9",
+    "belly": "#FFF5FA",
+    "inner_ear": "#F6B7C3",
+    "accent": "#6C5CE7",
+    "nose": "#FF88AC"
+  },
+  "clothing": {
+    "accessory": "overalls",
+    "color": "#6C5CE7"
+  },
+  "personality": [
+    "gentle",
+    "dreamy",
+    "shy"
+  ],
+  "quirk": "collects shiny pebbles",
+  "seed": 1,
+  "proportions": {
+    "age": "child",
+    "build": "stocky"
+  },
+  "style_name": "Fairytale (Disney-inspired)",
+  "render_spec": {
+    "id": "03-filix",
+    "name": "Filix",
+    "species": "bear",
+    "colors": {
+      "body": "#FFD0E9",
+      "belly": "#FFF5FA",
+      "inner_ear": "#F6B7C3",
+      "accent": "#6C5CE7",
+      "nose": "#FF88AC"
+    },
+    "clothing": {
+      "accessory": "overalls",
+      "color": "#6C5CE7"
+    },
+    "style": {
+      "mode": 1,
+      "head": 1.04,
+      "body": [
+        1.104,
+        0.915,
+        1.075
+      ],
+      "eye": 1.15,
+      "outline": 0.35,
+      "noise": 0.35,
+      "noise_scale": 0.05,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.649,
+    "scale": 1.9
+  }
+}

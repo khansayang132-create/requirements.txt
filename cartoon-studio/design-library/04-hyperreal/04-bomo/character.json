@@ -1,0 +1,66 @@
+{
+  "id": "04-bomo",
+  "name": "Bomo",
+  "style": "04-hyperreal",
+  "species": "cat",
+  "age": "teen",
+  "build": "stocky",
+  "colors": {
+    "body": "#BBADA7",
+    "belly": "#ECE8E1",
+    "inner_ear": "#FBB6D1",
+    "accent": "#7B2D26",
+    "nose": "#F691AB"
+  },
+  "clothing": {
+    "accessory": "scarf",
+    "color": "#7B2D26"
+  },
+  "personality": [
+    "observant",
+    "weathered",
+    "bold"
+  ],
+  "quirk": "names every cloud",
+  "seed": 1,
+  "proportions": {
+    "age": "teen",
+    "build": "stocky"
+  },
+  "style_name": "Hyperrealistic 3D Cartoon",
+  "render_spec": {
+    "id": "04-bomo",
+    "name": "Bomo",
+    "species": "cat",
+    "colors": {
+      "body": "#BBADA7",
+      "belly": "#ECE8E1",
+      "inner_ear": "#FBB6D1",
+      "accent": "#7B2D26",
+      "nose": "#F691AB"
+    },
+    "clothing": {
+      "accessory": "scarf",
+      "color": "#7B2D26"
+    },
+    "style": {
+      "mode": 5,
+      "head": 0.921,
+      "body": [
+        1.219,
+        0.933,
+        1.187
+      ],
+      "eye": 0.902,
+      "outline": 0,
+      "noise": 0.35,
+      "noise_scale": 0.22,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.608,
+    "scale": 1.9
+  }
+}

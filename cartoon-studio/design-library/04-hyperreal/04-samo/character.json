@@ -1,0 +1,66 @@
+{
+  "id": "04-samo",
+  "name": "Samo",
+  "style": "04-hyperreal",
+  "species": "bear",
+  "age": "teen",
+  "build": "tall",
+  "colors": {
+    "body": "#654444",
+    "belly": "#C9AE8C",
+    "inner_ear": "#F6ADBE",
+    "accent": "#2F4858",
+    "nose": "#F891A2"
+  },
+  "clothing": {
+    "accessory": "bandana",
+    "color": "#2F4858"
+  },
+  "personality": [
+    "quiet",
+    "proud",
+    "bold"
+  ],
+  "quirk": "hums when nervous",
+  "seed": 1,
+  "proportions": {
+    "age": "teen",
+    "build": "tall"
+  },
+  "style_name": "Hyperrealistic 3D Cartoon",
+  "render_spec": {
+    "id": "04-samo",
+    "name": "Samo",
+    "species": "bear",
+    "colors": {
+      "body": "#654444",
+      "belly": "#C9AE8C",
+      "inner_ear": "#F6ADBE",
+      "accent": "#2F4858",
+      "nose": "#F891A2"
+    },
+    "clothing": {
+      "accessory": "bandana",
+      "color": "#2F4858"
+    },
+    "style": {
+      "mode": 5,
+      "head": 0.921,
+      "body": [
+        0.975,
+        1.187,
+        0.975
+      ],
+      "eye": 0.902,
+      "outline": 0,
+      "noise": 0.35,
+      "noise_scale": 0.22,
+      "glow": 0.0,
+      "glow_color": "#40E0FF"
+    }
+  },
+  "measured": {
+    "head_ratio": 0.541,
+    "scale": 1.9
+  }
+}
