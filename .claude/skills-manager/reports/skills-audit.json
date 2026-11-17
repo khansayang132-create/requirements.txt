@@ -1,6 +1,6 @@
 {
   "duplicates": {},
-  "generated_at": "2026-11-15T12:14:12+00:00",
+  "generated_at": "2026-11-17T13:47:59+00:00",
   "skills": [
     {
       "allowed_tools": "",
@@ -23,13 +23,6 @@
       "errors": [],
       "findings": [
         {
-          "file": "scripts/check.test.mjs",
-          "line": 5,
-          "message": "runs external commands",
-          "rule": "SHELL_EXEC",
-          "severity": "medium"
-        },
-        {
           "file": "scripts/check.mjs",
           "line": 11,
           "message": "runs external commands",
@@ -41,6 +34,13 @@
           "line": 22,
           "message": "installs packages at runtime",
           "rule": "RUNTIME_INSTALL",
+          "severity": "medium"
+        },
+        {
+          "file": "scripts/check.test.mjs",
+          "line": 5,
+          "message": "runs external commands",
+          "rule": "SHELL_EXEC",
           "severity": "medium"
         }
       ],
