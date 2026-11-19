@@ -47,7 +47,7 @@
       "trust": "official",
       "url": "https://github.com/anthropics/skills",
       "verification": {
-        "at": "2026-11-17T13:47:59+00:00",
+        "at": "2026-11-19T13:50:47+00:00",
         "checks": [
           {
             "check": "files installed",
