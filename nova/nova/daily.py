@@ -51,6 +51,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--lufs", type=float, default=-14.0)
     ap.add_argument("--speed", type=float, default=1.0, help="1.2 = 20%% faster (pitch kept)")
     ap.add_argument("--pause-scale", type=float, default=1.0, help="0.6 = shorter pauses for fast TikTok pacing")
+    ap.add_argument("--pitch", type=float, default=0.0, help="semitones, e.g. 1.5 = a little higher (formants kept)")
+    ap.add_argument("--soften", type=float, default=0.0, help="0-1: lighter, gentler voice and softer highs")
     ap.add_argument("--data-dir", type=Path, default=None, help="default: a temporary folder")
     args = ap.parse_args(argv)
 
@@ -68,7 +70,7 @@ def main(argv: list[str] | None = None) -> int:
         profile = store.create_designed({"preset": args.preset})
         manifest = generate(settings, store, {
             "segments": segs, "profile_id": profile["id"], "engine": args.engine or None, "mode": args.mode,
-            "speed": args.speed, "pause_scale": args.pause_scale, "formats": [fmt], "target_lufs": args.lufs, "enhance": True,
+            "speed": args.speed, "pause_scale": args.pause_scale, "pitch": args.pitch, "soften": args.soften, "formats": [fmt], "target_lufs": args.lufs, "enhance": True,
         })
         args.out.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy(manifest["files"][fmt]["path"], args.out)

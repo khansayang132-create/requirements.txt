@@ -78,3 +78,28 @@ def test_time_stretch_changes_speed_not_pitch(speaker_wav):
     assert abs(y.size / x.size - 0.8) < 0.03
     a, b = analyze_voice(x, sr), analyze_voice(y, sr)
     assert abs(b["pitch"]["f0_median_hz"] - a["pitch"]["f0_median_hz"]) < 10
+
+
+def _f0(x, sr):
+    import pyworld as pw
+    f0, _ = pw.harvest(x.astype(np.float64), sr, f0_floor=70, f0_ceil=600, frame_period=10)
+    return float(np.median(f0[f0 > 0]))
+
+
+def test_voice_tone_pitch_and_soften(speaker_wav):
+    from nova.audio import load_audio, voice_tone
+    x, sr = load_audio(speaker_wav, sr=24000)
+    x = x[: sr * 6]
+    up = voice_tone(x, sr, pitch_semitones=2.0)
+    assert up.size == x.size
+    ratio = _f0(up, sr) / _f0(x, sr)
+    assert abs(12 * np.log2(ratio) - 2.0) < 0.5  # about two semitones higher
+    soft = voice_tone(x, sr, soften=1.0)
+    spec = lambda y: np.abs(np.fft.rfft(y))
+    fr = np.fft.rfftfreq(x.size, 1 / sr)
+    hi = lambda y: spec(y)[fr > 7000].sum() / spec(y).sum()
+    assert soft.size == x.size and hi(soft) < hi(x)  # softer highs
+    # soften moves the formants, not the pitch (-0.18 st on a real cloned voice; the pitch tracker
+    # reads up to ~0.7 st on this flat synthetic voice once its formants move)
+    assert abs(12 * np.log2(_f0(soft, sr) / _f0(x, sr))) < 0.8
+    assert voice_tone(x, sr) is x  # nothing asked, nothing done

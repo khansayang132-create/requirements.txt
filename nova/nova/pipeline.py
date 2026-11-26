@@ -149,6 +149,7 @@ def _controls(req: dict) -> dict:
         "pitch": float(np.clip(req.get("pitch", 0.0), -12, 12)),
         "volume_db": float(np.clip(req.get("volume_db", 0.0), -12, 12)),
         "pause_scale": float(np.clip(req.get("pause_scale", 1.0), 0.0, 3.0)),
+        "soften": float(np.clip(req.get("soften", 0.0), 0.0, 1.0)),
         "pronunciation": req.get("pronunciation") or {},
     }
 
@@ -251,6 +252,13 @@ def generate(settings: Settings, store: ProfileStore, req: dict, progress=lambda
     progress(25, f"synthesising {len(all_dirs)} sentences with {engine.name}")
     with _reference_file(store, profile, engine) as reference:
         raw, sr, sentence_reports = render(all_dirs, engine, profile, controls, req.get("voice"), reference)
+    # Voice tone: the cloned voice's own pitch control (the neural path skips per-sentence shifting)
+    # and the soften control, both applied once to the whole render.
+    neural = bool(profile) and engine.clones_from_reference
+    tone_pitch = controls["pitch"] if neural else 0.0
+    if tone_pitch or controls["soften"]:
+        progress(78, "adjusting voice tone")
+        raw = A.voice_tone(raw, sr, tone_pitch, controls["soften"])
     progress(80, "mastering")
     mastered, out_sr, master_report = master(raw, sr, target_sr=target_sr,
                                              target_lufs=float(req.get("target_lufs", -16.0)))

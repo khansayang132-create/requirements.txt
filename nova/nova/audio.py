@@ -141,3 +141,34 @@ def time_stretch(x: np.ndarray, sr: int, factor: float) -> np.ndarray:
             raise AudioError(f"time-stretch failed: {proc.stderr.strip()[:200]}")
         y, _ = sf.read(str(dst), dtype="float64")
     return to_mono(y)
+
+
+def voice_tone(x: np.ndarray, sr: int, pitch_semitones: float = 0.0, soften: float = 0.0) -> np.ndarray:
+    """Adjust a finished voice without a vocoder (ffmpeg rubberband): `pitch_semitones` moves the
+    pitch and keeps the formants; `soften` (0-1) gives a lighter, gentler voice: formants up to
+    +1 semitone, a small 3 kHz presence dip and softer highs. Length is unchanged."""
+    pitch_semitones = float(np.clip(pitch_semitones, -6, 6))
+    soften = float(np.clip(soften, 0.0, 1.0))
+    if x.size == 0 or (abs(pitch_semitones) < 0.05 and soften < 0.01):
+        return x
+    total = 2 ** (pitch_semitones / 12)
+    formant = 2 ** (soften / 12)
+    filters = []
+    if soften >= 0.01:  # move pitch and formants together by `formant`, then pitch alone by the rest
+        filters.append(f"rubberband=pitch={formant:.5f}:formant=shifted:pitchq=quality")
+    if abs(total / formant - 1) > 1e-4:
+        filters.append(f"rubberband=pitch={total / formant:.5f}:formant=preserved:pitchq=quality")
+    if soften >= 0.01:
+        filters += [f"equalizer=f=3200:t=q:w=1.2:g={-1.5 * soften:.2f}",
+                    f"highshelf=f=7000:g={-3.0 * soften:.2f}"]  # no de-esser: it dulled the voice by half
+    with tempfile.TemporaryDirectory() as td:
+        src, dst = Path(td) / "in.wav", Path(td) / "out.wav"
+        sf.write(str(src), np.clip(x, -1, 1), sr, subtype="FLOAT")
+        proc = subprocess.run(["ffmpeg", "-nostdin", "-v", "error", "-y", "-i", str(src), "-filter:a",
+                               ",".join(filters), "-ar", str(sr), str(dst)],
+                              capture_output=True, text=True, timeout=600)
+        if proc.returncode != 0:
+            raise AudioError(f"voice tone failed: {proc.stderr.strip()[:200]}")
+        y, _ = sf.read(str(dst), dtype="float64")
+    y = to_mono(y)
+    return y[: x.size] if y.size >= x.size else np.pad(y, (0, x.size - y.size))

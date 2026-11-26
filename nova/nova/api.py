@@ -84,6 +84,7 @@ class GenerateIn(BaseModel):
     pitch: float = 0.0
     volume_db: float = 0.0
     pause_scale: float = 1.0
+    soften: float = Field(default=0.0, ge=0.0, le=1.0)
     pronunciation: dict[str, str] = {}
     formats: list[Literal["wav", "mp3"]] = ["wav", "mp3"]
     sample_rate: int = 48000

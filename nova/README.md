@@ -161,6 +161,24 @@ Recording tips for a good clone: 15-20 seconds of your normal Indonesian speakin
 speaker, a quiet room, no music or echo, phone held 20-30 cm away, speak the way you want the
 voiceover to sound (soft and calm in → soft and calm out). Only the first 20 seconds are used.
 
+**Recording has music under it?** Separate the voice first, then make the profile from the voice track:
+
+```bash
+.venv/bin/python -m nova.separate my-ad.mp3 my-voice.wav    # UVR-MDX-NET-Voc_FT, checksum-verified
+```
+
+Music under the reference pulls the clone lower and rougher. Measured on a song-backed ad: clone
+from the raw recording 160 Hz, from the separated voice 187 Hz; the speaker's own voice is 192 Hz.
+The model (Ultimate Vocal Remover, Anjok07 and aufr33, MIT, credit requested) downloads once from
+Hugging Face into `~/.nova/models` and needs the neural install.
+
+**Voice tone.** `pitch` (semitones, formants kept) and `soften` (0-1: formants up to +1 semitone, a
+small 3 kHz dip, softer highs) adjust the finished voice with ffmpeg rubberband, without a vocoder.
+They work on cloned voices too (the per-sentence path skips shifting to avoid artefacts, so the
+cloned voice's pitch control used to be ignored). `pitch: 1.5, soften: 1.0` turned a clone that
+sounded too deep (median 166 Hz) into a softer 206 Hz voice. Both are `/api/generate` fields and
+`nova.daily` flags (`--pitch 1.5 --soften 1`).
+
 Speed: about 4-6x slower than real time on a 4-core CPU (18 s of audio took 96 s), much faster
 on a GPU. Output carries Resemble's Perth watermark marking it as AI-generated. Designed voices
 have no recording; with this engine NOVA clones a **synthetic reference** instead: the model's own
