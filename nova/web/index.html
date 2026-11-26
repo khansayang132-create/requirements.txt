@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NOVA Omniverse · Voice Studio</title>
+  <meta name="description" content="Intelligent voice cloning and voiceover studio">
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="shell">
+    <aside class="rail" aria-label="Main navigation">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-text"><b>NOVA</b> Omniverse</span>
+      </div>
+      <nav>
+        <ul class="nav" id="nav">
+          <li><a href="#/dashboard" data-route="dashboard">Dashboard</a></li>
+          <li><a href="#/clone" data-route="clone">Voice Cloning</a></li>
+          <li><a href="#/library" data-route="library">Voice Library</a></li>
+          <li><a href="#/intel" data-route="intel">Script Intelligence</a></li>
+          <li><a href="#/enhance" data-route="enhance">Script Enhancer</a></li>
+          <li><a href="#/director" data-route="director">Voice Director</a></li>
+          <li><a href="#/studio" data-route="studio">Audio Studio</a></li>
+          <li><a href="#/projects" data-route="projects">Projects</a></li>
+          <li><a href="#/settings" data-route="settings">Settings</a></li>
+        </ul>
+      </nav>
+      <p class="rail-voice">Active voice<br><b id="active-voice">None selected</b></p>
+    </aside>
+
+    <main id="main" tabindex="-1">
+      <!-- DASHBOARD -->
+      <section data-view="dashboard">
+        <header class="view-head">
+          <p class="eyebrow">Studio overview</p>
+          <h1>Your voice, directed.</h1>
+          <p class="lede">NOVA reads your script, judges it, improves its delivery, directs every sentence and renders mastered voiceover audio.</p>
+        </header>
+        <div class="viz-wrap"><canvas id="viz3d" aria-label="3D audio visualizer" role="img"></canvas></div>
+        <div class="grid stats" id="dash-stats"></div>
+        <h2>Workflow</h2>
+        <ol class="flow" id="flow">
+          <li><a href="#/library">Select a voice</a></li>
+          <li><a href="#/intel">Enter a script</a></li>
+          <li><a href="#/intel">Analyse it</a></li>
+          <li><a href="#/intel">Judge quality</a></li>
+          <li><a href="#/enhance">Enhance</a></li>
+          <li><a href="#/director">Direct each sentence</a></li>
+          <li><a href="#/enhance">Preview the script</a></li>
+          <li><a href="#/studio">Generate audio</a></li>
+          <li><a href="#/studio">Master</a></li>
+          <li><a href="#/studio">Preview &amp; export</a></li>
+        </ol>
+        <h2>Engines</h2>
+        <div class="grid" id="dash-engines"></div>
+      </section>
+
+      <!-- CLONING -->
+      <section data-view="clone" hidden>
+        <header class="view-head">
+          <p class="eyebrow">Voice Cloning</p>
+          <h1>Create a voice profile</h1>
+          <p class="lede">Clone a voice you own or have written permission to use. NOVA measures pitch, depth, texture, speed, rhythm and pauses, then stores the profile encrypted.</p>
+        </header>
+        <div class="two">
+          <form class="card" id="clone-form">
+            <h2>1 · Recording</h2>
+            <div class="seg" role="tablist">
+              <button type="button" class="seg-btn on" data-src="upload">Upload</button>
+              <button type="button" class="seg-btn" data-src="record">Record</button>
+            </div>
+            <div data-src-pane="upload">
+              <label class="field">Audio file (WAV, MP3, M4A, OGG, WebM · 10 s to 10 min)
+                <input type="file" name="audio" id="clone-file" accept="audio/*">
+              </label>
+            </div>
+            <div data-src-pane="record" hidden>
+              <div class="rec">
+                <button type="button" class="btn rec-btn" id="rec-btn">Start recording</button>
+                <span class="mono" id="rec-time">00:00</span>
+              </div>
+              <p class="hint">Read naturally for at least 30 seconds in a quiet room.</p>
+              <audio id="rec-audio" controls hidden></audio>
+            </div>
+            <h2>2 · Consent</h2>
+            <label class="field">Speaker's full name<input name="speaker_name" required autocomplete="name"></label>
+            <fieldset class="field">
+              <legend>Whose voice is this?</legend>
+              <label class="check"><input type="radio" name="relationship" value="self" checked> My own voice</label>
+              <label class="check"><input type="radio" name="relationship" value="authorized"> Another person who gave me written permission</label>
+            </fieldset>
+            <label class="field">Consent statement (in the speaker's words, naming them)
+              <textarea name="consent_statement" rows="3" required placeholder="I, Siti Rahma, consent to NOVA creating a voice profile from this recording."></textarea>
+            </label>
+            <label class="check"><input type="checkbox" name="consent_confirmed" value="true"> I confirm this consent is genuine. Cloning someone without permission is not allowed.</label>
+            <h2>3 · Details</h2>
+            <div class="row">
+              <label class="field">Profile name<input name="name" placeholder="Narrator, warm"></label>
+              <label class="field">Language
+                <select name="language"><option value="id">Indonesian</option><option value="en">English</option><option value="ur">Urdu</option></select>
+              </label>
+            </div>
+            <label class="field">Accent (declared)<input name="accent" placeholder="Jakarta, Lahore, American…"></label>
+            <button class="btn primary" type="submit">Analyse &amp; create profile</button>
+            <p class="status" id="clone-status" role="status"></p>
+          </form>
+          <div>
+            <form class="card" id="design-form">
+              <h2>Or design a voice</h2>
+              <p class="hint">Built from parameters, not from anyone's recording. No consent needed.</p>
+              <label class="field">Preset<select name="preset" id="design-preset"></select></label>
+              <label class="field">Name<input name="name" placeholder="Leave empty to use the preset name"></label>
+              <div class="sliders">
+                <label class="field">Pitch <output data-for="pitch_hz"></output> Hz<input type="range" name="pitch_hz" min="80" max="320" step="1"></label>
+                <label class="field">Intonation range <output data-for="range_semitones"></output> st<input type="range" name="range_semitones" min="2" max="12" step="0.5"></label>
+                <label class="field">Vocal tract <output data-for="formant_scale_hz"></output> Hz<input type="range" name="formant_scale_hz" min="1100" max="1550" step="10"></label>
+                <label class="field">Breathiness <output data-for="breathiness"></output><input type="range" name="breathiness" min="0" max="0.6" step="0.02"></label>
+                <label class="field">Pace <output data-for="rate"></output>×<input type="range" name="rate" min="0.7" max="1.3" step="0.01"></label>
+                <label class="field">Volume <output data-for="volume_db"></output> dB<input type="range" name="volume_db" min="-8" max="4" step="0.5"></label>
+              </div>
+              <button class="btn primary" type="submit">Create designed voice</button>
+              <p class="status" id="design-status" role="status"></p>
+            </form>
+            <div class="card" id="analysis-card" hidden>
+              <h2>Voice analysis</h2>
+              <dl class="metrics" id="analysis-out"></dl>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- LIBRARY -->
+      <section data-view="library" hidden>
+        <header class="view-head">
+          <p class="eyebrow">Voice Library</p>
+          <h1>Saved voices</h1>
+          <p class="lede">Profiles are encrypted at rest. Select one to use it everywhere in the studio.</p>
+        </header>
+        <div class="grid" id="library-list"></div>
+      </section>
+
+      <!-- INTELLIGENCE -->
+      <section data-view="intel" hidden>
+        <header class="view-head">
+          <p class="eyebrow">Script Intelligence</p>
+          <h1>Judge the script</h1>
+          <p class="lede">Language, emotion, delivery parameters and a 0–100 quality score, with the evidence behind every number.</p>
+        </header>
+        <div class="card">
+          <label class="field">Script<textarea id="script" rows="7" placeholder="Paste or type your script. English, Indonesian or both."></textarea></label>
+          <div class="row actions">
+            <label class="btn ghost file-btn">Upload .txt<input type="file" id="script-file" accept=".txt,text/plain"></label>
+            <button class="btn primary" id="analyze-btn">Analyse script</button>
+          </div>
+        </div>
+        <div id="intel-out" hidden>
+          <div class="two">
+            <div class="card score-card">
+              <div class="ring" id="score-ring"><span id="score-num">0</span><small>/100</small></div>
+              <div>
+                <h2>Script quality</h2>
+                <p class="hint" id="score-meta"></p>
+              </div>
+            </div>
+            <div class="card">
+              <h2>Emotional intent</h2>
+              <div id="emotion-bars"></div>
+            </div>
+          </div>
+          <h2>Parameters</h2>
+          <div class="grid" id="param-cards"></div>
+          <div class="two">
+            <div class="card"><h2>Language</h2><div id="lang-out"></div></div>
+            <div class="card"><h2>Voiceover parameters</h2><dl class="metrics" id="vo-out"></dl></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ENHANCER -->
+      <section data-view="enhance" hidden>
+        <header class="view-head">
+          <p class="eyebrow">Script Enhancer</p>
+          <h1>Improve the delivery, keep the message</h1>
+          <p class="lede">Every change is listed. A meaning check compares the content words before and after.</p>
+        </header>
+        <div class="card">
+          <div class="seg" role="radiogroup" aria-label="Enhancement mode" id="mode-seg">
+            <button type="button" class="seg-btn on" data-mode="natural">Natural</button>
+            <button type="button" class="seg-btn" data-mode="professional">Professional</button>
+            <button type="button" class="seg-btn" data-mode="expressive">Expressive</button>
+          </div>
+          <p class="hint" id="mode-hint">Human-like conversational delivery.</p>
+          <button class="btn primary" id="enhance-btn">Enhance script</button>
+        </div>
+        <div id="enhance-out" hidden>
+          <div class="card">
+            <div class="row between">
+              <h2>Compare</h2>
+              <span class="pill" id="meaning-pill"></span>
+            </div>
+            <div class="compare">
+              <div><h3>Original · <span id="score-a"></span></h3><p class="script-text" id="orig-text"></p></div>
+              <div><h3>Enhanced · <span id="score-b"></span></h3><p class="script-text" id="enh-text"></p></div>
+            </div>
+            <h3>Changes inline</h3>
+            <p class="script-text diff" id="diff-out"></p>
+            <div class="row actions">
+              <button class="btn" id="use-enhanced">Use enhanced script</button>
+              <button class="btn ghost" id="keep-original">Keep original</button>
+            </div>
+          </div>
+          <div class="card"><h2>What changed</h2><ul class="changes" id="changes-out"></ul></div>
+        </div>
+      </section>
+
+      <!-- DIRECTOR -->
+      <section data-view="director" hidden>
+        <header class="view-head">
+          <p class="eyebrow">Voice Director</p>
+          <h1>How each sentence is spoken</h1>
+          <p class="lede">Tone, pace, pitch, intonation, volume, emphasis, breaths and pauses. These drive real engine controls, not tags in the text.</p>
+        </header>
+        <div class="card row actions">
+          <label class="field">Emotion
+            <select id="dir-emotion"><option value="">Automatic</option></select>
+          </label>
+          <button class="btn primary" id="direct-btn">Direct script</button>
+        </div>
+        <div id="direct-out" hidden>
+          <div class="grid" id="dir-cards"></div>
+          <div class="card"><h2>Direction sheet</h2><pre class="sheet" id="dir-sheet"></pre></div>
+        </div>
+      </section>
+
+      <!-- STUDIO -->
+      <section data-view="studio" hidden>
+        <header class="view-head">
+          <p class="eyebrow">Audio Studio</p>
+          <h1>Render the voiceover</h1>
+          <p class="lede">One script or several scenes with their own emotion, combined into one mastered file.</p>
+        </header>
+        <div class="two wide-left">
+          <div>
+            <div class="card">
+              <div class="row between">
+                <h2>Scenes</h2>
+                <button class="btn ghost" id="add-scene" type="button">Add scene</button>
+              </div>
+              <p class="hint">With one scene, the script from Script Intelligence is used.</p>
+              <ol class="scenes" id="scenes"></ol>
+            </div>
+            <div class="card" id="result" hidden>
+          <div class="row between">
+            <h2>Result</h2>
+            <div class="row" id="downloads"></div>
+          </div>
+          <dl class="metrics" id="master-out"></dl>
+          <details><summary>Per-sentence report</summary><div class="table-wrap"><table class="tbl" id="sent-table"></table></div></details>
+        </div>
+                </div>
+          <form class="card controls" id="studio-form">
+            <h2>Controls</h2>
+            <label class="field">Voice<select name="profile_id" id="studio-voice"></select></label>
+            <label class="field">Engine<select name="engine" id="studio-engine"></select></label>
+            <div class="row">
+              <label class="field">Mode<select name="mode"><option value="natural">Natural</option><option value="professional">Professional</option><option value="expressive">Expressive</option></select></label>
+              <label class="field">Emotion<select name="emotion" id="studio-emotion"><option value="">Automatic</option></select></label>
+            </div>
+            <label class="field">Speed <output data-for="speed"></output>×<input type="range" name="speed" min="0.6" max="1.6" step="0.01" value="1"></label>
+            <label class="field">Pitch <output data-for="pitch"></output> st<input type="range" name="pitch" min="-6" max="6" step="0.5" value="0"></label>
+            <label class="field">Volume <output data-for="volume_db"></output> dB<input type="range" name="volume_db" min="-9" max="6" step="0.5" value="0"></label>
+            <label class="field">Pause length <output data-for="pause_scale"></output>×<input type="range" name="pause_scale" min="0" max="2" step="0.05" value="1"></label>
+            <label class="field">Pronunciation (one per line: word = spoken)
+              <textarea name="pronunciation" rows="2" placeholder="LSKhan = el es khan"></textarea>
+            </label>
+            <div class="row">
+              <label class="field">Sample rate
+                <select name="sample_rate"><option>48000</option><option>44100</option><option>24000</option><option>22050</option><option>16000</option></select>
+              </label>
+              <label class="field">Loudness (LUFS)
+                <select name="target_lufs"><option value="-16">−16 web</option><option value="-14">−14 social</option><option value="-19">−19 podcast</option><option value="-23">−23 broadcast</option></select>
+              </label>
+            </div>
+            <fieldset class="field">
+              <legend>Formats</legend>
+              <label class="check"><input type="checkbox" name="fmt" value="wav" checked> WAV</label>
+              <label class="check"><input type="checkbox" name="fmt" value="mp3" checked> MP3</label>
+            </fieldset>
+            <label class="check"><input type="checkbox" name="enhance" checked> Enhance the script before rendering</label>
+            <button class="btn primary big" type="submit" id="gen-btn">Generate voiceover</button>
+            <div class="progress" hidden id="gen-progress"><div class="bar"><span id="gen-bar"></span></div><p class="hint" id="gen-msg" role="status"></p></div>
+          </form>
+        </div>
+</section>
+
+      <!-- PROJECTS -->
+      <section data-view="projects" hidden>
+        <header class="view-head">
+          <p class="eyebrow">Projects</p>
+          <h1>Saved work</h1>
+          <p class="lede">A project keeps the script, scenes and studio settings.</p>
+        </header>
+        <form class="card row actions" id="project-form">
+          <label class="field grow">Project name<input name="name" required placeholder="Episode 12: first Eid in Lahore"></label>
+          <button class="btn primary" type="submit">Save current work</button>
+        </form>
+        <div class="grid" id="project-list"></div>
+      </section>
+
+      <!-- SETTINGS -->
+      <section data-view="settings" hidden>
+        <header class="view-head">
+          <p class="eyebrow">Settings</p>
+          <h1>Connection &amp; system</h1>
+        </header>
+        <form class="card" id="settings-form">
+          <label class="field">API key (only if the server sets NOVA_API_KEY)<input name="key" type="password" autocomplete="off"></label>
+          <button class="btn primary" type="submit">Save</button>
+          <p class="hint">Stored only in this browser.</p>
+        </form>
+        <div class="card"><h2>System</h2><pre class="sheet" id="sys-out"></pre></div>
+      </section>
+    </main>
+  </div>
+
+  <footer class="transport" aria-label="Player">
+    <button class="play" id="play-btn" aria-label="Play" disabled><span aria-hidden="true"></span></button>
+    <div class="wave-wrap">
+      <canvas id="wave" aria-label="Waveform: click to seek" role="img"></canvas>
+      <span class="mono t" id="t-cur">0:00</span>
+    </div>
+    <canvas id="meter" class="meter" aria-hidden="true"></canvas>
+    <audio id="player" preload="auto"></audio>
+  </footer>
+  <div class="toast" id="toast" role="alert" hidden></div>
+  <script src="app.js"></script>
+</body>
+</html>
