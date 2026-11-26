@@ -34,11 +34,10 @@ class ChatterboxEngine(TTSEngine):
     def available(self) -> bool:
         if not self.enabled:
             return False
-        try:
-            import chatterbox  # noqa: F401
-        except Exception:
-            return False
-        return True
+        # find_spec looks for the package without importing it: importing pulls in PyTorch,
+        # which took tens of seconds and froze the status page.
+        import importlib.util
+        return importlib.util.find_spec("chatterbox") is not None
 
     def _load(self):
         if not self.available():

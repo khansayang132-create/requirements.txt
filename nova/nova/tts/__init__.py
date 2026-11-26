@@ -19,7 +19,9 @@ def engines(settings: Settings) -> dict[str, TTSEngine]:
     }
 
 
-def get_engine(settings: Settings, name: str | None) -> TTSEngine:
+def get_engine(settings: Settings, name: str | None, has_reference: bool = True) -> TTSEngine:
+    """Pick an engine. A neural cloning engine is chosen automatically only when there is a
+    reference recording to clone; without one it would fall back to its own default voice."""
     all_engines = engines(settings)
     if name:
         if name not in all_engines:
@@ -29,7 +31,10 @@ def get_engine(settings: Settings, name: str | None) -> TTSEngine:
             raise TTSUnavailable(f"engine {name!r} is not available on this machine")
         return engine
     for preferred in ("chatterbox-id", "piper", "sherpa-onnx", "espeak-ng"):
-        if all_engines[preferred].available():
+        engine = all_engines[preferred]
+        if engine.clones_from_reference and not has_reference:
+            continue
+        if engine.available():
             return all_engines[preferred]
     raise TTSUnavailable("no TTS engine is available: install espeak-ng or configure a Piper/Sherpa model")
 

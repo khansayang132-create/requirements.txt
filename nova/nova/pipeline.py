@@ -181,8 +181,9 @@ def generate(settings: Settings, store: ProfileStore, req: dict, progress=lambda
     target_sr = int(req.get("sample_rate", 48000))
     if target_sr not in A.SUPPORTED_RATES:
         raise ValueError(f"sample_rate must be one of {A.SUPPORTED_RATES}")
-    engine = get_engine(settings, req.get("engine"))
     profile = store.get(req["profile_id"]) if req.get("profile_id") else None
+    engine = get_engine(settings, req.get("engine"),
+                        has_reference=bool(profile and profile.get("kind", "cloned") == "cloned"))
     controls = _controls(req)
     emotion = req.get("emotion") if req.get("emotion") in VALID_EMOTIONS else None
 

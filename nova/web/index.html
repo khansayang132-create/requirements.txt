@@ -176,6 +176,7 @@
             <div class="card"><h2>Language</h2><div id="lang-out"></div></div>
             <div class="card"><h2>Voiceover parameters</h2><dl class="metrics" id="vo-out"></dl></div>
           </div>
+          <div class="card" id="notes-card" hidden><h2>AI director notes</h2><p class="script-text" id="notes-out"></p></div>
         </div>
       </section>
 
@@ -199,7 +200,7 @@
           <div class="card">
             <div class="row between">
               <h2>Compare</h2>
-              <span class="pill" id="meaning-pill"></span>
+              <span class="row"><span class="pill" id="ai-pill" hidden></span><span class="pill" id="meaning-pill"></span></span>
             </div>
             <div class="compare">
               <div><h3>Original · <span id="score-a"></span></h3><p class="script-text" id="orig-text"></p></div>
@@ -314,14 +315,63 @@
       <section data-view="settings" hidden>
         <header class="view-head">
           <p class="eyebrow">Settings</p>
-          <h1>Connection &amp; system</h1>
+          <h1>AI, voices &amp; connection</h1>
+          <p class="lede">Connect a free local AI for the script tools, install the Indonesian voice and switch on neural cloning. Choices are saved on this computer.</p>
         </header>
+
+        <form class="card" id="llm-form">
+          <div class="row between">
+            <h2>AI for script tools</h2>
+            <span class="pill" id="llm-state">Off</span>
+          </div>
+          <p class="hint">Used to rewrite scripts and write director notes. Any OpenAI-compatible server works: llama.cpp, Ollama, LM Studio, vLLM, or a cloud service. Every rewrite still has to pass NOVA's meaning check.</p>
+          <label class="field">Provider<select name="provider" id="llm-provider"></select></label>
+          <div data-llm-fields>
+            <label class="field">Endpoint<input name="base_url" inputmode="url" autocomplete="off" placeholder="http://127.0.0.1:11434"></label>
+            <div class="row">
+              <label class="field grow">Model<input name="model" list="llm-models" autocomplete="off" placeholder="gemma4:e2b"></label>
+              <button class="btn ghost" type="button" id="llm-load-models">Load models</button>
+            </div>
+            <datalist id="llm-models"></datalist>
+            <label class="field">API key (only if the server needs one)<input name="api_key" type="password" autocomplete="off" id="llm-key"></label>
+            <label class="check"><input type="checkbox" name="thinking"> Allow "thinking" (slower; small models may return nothing)</label>
+          </div>
+          <div class="row actions">
+            <button class="btn primary" type="submit">Save</button>
+            <button class="btn" type="button" id="llm-test">Test connection</button>
+          </div>
+          <div class="test-out" id="llm-test-out" role="status" hidden></div>
+        </form>
+
+        <div class="card" id="voices-card">
+          <h2>Voices</h2>
+          <div class="voice-row">
+            <div>
+              <h3>Indonesian voice (Piper)</h3>
+              <p class="hint">Free neural voice, about 60 MB, checksum-verified. Used automatically once installed.</p>
+            </div>
+            <div class="voice-action" id="piper-action"></div>
+          </div>
+          <div class="progress" hidden id="piper-progress"><div class="bar"><span id="piper-bar"></span></div><p class="hint" id="piper-msg"></p></div>
+          <div class="voice-row">
+            <div>
+              <h3>Neural voice cloning (Chatterbox Indonesian)</h3>
+              <p class="hint">Clones a cloned profile's own recording. Free (Apache-2.0), runs on this computer; slow on CPU. First use downloads about 3 GB.</p>
+            </div>
+            <div class="voice-action" id="cbx-action"></div>
+          </div>
+          <div class="progress" hidden id="cbx-progress"><div class="bar"><span id="cbx-bar"></span></div><p class="hint" id="cbx-msg"></p></div>
+          <h3>Engines</h3>
+          <div class="tags" id="engine-tags"></div>
+        </div>
+
         <form class="card" id="settings-form">
-          <label class="field">API key (only if the server sets NOVA_API_KEY)<input name="key" type="password" autocomplete="off"></label>
+          <h2>Connection</h2>
+          <label class="field">NOVA API key (only if the server sets NOVA_API_KEY)<input name="key" type="password" autocomplete="off"></label>
           <button class="btn primary" type="submit">Save</button>
           <p class="hint">Stored only in this browser.</p>
         </form>
-        <div class="card"><h2>System</h2><pre class="sheet" id="sys-out"></pre></div>
+        <details class="card"><summary>System details</summary><pre class="sheet" id="sys-out"></pre></details>
       </section>
     </main>
   </div>

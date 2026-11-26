@@ -27,7 +27,7 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 
 Open http://127.0.0.1:8790. Don't use port 8765: Headroom uses it on the phone and in cloud sessions.
 
-Tests: `.venv/bin/python -m pytest -q` (39 tests, about 30 s; the 3 Piper tests skip until `scripts/get-voices.sh` has run, the Chatterbox test runs only with `NOVA_CHATTERBOX_TEST=1` and `requirements-neural.txt` installed, and the real-LLM test only with `NOVA_LLM_TEST_URL` set).
+Tests: `.venv/bin/python -m pytest -q` (43 tests, about 30 s; the 3 Piper tests skip until `scripts/get-voices.sh` has run, the Chatterbox test runs only with `NOVA_CHATTERBOX_TEST=1` and `requirements-neural.txt` installed, and the real-LLM test only with `NOVA_LLM_TEST_URL` set).
 
 ## Settings (environment variables)
 
@@ -40,6 +40,25 @@ Tests: `.venv/bin/python -m pytest -q` (39 tests, about 30 s; the 3 Piper tests 
 | `NOVA_CHATTERBOX` | `1` enables neural voice cloning with Chatterbox-TTS-Indonesian (needs `requirements-neural.txt`). Preferred over the other engines when enabled. |
 | `NOVA_SHERPA_MODEL_DIR` | Folder with a Sherpa-ONNX VITS model (`*.onnx`, `tokens.txt`, optional `espeak-ng-data/`). |
 | `NOVA_LLM_BASE_URL`, `NOVA_LLM_MODEL`, `NOVA_LLM_API_KEY`, `NOVA_LLM_THINKING` | Optional OpenAI-compatible LLM (see "Free local AI for the script tools" below). Used to rewrite scripts and add director notes. Its rewrite is accepted only if the meaning check passes. |
+
+## Set up from the app (Settings page)
+
+Everything below can also be done in **Settings** without environment variables:
+
+- **AI for script tools:** pick a provider (llama.cpp, Ollama, LM Studio, vLLM, Jan, KoboldCpp or
+  Custom), check the endpoint, press **Load models**, then **Test connection**. The test shows the
+  model's reply and how long it took, or a plain-language fix (server not running, wrong key,
+  model not found, rate limit, empty "thinking" reply). Choices are saved in
+  `$NOVA_DATA_DIR/runtime.json` (mode 600) and override the `NOVA_LLM_*` variables; an API key is
+  stored encrypted and never sent back to the browser.
+- **Voices:** **Download voice** installs the Indonesian Piper voice with progress and a SHA-256
+  check (a corrupted download installs nothing). The Chatterbox switch turns neural cloning on once
+  `requirements-neural.txt` is installed; **Load model now** downloads and loads it ahead of the
+  first render.
+- When no engine is chosen, Chatterbox is used only for cloned profiles with a recording; designed
+  voices and the plain engine voice use Piper (or espeak-ng).
+- The Enhancer shows whether the AI rewrite was used or rejected, and Script Intelligence shows the
+  AI director notes.
 
 ## Free local AI for the script tools
 

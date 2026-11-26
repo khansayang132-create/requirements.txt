@@ -27,6 +27,7 @@ from .enhance import MODES, enhance
 from .llm import LLMClient
 from .pipeline import VALID_EMOTIONS, generate, preview_profile
 from .profiles import PRESETS, ConsentError, ProfileNotFound, ProfileStore
+from .runtime import Runtime, explain_error, install_piper_voice, list_models, test_llm
 from .script_judge import judge
 from .tts import TTSUnavailable, engines
 
@@ -85,6 +86,24 @@ class GenerateIn(BaseModel):
     project_id: str | None = None
 
 
+class LLMSettingsIn(BaseModel):
+    provider: str
+    base_url: str = Field(default="", max_length=500)
+    model: str = Field(default="", max_length=200)
+    api_key: str | None = Field(default=None, max_length=500)
+    clear_key: bool = False
+    thinking: bool = False
+
+
+class ModelsIn(BaseModel):
+    base_url: str = Field(max_length=500)
+    api_key: str | None = Field(default=None, max_length=500)
+
+
+class ToggleIn(BaseModel):
+    enabled: bool
+
+
 class ProjectIn(BaseModel):
     name: str = Field(min_length=1, max_length=200)
     data: dict = {}
@@ -121,6 +140,7 @@ class Jobs:
 def create_app(settings: Settings | None = None) -> FastAPI:
     settings = settings or Settings()
     store = ProfileStore(settings)
+    runtime = Runtime(settings, store.fernet)  # saved app settings override environment defaults
     jobs = Jobs()
     app = FastAPI(title="NOVA OMNIVERSE", version=__version__)
 
@@ -158,11 +178,63 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     def system():
         return {
             "engines": [e.info() for e in engines(settings).values()],
-            "llm": {"configured": bool(settings.llm_base_url), "model": settings.llm_model if settings.llm_base_url else None},
+            "llm": {"configured": bool(settings.llm_base_url), "model": settings.llm_model if settings.llm_base_url else None,
+                    "endpoint": settings.llm_base_url or None},
             "modes": list(MODES), "emotions": sorted(VALID_EMOTIONS),
             "presets": [{"id": k, **{f: v[f] for f in ("name", "language", "description")}} for k, v in PRESETS.items()],
             "auth_required": bool(settings.api_key),
         }
+
+    # ---- App settings (AI server, voices) --------------------------------------------------
+    @app.get("/api/settings", dependencies=deps)
+    def get_settings():
+        return runtime.public()
+
+    @app.put("/api/settings/llm", dependencies=deps)
+    def save_llm(body: LLMSettingsIn):
+        return runtime.update_llm(body.provider, body.base_url, body.model, body.api_key,
+                                  body.thinking, body.clear_key)
+
+    @app.post("/api/settings/llm/test", dependencies=deps)
+    def llm_test():
+        try:
+            return {"ok": True} | test_llm(settings)
+        except Exception as exc:  # every failure becomes a readable message, not a 500
+            return {"ok": False, "error": explain_error(exc), "detail": f"{type(exc).__name__}: {str(exc)[:200]}"}
+
+    @app.post("/api/settings/llm/models", dependencies=deps)
+    def llm_models(body: ModelsIn):
+        key = body.api_key or (settings.llm_api_key if settings.llm_api_key != "none" else "")
+        try:
+            return {"ok": True, "models": list_models(body.base_url, key)}
+        except Exception as exc:
+            return {"ok": False, "models": [], "error": explain_error(exc)}
+
+    @app.post("/api/voices/piper/install", dependencies=deps)
+    def piper_install():
+        job = jobs.submit(lambda r, p: install_piper_voice(settings, p), {})
+        return {"job_id": job["id"]}
+
+    @app.put("/api/settings/chatterbox", dependencies=deps)
+    def chatterbox_toggle(body: ToggleIn):
+        if body.enabled and not runtime.public()["chatterbox"]["installed"]:
+            raise HTTPException(409, "Chatterbox is not installed on this computer: run "
+                                     "pip install -r requirements-neural.txt, then restart NOVA")
+        runtime.set_chatterbox(body.enabled)
+        return runtime.public()
+
+    @app.post("/api/voices/chatterbox/warmup", dependencies=deps)
+    def chatterbox_warmup():
+        engine = engines(settings)["chatterbox-id"]
+        if not engine.available():
+            raise HTTPException(409, "enable Chatterbox first")
+
+        def run(_req, progress):
+            progress(10, "loading the neural model (the first time downloads about 3 GB)")
+            engine._load()
+            progress(100, "model loaded and ready")
+            return {"loaded": True}
+        return {"job_id": jobs.submit(run, {})["id"]}
 
     # ---- Voice profiles -------------------------------------------------------------------
     @app.post("/api/profiles", dependencies=deps)
@@ -252,7 +324,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         if not job:
             raise HTTPException(404, "job not found")
         out = dict(job)
-        if job["result"]:
+        if job["result"] and "files" in job["result"]:  # voice jobs return no audio files
             out["result"] = dict(job["result"]) | {"urls": {
                 fmt: f"/api/files/{job_id}/voiceover.{fmt}" for fmt in job["result"]["files"]}}
         return out

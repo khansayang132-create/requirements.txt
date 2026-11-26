@@ -78,7 +78,7 @@ function route() {
   if (view === "studio") renderStudio();
   if (view === "projects") renderProjects();
   if (view === "dashboard") renderDashboard();
-  if (view === "settings") $("#sys-out").textContent = JSON.stringify(state.system, null, 2);
+  if (view === "settings") renderSettings();
   $("#main").focus({ preventScroll: true });
   window.scrollTo(0, 0);
 }
@@ -319,6 +319,8 @@ function renderAnalysis(r) {
   if (L.unnatural_phrases.length) langBox.append(h("h3", {}, "Unnatural phrasing"), h("ul", { class: "changes" }, ...L.unnatural_phrases.map((u) => h("li", {}, `“${u.text}”: ${u.hint}`))));
   if (L.difficult_words.length) langBox.append(h("h3", {}, "Difficult words"), h("ul", { class: "changes" }, ...L.difficult_words.slice(0, 10).map((d) => h("li", {}, h("b", {}, d.word), ` — ${d.reasons.join(", ")}`))));
   if (!L.unnatural_phrases.length && !L.difficult_words.length) langBox.append(h("p", { class: "hint" }, "No unnatural phrasing or difficult words found."));
+  $("#notes-card").hidden = !r.llm_notes;
+  if (r.llm_notes) $("#notes-out").textContent = r.llm_notes;
   const v = r.voiceover;
   const items = [["Speed", `${v.speaking_speed_wpm} wpm`], ["Duration", `${v.estimated_duration_s}s`], ["Pitch", v.pitch],
     ["Vocal intensity", v.vocal_intensity], ["Emotional intensity", `${v.emotional_intensity}/100`],
@@ -355,6 +357,12 @@ function renderEnhance(r) {
   const pill = $("#meaning-pill");
   pill.textContent = r.meaning.preserved ? `Meaning kept · ${Math.round(r.meaning.content_words_kept * 100)}% content words` : "Check meaning";
   pill.className = "pill " + (r.meaning.preserved ? "ok" : "bad");
+  const ai = $("#ai-pill");
+  ai.hidden = !r.llm;
+  if (r.llm) {
+    ai.textContent = r.llm.accepted ? "AI rewrite used" : r.llm.error ? "AI unavailable · rules used" : "AI rewrite rejected (changed meaning) · rules used";
+    ai.className = "pill " + (r.llm.accepted ? "ok" : "");
+  }
   clear($("#diff-out")).append(...r.diff.flatMap((d) => [d.op === "equal" ? d.text : h(d.op === "insert" ? "ins" : "del", {}, d.text), " "]));
   const ul = clear($("#changes-out"));
   if (!r.changes.length) ul.append(h("li", {}, "No changes needed."));
@@ -511,10 +519,130 @@ async function openProject(id) {
 }
 
 // ---------- settings ----------
+let appSettings = null;
 function setupSettings() {
   const f = $("#settings-form");
   f.key.value = store.get("key", "");
   f.addEventListener("submit", (ev) => { ev.preventDefault(); store.set("key", f.key.value.trim()); loadSystem().then(() => toast("Saved.")); });
+
+  const lf = $("#llm-form");
+  $("#llm-provider").addEventListener("change", () => {
+    const p = appSettings && appSettings.providers.find((x) => x.id === lf.provider.value);
+    if (p && p.id !== "custom") { lf.base_url.value = p.base_url; lf.model.value = p.model; }
+    if (p && p.id === "custom") { lf.base_url.value = ""; lf.model.value = ""; }
+    toggleLlmFields();
+  });
+  $("#llm-load-models").addEventListener("click", async (e) => {
+    const r = await busy(e.currentTarget, () => api("/api/settings/llm/models", { method: "POST", json: { base_url: lf.base_url.value, api_key: lf.api_key.value || null } }));
+    const dl = clear($("#llm-models"));
+    if (!r.ok) return showTest(false, r.error);
+    r.models.forEach((m) => dl.append(h("option", { value: m })));
+    if (r.models.length && !r.models.includes(lf.model.value)) lf.model.value = r.models[0];
+    showTest(true, r.models.length ? `Server lists ${r.models.length} model(s): ${r.models.slice(0, 5).join(", ")}` : "The server is running but lists no models. Load one first.", "Connected");
+  });
+  lf.addEventListener("submit", async (ev) => {
+    ev.preventDefault();
+    await busy(lf.querySelector("[type=submit]"), saveLlm);
+    toast("AI settings saved.");
+  });
+  $("#llm-test").addEventListener("click", async (e) => {
+    await busy(e.currentTarget, async () => {
+      await saveLlm();
+      showTest(null, "Asking the model… the first reply can take a while if it is still loading.", "Testing");
+      const r = await api("/api/settings/llm/test", { method: "POST" });
+      if (r.ok) showTest(true, `“${r.reply}”`, `Reply in ${r.seconds}s from ${r.model}`);
+      else showTest(false, r.error, "Test failed", r.detail);
+    });
+  });
+}
+async function saveLlm() {
+  const lf = $("#llm-form");
+  appSettings = await api("/api/settings/llm", { method: "PUT", json: {
+    provider: lf.provider.value, base_url: lf.base_url.value, model: lf.model.value,
+    api_key: lf.api_key.value || null, thinking: lf.thinking.checked } });
+  lf.api_key.value = "";
+  renderSettingsState();
+  state.system = await api("/api/system");
+}
+function toggleLlmFields() {
+  const off = $("#llm-provider").value === "off";
+  $("[data-llm-fields]").hidden = off;
+  $("#llm-test").hidden = off;
+}
+function showTest(ok, text, title, detail) {
+  const box = $("#llm-test-out");
+  box.hidden = false;
+  box.className = "test-out" + (ok === true ? " ok" : ok === false ? " bad" : "");
+  clear(box).append(h("b", {}, title || (ok ? "OK" : "Problem")), text);
+  if (detail) box.append(h("p", { class: "hint" }, detail));
+}
+async function renderSettings() {
+  $("#sys-out").textContent = JSON.stringify(state.system, null, 2);
+  try { appSettings = await api("/api/settings"); } catch (e) { toast(e.message); return; }
+  const lf = $("#llm-form"), sel = $("#llm-provider");
+  if (!sel.options.length) for (const p of appSettings.providers) sel.append(h("option", { value: p.id }, p.name));
+  const L = appSettings.llm;
+  sel.value = L.provider;
+  lf.base_url.value = L.base_url;
+  lf.model.value = L.model;
+  lf.thinking.checked = L.thinking;
+  $("#llm-key").placeholder = L.api_key_set ? "Saved (leave blank to keep)" : "";
+  toggleLlmFields();
+  renderSettingsState();
+}
+function renderSettingsState() {
+  const L = appSettings.llm, pill = $("#llm-state");
+  pill.textContent = L.base_url ? `On · ${L.model}` : "Off";
+  pill.className = "pill " + (L.base_url ? "ok" : "");
+  const pa = clear($("#piper-action"));
+  if (appSettings.piper.installed) pa.append(h("span", { class: "pill ok" }, "Installed"));
+  else pa.append(h("button", { class: "btn primary", type: "button", onclick: installPiper }, "Download voice"));
+  const ca = clear($("#cbx-action")), C = appSettings.chatterbox;
+  if (!C.installed) {
+    ca.append(h("span", { class: "pill" }, "Not installed"), h("code", {}, "pip install -r requirements-neural.txt"));
+  } else {
+    ca.append(h("label", { class: "check" }, h("input", { type: "checkbox", checked: C.enabled, onchange: (e) => toggleChatterbox(e.target) }), C.enabled ? "On" : "Off"));
+    if (C.enabled) ca.append(h("button", { class: "btn", type: "button", onclick: (e) => warmChatterbox(e.currentTarget) }, "Load model now"));
+  }
+  const tags = clear($("#engine-tags"));
+  for (const e of (state.system ? state.system.engines : [])) tags.append(h("span", { class: "pill " + (e.available ? "ok" : "") }, `${e.name}: ${e.available ? "ready" : "off"}`));
+}
+async function runJob(jobId, barSel, msgSel, wrapSel) {
+  $(wrapSel).hidden = false;
+  for (;;) {
+    await new Promise((r) => setTimeout(r, 700));
+    const job = await api(`/api/jobs/${jobId}`);
+    $(barSel).style.width = job.progress + "%";
+    $(msgSel).textContent = cap(job.message || "");
+    if (job.status === "failed") { $(msgSel).textContent = "Failed: " + job.error; throw new Error(job.error); }
+    if (job.status === "done") return job;
+  }
+}
+async function installPiper(e) {
+  const btn = e.currentTarget;
+  btn.disabled = true;
+  try {
+    const { job_id } = await api("/api/voices/piper/install", { method: "POST" });
+    await runJob(job_id, "#piper-bar", "#piper-msg", "#piper-progress");
+    state.system = await api("/api/system");
+    await renderSettings();
+    toast("Indonesian voice installed.");
+  } catch (err) { toast(err.message); btn.disabled = false; }
+}
+async function toggleChatterbox(input) {
+  try {
+    appSettings = await api("/api/settings/chatterbox", { method: "PUT", json: { enabled: input.checked } });
+    state.system = await api("/api/system");
+    renderSettingsState();
+  } catch (e) { toast(e.message); input.checked = !input.checked; }
+}
+async function warmChatterbox(btn) {
+  btn.disabled = true;
+  try {
+    const { job_id } = await api("/api/voices/chatterbox/warmup", { method: "POST" });
+    await runJob(job_id, "#cbx-bar", "#cbx-msg", "#cbx-progress");
+    toast("Neural voice model loaded.");
+  } catch (e) { toast(e.message); } finally { btn.disabled = false; }
 }
 
 // ---------- player, waveform, meter, 3D ----------

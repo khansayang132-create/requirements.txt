@@ -187,3 +187,17 @@ details summary { cursor: pointer; min-height: 44px; display: flex; align-items:
   .two.wide-left > div:first-child { display: contents; }
   .two.wide-left #result { order: 3; }
 }
+/* Settings: AI server and voices */
+.test-out { margin-top: var(--s3); padding: var(--s3) var(--s4); border-radius: 10px; background: var(--bg); border: 1px solid var(--line); font-size: 15px; overflow-wrap: anywhere; }
+.test-out.ok { border-color: var(--accent); }
+.test-out.bad { border-color: var(--rec); }
+.test-out b { display: block; margin-bottom: var(--s1); }
+.voice-row { display: flex; gap: var(--s4); align-items: center; justify-content: space-between; padding: var(--s3) 0; border-top: 1px solid var(--line); flex-wrap: wrap; }
+.voice-row:first-of-type { border-top: 0; }
+.voice-row h3 { color: var(--text); text-transform: none; letter-spacing: 0; font-size: 16px; margin-bottom: var(--s1); }
+.voice-row .hint { margin: 0; max-width: 60ch; }
+.voice-row > div:first-child { flex: 1 1 260px; }
+.voice-action { display: flex; gap: var(--s2); align-items: center; flex-wrap: wrap; }
+.voice-action code { font: 13px var(--mono); color: var(--muted); overflow-wrap: anywhere; }
+details.card summary { font-weight: 600; color: var(--text); }
+#llm-load-models { margin-bottom: var(--s4); }
