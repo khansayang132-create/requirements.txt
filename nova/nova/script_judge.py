@@ -282,5 +282,5 @@ def judge(text: str, llm=None) -> dict:
     }
     result["score"] = result["quality"]["score"]
     if llm is not None:
-        result["llm_notes"] = llm.notes(text)
+        result["llm_notes"] = llm.notes(text, language["primary"])
     return result

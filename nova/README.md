@@ -27,7 +27,7 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 
 Open http://127.0.0.1:8790. Don't use port 8765: Headroom uses it on the phone and in cloud sessions.
 
-Tests: `.venv/bin/python -m pytest -q` (34 tests, about 30 s; the 3 Piper tests skip until `scripts/get-voices.sh` has run, and the Chatterbox test runs only with `NOVA_CHATTERBOX_TEST=1` and `requirements-neural.txt` installed).
+Tests: `.venv/bin/python -m pytest -q` (39 tests, about 30 s; the 3 Piper tests skip until `scripts/get-voices.sh` has run, the Chatterbox test runs only with `NOVA_CHATTERBOX_TEST=1` and `requirements-neural.txt` installed, and the real-LLM test only with `NOVA_LLM_TEST_URL` set).
 
 ## Settings (environment variables)
 
@@ -39,7 +39,41 @@ Tests: `.venv/bin/python -m pytest -q` (34 tests, about 30 s; the 3 Piper tests 
 | `NOVA_PIPER_MODEL` | Path to a Piper `.onnx` voice (with its `.onnx.json`). Default: `~/.nova/models/id_ID-news_tts-medium.onnx` if present. When available, Piper is preferred over espeak-ng. |
 | `NOVA_CHATTERBOX` | `1` enables neural voice cloning with Chatterbox-TTS-Indonesian (needs `requirements-neural.txt`). Preferred over the other engines when enabled. |
 | `NOVA_SHERPA_MODEL_DIR` | Folder with a Sherpa-ONNX VITS model (`*.onnx`, `tokens.txt`, optional `espeak-ng-data/`). |
-| `NOVA_LLM_BASE_URL`, `NOVA_LLM_MODEL`, `NOVA_LLM_API_KEY` | Optional OpenAI-compatible LLM (e.g. `llama-server -m model.gguf --port 8080` → `http://127.0.0.1:8080/v1`). Used to rewrite scripts and add director notes. Its rewrite is accepted only if the meaning check passes. |
+| `NOVA_LLM_BASE_URL`, `NOVA_LLM_MODEL`, `NOVA_LLM_API_KEY`, `NOVA_LLM_THINKING` | Optional OpenAI-compatible LLM (see "Free local AI for the script tools" below). Used to rewrite scripts and add director notes. Its rewrite is accepted only if the meaning check passes. |
+
+## Free local AI for the script tools
+
+The enhancer's rewrite and the director notes can use any free local model behind an
+OpenAI-compatible server. NOVA's backend makes the call, not the browser, so CORS settings
+(such as `OLLAMA_ORIGINS`) are not needed. `NOVA_LLM_BASE_URL` accepts the base address,
+`…/v1`, or the full `…/v1/chat/completions` URL.
+
+Small, fast models are the right choice; Gemma 4 E2B (3.1 GB, Apache-2.0) was tested here:
+
+```bash
+# llama.cpp (tested): build or download llama-server, then
+llama-server -hf unsloth/gemma-4-E2B-it-GGUF:Q4_K_M --host 127.0.0.1 --port 8093 -c 4096 --jinja
+export NOVA_LLM_BASE_URL=http://127.0.0.1:8093 NOVA_LLM_MODEL=gemma
+```
+
+| Server | `NOVA_LLM_BASE_URL` | `NOVA_LLM_MODEL` |
+|---|---|---|
+| llama.cpp `llama-server` | `http://127.0.0.1:PORT` | any name (one model loaded) |
+| Ollama (`ollama pull gemma4:e2b`) | `http://127.0.0.1:11434` | the tag from `ollama list` |
+| LM Studio (Developer tab, server running) | `http://127.0.0.1:1234` | the id at `/v1/models` |
+| vLLM | `http://127.0.0.1:8000` | the served model id |
+
+Thinking is switched off by default (`chat_template_kwargs.enable_thinking=false`, which
+llama.cpp, vLLM and LM Studio read): with it on, Gemma 4 spent the whole reply budget on hidden
+reasoning and returned nothing. If a server rejects the field, NOVA retries without it.
+`NOVA_LLM_THINKING=1` turns thinking back on. An empty answer is never used as a rewrite.
+Director notes are requested in the script's language (Bahasa Indonesia or English).
+
+Measured on 4 CPU cores with Gemma 4 E2B: about 13 tokens/s, a rewrite in about 4 s, notes in
+about 11 s. Every rewrite still has to pass the meaning check; in testing a natural-mode rewrite
+was accepted (86% of content words kept) and an expressive-mode rewrite that added words was
+rejected and replaced by the rule-based result. Only llama.cpp was run here; the other rows
+follow each server's documented OpenAI-compatible API.
 
 ## Making it sound like a real person
 

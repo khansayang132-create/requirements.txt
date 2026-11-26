@@ -28,6 +28,8 @@ class Settings:
     llm_base_url: str = field(default_factory=lambda: os.environ.get("NOVA_LLM_BASE_URL", ""))
     llm_model: str = field(default_factory=lambda: os.environ.get("NOVA_LLM_MODEL", "local"))
     llm_api_key: str = field(default_factory=lambda: os.environ.get("NOVA_LLM_API_KEY", "none"))
+    # Off by default: reasoning adds seconds and can eat the whole reply budget.
+    llm_thinking: bool = field(default_factory=lambda: os.environ.get("NOVA_LLM_THINKING", "") == "1")
     max_upload_mb: int = field(default_factory=lambda: int(os.environ.get("NOVA_MAX_UPLOAD_MB", "50")))
 
     @property

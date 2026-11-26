@@ -25,6 +25,7 @@ VERIFIED means a test or a measured run shows it working. Nothing here is called
 | API endpoints | 13 API tests incl. validation, path traversal, API-key auth, projects CRUD |
 | Indonesian Piper voice (neural) | Downloaded with `scripts/get-voices.sh`, SHA-256 matches the published LFS hash; female speaker (F0 ≈ 254 Hz) at 22 kHz, ~0.8 s to render 9 s; rate changes length; `test_piper.py` (3 tests) incl. a full API job with WAV/MP3 |
 | Neural voice cloning (Chatterbox-TTS-Indonesian) | `test_chatterbox.py` through the API: a consented profile from a 248 Hz reference produced a 230 Hz clone (the model's default voice is 114 Hz); identity from the neural clone, no WORLD conversion. Full script: 18.5 s rendered in 96 s on 4 CPU cores. Runs only with `NOVA_CHATTERBOX_TEST=1` (not in CI: ~9 GB of downloads) |
+| Local LLM for rewrite and director notes | llama.cpp `llama-server` built from source with Gemma 4 E2B Q4_K_M (checksum-verified): `test_real_local_llm` passed via `NOVA_LLM_TEST_URL`; rewrite about 4 s, notes about 11 s in Bahasa Indonesia; the meaning gate accepted one rewrite and rejected one. `test_llm.py` covers thinking-off, retry when the field is rejected, reasoning-only replies, URL forms and the gate against a fake server (runs in CI) |
 | Director pitch on engines without pitch control | WORLD pitch shift: +3 st and range ×1.4 measured as >12% higher F0 and a wider range (`test_pitch_shift_for_engines_without_pitch`) |
 | Studio UI, phone and desktop | `design-check` on all 9 routes at 390 and 1440 px, dark: 0 errors. A Playwright run of analyse → enhance → direct → select voice → generate → download had no JS errors at both widths |
 
@@ -32,7 +33,7 @@ VERIFIED means a test or a measured run shows it working. Nothing here is called
 
 - **Sherpa-ONNX engine.** The package installs and imports; no Sherpa model was downloaded, so no audio was produced with it.
 - **How natural the voices sound to a listener.** Measurements are objective. The owner listened to the Piper samples and rejected them (robotic, wrong accent). Chatterbox has not yet been rated by a listener, nor tested with a real human reference recording.
-- **LLM enhancement and notes.** The client and the meaning-check gate exist; no local GGUF model or server was available.
+- **LLM through Ollama, LM Studio or vLLM.** Only llama.cpp was run; the others use the same OpenAI-compatible API but were not started here.
 - **Browser recording.** MediaRecorder upload decoded through ffmpeg; the headless check has no microphone.
 
 ## LIMITS (by design, stated in the UI and manifest)
