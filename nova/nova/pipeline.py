@@ -89,6 +89,7 @@ def synthesize_direction(d: Direction, engine: TTSEngine, profile: dict | None, 
     pieces, sr, conv_reports = [], None, []
     for i, chunk in enumerate(c for c in chunks if c.strip()):
         x, rate = engine.synthesize(chunk, d.language, engine_prosody, v)
+        x = trim_edges(x, rate)  # engines pad each phrase; NOVA's directed pauses replace that padding
         if converting:
             x, rate, rep = convert(x, rate, profile["voice"], prosody.pitch_semitones, prosody.pitch_range,
                                    source_scale=base_formant_scale(engine, d.language, v))
@@ -152,13 +153,48 @@ def _controls(req: dict) -> dict:
     }
 
 
+SYNTH_PASSAGE = ("Halo, selamat pagi. Hari ini cuacanya cerah sekali, jadi aku mau jalan-jalan sebentar ke pasar. "
+                 "Aku suka melihat buah-buahan segar dan mengobrol dengan para penjual yang ramah.")
+
+
+VOICES_DIR = Path(__file__).resolve().parent.parent / "voices"
+
+
+def build_synthetic_reference(engine: TTSEngine, profile: dict) -> tuple[np.ndarray, int]:
+    """The engine's own default voice reading a neutral passage, reshaped by WORLD to the design.
+    A preset ships its reference in nova/voices/ so every computer gets the identical voice."""
+    packaged = VOICES_DIR / f"{profile.get('preset') or '-'}.reference.wav"
+    if packaged.is_file():
+        return A.load_audio(packaged)
+    x, sr = engine.synthesize(SYNTH_PASSAGE, "id", Prosody(rate=0.95), None)
+    y, ysr, _ = convert(x, sr, profile["voice"])
+    return y / (np.max(np.abs(y)) + 1e-9) * 0.9, ysr
+
+
+def trim_edges(x: np.ndarray, sr: int, threshold_db: float = -45.0, keep_ms: float = 40.0) -> np.ndarray:
+    """Cut leading/trailing near-silence relative to the phrase's own peak, keeping a short margin."""
+    if x.size == 0:
+        return x
+    env = np.abs(x)
+    loud = np.flatnonzero(env > np.max(env) * 10 ** (threshold_db / 20))
+    if loud.size == 0:
+        return x
+    keep = int(sr * keep_ms / 1000)
+    return x[max(0, loud[0] - keep): min(x.size, loud[-1] + keep)]
+
+
 @contextmanager
 def _reference_file(store: ProfileStore, profile: dict | None, engine: TTSEngine):
-    """Decrypt a cloned profile's recording to a private temp WAV for the length of one render."""
-    if not (profile and profile.get("kind", "cloned") == "cloned" and engine.clones_from_reference):
+    """The reference a neural cloning engine speaks from, as a private temp WAV for one render:
+    a cloned profile's own recording (re-checked against its consent record), or for a designed
+    voice a synthetic reference NOVA builds once from the engine's default voice and the design."""
+    if not (profile and engine.clones_from_reference):
         yield None
         return
-    x, sr = store.reference_audio(profile["id"])  # re-checked against its consent record
+    if profile.get("kind", "cloned") == "cloned":
+        x, sr = store.reference_audio(profile["id"])
+    else:
+        x, sr = store.synthetic_reference(profile["id"], lambda: build_synthetic_reference(engine, profile))
     x = x[: sr * 20]  # a 10-20 s prompt is what zero-shot cloning uses
     x = x / (np.max(np.abs(x)) + 1e-9) * 0.9  # the model expects samples inside [-1, 1]
     with tempfile.TemporaryDirectory() as td:
@@ -183,7 +219,7 @@ def generate(settings: Settings, store: ProfileStore, req: dict, progress=lambda
         raise ValueError(f"sample_rate must be one of {A.SUPPORTED_RATES}")
     profile = store.get(req["profile_id"]) if req.get("profile_id") else None
     engine = get_engine(settings, req.get("engine"),
-                        has_reference=bool(profile and profile.get("kind", "cloned") == "cloned"))
+                        has_reference=profile is not None)
     controls = _controls(req)
     emotion = req.get("emotion") if req.get("emotion") in VALID_EMOTIONS else None
 

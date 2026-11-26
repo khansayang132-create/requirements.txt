@@ -163,8 +163,16 @@ voiceover to sound (soft and calm in → soft and calm out). Only the first 20 s
 
 Speed: about 4-6x slower than real time on a 4-core CPU (18 s of audio took 96 s), much faster
 on a GPU. Output carries Resemble's Perth watermark marking it as AI-generated. Designed voices
-have no recording, so with this engine they use the model's default (male) voice plus WORLD
-conversion; for a natural woman's voice, use a real recording.
+have no recording; with this engine NOVA clones a **synthetic reference** instead: the model's own
+default voice reshaped to the design by WORLD, so it belongs to no real person. The Soft Young
+Indonesian Woman preset ships its reference in `nova/voices/`, so the voice is identical on every
+computer and every day. Chatterbox has no speed control of its own; NOVA applies speed with a
+pitch-preserving time-stretch (ffmpeg atempo), and trims each phrase's own edge silence so only
+NOVA's directed pauses remain.
+
+Scheduled runs use `python -m nova.daily --segments today.json --out voiceover.mp3 --engine
+chatterbox-id --speed 1.25 --pause-scale 0.6` (a list of `{label, text, emotion}` scenes; a line
+that still holds a `[placeholder]` is refused).
 
 ### Neural cloning engines
 

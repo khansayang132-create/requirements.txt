@@ -5,9 +5,9 @@ Optional and heavy: needs `pip install -r requirements-neural.txt` (PyTorch, ~6 
 downloads ~3.2 GB of weights from Hugging Face on first use. It runs on CPU at about 4-6x slower
 than real time. Off unless NOVA_CHATTERBOX=1.
 
-Controls it really has: `exaggeration` (emotional intensity) and `cfg_weight` (lower = slower,
-more deliberate pacing), plus `temperature`. The director's emotion maps onto these; pitch has no
-direct control. Output carries Resemble's Perth watermark marking it as AI-generated."""
+Controls: the director's emotion maps to `exaggeration` (emotional intensity); speed is applied
+afterwards with a pitch-preserving time-stretch (ffmpeg atempo), because the model has no speed
+control of its own; pitch has no direct control. Output carries Resemble's Perth watermark marking it as AI-generated."""
 from __future__ import annotations
 
 import os
@@ -63,14 +63,16 @@ class ChatterboxEngine(TTSEngine):
         import torch
         # Emotion intensity: the director's intonation range is the best proxy (excited > 1, sad < 1).
         exaggeration = float(np.clip(0.5 * prosody.pitch_range, 0.25, 0.9))
-        # Pace: slower delivery -> lower cfg_weight (Chatterbox's own guidance).
-        cfg_weight = float(np.clip(0.5 * prosody.rate ** 2, 0.25, 0.7))
+        cfg_weight = 0.5  # Chatterbox's default; pace is set afterwards by a real time-stretch
         ref = voice if voice and os.path.isfile(voice) else None
         torch.manual_seed(1234)  # same text + settings -> same take
         with _lock, torch.inference_mode():
             wav = model.generate(text, audio_prompt_path=ref, exaggeration=exaggeration,
                                  cfg_weight=cfg_weight, temperature=0.7)
         x = wav.squeeze(0).cpu().numpy().astype(np.float64)
+        if abs(prosody.rate - 1.0) > 0.01:  # the model has no speed control: stretch without changing pitch
+            from ..audio import time_stretch
+            x = time_stretch(x, int(model.sr), prosody.rate)
         if prosody.volume_db:
             x = x * 10 ** (prosody.volume_db / 20)
         return x, int(model.sr)

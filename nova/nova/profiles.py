@@ -151,6 +151,7 @@ class ProfileStore:
         return profile
 
     def create_designed(self, params: dict) -> dict:
+        preset_id = params.get("preset") or ""
         if params.get("preset"):
             if params["preset"] not in PRESETS:
                 raise ValueError(f"unknown preset {params['preset']!r}")
@@ -163,7 +164,7 @@ class ProfileStore:
             "id": profile_id, "kind": "designed", "name": (params.get("name") or "Designed voice").strip(),
             "created_at": datetime.now(timezone.utc).isoformat(), "language": params.get("language", ""),
             "accent": "", "duration_s": 0, "consent": None, "voice": voice,
-            "description": params.get("description", ""),
+            "description": params.get("description", ""), "preset": preset_id,
             "base_variant": params.get("variant") or ("f3" if voice["pitch"]["f0_median_hz"] >= 165 else "m3"),
         }
         self._write(d / "profile.json.enc", json.dumps(profile).encode())
@@ -185,6 +186,24 @@ class ProfileStore:
             raise ProfileNotFound(f"{profile_id}: reference audio does not match its consent record")
         x, sr = sf.read(io.BytesIO(data), dtype="float64")
         return x, int(sr)
+
+    def synthetic_reference(self, profile_id: str, build) -> tuple[np.ndarray, int]:
+        """Reference audio for a *designed* voice: synthesised by NOVA (an engine's default voice
+        reshaped to the design), so it belongs to no real person and needs no consent record.
+        Built once by `build() -> (audio, sr)`, then stored encrypted so every render uses the
+        identical reference and the voice stays the same from day to day."""
+        profile = self.get(profile_id)
+        if profile.get("kind") != "designed":
+            raise ValueError("synthetic references are only for designed voices")
+        path = self._dir(profile_id) / "synthetic_reference.wav.enc"
+        if path.exists():
+            x, sr = sf.read(io.BytesIO(self._read(path)), dtype="float64")
+            return x, int(sr)
+        x, sr = build()
+        buf = io.BytesIO()
+        sf.write(buf, np.clip(x, -1, 1), sr, format="WAV", subtype="PCM_16")
+        self._write(path, buf.getvalue())
+        return x, sr
 
     def list(self) -> list[dict]:
         out = []

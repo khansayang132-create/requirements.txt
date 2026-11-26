@@ -125,3 +125,19 @@ def concat(chunks: list[np.ndarray], sr: int, crossfade_ms: float = 8.0) -> np.n
         else:
             out = np.concatenate([out, c])
     return out
+
+
+def time_stretch(x: np.ndarray, sr: int, factor: float) -> np.ndarray:
+    """Change speed without changing pitch (ffmpeg atempo, WSOLA). factor 1.2 = 20% faster."""
+    factor = float(np.clip(factor, 0.5, 2.0))
+    if abs(factor - 1.0) < 0.01 or x.size == 0:
+        return x
+    with tempfile.TemporaryDirectory() as td:
+        src, dst = Path(td) / "in.wav", Path(td) / "out.wav"
+        sf.write(str(src), np.clip(x, -1, 1), sr, subtype="FLOAT")
+        proc = subprocess.run(["ffmpeg", "-nostdin", "-v", "error", "-y", "-i", str(src), "-filter:a",
+                               f"atempo={factor:.4f}", str(dst)], capture_output=True, text=True, timeout=300)
+        if proc.returncode != 0:
+            raise AudioError(f"time-stretch failed: {proc.stderr.strip()[:200]}")
+        y, _ = sf.read(str(dst), dtype="float64")
+    return to_mono(y)

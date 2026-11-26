@@ -69,3 +69,12 @@ def test_mp3_and_wav_export_verified(tmp_path):
     for fmt, codec in (("wav", "pcm_s16le"), ("mp3", "mp3")):
         info = probe(export(tmp_path / f"t.{fmt}", x, 48000, fmt))
         assert info["codec"] == codec and info["sample_rate"] == 48000 and abs(info["duration"] - 1) < 0.1
+
+
+def test_time_stretch_changes_speed_not_pitch(speaker_wav):
+    from nova.audio import time_stretch
+    x, sr = load_audio(speaker_wav)
+    y = time_stretch(x, sr, 1.25)
+    assert abs(y.size / x.size - 0.8) < 0.03
+    a, b = analyze_voice(x, sr), analyze_voice(y, sr)
+    assert abs(b["pitch"]["f0_median_hz"] - a["pitch"]["f0_median_hz"]) < 10
