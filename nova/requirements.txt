@@ -1,8 +1,8 @@
-fastapi==0.165.0
+fastapi>=0.115,<1  # chatterbox-tts pulls gradio, which needs starlette<1.0
 uvicorn==0.54.0
 python-multipart==0.0.34
 pydantic>=2.7
-numpy>=2.0
+numpy>=1.24  # chatterbox-tts needs numpy<2 on Python < 3.13
 scipy>=1.13
 pyworld==0.3.5
 setuptools<81  # pyworld 0.3.5 imports pkg_resources
