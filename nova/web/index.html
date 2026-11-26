@@ -243,6 +243,22 @@
           <h1>Render the voiceover</h1>
           <p class="lede">One script or several scenes with their own emotion, combined into one mastered file.</p>
         </header>
+        <div class="card" id="lsk-card">
+          <div class="row between">
+            <h2>From LSKhan Studio autopilot</h2>
+            <span class="pill" id="lsk-pill" hidden></span>
+          </div>
+          <p class="hint">In LSKhan Studio, open today's plan and tap <b>Salin naskah</b>, then paste it here (the plan's JSON works too). NOVA asks for the real details the autopilot left in [brackets]; it never fills them in itself.</p>
+          <label class="field">Script from LSKhan Studio<textarea id="lsk-source" rows="5" placeholder="0-2s  Kebaya Indonesia vs shalwar kameez Pakistan… aku coba dua-duanya.&#10;   [TEXT] KEBAYA vs SHALWAR KAMEEZ&#10;2-5s  …"></textarea></label>
+          <button class="btn" type="button" id="lsk-read">Read script</button>
+          <div id="lsk-plan" hidden>
+            <ol class="lsk-scenes" id="lsk-scenes"></ol>
+            <p class="hint" id="lsk-uses">Uses the voice and settings from Controls below.</p>
+            <button class="btn primary big" type="button" id="lsk-render">Make voiceover</button>
+            <div class="progress" hidden id="lsk-progress"><div class="bar"><span id="lsk-bar"></span></div><p class="hint" id="lsk-msg" role="status"></p></div>
+            <div class="table-wrap" id="lsk-timing" hidden><table class="tbl" id="lsk-timing-table"></table></div>
+          </div>
+        </div>
         <div class="two wide-left">
           <div>
             <div class="card">

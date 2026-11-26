@@ -202,3 +202,16 @@ details summary { cursor: pointer; min-height: 44px; display: flex; align-items:
 details.card summary { font-weight: 600; color: var(--text); }
 #llm-load-models { margin-bottom: var(--s4); }
 .row > .field.grow { flex-basis: 240px; }  /* wins over .row > .field so wide inputs wrap on phones */
+/* LSKhan Studio bridge */
+.lsk-scenes { list-style: none; padding: 0; margin: var(--s4) 0 0; display: grid; gap: var(--s3); }
+.lsk-scene { background: var(--bg); border: 1px solid var(--line); border-radius: 12px; padding: var(--s3) var(--s4); }
+.lsk-scene .t { font: 600 12px var(--mono); color: var(--accent); }
+.lsk-scene .say { margin: var(--s1) 0 var(--s2); overflow-wrap: anywhere; }
+.lsk-scene .say mark { background: rgba(242, 196, 107, .14); color: var(--warn); border-radius: 4px; padding: 0 2px; }
+.lsk-scene .ost { font: 600 12px var(--mono); color: var(--muted); margin-bottom: var(--s2); overflow-wrap: anywhere; }
+.lsk-scene .field { margin-bottom: var(--s2); }
+.lsk-scene .field input.missing { border-color: var(--rec); }
+.tbl td.over { color: var(--rec); font-weight: 600; }
+.tbl td.ok { color: var(--accent); }
+.card > p.hint { max-width: 75ch; }
+.tbl caption { caption-side: bottom; text-align: left; padding-top: var(--s2); }

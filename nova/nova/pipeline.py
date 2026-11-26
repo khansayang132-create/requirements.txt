@@ -108,7 +108,7 @@ def synthesize_direction(d: Direction, engine: TTSEngine, profile: dict | None, 
         pieces.append(x)
     out = A.concat(pieces, sr)
     report = {
-        "sentence": d.index, "text": d.text, "spoken_text": text, "tone": d.tone,
+        "sentence": d.index, "scene": d.scene, "text": d.text, "spoken_text": text, "tone": d.tone,
         "voice": "profile reference (neural clone)" if neural_clone else v,
         "prosody": {"rate": round(prosody.rate, 3), "pitch_semitones": round(prosody.pitch_semitones, 2),
                     "pitch_range": round(prosody.pitch_range, 3), "volume_db": round(prosody.volume_db, 2),

@@ -511,6 +511,76 @@ async function masterVoiceover(ev) {
   } catch (e) { toast(e.message); } finally { btn.disabled = false; }
 }
 
+// ---------- LSKhan Studio autopilot bridge ----------
+let lskPlan = null;
+function setupLskhan() {
+  $("#lsk-read").addEventListener("click", async (e) => {
+    const source = $("#lsk-source").value.trim();
+    if (!source) return toast("Paste the script from LSKhan Studio first.");
+    lskPlan = await busy(e.currentTarget, () => api("/api/lskhan/parse", { method: "POST", json: { source } }));
+    renderLskPlan();
+  });
+  $("#lsk-render").addEventListener("click", lskRender);
+}
+function renderLskPlan() {
+  const p = lskPlan;
+  $("#lsk-plan").hidden = false;
+  const pill = $("#lsk-pill");
+  pill.hidden = false;
+  pill.textContent = [p.type, `${p.scenes.length} scenes`, p.placeholder_count ? `${p.placeholder_count} details to fill` : "ready"].filter(Boolean).join(" · ");
+  pill.className = "pill " + (p.placeholder_count ? "" : "ok");
+  const ol = clear($("#lsk-scenes"));
+  if (p.title) ol.append(h("li", {}, h("h3", {}, p.title)));
+  for (const s of p.scenes) {
+    const say = h("p", { class: "say" });
+    let last = 0;
+    for (const m of s.say.matchAll(/\[([^\[\]]{2,400})\]/g)) {
+      say.append(s.say.slice(last, m.index), h("mark", {}, m[0]));
+      last = m.index + m[0].length;
+    }
+    say.append(s.say.slice(last));
+    ol.append(h("li", { class: "lsk-scene" },
+      h("span", { class: "t" }, s.t || `Scene ${s.index + 1}`), say,
+      s.text ? h("p", { class: "ost" }, "On screen: " + s.text) : null,
+      ...s.placeholders.map((ph) => h("label", { class: "field" }, "Your real answer: " + ph.hint,
+        h("input", { "data-ph": ph.id, autocomplete: "off", placeholder: "In your own words",
+          oninput: (e) => e.target.classList.toggle("missing", !e.target.value.trim() && e.target.classList.contains("missing")) })))));
+  }
+}
+async function lskRender() {
+  if (!lskPlan) return;
+  const inputs = $$("#lsk-scenes input[data-ph]");
+  const answers = {};
+  inputs.forEach((i) => { i.classList.remove("missing"); if (i.value.trim()) answers[i.dataset.ph] = i.value.trim(); });
+  const empty = inputs.filter((i) => !i.value.trim());
+  if (empty.length) {
+    empty.forEach((i) => i.classList.add("missing"));
+    empty[0].focus();
+    return toast(`${empty.length} real detail(s) still need your answer. NOVA never makes them up.`);
+  }
+  const { text, segments, emotion, ...ctl } = studioRequest();  // controls only; the plan supplies the script
+  const btn = $("#lsk-render");
+  btn.disabled = true;
+  $("#lsk-timing").hidden = true;
+  try {
+    const { job_id } = await api("/api/lskhan/render", { method: "POST", json: { ...ctl, source: $("#lsk-source").value.trim(), answers } });
+    const job = await runJob(job_id, "#lsk-bar", "#lsk-msg", "#lsk-progress");
+    renderResult(job.result);
+    const rows = job.result.lskhan.timing;
+    const t = clear($("#lsk-timing-table"));
+    t.append(h("thead", {}, h("tr", {}, ...["Scene", "Slot", "Speech", ""].map((x) => h("th", {}, x)))));
+    t.append(h("tbody", {}, ...rows.map((r) => h("tr", {}, h("td", {}, r.scene), h("td", {}, r.slot_s ? `${r.slot_s}s` : "—"),
+      h("td", {}, `${r.speech_s}s`), h("td", { class: r.status }, r.status === "over" ? "Too long for the slot" : r.status === "ok" ? "Fits" : "")))));
+    const speech = rows.reduce((a, r) => a + r.speech_s, 0), slots = rows.reduce((a, r) => a + (r.slot_s || 0), 0);
+    if (rows.some((r) => r.status === "over") && slots) {
+      const speed = Math.min(1.4, Math.ceil((speech / slots) * 20) / 20);
+      t.append(h("caption", { class: "hint" }, `Speech is ${speech.toFixed(1)}s for a ${slots}s plan. Set Speed to about ${speed}× in Controls, or shorten the long lines in LSKhan Studio. A few seconds over is fine if the story needs it.`));
+    }
+    $("#lsk-timing").hidden = false;
+    $("#result").scrollIntoView({ behavior: "smooth", block: "start" });
+  } catch (e) { toast(e.message); } finally { btn.disabled = false; }
+}
+
 // ---------- projects ----------
 function setupProjects() {
   $("#project-form").addEventListener("submit", async (ev) => {
@@ -793,7 +863,7 @@ function frame(t) {
 }
 
 // ---------- boot ----------
-setupClone(); setupIntel(); setupEnhance(); setupDirector(); setupStudio(); setupProjects(); setupSettings();
+setupClone(); setupIntel(); setupEnhance(); setupDirector(); setupStudio(); setupLskhan(); setupProjects(); setupSettings();
 window.addEventListener("hashchange", route);
 window.addEventListener("resize", drawWave);
 loadSystem().then(route);

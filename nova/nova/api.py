@@ -27,6 +27,11 @@ from .enhance import MODES, enhance
 from .llm import LLMClient
 from .pipeline import VALID_EMOTIONS, generate, master_upload, preview_profile
 from .profiles import PRESETS, ConsentError, ProfileNotFound, ProfileStore
+from .lskhan import PlanError
+from .lskhan import fill as lskhan_fill
+from .lskhan import parse as lskhan_parse
+from .lskhan import segments as lskhan_segments
+from .lskhan import timing_report
 from .runtime import Runtime, explain_error, install_piper_voice, list_models, test_llm
 from .script_judge import judge
 from .tts import TTSUnavailable, engines
@@ -93,6 +98,27 @@ class LLMSettingsIn(BaseModel):
     api_key: str | None = Field(default=None, max_length=500)
     clear_key: bool = False
     thinking: bool = False
+
+
+class LskhanIn(BaseModel):
+    source: str | dict = Field(...)
+
+
+class LskhanRenderIn(BaseModel):
+    source: str | dict
+    answers: dict[str, str] = {}
+    profile_id: str | None = None
+    engine: str | None = None
+    mode: Literal["natural", "professional", "expressive"] = "expressive"
+    enhance: bool = True
+    speed: float = 1.0
+    pitch: float = 0.0
+    volume_db: float = 0.0
+    pause_scale: float = 1.0
+    pronunciation: dict[str, str] = {}
+    formats: list[Literal["wav", "mp3"]] = ["wav", "mp3"]
+    sample_rate: int = 48000
+    target_lufs: float = -14.0
 
 
 class ModelsIn(BaseModel):
@@ -163,6 +189,11 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     @app.exception_handler(TTSUnavailable)
     async def _tts(_, exc):
         return JSONResponse({"detail": str(exc)}, status_code=503)
+
+    @app.exception_handler(PlanError)
+    async def _plan(_, exc):
+        missing = exc.args[1] if len(exc.args) > 1 else []
+        return JSONResponse({"detail": str(exc.args[0]), "missing": missing}, status_code=422)
 
     @app.exception_handler(ValueError)
     async def _val(_, exc):
@@ -344,6 +375,26 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             finally:
                 shutil.rmtree(tmp_dir, ignore_errors=True)  # the upload is not kept
         return {"job_id": jobs.submit(run, req)["id"]}
+
+    # ---- LSKhan Studio autopilot bridge ----------------------------------------------------
+    @app.post("/api/lskhan/parse", dependencies=deps)
+    def lskhan_parse_route(body: LskhanIn):
+        return lskhan_parse(body.source)
+
+    @app.post("/api/lskhan/render", dependencies=deps)
+    def lskhan_render(body: LskhanRenderIn):
+        plan = lskhan_parse(body.source)
+        segs = lskhan_segments(plan, lskhan_fill(plan, body.answers))  # refuses unanswered placeholders
+        if body.profile_id:
+            store.get(body.profile_id)
+        req = body.model_dump(exclude={"source", "answers"}) | {"segments": segs}
+
+        def run(r, progress):
+            manifest = generate(settings, store, r, progress)
+            manifest["lskhan"] = {"title": plan["title"], "type": plan["type"], "timing": timing_report(manifest, segs)}
+            (settings.outputs_dir / manifest["id"] / "manifest.json").write_text(json.dumps(manifest, indent=2, ensure_ascii=False))
+            return manifest
+        return {"job_id": jobs.submit(run, req)["id"], "segments": segs}
 
     @app.get("/api/jobs/{job_id}", dependencies=deps)
     def job_status(job_id: str):
