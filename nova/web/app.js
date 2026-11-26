@@ -402,6 +402,7 @@ function setupStudio() {
   for (const r of $$("input[type=range]", f)) { r.addEventListener("input", () => syncOutput(r)); syncOutput(r); }
   $("#add-scene").addEventListener("click", () => { state.scenes.push({ label: `Scene ${state.scenes.length + 1}`, text: "", emotion: "" }); saveScenes(); renderScenes(); });
   f.addEventListener("submit", generate);
+  $("#master-form").addEventListener("submit", masterVoiceover);
 }
 function renderStudio() {
   const vs = clear($("#studio-voice"));
@@ -485,6 +486,29 @@ function renderResult(res) {
     h("td", {}, s.sentence + 1), h("td", {}, s.tone), h("td", {}, s.prosody.rate), h("td", {}, s.prosody.pitch_semitones),
     h("td", {}, s.prosody.volume_db), h("td", {}, s.prosody.emphasis.join(", ")), h("td", {}, s.text)))));
   loadIntoPlayer(res.urls.wav || res.urls.mp3, false);
+}
+
+async function masterVoiceover(ev) {
+  ev.preventDefault();
+  const f = ev.target, btn = f.querySelector("[type=submit]");
+  const fd = new FormData(f);
+  if (!f.audio.files[0]) return toast("Choose an audio file.");
+  btn.disabled = true;
+  $("#master-result").hidden = true;
+  try {
+    const { job_id } = await api("/api/master", { method: "POST", form: fd });
+    const job = await runJob(job_id, "#master-bar", "#master-msg", "#master-progress");
+    const r = job.result, m = r.mastering, b = r.before;
+    $("#master-result").hidden = false;
+    clear($("#master-metrics")).append(...[
+      ["Loudness", `${b.lufs} → ${m.output_lufs} LUFS`], ["True peak", `${b.true_peak_dbtp} → ${m.true_peak_dbtp} dBTP`],
+      ["Duration", `${m.duration_s}s`], ["Sample rate", `${m.sample_rate} Hz`],
+      ["Noise reduction", m.noise_reduction && m.noise_reduction.applied ? "Applied" : "Not needed"],
+    ].map(([k, v]) => h("div", {}, h("dt", {}, k), h("dd", {}, v))));
+    const dl = clear($("#master-downloads"));
+    for (const fmt of Object.keys(r.files)) dl.append(h("a", { class: "btn", href: withToken(`/api/files/${job_id}/voiceover.${fmt}`), download: "" }, `Download ${fmt.toUpperCase()}`));
+    loadIntoPlayer(`/api/files/${job_id}/voiceover.${r.files.wav ? "wav" : "mp3"}`, false);
+  } catch (e) { toast(e.message); } finally { btn.disabled = false; }
 }
 
 // ---------- projects ----------

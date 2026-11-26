@@ -295,7 +295,23 @@
             <div class="progress" hidden id="gen-progress"><div class="bar"><span id="gen-bar"></span></div><p class="hint" id="gen-msg" role="status"></p></div>
           </form>
         </div>
-</section>
+        <form class="card" id="master-form">
+          <h2>Master a voiceover</h2>
+          <p class="hint">Already have a voiceover (your own recording, or audio you generated elsewhere)? Make it ready to post: even loudness, safe peaks, tidy edges. The voice itself is not changed.</p>
+          <div class="row">
+            <label class="field grow">Audio file<input type="file" name="audio" accept="audio/*" required></label>
+            <label class="field">Loudness (LUFS)
+              <select name="target_lufs"><option value="-14">−14 TikTok/Reels</option><option value="-16">−16 web</option><option value="-19">−19 podcast</option><option value="-23">−23 broadcast</option></select>
+            </label>
+          </div>
+          <button class="btn primary" type="submit">Master it</button>
+          <div class="progress" hidden id="master-progress"><div class="bar"><span id="master-bar"></span></div><p class="hint" id="master-msg" role="status"></p></div>
+          <div id="master-result" hidden>
+            <dl class="metrics" id="master-metrics"></dl>
+            <div class="row actions" id="master-downloads"></div>
+          </div>
+        </form>
+      </section>
 
       <!-- PROJECTS -->
       <section data-view="projects" hidden>

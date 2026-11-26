@@ -25,7 +25,7 @@ from .config import Settings
 from .director import direct, render_script
 from .enhance import MODES, enhance
 from .llm import LLMClient
-from .pipeline import VALID_EMOTIONS, generate, preview_profile
+from .pipeline import VALID_EMOTIONS, generate, master_upload, preview_profile
 from .profiles import PRESETS, ConsentError, ProfileNotFound, ProfileStore
 from .runtime import Runtime, explain_error, install_piper_voice, list_models, test_llm
 from .script_judge import judge
@@ -317,6 +317,33 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             store.get(req["profile_id"])
         job = jobs.submit(lambda r, p: generate(settings, store, r, p), req)
         return {"job_id": job["id"], "status": job["status"]}
+
+    @app.post("/api/master", dependencies=deps)
+    async def master_voiceover(audio: UploadFile = File(...), target_lufs: float = Form(-14.0),
+                               sample_rate: int = Form(48000), formats: str = Form("wav,mp3")):
+        """Polish an existing voiceover: loudness, peaks, edges, fades. The voice is not changed."""
+        if not -30 <= target_lufs <= -8:
+            raise HTTPException(422, "target_lufs must be between -30 and -8")
+        settings.outputs_dir.mkdir(parents=True, exist_ok=True)
+        tmp_dir = Path(tempfile.mkdtemp(dir=settings.outputs_dir, prefix="upload-"))
+        src = tmp_dir / ("source" + Path(audio.filename or "a.wav").suffix[:8])
+        size = 0
+        with src.open("wb") as fh:
+            while chunk := await audio.read(1 << 20):
+                size += len(chunk)
+                if size > settings.max_upload_mb << 20:
+                    shutil.rmtree(tmp_dir, ignore_errors=True)
+                    raise HTTPException(413, f"file larger than {settings.max_upload_mb} MB")
+                fh.write(chunk)
+        req = {"target_lufs": target_lufs, "sample_rate": sample_rate,
+               "formats": [f for f in formats.split(",") if f], "filename": (audio.filename or "")[:120]}
+
+        def run(r, progress):
+            try:
+                return master_upload(settings, src, r, progress)
+            finally:
+                shutil.rmtree(tmp_dir, ignore_errors=True)  # the upload is not kept
+        return {"job_id": jobs.submit(run, req)["id"]}
 
     @app.get("/api/jobs/{job_id}", dependencies=deps)
     def job_status(job_id: str):

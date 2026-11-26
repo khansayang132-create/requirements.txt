@@ -249,3 +249,42 @@ def preview_profile(settings: Settings, store: ProfileStore, profile_id: str, te
                                           "format": "wav", "sample_rate": 24000,
                                           "job_id": f"preview-{profile_id}"})
     return Path(manifest["files"]["wav"]["path"])
+
+
+def master_upload(settings: Settings, src: Path, req: dict, progress=lambda p, msg: None) -> dict:
+    """Polish an existing voiceover (your own recording or audio you generated elsewhere):
+    loudness for the chosen platform, true-peak limit, edge silence, fades, WAV/MP3. The voice
+    itself is not re-synthesised or converted."""
+    from .mastering import integrated_loudness, true_peak_db
+
+    formats = req.get("formats") or ["wav", "mp3"]
+    if any(f not in ("wav", "mp3") for f in formats):
+        raise ValueError("formats must be wav and/or mp3")
+    target_sr = int(req.get("sample_rate", 48000))
+    if target_sr not in A.SUPPORTED_RATES:
+        raise ValueError(f"sample_rate must be one of {A.SUPPORTED_RATES}")
+    progress(10, "reading audio")
+    x, sr = A.load_audio(src)
+    if x.size < sr * 0.5:
+        raise ValueError("audio is shorter than half a second")
+    if x.size > sr * 1800:
+        raise ValueError("audio is longer than 30 minutes")
+    before = {"lufs": round(integrated_loudness(x, sr), 2), "true_peak_dbtp": round(true_peak_db(x), 2),
+              "duration_s": round(x.size / sr, 2), "sample_rate": sr}
+    progress(40, "mastering")
+    y, out_sr, report = master(x, sr, target_sr=target_sr, target_lufs=float(req.get("target_lufs", -14.0)))
+    job_id = req.get("job_id") or uuid.uuid4().hex
+    out_dir = settings.outputs_dir / job_id
+    out_dir.mkdir(parents=True, exist_ok=True)
+    files = {}
+    for fmt in formats:
+        path = A.export(out_dir / f"voiceover.{fmt}", y, out_sr, fmt)
+        info = A.probe(path)
+        if info["duration"] <= 0 or abs(info["duration"] - y.size / out_sr) > 0.2:
+            raise A.AudioError(f"{fmt} output failed verification: {info}")
+        files[fmt] = {"path": str(path), "bytes": path.stat().st_size, "probe": info}
+    manifest = {"id": job_id, "kind": "master", "source": req.get("filename", src.name), "before": before,
+                "mastering": report, "files": files}
+    (out_dir / "manifest.json").write_text(json.dumps(manifest, indent=2, ensure_ascii=False))
+    progress(100, "done")
+    return manifest

@@ -81,7 +81,7 @@ def reduce_noise(x: np.ndarray, sr: int, max_reduction_db: float = 8.0) -> tuple
     scale = np.sqrt(np.sum(win ** 2) * n_fft / 2)  # per-bin magnitude -> time-domain RMS
     noise_db = float(20 * np.log10(np.sqrt(np.sum(noise ** 2)) / scale + 1e-12))
     speech_db = float(20 * np.log10(np.sqrt(np.sum(mag[~quiet].mean(axis=0) ** 2)) / scale + 1e-12))
-    if noise_db < -60 or speech_db - noise_db > 40:  # nothing audible to remove
+    if noise_db < -50 or speech_db - noise_db > 40:  # nothing audible to remove (studio TTS sits near -60)
         return x, {"applied": False, "reason": "no measurable noise floor", "snr_db": round(speech_db - noise_db, 1)}
     floor = 10 ** (-max_reduction_db / 20)
     gain = np.maximum(floor, 1 - 1.5 * noise / (mag + 1e-12))

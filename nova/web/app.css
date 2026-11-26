@@ -201,3 +201,4 @@ details summary { cursor: pointer; min-height: 44px; display: flex; align-items:
 .voice-action code { font: 13px var(--mono); color: var(--muted); overflow-wrap: anywhere; }
 details.card summary { font-weight: 600; color: var(--text); }
 #llm-load-models { margin-bottom: var(--s4); }
+.row > .field.grow { flex-basis: 240px; }  /* wins over .row > .field so wide inputs wrap on phones */

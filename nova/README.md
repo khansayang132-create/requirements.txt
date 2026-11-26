@@ -27,7 +27,7 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 
 Open http://127.0.0.1:8790. Don't use port 8765: Headroom uses it on the phone and in cloud sessions.
 
-Tests: `.venv/bin/python -m pytest -q` (43 tests, about 30 s; the 3 Piper tests skip until `scripts/get-voices.sh` has run, the Chatterbox test runs only with `NOVA_CHATTERBOX_TEST=1` and `requirements-neural.txt` installed, and the real-LLM test only with `NOVA_LLM_TEST_URL` set).
+Tests: `.venv/bin/python -m pytest -q` (45 tests, about 30 s; the 3 Piper tests skip until `scripts/get-voices.sh` has run, the Chatterbox test runs only with `NOVA_CHATTERBOX_TEST=1` and `requirements-neural.txt` installed, and the real-LLM test only with `NOVA_LLM_TEST_URL` set).
 
 ## Settings (environment variables)
 
@@ -57,6 +57,10 @@ Everything below can also be done in **Settings** without environment variables:
   first render.
 - When no engine is chosen, Chatterbox is used only for cloned profiles with a recording; designed
   voices and the plain engine voice use Piper (or espeak-ng).
+- **Master a voiceover** (Audio Studio): upload a finished voiceover, your own recording or audio
+  you generated elsewhere, and get it back at the chosen loudness (−14 LUFS for TikTok/Reels by
+  default) with peaks limited and edges tidied. The voice is not converted, and the upload is
+  deleted after mastering. API: `POST /api/master` (multipart `audio`, `target_lufs`, `formats`).
 - The Enhancer shows whether the AI rewrite was used or rejected, and Script Intelligence shows the
   AI director notes.
 
