@@ -33,6 +33,7 @@ class Capabilities:
 class TTSEngine:
     name = "base"
     capabilities = Capabilities()
+    clones_from_reference = False  # True: `voice` may be a reference WAV path to clone (neural engines)
 
     def available(self) -> bool:
         return False

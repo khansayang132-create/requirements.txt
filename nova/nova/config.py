@@ -21,6 +21,8 @@ class Settings:
     # Default: the Indonesian voice that scripts/get-voices.sh installs, if it is there.
     piper_model: str = field(default_factory=lambda: os.environ.get("NOVA_PIPER_MODEL") or str(
         Path(os.environ.get("NOVA_MODELS_DIR", Path.home() / ".nova" / "models")) / "id_ID-news_tts-medium.onnx"))
+    # Neural Indonesian voice cloning (requirements-neural.txt, ~3 GB download on first use).
+    chatterbox: bool = field(default_factory=lambda: os.environ.get("NOVA_CHATTERBOX", "") == "1")
     sherpa_model_dir: str = field(default_factory=lambda: os.environ.get("NOVA_SHERPA_MODEL_DIR", ""))
     # Optional LLM: any OpenAI-compatible endpoint (llama.cpp server with a GGUF model, Ollama, OmniRoute).
     llm_base_url: str = field(default_factory=lambda: os.environ.get("NOVA_LLM_BASE_URL", ""))

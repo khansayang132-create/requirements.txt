@@ -27,7 +27,7 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 
 Open http://127.0.0.1:8790. Don't use port 8765: Headroom uses it on the phone and in cloud sessions.
 
-Tests: `.venv/bin/python -m pytest -q` (33 tests, about 30 s; the 3 Piper tests skip until `scripts/get-voices.sh` has run).
+Tests: `.venv/bin/python -m pytest -q` (34 tests, about 30 s; the 3 Piper tests skip until `scripts/get-voices.sh` has run, and the Chatterbox test runs only with `NOVA_CHATTERBOX_TEST=1` and `requirements-neural.txt` installed).
 
 ## Settings (environment variables)
 
@@ -37,6 +37,7 @@ Tests: `.venv/bin/python -m pytest -q` (33 tests, about 30 s; the 3 Piper tests 
 | `NOVA_API_KEY` | Optional bearer token for every `/api` route except `/api/health`. Set it before binding to anything but 127.0.0.1. |
 | `NOVA_SECRET_KEY` | Fernet key for profile encryption. If unset, one is generated in `$NOVA_DATA_DIR/secret.key` (mode 600). Losing the key makes saved profiles unreadable. |
 | `NOVA_PIPER_MODEL` | Path to a Piper `.onnx` voice (with its `.onnx.json`). Default: `~/.nova/models/id_ID-news_tts-medium.onnx` if present. When available, Piper is preferred over espeak-ng. |
+| `NOVA_CHATTERBOX` | `1` enables neural voice cloning with Chatterbox-TTS-Indonesian (needs `requirements-neural.txt`). Preferred over the other engines when enabled. |
 | `NOVA_SHERPA_MODEL_DIR` | Folder with a Sherpa-ONNX VITS model (`*.onnx`, `tokens.txt`, optional `espeak-ng-data/`). |
 | `NOVA_LLM_BASE_URL`, `NOVA_LLM_MODEL`, `NOVA_LLM_API_KEY` | Optional OpenAI-compatible LLM (e.g. `llama-server -m model.gguf --port 8080` → `http://127.0.0.1:8080/v1`). Used to rewrite scripts and add director notes. Its rewrite is accepted only if the meaning check passes. |
 
@@ -58,6 +59,31 @@ bash scripts/get-voices.sh      # ~60 MB into ~/.nova/models, SHA-256 checked, s
 - For the most natural sound, use "Engine voice (no profile)". A designed profile re-synthesises
   every sentence through the WORLD vocoder, which shapes the voice but costs some naturalness.
 - `NOVA_PIPER_MODEL` points at a different voice; `NOVA_MODELS_DIR` moves the default folder.
+
+### Your own voice, cloned (free, neural)
+
+NOVA can clone a voice with **Chatterbox-TTS-Indonesian** (`grandhigh/Chatterbox-TTS-Indonesian`,
+Apache-2.0, fine-tuned on Indonesian speech). It runs locally; no account or payment.
+
+```bash
+.venv/bin/pip install -r requirements-neural.txt   # PyTorch + Chatterbox, ~6 GB
+export NOVA_CHATTERBOX=1 HF_HUB_DISABLE_XET=1        # weights (~3.2 GB) download on first render
+.venv/bin/uvicorn nova.api:app --host 127.0.0.1 --port 8790
+```
+
+Then create a **cloned profile** from your own recording (Voice Cloning page, with the consent
+form) and pick it in the Studio. The encrypted recording is decrypted to a private temp file for
+each render and used as the model's reference; the neural model reproduces the voice, so NOVA
+skips its WORLD conversion. Emotion maps to Chatterbox's `exaggeration`, pace to `cfg_weight`.
+
+Recording tips for a good clone: 15-20 seconds of your normal Indonesian speaking voice, one
+speaker, a quiet room, no music or echo, phone held 20-30 cm away, speak the way you want the
+voiceover to sound (soft and calm in → soft and calm out). Only the first 20 seconds are used.
+
+Speed: about 4-6x slower than real time on a 4-core CPU (18 s of audio took 96 s), much faster
+on a GPU. Output carries Resemble's Perth watermark marking it as AI-generated. Designed voices
+have no recording, so with this engine they use the model's default (male) voice plus WORLD
+conversion; for a natural woman's voice, use a real recording.
 
 ### Neural cloning engines
 
@@ -107,7 +133,7 @@ vocal-tract length and breathiness. It does not copy fine timbre the way a train
 | `nova/script_judge.py`, `textutil.py` | Language, emotion, voiceover parameters, quality score |
 | `nova/enhance.py` | Three enhancement modes, meaning check, word diff |
 | `nova/director.py` | Per-sentence direction and engine mapping |
-| `nova/tts/` | espeak-ng, Piper and Sherpa-ONNX engines |
+| `nova/tts/` | Chatterbox (neural cloning), Piper, Sherpa-ONNX and espeak-ng engines |
 | `nova/mastering.py` | Loudness, noise reduction, silence, fades, limiter |
 | `nova/pipeline.py` | End-to-end generation and the manifest |
 | `nova/api.py`, `web/` | FastAPI app and the studio UI |

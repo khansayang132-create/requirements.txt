@@ -1,0 +1,4 @@
+# Optional neural Indonesian voice cloning (Chatterbox). Large: PyTorch + CUDA wheels (~6 GB).
+# Enable with NOVA_CHATTERBOX=1; weights (~3.2 GB) download from Hugging Face on first use.
+-r requirements.txt
+chatterbox-tts==0.1.7

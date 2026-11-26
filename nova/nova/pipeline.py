@@ -6,9 +6,12 @@ stage actually did (including controls an engine does not support)."""
 from __future__ import annotations
 
 import json
+import os
 import re
+import tempfile
 import time
 import uuid
+from contextlib import contextmanager
 from dataclasses import replace
 from pathlib import Path
 
@@ -62,7 +65,7 @@ def base_formant_scale(engine: TTSEngine, language: str, voice: str | None) -> f
 
 
 def synthesize_direction(d: Direction, engine: TTSEngine, profile: dict | None, controls: dict,
-                         voice: str | None = None) -> tuple[np.ndarray, int, dict]:
+                         voice: str | None = None, reference: str | None = None) -> tuple[np.ndarray, int, dict]:
     delivery = (profile or {}).get("voice", {}).get("delivery", {})
     p = d.prosody
     prosody = Prosody(
@@ -72,14 +75,17 @@ def synthesize_direction(d: Direction, engine: TTSEngine, profile: dict | None, 
         volume_db=p.volume_db + controls.get("volume_db", 0.0) + delivery.get("volume_db", 0.0),
         emphasis=p.emphasis,
     )
-    converting = profile is not None
+    # A neural cloning engine given the profile's own recording reproduces the voice itself;
+    # WORLD conversion or pitch shifting on top would only add vocoder artefacts.
+    neural_clone = bool(reference) and engine.clones_from_reference
+    converting = profile is not None and not neural_clone
     engine_prosody = replace(prosody, pitch_semitones=0.0, pitch_range=1.0) if converting else prosody
     text = apply_pronunciation(d.text, controls.get("pronunciation"))
     chunks = [text]
     if d.breath_after_word:
         ws = text.split()
         chunks = [" ".join(ws[:d.breath_after_word]), " ".join(ws[d.breath_after_word:])]
-    v = _voice_for(engine, d.language, profile, voice)
+    v = reference if neural_clone else _voice_for(engine, d.language, profile, voice)
     pieces, sr, conv_reports = [], None, []
     for i, chunk in enumerate(c for c in chunks if c.strip()):
         x, rate = engine.synthesize(chunk, d.language, engine_prosody, v)
@@ -87,7 +93,8 @@ def synthesize_direction(d: Direction, engine: TTSEngine, profile: dict | None, 
             x, rate, rep = convert(x, rate, profile["voice"], prosody.pitch_semitones, prosody.pitch_range,
                                    source_scale=base_formant_scale(engine, d.language, v))
             conv_reports.append(rep)
-        elif not engine.capabilities.pitch and (prosody.pitch_semitones or prosody.pitch_range != 1.0):
+        elif (not neural_clone and not engine.capabilities.pitch
+              and (prosody.pitch_semitones or prosody.pitch_range != 1.0)):
             x, rate, rep = shift_pitch(x, rate, prosody.pitch_semitones, prosody.pitch_range)
             conv_reports.append({"pitch_shift": rep})
         if not engine.capabilities.volume and prosody.volume_db:
@@ -101,22 +108,25 @@ def synthesize_direction(d: Direction, engine: TTSEngine, profile: dict | None, 
         pieces.append(x)
     out = A.concat(pieces, sr)
     report = {
-        "sentence": d.index, "text": d.text, "spoken_text": text, "tone": d.tone, "voice": v,
+        "sentence": d.index, "text": d.text, "spoken_text": text, "tone": d.tone,
+        "voice": "profile reference (neural clone)" if neural_clone else v,
         "prosody": {"rate": round(prosody.rate, 3), "pitch_semitones": round(prosody.pitch_semitones, 2),
                     "pitch_range": round(prosody.pitch_range, 3), "volume_db": round(prosody.volume_db, 2),
                     "emphasis": prosody.emphasis},
-        "applied_by": map_to_engine(d, engine.capabilities, converting),
+        "applied_by": (map_to_engine(d, engine.capabilities, converting) | (
+            {"pitch": "neural clone (emotion via exaggeration)", "pitch_range": "neural clone (exaggeration)",
+             "voice_identity": "neural clone from reference"} if neural_clone else {})),
         "conversion": conv_reports, "duration_s": round(out.size / sr, 3),
     }
     return out, sr, report
 
 
 def render(directions: list[Direction], engine: TTSEngine, profile: dict | None, controls: dict,
-           voice: str | None = None) -> tuple[np.ndarray, int, list[dict]]:
+           voice: str | None = None, reference: str | None = None) -> tuple[np.ndarray, int, list[dict]]:
     pieces, reports, sr = [], [], None
     pause_scale = controls.get("pause_scale", 1.0)
     for i, d in enumerate(directions):
-        x, rate, rep = synthesize_direction(d, engine, profile, controls, voice)
+        x, rate, rep = synthesize_direction(d, engine, profile, controls, voice, reference)
         if sr is None:
             sr = rate
         elif rate != sr:
@@ -140,6 +150,21 @@ def _controls(req: dict) -> dict:
         "pause_scale": float(np.clip(req.get("pause_scale", 1.0), 0.0, 3.0)),
         "pronunciation": req.get("pronunciation") or {},
     }
+
+
+@contextmanager
+def _reference_file(store: ProfileStore, profile: dict | None, engine: TTSEngine):
+    """Decrypt a cloned profile's recording to a private temp WAV for the length of one render."""
+    if not (profile and profile.get("kind", "cloned") == "cloned" and engine.clones_from_reference):
+        yield None
+        return
+    x, sr = store.reference_audio(profile["id"])  # re-checked against its consent record
+    x = x[: sr * 20]  # a 10-20 s prompt is what zero-shot cloning uses
+    x = x / (np.max(np.abs(x)) + 1e-9) * 0.9  # the model expects samples inside [-1, 1]
+    with tempfile.TemporaryDirectory() as td:
+        os.chmod(td, 0o700)
+        path = A.write_wav(Path(td) / "reference.wav", x, sr)
+        yield str(path)
 
 
 def generate(settings: Settings, store: ProfileStore, req: dict, progress=lambda p, msg: None) -> dict:
@@ -184,7 +209,8 @@ def generate(settings: Settings, store: ProfileStore, req: dict, progress=lambda
                             "text": final_text})
 
     progress(25, f"synthesising {len(all_dirs)} sentences with {engine.name}")
-    raw, sr, sentence_reports = render(all_dirs, engine, profile, controls, req.get("voice"))
+    with _reference_file(store, profile, engine) as reference:
+        raw, sr, sentence_reports = render(all_dirs, engine, profile, controls, req.get("voice"), reference)
     progress(80, "mastering")
     mastered, out_sr, master_report = master(raw, sr, target_sr=target_sr,
                                              target_lufs=float(req.get("target_lufs", -16.0)))

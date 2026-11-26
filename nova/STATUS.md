@@ -24,13 +24,14 @@ VERIFIED means a test or a measured run shows it working. Nothing here is called
 | Noise reduction only when needed | Clean audio untouched; a −41 dB noise floor lowered 8 dB with speech level changed 0.4 dB |
 | API endpoints | 13 API tests incl. validation, path traversal, API-key auth, projects CRUD |
 | Indonesian Piper voice (neural) | Downloaded with `scripts/get-voices.sh`, SHA-256 matches the published LFS hash; female speaker (F0 ≈ 254 Hz) at 22 kHz, ~0.8 s to render 9 s; rate changes length; `test_piper.py` (3 tests) incl. a full API job with WAV/MP3 |
+| Neural voice cloning (Chatterbox-TTS-Indonesian) | `test_chatterbox.py` through the API: a consented profile from a 248 Hz reference produced a 230 Hz clone (the model's default voice is 114 Hz); identity from the neural clone, no WORLD conversion. Full script: 18.5 s rendered in 96 s on 4 CPU cores. Runs only with `NOVA_CHATTERBOX_TEST=1` (not in CI: ~9 GB of downloads) |
 | Director pitch on engines without pitch control | WORLD pitch shift: +3 st and range ×1.4 measured as >12% higher F0 and a wider range (`test_pitch_shift_for_engines_without_pitch`) |
 | Studio UI, phone and desktop | `design-check` on all 9 routes at 390 and 1440 px, dark: 0 errors. A Playwright run of analyse → enhance → direct → select voice → generate → download had no JS errors at both widths |
 
 ## IMPLEMENTED, NOT VERIFIED
 
 - **Sherpa-ONNX engine.** The package installs and imports; no Sherpa model was downloaded, so no audio was produced with it.
-- **How natural Piper sounds to a listener.** The measurements above are objective; nobody has listened and rated it here.
+- **How natural the voices sound to a listener.** Measurements are objective. The owner listened to the Piper samples and rejected them (robotic, wrong accent). Chatterbox has not yet been rated by a listener, nor tested with a real human reference recording.
 - **LLM enhancement and notes.** The client and the meaning-check gate exist; no local GGUF model or server was available.
 - **Browser recording.** MediaRecorder upload decoded through ffmpeg; the headless check has no microphone.
 
@@ -38,5 +39,6 @@ VERIFIED means a test or a measured run shows it working. Nothing here is called
 
 - espeak-ng is robotic; it is the fallback when the Piper voice is not installed.
 - The Piper voice speaks Indonesian only and has no word-emphasis control.
-- The built-in cloning is WORLD signal processing: it matches pitch, intonation, vocal tract and breathiness, not fine timbre.
+- Without Chatterbox, cloning is WORLD signal processing: it matches pitch, intonation, vocal tract and breathiness, not fine timbre.
+- Chatterbox is slow on CPU (4-6x real time) and needs ~9 GB of disk for PyTorch and weights.
 - Accent and pronunciation of a recording are recorded as *declared*; measuring them needs a speech recogniser.

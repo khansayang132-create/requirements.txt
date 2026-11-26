@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from ..config import Settings
 from .base import Capabilities, Prosody, TTSEngine, TTSUnavailable
+from .chatterbox_engine import ChatterboxEngine
 from .espeak import EspeakEngine
 from .piper_engine import PiperEngine
 from .sherpa_engine import SherpaEngine
@@ -11,6 +12,7 @@ __all__ = ["Capabilities", "Prosody", "TTSEngine", "TTSUnavailable", "engines", 
 
 def engines(settings: Settings) -> dict[str, TTSEngine]:
     return {
+        "chatterbox-id": _chatterbox(settings),
         "espeak-ng": EspeakEngine(),
         "piper": PiperEngine(settings.piper_model),
         "sherpa-onnx": SherpaEngine(settings.sherpa_model_dir),
@@ -26,7 +28,17 @@ def get_engine(settings: Settings, name: str | None) -> TTSEngine:
         if not engine.available():
             raise TTSUnavailable(f"engine {name!r} is not available on this machine")
         return engine
-    for preferred in ("piper", "sherpa-onnx", "espeak-ng"):
+    for preferred in ("chatterbox-id", "piper", "sherpa-onnx", "espeak-ng"):
         if all_engines[preferred].available():
             return all_engines[preferred]
     raise TTSUnavailable("no TTS engine is available: install espeak-ng or configure a Piper/Sherpa model")
+
+
+_CHATTERBOX: dict[bool, ChatterboxEngine] = {}
+
+
+def _chatterbox(settings: Settings) -> ChatterboxEngine:
+    # One instance per process: the model is ~3 GB and takes over a minute to load.
+    if settings.chatterbox not in _CHATTERBOX:
+        _CHATTERBOX[settings.chatterbox] = ChatterboxEngine(settings.chatterbox)
+    return _CHATTERBOX[settings.chatterbox]
