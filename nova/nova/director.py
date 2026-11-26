@@ -6,7 +6,7 @@ from __future__ import annotations
 import re
 from dataclasses import asdict, dataclass, field
 
-from .script_judge import EMOTIONS, detect_emotion, emphasis_candidates
+from .script_judge import EMOTIONS, emphasis_candidates
 from .textutil import sentence_language, split_sentences, words
 from .tts.base import Capabilities, Prosody
 
@@ -60,11 +60,12 @@ def _sentence_emotion(sentence: str, fallback: str) -> str:
 def direct(text: str, mode: str = "natural", emotion_override: str | None = None, scene: int | None = None,
            script_language: str = "en") -> list[Direction]:
     sentences = split_sentences(text)
-    overall = emotion_override or detect_emotion(text)["dominant"]
     scale = MODE_SCALE.get(mode, 1.0)
     out = []
     for i, s in enumerate(sentences):
-        emo = emotion_override or _sentence_emotion(s, overall)
+        # A sentence without its own emotion words stays neutral: inheriting the script's dominant
+        # emotion let one keyword (e.g. "ternyata") make every line sound excited.
+        emo = emotion_override or _sentence_emotion(s, "neutral")
         tone, rate, pitch, rng, vol = TONES.get(emo, TONES["neutral"])
         prosody = Prosody(
             rate=round(1 + (rate - 1) * scale, 3),
@@ -94,8 +95,8 @@ def map_to_engine(d: Direction, caps: Capabilities, converting: bool) -> dict:
     (pitch/range via WORLD conversion, volume via gain)."""
     return {
         "rate": "engine" if caps.rate else "not supported",
-        "pitch": "voice conversion" if converting else "engine" if caps.pitch else "voice conversion",
-        "pitch_range": "voice conversion" if converting else "engine" if caps.pitch_range else "voice conversion",
+        "pitch": "voice conversion" if converting else "engine" if caps.pitch else "WORLD pitch shift",
+        "pitch_range": "voice conversion" if converting else "engine" if caps.pitch_range else "WORLD pitch shift",
         "volume": "engine" if caps.volume else "gain",
         "emphasis": "engine (SSML)" if caps.emphasis else "not supported",
         "pauses": "inserted silence",

@@ -167,6 +167,11 @@ jobs:
           python-version: "3.13"
       - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends espeak-ng ffmpeg
       - run: pip install -r requirements.txt
+      - uses: actions/cache@v4
+        with:
+          path: ~/.nova/models
+          key: nova-piper-id_ID-news_tts-medium-v1
+      - run: bash scripts/get-voices.sh
       - run: python -m pytest -q
 
   design:

@@ -18,7 +18,9 @@ class Settings:
     # Optional bearer token. When set, every /api route except /api/health requires it.
     api_key: str = field(default_factory=lambda: os.environ.get("NOVA_API_KEY", ""))
     # Optional engines: a model only counts as available when its file exists.
-    piper_model: str = field(default_factory=lambda: os.environ.get("NOVA_PIPER_MODEL", ""))
+    # Default: the Indonesian voice that scripts/get-voices.sh installs, if it is there.
+    piper_model: str = field(default_factory=lambda: os.environ.get("NOVA_PIPER_MODEL") or str(
+        Path(os.environ.get("NOVA_MODELS_DIR", Path.home() / ".nova" / "models")) / "id_ID-news_tts-medium.onnx"))
     sherpa_model_dir: str = field(default_factory=lambda: os.environ.get("NOVA_SHERPA_MODEL_DIR", ""))
     # Optional LLM: any OpenAI-compatible endpoint (llama.cpp server with a GGUF model, Ollama, OmniRoute).
     llm_base_url: str = field(default_factory=lambda: os.environ.get("NOVA_LLM_BASE_URL", ""))

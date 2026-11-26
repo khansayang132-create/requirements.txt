@@ -1,3 +1,4 @@
+import os
 import sys
 import warnings
 from pathlib import Path
@@ -36,9 +37,14 @@ def settings(tmp_path, monkeypatch):
     monkeypatch.delenv("NOVA_API_KEY", raising=False)
     monkeypatch.delenv("NOVA_LLM_BASE_URL", raising=False)
     monkeypatch.delenv("NOVA_SECRET_KEY", raising=False)
+    monkeypatch.delenv("NOVA_PIPER_MODEL", raising=False)
+    monkeypatch.setenv("NOVA_MODELS_DIR", str(tmp_path / "no-models"))  # espeak-ng unless a test opts in
     from nova.config import Settings
     return Settings()
 
 
 CONSENT = {"speaker_name": "Test Speaker", "relationship": "self", "consent_confirmed": "true",
            "consent_statement": "I, Test Speaker, consent to NOVA creating a voice profile from this recording."}
+
+
+PIPER_MODEL = Path(os.environ.get("NOVA_MODELS_DIR_REAL", Path.home() / ".nova" / "models")) / "id_ID-news_tts-medium.onnx"

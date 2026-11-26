@@ -23,16 +23,20 @@ VERIFIED means a test or a measured run shows it working. Nothing here is called
 | Loudness measurement | Matches ffmpeg `ebur128` (−25.49 vs −25.5 LUFS; test tolerance 0.3 LU) |
 | Noise reduction only when needed | Clean audio untouched; a −41 dB noise floor lowered 8 dB with speech level changed 0.4 dB |
 | API endpoints | 13 API tests incl. validation, path traversal, API-key auth, projects CRUD |
+| Indonesian Piper voice (neural) | Downloaded with `scripts/get-voices.sh`, SHA-256 matches the published LFS hash; female speaker (F0 ≈ 254 Hz) at 22 kHz, ~0.8 s to render 9 s; rate changes length; `test_piper.py` (3 tests) incl. a full API job with WAV/MP3 |
+| Director pitch on engines without pitch control | WORLD pitch shift: +3 st and range ×1.4 measured as >12% higher F0 and a wider range (`test_pitch_shift_for_engines_without_pitch`) |
 | Studio UI, phone and desktop | `design-check` on all 9 routes at 390 and 1440 px, dark: 0 errors. A Playwright run of analyse → enhance → direct → select voice → generate → download had no JS errors at both widths |
 
 ## IMPLEMENTED, NOT VERIFIED
 
-- **Piper and Sherpa-ONNX engines.** The packages install and import; model downloads (Hugging Face, GitHub releases) are blocked by the sandbox proxy, so no audio was produced with them.
+- **Sherpa-ONNX engine.** The package installs and imports; no Sherpa model was downloaded, so no audio was produced with it.
+- **How natural Piper sounds to a listener.** The measurements above are objective; nobody has listened and rated it here.
 - **LLM enhancement and notes.** The client and the meaning-check gate exist; no local GGUF model or server was available.
 - **Browser recording.** MediaRecorder upload decoded through ffmpeg; the headless check has no microphone.
 
 ## LIMITS (by design, stated in the UI and manifest)
 
-- espeak-ng is robotic. Natural, human-sounding speech needs a neural voice (README, "Making it sound like a real person").
+- espeak-ng is robotic; it is the fallback when the Piper voice is not installed.
+- The Piper voice speaks Indonesian only and has no word-emphasis control.
 - The built-in cloning is WORLD signal processing: it matches pitch, intonation, vocal tract and breathiness, not fine timbre.
 - Accent and pronunciation of a recording are recorded as *declared*; measuring them needs a speech recogniser.

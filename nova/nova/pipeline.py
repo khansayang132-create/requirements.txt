@@ -15,7 +15,7 @@ from pathlib import Path
 import numpy as np
 
 from . import audio as A
-from .clone import convert
+from .clone import convert, shift_pitch
 from .config import Settings
 from .director import Direction, direct, map_to_engine, render_script
 from .enhance import enhance
@@ -87,6 +87,9 @@ def synthesize_direction(d: Direction, engine: TTSEngine, profile: dict | None, 
             x, rate, rep = convert(x, rate, profile["voice"], prosody.pitch_semitones, prosody.pitch_range,
                                    source_scale=base_formant_scale(engine, d.language, v))
             conv_reports.append(rep)
+        elif not engine.capabilities.pitch and (prosody.pitch_semitones or prosody.pitch_range != 1.0):
+            x, rate, rep = shift_pitch(x, rate, prosody.pitch_semitones, prosody.pitch_range)
+            conv_reports.append({"pitch_shift": rep})
         if not engine.capabilities.volume and prosody.volume_db:
             x = x * 10 ** (prosody.volume_db / 20)
         if sr is None:

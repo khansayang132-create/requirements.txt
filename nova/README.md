@@ -27,7 +27,7 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 
 Open http://127.0.0.1:8790. Don't use port 8765: Headroom uses it on the phone and in cloud sessions.
 
-Tests: `.venv/bin/python -m pytest -q` (30 tests, about 20 s).
+Tests: `.venv/bin/python -m pytest -q` (33 tests, about 30 s; the 3 Piper tests skip until `scripts/get-voices.sh` has run).
 
 ## Settings (environment variables)
 
@@ -36,26 +36,28 @@ Tests: `.venv/bin/python -m pytest -q` (30 tests, about 20 s).
 | `NOVA_DATA_DIR` | Where profiles, projects and outputs live (default `~/.nova`, mode 700). |
 | `NOVA_API_KEY` | Optional bearer token for every `/api` route except `/api/health`. Set it before binding to anything but 127.0.0.1. |
 | `NOVA_SECRET_KEY` | Fernet key for profile encryption. If unset, one is generated in `$NOVA_DATA_DIR/secret.key` (mode 600). Losing the key makes saved profiles unreadable. |
-| `NOVA_PIPER_MODEL` | Path to a Piper `.onnx` voice (with its `.onnx.json`). When set, Piper is preferred over espeak-ng. |
+| `NOVA_PIPER_MODEL` | Path to a Piper `.onnx` voice (with its `.onnx.json`). Default: `~/.nova/models/id_ID-news_tts-medium.onnx` if present. When available, Piper is preferred over espeak-ng. |
 | `NOVA_SHERPA_MODEL_DIR` | Folder with a Sherpa-ONNX VITS model (`*.onnx`, `tokens.txt`, optional `espeak-ng-data/`). |
 | `NOVA_LLM_BASE_URL`, `NOVA_LLM_MODEL`, `NOVA_LLM_API_KEY` | Optional OpenAI-compatible LLM (e.g. `llama-server -m model.gguf --port 8080` → `http://127.0.0.1:8080/v1`). Used to rewrite scripts and add director notes. Its rewrite is accepted only if the meaning check passes. |
 
 ## Making it sound like a real person
 
-espeak-ng is a formant synthesiser: it is always available and every control works, but it
-sounds robotic. For natural speech, add a neural voice. These downloads are blocked in the build
-sandbox, so they are **not verified here**:
+espeak-ng sounds robotic. NOVA uses the neural Indonesian Piper voice automatically once it is
+installed:
 
 ```bash
-# Indonesian Piper voice (from the rhasspy/piper-voices repository on Hugging Face)
-mkdir -p ~/.nova/models && cd ~/.nova/models
-curl -LO https://huggingface.co/rhasspy/piper-voices/resolve/main/id/id_ID/news_tts/medium/id_ID-news_tts-medium.onnx
-curl -LO https://huggingface.co/rhasspy/piper-voices/resolve/main/id/id_ID/news_tts/medium/id_ID-news_tts-medium.onnx.json
-export NOVA_PIPER_MODEL=~/.nova/models/id_ID-news_tts-medium.onnx
+bash scripts/get-voices.sh      # ~60 MB into ~/.nova/models, SHA-256 checked, safe to re-run
 ```
 
-The director's pitch, range and the profile's voice are then applied by the conversion stage,
-and rate by Piper's `length_scale`. The manifest says which stage applied each control.
+- Voice: `id_ID-news_tts-medium` from rhasspy/piper-voices, one female speaker, 22 kHz. Its model
+  card points to a Kaggle dataset for the licence; check it before commercial use.
+- It speaks Indonesian. English sentences in a mixed script are read with Indonesian pronunciation.
+- Piper controls rate (`length_scale`) and volume. The director's pitch and intonation range are
+  applied afterwards by a WORLD pitch shift, or by the voice profile when one is selected. Piper has
+  no word emphasis; the manifest reports it as "not supported".
+- For the most natural sound, use "Engine voice (no profile)". A designed profile re-synthesises
+  every sentence through the WORLD vocoder, which shapes the voice but costs some naturalness.
+- `NOVA_PIPER_MODEL` points at a different voice; `NOVA_MODELS_DIR` moves the default folder.
 
 ### Neural cloning engines
 

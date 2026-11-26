@@ -91,3 +91,26 @@ def convert(x: np.ndarray, sr: int, profile_voice: dict, pitch_semitones: float 
         "breathiness": round(float(breath), 2),
     })
     return y, sr, report
+
+
+def shift_pitch(x: np.ndarray, sr: int, semitones: float = 0.0, pitch_range: float = 1.0) -> tuple[np.ndarray, int, dict]:
+    """Apply the director's pitch offset and intonation range to an engine that has no pitch
+    control (Piper, Sherpa). The voice keeps its own register and vocal tract: only F0 moves."""
+    from .audio import resample
+
+    if x.size == 0 or (abs(semitones) < 0.05 and abs(pitch_range - 1.0) < 0.02):
+        return x, sr, {"applied": False}
+    if sr != WORK_SR:
+        x = resample(x, sr, WORK_SR)
+        sr = WORK_SR
+    peak = float(np.max(np.abs(x))) or 1.0
+    f0, sp, ap = world_features(x / peak * 0.9, sr)
+    voiced = f0 > 0
+    if voiced.sum() < 5:
+        return x, sr, {"applied": False}
+    lf0 = np.log(f0[voiced])
+    mu = lf0.mean()
+    f0[voiced] = np.exp((lf0 - mu) * pitch_range + mu + np.log(2.0) * semitones / 12.0)
+    y = pw.synthesize(f0, sp, ap, sr, frame_period=FRAME_MS)[: x.size]
+    y = y / (np.max(np.abs(y)) + 1e-9) * peak
+    return y, sr, {"applied": True, "semitones": round(semitones, 2), "range": round(pitch_range, 3)}
