@@ -27,7 +27,7 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 
 Open http://127.0.0.1:8790. Don't use port 8765: Headroom uses it on the phone and in cloud sessions.
 
-Tests: `.venv/bin/python -m pytest -q` (45 tests, about 30 s; the 3 Piper tests skip until `scripts/get-voices.sh` has run, the Chatterbox test runs only with `NOVA_CHATTERBOX_TEST=1` and `requirements-neural.txt` installed, and the real-LLM test only with `NOVA_LLM_TEST_URL` set).
+Tests: `.venv/bin/python -m pytest -q` (50 tests, about 30 s; the 3 Piper tests skip until `scripts/get-voices.sh` has run, the Chatterbox test runs only with `NOVA_CHATTERBOX_TEST=1` and `requirements-neural.txt` installed, and the real-LLM test only with `NOVA_LLM_TEST_URL` set).
 
 ## Settings (environment variables)
 
@@ -63,6 +63,30 @@ Everything below can also be done in **Settings** without environment variables:
   deleted after mastering. API: `POST /api/master` (multipart `audio`, `target_lufs`, `formats`).
 - The Enhancer shows whether the AI rewrite was used or rejected, and Script Intelligence shows the
   AI director notes.
+
+## From the LSKhan Studio autopilot
+
+The scheduled task "LSKhan daily video plan" writes one ready-to-film plan each morning into the
+LSKhan Studio app (`plans/auto-YYYY-MM-DD`). NOVA turns that plan into a voiceover:
+
+1. In LSKhan Studio, open today's plan and tap **Salin naskah** (the plan's JSON also works).
+2. In NOVA, Audio Studio, **From LSKhan Studio autopilot**: paste it and press **Read script**.
+3. The autopilot leaves real personal facts as `[placeholders]` (it must never invent them). NOVA
+   shows each one with the autopilot's hint and asks for your own answer. It refuses to render
+   while any is empty, and never fills one itself.
+4. **Make voiceover** renders scene by scene with the Studio controls (voice, engine, speed,
+   loudness). The content type sets the emotion (Lucu, Budaya and Keluarga warm with an energetic
+   hook; Emosional gentle; Islami and Misteri calm; Edukasi professional; Debat confident).
+   On-screen text, arrows and emoji are not spoken; in bilingual plans only the Indonesian part is
+   voiced.
+5. A timing table compares each scene's speech with the plan's time slot and suggests a speed when
+   it runs long.
+6. Upload the MP3/WAV in LSKhan Studio's Video Maker (audio, voice) to finish the video.
+
+The two apps don't talk to each other directly: the scheduled task runs in the cloud and NOVA runs
+on your computer, so the hand-off is the copy and paste in step 1. API: `POST /api/lskhan/parse`
+(`source`) and `POST /api/lskhan/render` (`source`, `answers`, plus the usual controls; default
+-14 LUFS); unanswered placeholders return 422 with the list of what is missing.
 
 ## Free local AI for the script tools
 
@@ -193,4 +217,5 @@ vocal-tract length and breathiness. It does not copy fine timbre the way a train
 | `nova/tts/` | Chatterbox (neural cloning), Piper, Sherpa-ONNX and espeak-ng engines |
 | `nova/mastering.py` | Loudness, noise reduction, silence, fades, limiter |
 | `nova/pipeline.py` | End-to-end generation and the manifest |
+| `nova/lskhan.py` | LSKhan Studio plan import: parse, placeholders, fill, segments, timing |
 | `nova/api.py`, `web/` | FastAPI app and the studio UI |
