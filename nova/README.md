@@ -211,6 +211,23 @@ vocal-tract length and breathiness. It does not copy fine timbre the way a train
 | GET | `/api/jobs/{id}` | Progress and result manifest |
 | GET | `/api/files/{job}/voiceover.wav\|mp3\|manifest.json` | Download |
 | CRUD | `/api/projects` | Saved scripts, scenes and settings |
+| GET | `/api/voice-director/voices` | Voices for the NOVA Voice Studio Android app: `nova-default` plus every profile |
+| POST | `/api/voice-director/produce` | Render right away for the Android app; returns `status`, `audio_url`, `filename` (.wav), `duration`, `sample_rate` |
+
+### Android app (NOVA Voice Studio)
+
+The app (`com.lskhan.nova`) talks to the two `/api/voice-director` routes. Start NOVA on the port the app
+expects by default and enter that address in the app (a phone on the same Wi-Fi needs the computer's
+address over HTTPS: the app accepts plain HTTP only for `localhost` and `127.0.0.1`):
+
+```
+.venv/bin/python -m uvicorn nova.api:app --host 127.0.0.1 --port 8013
+```
+
+The app's presets map to NOVA as: Natural → natural; Warm → natural, happiness; Narration → professional,
+documentary; Energetic → expressive, excitement; Calm → natural, neutral. Speed 0.5-1.5 is passed through.
+`pause_after_ms` sets the gap after a segment; mastering still shortens any silence over 1.6 s. The app
+sends no API key, so leave `NOVA_API_KEY` unset when you use it.
 
 ## Code map
 

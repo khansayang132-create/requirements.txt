@@ -121,6 +121,29 @@ class LskhanRenderIn(BaseModel):
     target_lufs: float = -14.0
 
 
+class VDSegment(BaseModel):
+    text: str = Field(max_length=5000)
+    pause_after_ms: int = Field(default=500, ge=0, le=5000)
+
+
+class VDProduceIn(BaseModel):
+    """Request of the NOVA Voice Studio Android app (com.lskhan.nova)."""
+    filename: str = Field(default="nova", max_length=120)
+    voice_id: str = Field(max_length=64)
+    speed: float = Field(default=1.0, ge=0.5, le=1.5)
+    preset: str = Field(default="natural", max_length=40)
+    segments: list[VDSegment] = Field(min_length=1, max_length=50)
+
+
+# Android app delivery presets -> NOVA mode and emotion.
+VD_PRESETS = {
+    "natural": ("natural", None), "warm": ("natural", "happiness"),
+    "narration": ("professional", "documentary"), "energetic": ("expressive", "excitement"),
+    "calm": ("natural", "neutral"),
+}
+VD_DEFAULT_VOICE = "nova-default"
+
+
 class ModelsIn(BaseModel):
     base_url: str = Field(max_length=500)
     api_key: str | None = Field(default=None, max_length=500)
@@ -416,6 +439,43 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             raise HTTPException(404, "not found")
         media = {"wav": "audio/wav", "mp3": "audio/mpeg", "json": "application/json"}[filename.rsplit(".", 1)[1]]
         return FileResponse(path, media_type=media, filename=f"nova-{job_id[:8]}-{filename}")
+
+    # ---- Voice Director compatibility (NOVA Voice Studio Android app) ----------------------
+    @app.get("/api/voice-director/voices", dependencies=deps)
+    def vd_voices():
+        voices = [{"id": VD_DEFAULT_VOICE, "name": "NOVA default voice", "kind": "engine", "available": True}]
+        voices += [{"id": p["id"], "name": p["name"] or p["id"][:8], "kind": p["kind"], "language": p["language"],
+                    "available": True} for p in store.list()]
+        return {"voices": voices}
+
+    @app.post("/api/voice-director/produce", dependencies=deps)
+    def vd_produce(body: VDProduceIn):
+        text_len = sum(len(s.text) for s in body.segments)
+        if not any(s.text.strip() for s in body.segments):
+            raise HTTPException(422, "script is empty")
+        if text_len > 5000:
+            raise HTTPException(422, "script longer than 5000 characters")
+        preset = body.preset.strip().lower()
+        if preset not in VD_PRESETS:
+            raise HTTPException(422, f"unknown preset {body.preset!r}; use one of {sorted(VD_PRESETS)}")
+        profile_id = None if body.voice_id == VD_DEFAULT_VOICE else body.voice_id
+        if profile_id is not None:
+            if not ID_RE.match(profile_id):
+                raise HTTPException(404, f"voice not found: {body.voice_id}")
+            store.get(profile_id)  # 404 when missing
+        mode, emotion = VD_PRESETS[preset]
+        job_id = uuid.uuid4().hex
+        manifest = generate(settings, store, {
+            "segments": [{"text": s.text, "pause_after_ms": s.pause_after_ms} for s in body.segments],
+            "profile_id": profile_id, "mode": mode, "emotion": emotion, "enhance": False,
+            "speed": body.speed, "formats": ["wav"], "sample_rate": 48000, "target_lufs": -16.0,
+            "job_id": job_id})
+        wav = manifest["files"]["wav"]
+        stem = re.sub(r"[^A-Za-z0-9._-]", "_", Path(body.filename).stem)[:100] or "nova"
+        return {"status": "success", "audio_url": f"/api/files/{job_id}/voiceover.wav",
+                "filename": f"{stem}.wav", "duration": wav["probe"]["duration"],
+                "sample_rate": wav["probe"]["sample_rate"], "engine": manifest["engine"],
+                "voice_id": body.voice_id, "preset": preset, "job_id": job_id}
 
     # ---- Projects --------------------------------------------------------------------------
     def _project_path(pid: str) -> Path:

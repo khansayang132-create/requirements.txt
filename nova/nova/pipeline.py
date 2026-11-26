@@ -135,7 +135,7 @@ def render(directions: list[Direction], engine: TTSEngine, profile: dict | None,
         pieces.append(x)
         nxt = directions[i + 1] if i + 1 < len(directions) else None
         gap = d.pause_after_ms
-        if nxt is not None and nxt.scene != d.scene:
+        if nxt is not None and nxt.scene != d.scene and not getattr(d, "pause_fixed", False):
             gap = max(gap, SCENE_GAP_MS)
         if nxt is not None and gap:
             pieces.append(A.silence(gap * pause_scale / 1000, sr))
@@ -239,6 +239,9 @@ def generate(settings: Settings, store: ProfileStore, req: dict, progress=lambda
         start = len(all_dirs)
         for k, d in enumerate(dirs):
             d.index = start + k
+        if dirs and seg.get("pause_after_ms") is not None:  # the caller sets the gap after this segment
+            dirs[-1].pause_after_ms = max(0, min(int(seg["pause_after_ms"]), 5000))
+            dirs[-1].pause_fixed = True  # an explicit pause replaces the default scene gap
         all_dirs.extend(dirs)
         seg_reports.append({"scene": si, "label": seg.get("label") or f"Scene {si + 1}",
                             "emotion": seg_emotion or analysis["emotion"]["dominant"],
