@@ -17,10 +17,13 @@ pytestmark = pytest.mark.skipif(not PIPER_MODEL.is_file(), reason="Piper voice n
 
 def test_piper_indonesian_voice_and_rate():
     e = PiperEngine(str(PIPER_MODEL))
-    x, sr = e.synthesize("Ada satu hal tentang keluarga suamiku yang tidak pernah aku bayangkan.", "id", Prosody())
-    slow, _ = e.synthesize("Ada satu hal tentang keluarga suamiku yang tidak pernah aku bayangkan.", "id", Prosody(rate=0.8))
+    text = "Ada satu hal tentang keluarga suamiku yang tidak pernah aku bayangkan."
+    x, sr = e.synthesize(text, "id", Prosody())
     assert sr == 22050 and x.size / sr > 2
-    assert slow.size > x.size * 1.15  # rate maps to length_scale
+    # Piper randomises timing on every render (noise_w), so compare medians of three takes.
+    normal = np.median([e.synthesize(text, "id", Prosody())[0].size for _ in range(3)])
+    slow = np.median([e.synthesize(text, "id", Prosody(rate=0.8))[0].size for _ in range(3)])
+    assert slow > normal * 1.08  # rate 0.8 -> length_scale 1.25; measured 1.13-1.20, no effect ~1.0
     assert 170 < analyze_voice(np.concatenate([x, x]), sr)["pitch"]["f0_median_hz"] < 320  # female speaker
 
 
