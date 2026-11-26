@@ -4,6 +4,7 @@ and sample-rate normalisation. Gain changes are smooth and limited, so voice cha
 from __future__ import annotations
 
 import numpy as np
+from scipy.ndimage import minimum_filter1d
 from scipy.signal import lfilter, resample_poly
 
 from .audio import resample
@@ -57,7 +58,8 @@ def limit(x: np.ndarray, sr: int, ceiling_db: float = -1.0, release_ms: float = 
     need = np.minimum(1.0, ceiling / (peak + 1e-12))
     # Look-ahead 2 ms: the gain starts falling before the peak arrives.
     la = max(1, int(0.002 * sr))
-    need = np.minimum.reduce([np.roll(need, -k) for k in range(la)])
+    # Sliding minimum over [i, i+la): O(n) memory. (A stack of rolled copies used ~9 GB on a 4-minute file.)
+    need = minimum_filter1d(need, size=la, mode="nearest", origin=-(la // 2))
     rel = np.exp(-1.0 / (release_ms / 1000 * sr))
     gain = np.empty_like(need)
     g = 1.0
