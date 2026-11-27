@@ -179,6 +179,9 @@ cloned voice's pitch control used to be ignored). `pitch: 1.5, soften: 1.0` turn
 sounded too deep (median 166 Hz) into a softer 206 Hz voice. Both are `/api/generate` fields and
 `nova.daily` flags (`--pitch 1.5 --soften 1`).
 
+A scheduled run can clone the owner's own voice: `python -m nova.daily ... --reference me.ogg --speaker NAME
+--consent "I, NAME, consent ..."`. The consent statement must name the speaker or the run is refused (exit 2).
+
 Speed: about 4-6x slower than real time on a 4-core CPU (18 s of audio took 96 s), much faster
 on a GPU. Output carries Resemble's Perth watermark marking it as AI-generated. Designed voices
 have no recording; with this engine NOVA clones a **synthetic reference** instead: the model's own

@@ -1,7 +1,8 @@
 """One-shot voiceover from the command line, for scheduled runs.
 
     python -m nova.daily --segments today.json --out voiceover.mp3 \
-        [--preset soft-young-indonesian-woman] [--engine chatterbox-id] [--lufs -14] [--speed 1.0]
+        [--preset soft-young-indonesian-woman | --reference me.wav --speaker NAME --consent "I, NAME, ..."]
+        [--engine chatterbox-id] [--lufs -14] [--speed 1.0] [--pitch 1.5 --soften 1]
 
 today.json is a list of scenes: [{"label": "0-2s", "text": "...", "emotion": "excitement"}, ...]
 (emotion optional). A line that still contains a [placeholder] is refused: the caller must turn
@@ -17,7 +18,7 @@ from pathlib import Path
 
 from .config import Settings
 from .pipeline import VALID_EMOTIONS, generate
-from .profiles import PRESETS, ProfileStore
+from .profiles import PRESETS, ConsentError, ProfileStore
 
 
 def load_segments(path: Path) -> list[dict]:
@@ -53,6 +54,10 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--pause-scale", type=float, default=1.0, help="0.6 = shorter pauses for fast TikTok pacing")
     ap.add_argument("--pitch", type=float, default=0.0, help="semitones, e.g. 1.5 = a little higher (formants kept)")
     ap.add_argument("--soften", type=float, default=0.0, help="0-1: lighter, gentler voice and softer highs")
+    ap.add_argument("--reference", type=Path, default=None,
+                    help="clone this recording instead of the preset (the speaker's own voice, 10-20 s)")
+    ap.add_argument("--speaker", default="", help="with --reference: the speaker's name")
+    ap.add_argument("--consent", default="", help="with --reference: the speaker's consent statement, naming them")
     ap.add_argument("--data-dir", type=Path, default=None, help="default: a temporary folder")
     args = ap.parse_args(argv)
 
@@ -67,7 +72,16 @@ def main(argv: list[str] | None = None) -> int:
         if args.engine == "chatterbox-id":
             settings.chatterbox = True
         store = ProfileStore(settings)
-        profile = store.create_designed({"preset": args.preset})
+        if args.reference:
+            from .analysis import analyze_voice
+            from .audio import load_audio
+            x, sr = load_audio(args.reference, sr=24000)
+            consent = {"speaker_name": args.speaker, "statement": args.consent, "relationship": "self",
+                       "confirmed": True}
+            profile = store.create(args.speaker or "Reference voice", x[: sr * 20], sr, consent,
+                                   analyze_voice(x, sr, "id"), "id", "")
+        else:
+            profile = store.create_designed({"preset": args.preset})
         manifest = generate(settings, store, {
             "segments": segs, "profile_id": profile["id"], "engine": args.engine or None, "mode": args.mode,
             "speed": args.speed, "pause_scale": args.pause_scale, "pitch": args.pitch, "soften": args.soften, "formats": [fmt], "target_lufs": args.lufs, "enhance": True,
@@ -84,6 +98,6 @@ def main(argv: list[str] | None = None) -> int:
 if __name__ == "__main__":
     try:
         sys.exit(main())
-    except ValueError as exc:
+    except (ValueError, ConsentError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         sys.exit(2)

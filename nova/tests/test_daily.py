@@ -44,3 +44,18 @@ def test_daily_cli_renders_mp3(tmp_path):
     r = subprocess.run([sys.executable, "-m", "nova.daily", "--segments", str(bad), "--out", str(out)],
                        cwd=NOVA, capture_output=True, text=True, timeout=120)
     assert r.returncode == 2 and "placeholder" in r.stderr
+
+
+def test_daily_cli_clones_a_reference_with_consent(tmp_path, speaker_wav):
+    f = tmp_path / "today.json"
+    f.write_text(json.dumps([{"text": "Halo semua, ini suara aku sendiri."}]))
+    out = tmp_path / "me.mp3"
+    base = [sys.executable, "-m", "nova.daily", "--segments", str(f), "--out", str(out), "--engine", "espeak-ng",
+            "--reference", str(speaker_wav), "--speaker", "Test Speaker"]
+    refused = subprocess.run(base + ["--consent", "yes"], cwd=NOVA, capture_output=True, text=True, timeout=300)
+    assert refused.returncode == 2 and "consent" in refused.stderr.lower()  # statement must name the speaker
+    r = subprocess.run(base + ["--consent", "I, Test Speaker, consent to cloning my own voice.", "--pitch", "1",
+                               "--soften", "0.5"], cwd=NOVA, capture_output=True, text=True, timeout=300)
+    assert r.returncode == 0, r.stderr
+    summary = json.loads(r.stdout.strip().splitlines()[-1])
+    assert summary["voice"] == "Test Speaker" and probe(out)["duration"] > 1
