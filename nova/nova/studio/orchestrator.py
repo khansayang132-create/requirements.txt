@@ -221,18 +221,15 @@ class Orchestrator:
         vid = ctx["emotion"]["version_id"]
         dirs = [loads(r["data"]) for r in self.db.all("SELECT data FROM emotional_directions WHERE script_version_id=? "
                                                       "ORDER BY sentence_index", (vid,))]
-        segs = []
-        for i, d in enumerate(dirs):
-            nxt_before = dirs[i + 1]["pause_before_ms"] if i + 1 < len(dirs) else 0
-            segs.append({"text": d["text"], "emotion": d["engine_emotion"], "label": d["emotion"],
-                         "prosody": d["prosody"] | {"emphasis": d["emphasis"]},
-                         "pause_after_ms": 0 if i + 1 == len(dirs) else d["pause_after_ms"] + nxt_before})
         v = ctx["voice"]
+        from ..tts import engines as _engines
+        neural = getattr(_engines(self.settings).get(v["engine"]), "clones_from_reference", False)
+        segs, labels = (_neural_phrases(dirs) if neural else _sentence_segments(dirs))
         job = f"prod-{pid}"
         m = generate(self.settings, self.profiles, {
             "segments": segs, "profile_id": v["profile_id"], "engine": v["engine"], "mode": req.get("mode", "natural"),
             "enhance": False, "speed": float(req.get("speed", 1.0)), "pause_scale": float(req.get("pause_scale", 1.0)),
-            "pitch": float(req.get("pitch", 0.0)), "soften": float(req.get("soften", 0.0)), "polish": True,
+            "pitch": float(req.get("pitch", 0.0)), "soften": float(req.get("soften", 0.0)), "polish": not neural,
             "formats": ["wav", "mp3"], "sample_rate": int(req.get("sample_rate", 48000)),
             "target_lufs": float(req.get("target_lufs", -14.0)), "job_id": job})
         out_dir = self.out_root / pid
@@ -254,7 +251,9 @@ class Orchestrator:
         shutil.copy(self.settings.outputs_dir / job / "manifest.json", out_dir / "render-manifest.json")
         return {"files": files, "duration_s": m["mastering"]["duration_s"], "timeline": m["timeline"],
                 "engine": m["engine"], "mastering": {k: v for k, v in m["mastering"].items() if k != "time_map"},
-                "music": m.get("music"), "polish": m.get("polish"), "sentences": len(dirs),
+                "music": m.get("music"), "polish": m.get("polish"), "sentences": len(segs), "labels": labels,
+                "rendering": "neural phrases: no time-stretch, emotion via intensity and pauses" if neural
+                else "one segment per sentence with full prosody",
                 "elapsed_s": m["elapsed_s"]}
 
     def _stage_subtitles(self, pid, req, ctx):
@@ -288,9 +287,7 @@ class Orchestrator:
                                             "bytes": info.get("bytes"), "duration_s": info.get("duration"),
                                             "sample_rate": info.get("sample_rate"), "sha256": info.get("sha256"),
                                             "created_at": now()})
-        vid = ctx["emotion"]["version_id"]  # current timeline, including the user's edits
-        labels = {r["sentence_index"]: loads(r["data"])["emotion"] for r in self.db.all(
-            "SELECT sentence_index, data FROM emotional_directions WHERE script_version_id=?", (vid,))}
+        labels = dict(enumerate(a.get("labels") or []))  # one label per rendered segment
         for t in a["timeline"]:
             self.db.upsert("audio_segments", {"production_id": pid, "idx": t["index"], "scene": t["scene"],
                                               "text": t["text"], "emotion": labels.get(t["index"]),
@@ -325,3 +322,45 @@ def _asr():
             return " ".join(parts)
         _ASR = run
     return _ASR
+
+
+def _sentence_segments(dirs: list[dict]) -> tuple[list[dict], list[str]]:
+    segs = []
+    for i, d in enumerate(dirs):
+        nxt_before = dirs[i + 1]["pause_before_ms"] if i + 1 < len(dirs) else 0
+        segs.append({"text": d["text"], "emotion": d["engine_emotion"], "label": d["emotion"],
+                     "prosody": d["prosody"] | {"emphasis": d["emphasis"]},
+                     "pause_after_ms": 0 if i + 1 == len(dirs) else d["pause_after_ms"] + nxt_before})
+    return segs, [d["emotion"] for d in dirs]
+
+
+CALM = {"sad", "heartbroken", "nostalgic", "peaceful", "vulnerable", "whispering", "reflective", "comforting",
+        "compassionate", "romantic", "suspenseful", "disappointed", "serious", "grateful"}
+
+
+def _neural_phrases(dirs: list[dict], max_chars: int = 280) -> tuple[list[dict], list[str]]:
+    """For a neural cloning engine (Chatterbox): join neighbouring sentences into phrases spoken in
+    one breath group, so the melody flows. Speed stays 1.0 (this engine can only change speed by
+    time-stretching, which the owner heard as robotic); emotion is carried by intensity
+    (exaggeration), loudness and the pauses between phrases. A phrase breaks where the mood turns
+    (calm <-> energetic) or intensity jumps by more than 25."""
+    groups: list[list[dict]] = []
+    for d in dirs:
+        g = groups[-1] if groups else None
+        if (g and len(" ".join(x["text"] for x in g)) + 1 + len(d["text"]) <= max_chars
+                and (g[-1]["emotion"] in CALM) == (d["emotion"] in CALM)
+                and abs(g[-1]["intensity"] - d["intensity"]) <= 25):
+            g.append(d)
+        else:
+            groups.append([d])
+    segs, labels = [], []
+    for i, g in enumerate(groups):
+        n = len(g)
+        pr = {"rate": 1.0, "pitch_semitones": 0.0,
+              "pitch_range": round(sum(x["prosody"]["pitch_range"] for x in g) / n, 3),
+              "volume_db": round(sum(x["prosody"]["volume_db"] for x in g) / n, 2)}
+        nxt_before = groups[i + 1][0]["pause_before_ms"] if i + 1 < len(groups) else 0
+        segs.append({"text": " ".join(x["text"] for x in g), "emotion": g[0]["engine_emotion"], "label": g[0]["emotion"],
+                     "prosody": pr, "pause_after_ms": 0 if i + 1 == len(groups) else g[-1]["pause_after_ms"] + nxt_before})
+        labels.append(g[0]["emotion"] if n == 1 else f"{g[0]['emotion']} → {g[-1]['emotion']}")
+    return segs, labels

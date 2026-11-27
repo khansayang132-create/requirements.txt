@@ -66,10 +66,14 @@ def base_formant_scale(engine: TTSEngine, language: str, voice: str | None) -> f
 
 def synthesize_direction(d: Direction, engine: TTSEngine, profile: dict | None, controls: dict,
                          voice: str | None = None, reference: str | None = None) -> tuple[np.ndarray, int, dict]:
+    neural_clone = bool(reference) and engine.clones_from_reference
     delivery = (profile or {}).get("voice", {}).get("delivery", {})
     p = d.prosody
+    # A neural clone takes its pace from the reference; a preset's delivery rate would only add a
+    # time-stretch (heard as robotic). The user's own speed control still applies.
+    preset_rate = 1.0 if neural_clone else delivery.get("rate", 1.0)
     prosody = Prosody(
-        rate=p.rate * controls.get("speed", 1.0) * delivery.get("rate", 1.0),
+        rate=p.rate * controls.get("speed", 1.0) * preset_rate,
         pitch_semitones=p.pitch_semitones + controls.get("pitch", 0.0),
         pitch_range=p.pitch_range,
         volume_db=p.volume_db + controls.get("volume_db", 0.0) + delivery.get("volume_db", 0.0),
@@ -77,7 +81,6 @@ def synthesize_direction(d: Direction, engine: TTSEngine, profile: dict | None, 
     )
     # A neural cloning engine given the profile's own recording reproduces the voice itself;
     # WORLD conversion or pitch shifting on top would only add vocoder artefacts.
-    neural_clone = bool(reference) and engine.clones_from_reference
     converting = profile is not None and not neural_clone
     engine_prosody = replace(prosody, pitch_semitones=0.0, pitch_range=1.0) if converting else prosody
     text = apply_pronunciation(d.text, controls.get("pronunciation"))

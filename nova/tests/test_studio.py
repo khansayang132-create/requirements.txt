@@ -262,3 +262,14 @@ def test_api_validation_and_scheduler_endpoints(studio_client):
     lib = c.get("/api/v100/emotion/library").json()
     assert len(lib) == 26
     assert any(a["name"] == "espeak-ng" and a["status"] == "available" for a in c.get("/api/v100/voice/adapters").json())
+
+
+def test_neural_productions_never_time_stretch():
+    from nova.studio.orchestrator import _neural_phrases
+    dirs = emotion.analyze(STORY, "expressive", StubLLM())["sentences"]
+    assert any(d["prosody"]["rate"] != 1.0 for d in dirs)  # the director does vary speed per sentence
+    segs, labels = _neural_phrases(dirs)
+    assert all(s["prosody"]["rate"] == 1.0 and s["prosody"]["pitch_semitones"] == 0.0 for s in segs)
+    assert 1 <= len(segs) < len(dirs) and len(labels) == len(segs)  # sentences joined into phrases
+    assert " ".join(s["text"] for s in segs) == " ".join(d["text"] for d in dirs)  # nothing lost or reordered
+    assert segs[-1]["pause_after_ms"] == 0

@@ -1,0 +1,175 @@
+{
+ "productions": [
+  {
+   "id": "6caeea0524ea4361aeae9acd1af398f5",
+   "status": "completed",
+   "error": null,
+   "script_version_id": "88db7b0952f04535a6d2ab090819312b",
+   "idempotency_key": null,
+   "job_run_id": null,
+   "created_at": "2026-11-27T18:21:05+00:00",
+   "updated_at": "2026-11-27T18:29:26+00:00"
+  }
+ ],
+ "production_stages": [
+  {
+   "stage": "analysis",
+   "status": "done",
+   "attempts": 1,
+   "started_at": "2026-11-27T18:21:05+00:00",
+   "finished_at": "2026-11-27T18:21:05+00:00",
+   "error": null
+  },
+  {
+   "stage": "audio",
+   "status": "done",
+   "attempts": 1,
+   "started_at": "2026-11-27T18:21:05+00:00",
+   "finished_at": "2026-11-27T18:28:16+00:00",
+   "error": null
+  },
+  {
+   "stage": "concepts",
+   "status": "done",
+   "attempts": 1,
+   "started_at": "2026-11-27T18:21:05+00:00",
+   "finished_at": "2026-11-27T18:21:05+00:00",
+   "error": null
+  },
+  {
+   "stage": "deliver",
+   "status": "done",
+   "attempts": 1,
+   "started_at": "2026-11-27T18:29:26+00:00",
+   "finished_at": "2026-11-27T18:29:26+00:00",
+   "error": null
+  },
+  {
+   "stage": "emotion",
+   "status": "done",
+   "attempts": 1,
+   "started_at": "2026-11-27T18:21:05+00:00",
+   "finished_at": "2026-11-27T18:21:05+00:00",
+   "error": null
+  },
+  {
+   "stage": "enhancement",
+   "status": "done",
+   "attempts": 1,
+   "started_at": "2026-11-27T18:21:05+00:00",
+   "finished_at": "2026-11-27T18:21:05+00:00",
+   "error": null
+  },
+  {
+   "stage": "intent",
+   "status": "done",
+   "attempts": 1,
+   "started_at": "2026-11-27T18:21:05+00:00",
+   "finished_at": "2026-11-27T18:21:05+00:00",
+   "error": null
+  },
+  {
+   "stage": "qa",
+   "status": "done",
+   "attempts": 1,
+   "started_at": "2026-11-27T18:28:16+00:00",
+   "finished_at": "2026-11-27T18:29:26+00:00",
+   "error": null
+  },
+  {
+   "stage": "script",
+   "status": "done",
+   "attempts": 1,
+   "started_at": "2026-11-27T18:21:05+00:00",
+   "finished_at": "2026-11-27T18:21:05+00:00",
+   "error": null
+  },
+  {
+   "stage": "subtitles",
+   "status": "done",
+   "attempts": 1,
+   "started_at": "2026-11-27T18:28:16+00:00",
+   "finished_at": "2026-11-27T18:28:16+00:00",
+   "error": null
+  },
+  {
+   "stage": "voice",
+   "status": "done",
+   "attempts": 1,
+   "started_at": "2026-11-27T18:21:05+00:00",
+   "finished_at": "2026-11-27T18:21:05+00:00",
+   "error": null
+  }
+ ],
+ "audio_assets": [
+  {
+   "format": "wav",
+   "bytes": 3633492,
+   "duration_s": 37.848417,
+   "sample_rate": 48000,
+   "sha256": "4ced7b7722dffef8ad4cea5c2fc4a6e159ada82e78eac2f219eb7e5b740b3b15"
+  },
+  {
+   "format": "mp3",
+   "bytes": 910125,
+   "duration_s": 37.896,
+   "sample_rate": 48000,
+   "sha256": "d24b24ef071f99f518d18bb484a9ef858edb07759655784dfdf7bf56ab9729cf"
+  }
+ ],
+ "audio_segments": [
+  {
+   "idx": 0,
+   "emotion": "hopeful",
+   "start_s": 0.0,
+   "end_s": 2.695,
+   "text": "Setiap tetes peluh adalah janji untuk esok yang lebih baik."
+  },
+  {
+   "idx": 1,
+   "emotion": "serious → serious",
+   "start_s": 3.155,
+   "end_s": 12.449,
+   "text": "Lihatlah dia, di bawah terik matahari yang membakar. Keadaan sungguh berat, beban keluarga terasa begitu nyata. Ada malam-malam tanpa tidur, ada keraguan yang menusuk hati."
+  },
+  {
+   "idx": 2,
+   "emotion": "angry",
+   "start_s": 12.73,
+   "end_s": 16.019,
+   "text": "Rasa marah dan frustrasi sering datang, ingin menyerah saja."
+  },
+  {
+   "idx": 3,
+   "emotion": "serious → serious",
+   "start_s": 16.326,
+   "end_s": 24.408,
+   "text": "Tapi kemudian, dia menarik napas dalam. Dia ingat wajah mereka, senyum mereka yang selalu menjadi bahan bakarnya. Di situlah kekuatan itu muncul."
+  },
+  {
+   "idx": 4,
+   "emotion": "determined → hopeful",
+   "start_s": 24.737,
+   "end_s": 37.848,
+   "text": "Keteguhan sejati bukan tentang tidak pernah jatuh, tapi tentang terus bangkit lagi. Ia memilih untuk berjuang, karena cinta tanpa syarat pada keluarga jauh lebih kuat dari badai apapun. Senja di ujung harapan itu, justru menjadi awal dari kebanggaan yang tak terhingga."
+  }
+ ],
+ "quality_reports": [
+  {
+   "passed": 1,
+   "created_at": "2026-11-27T18:29:26+00:00"
+  }
+ ],
+ "job_runs": [],
+ "scheduled_jobs": [
+  {
+   "id": "75103a8b4fc8424ea5125e1478586e51",
+   "name": "Real-world scheduled production",
+   "schedule": "{\"type\": \"once\", \"at\": \"2026-11-27T22:26\"}",
+   "timezone": "Asia/Karachi",
+   "next_run_utc": null,
+   "last_status": "succeeded",
+   "idempotency_key": "v100-realworld-schedule-1"
+  }
+ ]
+}
