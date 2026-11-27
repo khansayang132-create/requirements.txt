@@ -122,6 +122,33 @@ def synthesize_direction(d: Direction, engine: TTSEngine, profile: dict | None, 
     return out, sr, report
 
 
+NEURAL_CHUNK_CHARS = 280  # Chatterbox speaks up to about this much in one natural breath group
+
+
+def merge_scenes(directions: list[Direction]) -> list[Direction]:
+    """For a neural cloning engine: speak each scene in one call (split only when it is long), so the
+    melody flows across sentences instead of resetting at every full stop. Per-sentence rate changes
+    are dropped: on this engine they could only be applied by time-stretching, which sounds robotic."""
+    out: list[Direction] = []
+    for d in directions:
+        last = out[-1] if out else None
+        if (last is not None and last.scene == d.scene and len(last.text) + 1 + len(d.text) <= NEURAL_CHUNK_CHARS):
+            pitch_range = max(last.prosody.pitch_range, d.prosody.pitch_range)
+            last.text = f"{last.text} {d.text}"
+            last.prosody = replace(last.prosody, pitch_range=pitch_range)
+            last.pause_after_ms = d.pause_after_ms
+            if getattr(d, "pause_fixed", False):
+                last.pause_fixed = True
+            continue
+        m = replace(d, prosody=replace(d.prosody, rate=1.0), breath_after_word=None, applied={})
+        if getattr(d, "pause_fixed", False):
+            m.pause_fixed = True
+        out.append(m)
+    for i, d in enumerate(out):
+        d.index = i
+    return out
+
+
 def render(directions: list[Direction], engine: TTSEngine, profile: dict | None, controls: dict,
            voice: str | None = None, reference: str | None = None) -> tuple[np.ndarray, int, list[dict]]:
     pieces, reports, sr = [], [], None
@@ -249,16 +276,23 @@ def generate(settings: Settings, store: ProfileStore, req: dict, progress=lambda
                             "score": analysis["score"], "enhanced": bool(enhanced),
                             "text": final_text})
 
-    progress(25, f"synthesising {len(all_dirs)} sentences with {engine.name}")
-    with _reference_file(store, profile, engine) as reference:
-        raw, sr, sentence_reports = render(all_dirs, engine, profile, controls, req.get("voice"), reference)
-    # Voice tone: the cloned voice's own pitch control (the neural path skips per-sentence shifting)
-    # and the soften control, both applied once to the whole render.
     neural = bool(profile) and engine.clones_from_reference
+    if neural:
+        all_dirs = merge_scenes(all_dirs)
+    progress(25, f"synthesising {len(all_dirs)} {'scenes' if neural else 'sentences'} with {engine.name}")
     tone_pitch = controls["pitch"] if neural else 0.0
-    if tone_pitch or controls["soften"]:
+    with _reference_file(store, profile, engine) as reference:
+        if neural and (tone_pitch or controls["soften"]):
+            # A neural clone gets its pitch and softness from the reference itself: the model then
+            # speaks that way natively, with no processing on the finished voice.
+            rx, rsr = A.load_audio(reference)
+            toned = Path(reference).with_name("reference-toned.wav")
+            A.write_wav(toned, A.voice_tone(rx, rsr, tone_pitch, controls["soften"]) * 0.98, rsr)
+            reference = str(toned)
+        raw, sr, sentence_reports = render(all_dirs, engine, profile, controls, req.get("voice"), reference)
+    if not neural and controls["soften"]:
         progress(78, "adjusting voice tone")
-        raw = A.voice_tone(raw, sr, tone_pitch, controls["soften"])
+        raw = A.voice_tone(raw, sr, 0.0, controls["soften"])
     progress(80, "mastering")
     mastered, out_sr, master_report = master(raw, sr, target_sr=target_sr,
                                              target_lufs=float(req.get("target_lufs", -16.0)))

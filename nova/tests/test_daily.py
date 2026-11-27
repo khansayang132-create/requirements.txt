@@ -59,3 +59,19 @@ def test_daily_cli_clones_a_reference_with_consent(tmp_path, speaker_wav):
     assert r.returncode == 0, r.stderr
     summary = json.loads(r.stdout.strip().splitlines()[-1])
     assert summary["voice"] == "Test Speaker" and probe(out)["duration"] > 1
+
+
+def test_merge_scenes_for_neural_clones():
+    from nova.director import direct
+    from nova.pipeline import NEURAL_CHUNK_CHARS, merge_scenes
+    dirs = direct("Pertama, kebaya. Baju kebanggaan perempuan Indonesia. Modelnya pas di badan.", "natural", scene=0,
+                  script_language="id")
+    dirs += direct("Kedua, shalwar kameez. Ini baju sehari-hari di Pakistan.", "natural", scene=1, script_language="id")
+    assert len(dirs) == 5
+    merged = merge_scenes(dirs)
+    assert [d.scene for d in merged] == [0, 1]  # one call per scene, scenes never mixed
+    assert merged[0].text.startswith("Pertama, kebaya.") and merged[0].text.endswith("Modelnya pas di badan.")
+    assert all(d.prosody.rate == 1.0 for d in merged)  # no per-sentence time-stretching
+    assert merged[1].pause_after_ms == dirs[-1].pause_after_ms
+    long = direct(" ".join(["Ini kalimat yang cukup panjang untuk diuji."] * 12), "natural", scene=0, script_language="id")
+    assert all(len(d.text) <= NEURAL_CHUNK_CHARS for d in merge_scenes(long)) and len(merge_scenes(long)) > 1

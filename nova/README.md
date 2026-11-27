@@ -179,6 +179,13 @@ cloned voice's pitch control used to be ignored). `pitch: 1.5, soften: 1.0` turn
 sounded too deep (median 166 Hz) into a softer 206 Hz voice. Both are `/api/generate` fields and
 `nova.daily` flags (`--pitch 1.5 --soften 1`).
 
+**Natural cloned voice.** With a neural cloning engine NOVA now (1) speaks each scene in one call
+(split only above 280 characters), so the melody flows across sentences instead of resetting at every
+full stop; (2) drops per-sentence rate changes, which this engine could only apply by time-stretching;
+and (3) applies `pitch` and `soften` to the *reference*, so the model speaks that way natively with no
+processing on the finished voice. Keep `speed` at 1.0 for cloned voices and use `pause_scale` for pace:
+the owner heard the time-stretched, pitch-shifted version as robotic.
+
 A scheduled run can clone the owner's own voice: `python -m nova.daily ... --reference me.ogg --speaker NAME
 --consent "I, NAME, consent ..."`. The consent statement must name the speaker or the run is refused (exit 2).
 
