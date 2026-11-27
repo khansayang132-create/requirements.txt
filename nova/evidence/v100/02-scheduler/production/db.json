@@ -1,0 +1,187 @@
+{
+ "productions": [
+  {
+   "id": "c501eb5f5e1e48a0bc453de86279f665",
+   "status": "completed",
+   "error": null,
+   "script_version_id": "8fbc697b9ab449549903d375c4eb04c4",
+   "idempotency_key": "job:75103a8b4fc8424ea5125e1478586e51:2026-11-27T17:26:00+00:00:1",
+   "job_run_id": "3757f712dee84a3c8dbc9d8d0d787575",
+   "created_at": "2026-11-27T17:26:09+00:00",
+   "updated_at": "2026-11-27T17:29:23+00:00"
+  }
+ ],
+ "production_stages": [
+  {
+   "stage": "analysis",
+   "status": "done",
+   "attempts": 1,
+   "started_at": "2026-11-27T17:26:46+00:00",
+   "finished_at": "2026-11-27T17:26:50+00:00",
+   "error": null
+  },
+  {
+   "stage": "audio",
+   "status": "done",
+   "attempts": 1,
+   "started_at": "2026-11-27T17:26:58+00:00",
+   "finished_at": "2026-11-27T17:29:05+00:00",
+   "error": null
+  },
+  {
+   "stage": "concepts",
+   "status": "done",
+   "attempts": 1,
+   "started_at": "2026-11-27T17:26:21+00:00",
+   "finished_at": "2026-11-27T17:26:39+00:00",
+   "error": null
+  },
+  {
+   "stage": "deliver",
+   "status": "done",
+   "attempts": 1,
+   "started_at": "2026-11-27T17:29:23+00:00",
+   "finished_at": "2026-11-27T17:29:23+00:00",
+   "error": null
+  },
+  {
+   "stage": "emotion",
+   "status": "done",
+   "attempts": 1,
+   "started_at": "2026-11-27T17:26:51+00:00",
+   "finished_at": "2026-11-27T17:26:58+00:00",
+   "error": null
+  },
+  {
+   "stage": "enhancement",
+   "status": "done",
+   "attempts": 1,
+   "started_at": "2026-11-27T17:26:50+00:00",
+   "finished_at": "2026-11-27T17:26:50+00:00",
+   "error": null
+  },
+  {
+   "stage": "intent",
+   "status": "done",
+   "attempts": 1,
+   "started_at": "2026-11-27T17:26:09+00:00",
+   "finished_at": "2026-11-27T17:26:21+00:00",
+   "error": null
+  },
+  {
+   "stage": "qa",
+   "status": "done",
+   "attempts": 1,
+   "started_at": "2026-11-27T17:29:05+00:00",
+   "finished_at": "2026-11-27T17:29:23+00:00",
+   "error": null
+  },
+  {
+   "stage": "script",
+   "status": "done",
+   "attempts": 1,
+   "started_at": "2026-11-27T17:26:39+00:00",
+   "finished_at": "2026-11-27T17:26:46+00:00",
+   "error": null
+  },
+  {
+   "stage": "subtitles",
+   "status": "done",
+   "attempts": 1,
+   "started_at": "2026-11-27T17:29:05+00:00",
+   "finished_at": "2026-11-27T17:29:05+00:00",
+   "error": null
+  },
+  {
+   "stage": "voice",
+   "status": "done",
+   "attempts": 1,
+   "started_at": "2026-11-27T17:26:58+00:00",
+   "finished_at": "2026-11-27T17:26:58+00:00",
+   "error": null
+  }
+ ],
+ "audio_assets": [
+  {
+   "format": "wav",
+   "bytes": 2401288,
+   "duration_s": 25.012958,
+   "sample_rate": 48000,
+   "sha256": "532ee96a31661a8f8156fac276eb899ae38d89e00b3f1b6a7e2e147c959aa9c3"
+  },
+  {
+   "format": "mp3",
+   "bytes": 601965,
+   "duration_s": 25.056,
+   "sample_rate": 48000,
+   "sha256": "cee6967735463ddd4e320e7f806b28d68a602f87e459f0abe524523454df21cb"
+  }
+ ],
+ "audio_segments": [
+  {
+   "idx": 0,
+   "emotion": "reflective",
+   "start_s": 0.0,
+   "end_s": 3.223,
+   "text": "Setiap malam adalah pengorbanan yang tak terucapkan."
+  },
+  {
+   "idx": 1,
+   "emotion": "serious",
+   "start_s": 3.847,
+   "end_s": 9.823,
+   "text": "Ayah itu bekerja keras di bawah lampu remang, demi setiap buku dan cita-cita anaknya."
+  },
+  {
+   "idx": 2,
+   "emotion": "compassionate",
+   "start_s": 10.345,
+   "end_s": 15.063,
+   "text": "Ada lelah yang tak terperi, tapi senyum anaknya selalu jadi kekuatan."
+  },
+  {
+   "idx": 3,
+   "emotion": "inspirational",
+   "start_s": 15.763,
+   "end_s": 20.047,
+   "text": "Pengorbanan seorang ayah adalah fondasi mimpi anak-anaknya."
+  },
+  {
+   "idx": 4,
+   "emotion": "romantic",
+   "start_s": 20.873,
+   "end_s": 25.013,
+   "text": "Lihatlah, di balik lelah itu, ada cinta yang tak pernah padam."
+  }
+ ],
+ "quality_reports": [
+  {
+   "passed": 1,
+   "created_at": "2026-11-27T17:29:23+00:00"
+  }
+ ],
+ "job_runs": [
+  {
+   "id": "3757f712dee84a3c8dbc9d8d0d787575",
+   "job_id": "75103a8b4fc8424ea5125e1478586e51",
+   "scheduled_for": "2026-11-27T17:26:00+00:00",
+   "attempt": 1,
+   "started_at": "2026-11-27T17:26:09+00:00",
+   "finished_at": "2026-11-27T17:29:23+00:00",
+   "status": "succeeded",
+   "production_id": "c501eb5f5e1e48a0bc453de86279f665",
+   "error": null
+  }
+ ],
+ "scheduled_jobs": [
+  {
+   "id": "75103a8b4fc8424ea5125e1478586e51",
+   "name": "Real-world scheduled production",
+   "schedule": "{\"type\": \"once\", \"at\": \"2026-11-27T22:26\"}",
+   "timezone": "Asia/Karachi",
+   "next_run_utc": null,
+   "last_status": "succeeded",
+   "idempotency_key": "v100-realworld-schedule-1"
+  }
+ ]
+}

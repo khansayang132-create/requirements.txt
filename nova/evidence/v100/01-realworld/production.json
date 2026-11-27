@@ -1,0 +1,1213 @@
+{
+ "id": "6cbb111ca5dc4e3bbb7706a3640676f3",
+ "project_id": null,
+ "idea": "Create a 60-second Indonesian emotional narration about a woman who continues fighting for her family despite difficult circumstances.",
+ "request": {
+  "idea": "Create a 60-second Indonesian emotional narration about a woman who continues fighting for her family despite difficult circumstances.",
+  "language": "id",
+  "duration_s": 60.0,
+  "concepts": 3,
+  "concept_index": 0,
+  "enhance_mode": "deep_emotional",
+  "mode": "expressive",
+  "voice": "preset:soft-young-indonesian-woman",
+  "speed": 1.0,
+  "pause_scale": 1.0,
+  "pitch": 0.0,
+  "soften": 0.0,
+  "target_lufs": -14.0,
+  "music_db": -18,
+  "cta": false
+ },
+ "status": "completed",
+ "current_stage": null,
+ "error": null,
+ "script_version_id": "4389d3e275b342078b5f65ae0a90d103",
+ "idempotency_key": null,
+ "job_run_id": null,
+ "created_at": "2026-11-27T17:07:14+00:00",
+ "updated_at": "2026-11-27T17:22:27+00:00",
+ "stages": [
+  {
+   "production_id": "6cbb111ca5dc4e3bbb7706a3640676f3",
+   "stage": "intent",
+   "status": "done",
+   "output": {
+    "idea": "Create a 60-second Indonesian emotional narration about a woman who continues fighting for her family despite difficult circumstances.",
+    "language": "id",
+    "content_type": "emotional",
+    "factual": false,
+    "source": "llm",
+    "extra": {},
+    "purpose": "Menginspirasi ketangguhan",
+    "audience": "Wanita, keluarga, dan siapa saja yang membutuhkan dorongan",
+    "audience_psychology": "Mencari inspirasi, empati, dan validasi perjuangan",
+    "structure": "Pengenalan kesulitan -> Momen perjuangan -> Penegasan keteguhan -> Pesan harapan",
+    "perspective": "Ketiga orang (Third Person)",
+    "direction": "Visual sinematik, pencahayaan dramatis, musik orkestra yang membangun, fokus pada ekspresi wajah dan detail perjuangan sehari-hari.",
+    "emotional_journey": [
+     "Sedih/Empati",
+     "Marah/Frustrasi",
+     "Keteguhan/Harapan",
+     "Ketenangan/Kebanggaan"
+    ],
+    "desired_reaction": "Inspirasi dan rasa haru yang mendalam"
+   },
+   "error": null,
+   "attempts": 3,
+   "started_at": "2026-11-27T17:10:22+00:00",
+   "finished_at": "2026-11-27T17:10:35+00:00"
+  },
+  {
+   "production_id": "6cbb111ca5dc4e3bbb7706a3640676f3",
+   "stage": "concepts",
+   "status": "done",
+   "output": {
+    "concepts": [
+     {
+      "title": "Senja di Ujung Harapan",
+      "angle": "Visualisasi perjuangan harian yang sunyi namun penuh makna.",
+      "audience": "Wanita, keluarga, dan pencari inspirasi.",
+      "hook": "Setiap tetes peluh adalah janji untuk esok yang lebih baik.",
+      "message": "Ketangguhan sejati ditemukan dalam cinta tanpa syarat terhadap keluarga.",
+      "emotional_direction": "Sedih/Empati -> Marah/Frustrasi -> Keteguhan/Harapan -> Ketenangan/Kebanggaan",
+      "duration_s": 60,
+      "platform": "instagram_reels"
+     },
+     {
+      "title": "Beban di Pundak Bunda",
+      "angle": "Fokus pada momen-momen intim antara karakter utama dan keluarganya di tengah kesulitan.",
+      "audience": "Keluarga, mereka yang sedang berjuang secara personal.",
+      "hook": "Melihat senyum mereka adalah bahan bakar terkuatku.",
+      "message": "Cinta keluarga adalah jangkar yang menahan badai kehidupan.",
+      "emotional_direction": "Sedih/Empati -> Marah/Frustrasi -> Keteguhan/Harapan -> Ketenangan/Kebanggaan",
+      "duration_s": 60,
+      "platform": "youtube_shorts"
+     },
+     {
+      "title": "Nyala Api di Dalam Jiwa",
+      "angle": "Narasi yang lebih filosofis, menekankan kekuatan internal untuk bangkit dari keputusasaan.",
+      "audience": "Semua kalangan, terutama yang butuh dorongan spiritual.",
+      "hook": "Jangan biarkan kegelapan merenggut nyala semangatmu.",
+      "message": "Kita bukan sekadar bertahan; kita adalah pembentuk takdir kita sendiri.",
+      "emotional_direction": "Sedih/Empati -> Marah/Frustrasi -> Keteguhan/Harapan -> Ketenangan/Kebanggaan",
+      "duration_s": 60,
+      "platform": "podcast"
+     }
+    ],
+    "chosen": 0,
+    "idea_id": "8a90f22d415b4c4ba2533095e0d24266"
+   },
+   "error": null,
+   "attempts": 1,
+   "started_at": "2026-11-27T17:10:35+00:00",
+   "finished_at": "2026-11-27T17:11:04+00:00"
+  },
+  {
+   "production_id": "6cbb111ca5dc4e3bbb7706a3640676f3",
+   "stage": "script",
+   "status": "done",
+   "output": {
+    "text": "Setiap tetes peluh adalah janji untuk esok yang lebih baik. Lihatlah dia, di bawah terik matahari yang membakar. Keadaan sungguh berat, beban keluarga terasa begitu nyata. Ada malam-malam tanpa tidur, ada keraguan yang menusuk hati. Rasa marah dan frustrasi sering datang, ingin menyerah saja. Tapi kemudian, dia menarik napas dalam. Dia ingat wajah mereka, senyum mereka yang selalu menjadi bahan bakarnya. Di situlah kekuatan itu muncul. Keteguhan sejati bukan tentang tidak pernah jatuh, tapi tentang terus bangkit lagi. Ia memilih untuk berjuang, karena cinta tanpa syarat pada keluarga jauh lebih kuat dari badai apapun. Senja di ujung harapan itu, justru menjadi awal dari kebanggaan yang tak terhingga.",
+    "language": "id",
+    "words": 108,
+    "target_words": 109,
+    "target_s": 60.0,
+    "estimated_s": 58.5,
+    "within_target": true,
+    "attempts": [
+     {
+      "attempt": 0,
+      "words": 108,
+      "target_words": 109
+     }
+    ],
+    "note": "",
+    "script_id": "bd4f5d53ae6c4da3b20fcdcf4e79bcb6",
+    "version_id": "4389d3e275b342078b5f65ae0a90d103",
+    "title": "Senja di Ujung Harapan"
+   },
+   "error": null,
+   "attempts": 1,
+   "started_at": "2026-11-27T17:11:04+00:00",
+   "finished_at": "2026-11-27T17:11:15+00:00"
+  },
+  {
+   "production_id": "6cbb111ca5dc4e3bbb7706a3640676f3",
+   "stage": "analysis",
+   "status": "done",
+   "output": {
+    "score": 91,
+    "quality": {
+     "score": 91,
+     "parameters": {
+      "grammar": {
+       "score": 100,
+       "issues": [],
+       "advice": "Good."
+      },
+      "structure": {
+       "score": 100,
+       "issues": [],
+       "advice": "Good."
+      },
+      "repetition": {
+       "score": 100,
+       "issues": [],
+       "advice": "Good."
+      },
+      "clarity": {
+       "score": 100,
+       "issues": [],
+       "advice": "Good."
+      },
+      "flow": {
+       "score": 85,
+       "issues": [
+        "no direct address or questions: may sound like reading"
+       ],
+       "advice": "Write the way you speak: address the listener, keep each sentence to one breath."
+      },
+      "engagement": {
+       "score": 55,
+       "issues": [
+        "opening line has no hook (question, surprise or call to action)",
+        "never speaks to the listener (you / kamu)",
+        "no closing question or call to action"
+       ],
+       "advice": "Open with a hook and close with a question or call to action."
+      },
+      "suitability": {
+       "score": 100,
+       "issues": [],
+       "advice": "Good."
+      }
+     }
+    },
+    "language": {
+     "primary": "id",
+     "is_mixed": false,
+     "share": {
+      "id": 1.0
+     },
+     "sentence_languages": [
+      {
+       "sentence": "Setiap tetes peluh adalah janji untuk esok yang lebih baik.",
+       "language": "id"
+      },
+      {
+       "sentence": "Lihatlah dia, di bawah terik matahari yang membakar.",
+       "language": "id"
+      },
+      {
+       "sentence": "Keadaan sungguh berat, beban keluarga terasa begitu nyata.",
+       "language": "id"
+      },
+      {
+       "sentence": "Ada malam-malam tanpa tidur, ada keraguan yang menusuk hati.",
+       "language": "id"
+      },
+      {
+       "sentence": "Rasa marah dan frustrasi sering datang, ingin menyerah saja.",
+       "language": "id"
+      },
+      {
+       "sentence": "Tapi kemudian, dia menarik napas dalam.",
+       "language": "id"
+      },
+      {
+       "sentence": "Dia ingat wajah mereka, senyum mereka yang selalu menjadi bahan bakarnya.",
+       "language": "id"
+      },
+      {
+       "sentence": "Di situlah kekuatan itu muncul.",
+       "language": "id"
+      },
+      {
+       "sentence": "Keteguhan sejati bukan tentang tidak pernah jatuh, tapi tentang terus bangkit lagi.",
+       "language": "id"
+      },
+      {
+       "sentence": "Ia memilih untuk berjuang, karena cinta tanpa syarat pada keluarga jauh lebih kuat dari badai apapun.",
+       "language": "id"
+      },
+      {
+       "sentence": "Senja di ujung harapan itu, justru menjadi awal dari kebanggaan yang tak terhingga.",
+       "language": "id"
+      }
+     ],
+     "unnatural_phrases": [],
+     "difficult_words": [],
+     "symbols": []
+    },
+    "emotion": {
+     "dominant": "sadness",
+     "intensity": 36,
+     "scores": {
+      "happiness": 0,
+      "sadness": 33,
+      "excitement": 0,
+      "confidence": 33,
+      "authority": 33,
+      "romance": 0,
+      "professional": 0,
+      "documentary": 0,
+      "commercial": 0
+     }
+    },
+    "sentences": 11,
+    "words": 108,
+    "sentence_length": {
+     "avg": 9.8,
+     "max": 16,
+     "long_sentences": []
+    },
+    "repetition": [],
+    "pronunciation_difficulty": {
+     "items": [],
+     "count": 0
+    },
+    "estimated_s": 58.5,
+    "editor": {
+     "error": "LLMEmpty: the model did not return valid JSON: Expecting ',' delimiter: line 10 column 1 (char 274)"
+    }
+   },
+   "error": null,
+   "attempts": 1,
+   "started_at": "2026-11-27T17:11:15+00:00",
+   "finished_at": "2026-11-27T17:11:28+00:00"
+  },
+  {
+   "production_id": "6cbb111ca5dc4e3bbb7706a3640676f3",
+   "stage": "enhancement",
+   "status": "done",
+   "output": {
+    "text": "Setiap tetes peluh adalah janji untuk esok yang lebih baik. Lihatlah dia, di bawah terik matahari yang membakar. Keadaan sungguh berat, beban keluarga terasa begitu nyata. Ada malam-malam tanpa tidur, ada keraguan yang menusuk hati. Rasa marah dan frustrasi sering datang, ingin menyerah saja. Tapi kemudian, dia menarik napas dalam. Dia ingat wajah mereka, senyum mereka yang selalu menjadi bahan bakarnya. Di situlah kekuatan itu muncul. Keteguhan sejati bukan tentang tidak pernah jatuh, tapi tentang terus bangkit lagi. Ia memilih untuk berjuang, karena cinta tanpa syarat pada keluarga jauh lebih kuat dari badai apapun. Senja di ujung harapan itu, justru menjadi awal dari kebanggaan yang tak terhingga.",
+    "proposal": "Setiap tetes peluh itu adalah sumpah untuk hari esok yang lebih baik. Tataplah dia, di bawah terik yang membakar kulit. Beban ini sungguh berat, rasa keluarga terasa begitu nyata di dada. Ada malam-malam tanpa lelap, ada keraguan yang menusuk sampai ke tulang. Amarah dan kekecewaan sering datang, dorongan untuk menyerah begitu menggoda. Namun, kemudian, ia menarik napas. Ia mengingat wajah mereka, senyum mereka yang selalu menjadi nyala api dalam dirinya. Di situlah kekuatan itu lahir. Keteguhan sejati bukanlah tentang tak pernah tersungkur, tapi tentang memilih untuk berdiri lagi. Ia memilih untuk terus berjuang, sebab cinta tanpa syarat pada keluarga jauh lebih dalam dari badai mana pun. Senja di ujung keputusasaan itu, justru menjadi awal dari kebanggaan yang tak terhingga.",
+    "accepted": false,
+    "method": "llm",
+    "meaning": {
+     "content_words_kept": 0.727,
+     "new_content_words": [
+      "amarah",
+      "api",
+      "berdiri",
+      "bukanlah",
+      "dada",
+      "dirinya",
+      "dorongan",
+      "kekecewaan",
+      "keputusasaan",
+      "kulit",
+      "lahir",
+      "lelap",
+      "menggoda",
+      "mengingat",
+      "nyala",
+      "sampai",
+      "sebab",
+      "sumpah",
+      "tataplah",
+      "tersungkur"
+     ],
+     "preserved": false
+    },
+    "note": "rejected: the rewrite dropped too much of the meaning",
+    "version_id": "4389d3e275b342078b5f65ae0a90d103"
+   },
+   "error": null,
+   "attempts": 1,
+   "started_at": "2026-11-27T17:11:28+00:00",
+   "finished_at": "2026-11-27T17:11:41+00:00"
+  },
+  {
+   "production_id": "6cbb111ca5dc4e3bbb7706a3640676f3",
+   "stage": "emotion",
+   "status": "done",
+   "output": {
+    "arc": {
+     "opening": "hopeful",
+     "middle": "angry",
+     "ending": "hopeful",
+     "shape": "rising",
+     "sentences": 11
+    },
+    "mode": "expressive",
+    "sentences": [
+     {
+      "index": 0,
+      "text": "Setiap tetes peluh adalah janji untuk esok yang lebih baik.",
+      "emotion": "hopeful",
+      "intensity": 70,
+      "vocal_energy": "medium",
+      "speed": "medium",
+      "pitch_direction": "rising",
+      "delivery": "warm and lifting",
+      "pause_before_ms": 105,
+      "pause_after_ms": 612,
+      "emphasis": [],
+      "breathing": "breath before",
+      "transition_from_previous": "opening line: start in this mood",
+      "transition_to_next": "lead into hopeful to serious",
+      "source": "llm",
+      "rendering": {
+       "rate": "engine speed (time-stretch on Chatterbox)",
+       "pitch": "engine or pitch shift",
+       "pitch_range": "intonation range (Chatterbox: exaggeration)",
+       "volume": "gain",
+       "pauses": "silence between segments"
+      },
+      "prosody": {
+       "rate": 0.984,
+       "pitch_semitones": 0.8,
+       "pitch_range": 1.121,
+       "volume_db": 0.0
+      },
+      "engine_emotion": "happiness"
+     },
+     {
+      "index": 1,
+      "text": "Lihatlah dia, di bawah terik matahari yang membakar.",
+      "emotion": "serious",
+      "intensity": 60,
+      "vocal_energy": "medium",
+      "speed": "medium",
+      "pitch_direction": "level",
+      "delivery": "measured and plain",
+      "pause_before_ms": 0,
+      "pause_after_ms": 432,
+      "emphasis": [],
+      "breathing": "normal",
+      "transition_from_previous": "shift from hopeful to serious: change pace and colour across the pause, not abruptly",
+      "transition_to_next": "lead into serious to sad",
+      "source": "llm",
+      "rendering": {
+       "rate": "engine speed (time-stretch on Chatterbox)",
+       "pitch": "engine or pitch shift",
+       "pitch_range": "intonation range (Chatterbox: exaggeration)",
+       "volume": "gain",
+       "pauses": "silence between segments"
+      },
+      "prosody": {
+       "rate": 0.972,
+       "pitch_semitones": 0.0,
+       "pitch_range": 0.966,
+       "volume_db": 0.0
+      },
+      "engine_emotion": "professional"
+     },
+     {
+      "index": 2,
+      "text": "Keadaan sungguh berat, beban keluarga terasa begitu nyata.",
+      "emotion": "sad",
+      "intensity": 80,
+      "vocal_energy": "low",
+      "speed": "slow",
+      "pitch_direction": "falling",
+      "delivery": "soft and heavy",
+      "pause_before_ms": 160,
+      "pause_after_ms": 756,
+      "emphasis": [],
+      "breathing": "slow breath before",
+      "transition_from_previous": "shift from serious to sad: change pace and colour across the pause, not abruptly",
+      "transition_to_next": "lead into sad to vulnerable",
+      "source": "llm",
+      "rendering": {
+       "rate": "engine speed (time-stretch on Chatterbox)",
+       "pitch": "engine or pitch shift",
+       "pitch_range": "intonation range (Chatterbox: exaggeration)",
+       "volume": "gain",
+       "pauses": "silence between segments"
+      },
+      "prosody": {
+       "rate": 0.89,
+       "pitch_semitones": -1.38,
+       "pitch_range": 0.816,
+       "volume_db": -1.84
+      },
+      "engine_emotion": "sadness"
+     },
+     {
+      "index": 3,
+      "text": "Ada malam-malam tanpa tidur, ada keraguan yang menusuk hati.",
+      "emotion": "vulnerable",
+      "intensity": 75,
+      "vocal_energy": "low",
+      "speed": "slow",
+      "pitch_direction": "falling",
+      "delivery": "quiet and open",
+      "pause_before_ms": 187,
+      "pause_after_ms": 840,
+      "emphasis": [],
+      "breathing": "breath before",
+      "transition_from_previous": "shift from sad to vulnerable: change pace and colour across the pause, not abruptly",
+      "transition_to_next": "lead into vulnerable to frustrated",
+      "source": "llm",
+      "rendering": {
+       "rate": "engine speed (time-stretch on Chatterbox)",
+       "pitch": "engine or pitch shift",
+       "pitch_range": "intonation range (Chatterbox: exaggeration)",
+       "volume": "gain",
+       "pauses": "silence between segments"
+      },
+      "prosody": {
+       "rate": 0.896,
+       "pitch_semitones": -0.86,
+       "pitch_range": 0.871,
+       "volume_db": -2.16
+      },
+      "engine_emotion": "sadness"
+     },
+     {
+      "index": 4,
+      "text": "Rasa marah dan frustrasi sering datang, ingin menyerah saja.",
+      "emotion": "frustrated",
+      "intensity": 85,
+      "vocal_energy": "high",
+      "speed": "medium",
+      "pitch_direction": "level",
+      "delivery": "tense and clipped",
+      "pause_before_ms": 0,
+      "pause_after_ms": 499,
+      "emphasis": [],
+      "breathing": "short breath",
+      "transition_from_previous": "shift from vulnerable to frustrated: change pace and colour across the pause, not abruptly",
+      "transition_to_next": "lead into frustrated to determined",
+      "source": "llm",
+      "rendering": {
+       "rate": "engine speed (time-stretch on Chatterbox)",
+       "pitch": "engine or pitch shift",
+       "pitch_range": "intonation range (Chatterbox: exaggeration)",
+       "volume": "gain",
+       "pauses": "silence between segments"
+      },
+      "prosody": {
+       "rate": 1.0,
+       "pitch_semitones": -0.49,
+       "pitch_range": 1.098,
+       "volume_db": 0.49
+      },
+      "engine_emotion": "confidence"
+     },
+     {
+      "index": 5,
+      "text": "Tapi kemudian, dia menarik napas dalam.",
+      "emotion": "determined",
+      "intensity": 55,
+      "vocal_energy": "medium",
+      "speed": "medium",
+      "pitch_direction": "level",
+      "delivery": "firm and resolved",
+      "pause_before_ms": 55,
+      "pause_after_ms": 464,
+      "emphasis": [],
+      "breathing": "steady breath",
+      "transition_from_previous": "shift from frustrated to determined: change pace and colour across the pause, not abruptly",
+      "transition_to_next": "lead into determined to nostalgic",
+      "source": "llm",
+      "rendering": {
+       "rate": "engine speed (time-stretch on Chatterbox)",
+       "pitch": "engine or pitch shift",
+       "pitch_range": "intonation range (Chatterbox: exaggeration)",
+       "volume": "gain",
+       "pauses": "silence between segments"
+      },
+      "prosody": {
+       "rate": 0.975,
+       "pitch_semitones": -0.32,
+       "pitch_range": 1.032,
+       "volume_db": 0.63
+      },
+      "engine_emotion": "confidence"
+     },
+     {
+      "index": 6,
+      "text": "Dia ingat wajah mereka, senyum mereka yang selalu menjadi bahan bakarnya.",
+      "emotion": "nostalgic",
+      "intensity": 65,
+      "vocal_energy": "low",
+      "speed": "slow",
+      "pitch_direction": "falling",
+      "delivery": "warm and wistful",
+      "pause_before_ms": 130,
+      "pause_after_ms": 693,
+      "emphasis": [
+       "selalu"
+      ],
+      "breathing": "slow breath",
+      "transition_from_previous": "shift from determined to nostalgic: change pace and colour across the pause, not abruptly",
+      "transition_to_next": "lead into nostalgic to powerful",
+      "source": "llm",
+      "rendering": {
+       "rate": "engine speed (time-stretch on Chatterbox)",
+       "pitch": "engine or pitch shift",
+       "pitch_range": "intonation range (Chatterbox: exaggeration)",
+       "volume": "gain",
+       "pauses": "silence between segments"
+      },
+      "prosody": {
+       "rate": 0.925,
+       "pitch_semitones": -0.37,
+       "pitch_range": 0.925,
+       "volume_db": -0.75
+      },
+      "engine_emotion": "sadness"
+     },
+     {
+      "index": 7,
+      "text": "Di situlah kekuatan itu muncul.",
+      "emotion": "powerful",
+      "intensity": 90,
+      "vocal_energy": "high",
+      "speed": "medium",
+      "pitch_direction": "falling",
+      "delivery": "full and commanding",
+      "pause_before_ms": 180,
+      "pause_after_ms": 798,
+      "emphasis": [],
+      "breathing": "full breath before",
+      "transition_from_previous": "shift from nostalgic to powerful: change pace and colour across the pause, not abruptly",
+      "transition_to_next": "lead into powerful to inspirational",
+      "source": "llm",
+      "rendering": {
+       "rate": "engine speed (time-stretch on Chatterbox)",
+       "pitch": "engine or pitch shift",
+       "pitch_range": "intonation range (Chatterbox: exaggeration)",
+       "volume": "gain",
+       "pauses": "silence between segments"
+      },
+      "prosody": {
+       "rate": 0.938,
+       "pitch_semitones": -1.55,
+       "pitch_range": 1.104,
+       "volume_db": 2.07
+      },
+      "engine_emotion": "authority"
+     },
+     {
+      "index": 8,
+      "text": "Keteguhan sejati bukan tentang tidak pernah jatuh, tapi tentang terus bangkit lagi.",
+      "emotion": "inspirational",
+      "intensity": 88,
+      "vocal_energy": "high",
+      "speed": "medium",
+      "pitch_direction": "rising",
+      "delivery": "warm and uplifting",
+      "pause_before_ms": 176,
+      "pause_after_ms": 789,
+      "emphasis": [],
+      "breathing": "full breath before",
+      "transition_from_previous": "shift from powerful to inspirational: change pace and colour across the pause, not abruptly",
+      "transition_to_next": "lead into inspirational to determined",
+      "source": "llm",
+      "rendering": {
+       "rate": "engine speed (time-stretch on Chatterbox)",
+       "pitch": "engine or pitch shift",
+       "pitch_range": "intonation range (Chatterbox: exaggeration)",
+       "volume": "gain",
+       "pauses": "silence between segments"
+      },
+      "prosody": {
+       "rate": 0.97,
+       "pitch_semitones": 1.01,
+       "pitch_range": 1.202,
+       "volume_db": 1.01
+      },
+      "engine_emotion": "confidence"
+     },
+     {
+      "index": 9,
+      "text": "Ia memilih untuk berjuang, karena cinta tanpa syarat pada keluarga jauh lebih kuat dari badai apapun.",
+      "emotion": "determined",
+      "intensity": 95,
+      "vocal_energy": "high",
+      "speed": "medium",
+      "pitch_direction": "level",
+      "delivery": "firm and resolved",
+      "pause_before_ms": 95,
+      "pause_after_ms": 585,
+      "emphasis": [],
+      "breathing": "steady breath",
+      "transition_from_previous": "shift from inspirational to determined: change pace and colour across the pause, not abruptly",
+      "transition_to_next": "lead into determined to happy",
+      "source": "llm",
+      "rendering": {
+       "rate": "engine speed (time-stretch on Chatterbox)",
+       "pitch": "engine or pitch shift",
+       "pitch_range": "intonation range (Chatterbox: exaggeration)",
+       "volume": "gain",
+       "pauses": "silence between segments"
+      },
+      "prosody": {
+       "rate": 0.956,
+       "pitch_semitones": -0.55,
+       "pitch_range": 1.055,
+       "volume_db": 1.09
+      },
+      "engine_emotion": "confidence"
+     },
+     {
+      "index": 10,
+      "text": "Senja di ujung harapan itu, justru menjadi awal dari kebanggaan yang tak terhingga.",
+      "emotion": "happy",
+      "intensity": 80,
+      "vocal_energy": "high",
+      "speed": "medium",
+      "pitch_direction": "rising",
+      "delivery": "bright and smiling",
+      "pause_before_ms": 0,
+      "pause_after_ms": 0,
+      "emphasis": [],
+      "breathing": "normal",
+      "transition_from_previous": "shift from determined to happy: change pace and colour across the pause, not abruptly",
+      "transition_to_next": "closing line: let it settle",
+      "source": "llm",
+      "rendering": {
+       "rate": "engine speed (time-stretch on Chatterbox)",
+       "pitch": "engine or pitch shift",
+       "pitch_range": "intonation range (Chatterbox: exaggeration)",
+       "volume": "gain",
+       "pauses": "silence between segments"
+      },
+      "prosody": {
+       "rate": 1.037,
+       "pitch_semitones": 1.38,
+       "pitch_range": 1.23,
+       "volume_db": 0.46
+      },
+      "engine_emotion": "happiness"
+     }
+    ],
+    "version_id": "4389d3e275b342078b5f65ae0a90d103",
+    "directed_script": "[EMOTION: HOPEFUL]\n[INTENSITY: 70/100]\n[DELIVERY: WARM AND LIFTING]\n[SPEED: MEDIUM]\n[PITCH: RISING]\n[PAUSE BEFORE: 105ms]\n\"Setiap tetes peluh adalah janji untuk esok yang lebih baik.\"\n[PAUSE: 612ms]\n\n[EMOTION: SERIOUS]\n[INTENSITY: 60/100]\n[DELIVERY: MEASURED AND PLAIN]\n[SPEED: MEDIUM]\n[PITCH: LEVEL]\n\"Lihatlah dia, di bawah terik matahari yang membakar.\"\n[PAUSE: 432ms]\n\n[EMOTION: SAD]\n[INTENSITY: 80/100]\n[DELIVERY: SOFT AND HEAVY]\n[SPEED: SLOW]\n[PITCH: FALLING]\n[PAUSE BEFORE: 160ms]\n\"Keadaan sungguh berat, beban keluarga terasa begitu nyata.\"\n[PAUSE: 756ms]\n\n[EMOTION: VULNERABLE]\n[INTENSITY: 75/100]\n[DELIVERY: QUIET AND OPEN]\n[SPEED: SLOW]\n[PITCH: FALLING]\n[PAUSE BEFORE: 187ms]\n\"Ada malam-malam tanpa tidur, ada keraguan yang menusuk hati.\"\n[PAUSE: 840ms]\n\n[EMOTION: FRUSTRATED]\n[INTENSITY: 85/100]\n[DELIVERY: TENSE AND CLIPPED]\n[SPEED: MEDIUM]\n[PITCH: LEVEL]\n\"Rasa marah dan frustrasi sering datang, ingin menyerah saja.\"\n[PAUSE: 499ms]\n\n[EMOTION: DETERMINED]\n[INTENSITY: 55/100]\n[DELIVERY: FIRM AND RESOLVED]\n[SPEED: MEDIUM]\n[PITCH: LEVEL]\n[PAUSE BEFORE: 55ms]\n\"Tapi kemudian, dia menarik napas dalam.\"\n[PAUSE: 464ms]\n\n[EMOTION: NOSTALGIC]\n[INTENSITY: 65/100]\n[DELIVERY: WARM AND WISTFUL]\n[SPEED: SLOW]\n[PITCH: FALLING]\n[PAUSE BEFORE: 130ms]\n[EMPHASIS: selalu]\n\"Dia ingat wajah mereka, senyum mereka yang selalu menjadi bahan bakarnya.\"\n[PAUSE: 693ms]\n\n[EMOTION: POWERFUL]\n[INTENSITY: 90/100]\n[DELIVERY: FULL AND COMMANDING]\n[SPEED: MEDIUM]\n[PITCH: FALLING]\n[PAUSE BEFORE: 180ms]\n\"Di situlah kekuatan itu muncul.\"\n[PAUSE: 798ms]\n\n[EMOTION: INSPIRATIONAL]\n[INTENSITY: 88/100]\n[DELIVERY: WARM AND UPLIFTING]\n[SPEED: MEDIUM]\n[PITCH: RISING]\n[PAUSE BEFORE: 176ms]\n\"Keteguhan sejati bukan tentang tidak pernah jatuh, tapi tentang terus bangkit lagi.\"\n[PAUSE: 789ms]\n\n[EMOTION: DETERMINED]\n[INTENSITY: 95/100]\n[DELIVERY: FIRM AND RESOLVED]\n[SPEED: MEDIUM]\n[PITCH: LEVEL]\n[PAUSE BEFORE: 95ms]\n\"Ia memilih untuk berjuang, karena cinta tanpa syarat pada keluarga jauh lebih kuat dari badai apapun.\"\n[PAUSE: 585ms]\n\n[EMOTION: HAPPY]\n[INTENSITY: 80/100]\n[DELIVERY: BRIGHT AND SMILING]\n[SPEED: MEDIUM]\n[PITCH: RISING]\n\"Senja di ujung harapan itu, justru menjadi awal dari kebanggaan yang tak terhingga.\"\n[PAUSE: 0ms]"
+   },
+   "error": null,
+   "attempts": 1,
+   "started_at": "2026-11-27T17:11:41+00:00",
+   "finished_at": "2026-11-27T17:11:57+00:00"
+  },
+  {
+   "production_id": "6cbb111ca5dc4e3bbb7706a3640676f3",
+   "stage": "voice",
+   "status": "done",
+   "output": {
+    "engine": "chatterbox-id",
+    "profile_id": "2296d322a485482cbd41848f3e2ab2f6",
+    "preset": "soft-young-indonesian-woman",
+    "reason": "best available Indonesian engine: chatterbox-id"
+   },
+   "error": null,
+   "attempts": 1,
+   "started_at": "2026-11-27T17:11:57+00:00",
+   "finished_at": "2026-11-27T17:11:57+00:00"
+  },
+  {
+   "production_id": "6cbb111ca5dc4e3bbb7706a3640676f3",
+   "stage": "audio",
+   "status": "done",
+   "output": {
+    "files": {
+     "wav": "/tmp/claude-0/v100/data/outputs/productions/6cbb111ca5dc4e3bbb7706a3640676f3/production.wav",
+     "mp3": "/tmp/claude-0/v100/data/outputs/productions/6cbb111ca5dc4e3bbb7706a3640676f3/production.mp3"
+    },
+    "duration_s": 57.18,
+    "timeline": [
+     {
+      "index": 0,
+      "scene": 0,
+      "text": "Setiap tetes peluh adalah janji untuk esok yang lebih baik.",
+      "start_s": 0.0,
+      "end_s": 4.047
+     },
+     {
+      "index": 1,
+      "scene": 1,
+      "text": "Lihatlah dia, di bawah terik matahari yang membakar.",
+      "start_s": 4.659,
+      "end_s": 8.098
+     },
+     {
+      "index": 2,
+      "scene": 2,
+      "text": "Keadaan sungguh berat, beban keluarga terasa begitu nyata.",
+      "start_s": 8.69,
+      "end_s": 13.886
+     },
+     {
+      "index": 3,
+      "scene": 3,
+      "text": "Ada malam-malam tanpa tidur, ada keraguan yang menusuk hati.",
+      "start_s": 14.829,
+      "end_s": 19.091
+     },
+     {
+      "index": 4,
+      "scene": 4,
+      "text": "Rasa marah dan frustrasi sering datang, ingin menyerah saja.",
+      "start_s": 19.931,
+      "end_s": 24.121
+     },
+     {
+      "index": 5,
+      "scene": 5,
+      "text": "Tapi kemudian, dia menarik napas dalam.",
+      "start_s": 24.675,
+      "end_s": 27.79
+     },
+     {
+      "index": 6,
+      "scene": 6,
+      "text": "Dia ingat wajah mereka, senyum mereka yang selalu menjadi bahan bakarnya.",
+      "start_s": 28.384,
+      "end_s": 33.598
+     },
+     {
+      "index": 7,
+      "scene": 7,
+      "text": "Di situlah kekuatan itu muncul.",
+      "start_s": 34.471,
+      "end_s": 37.067
+     },
+     {
+      "index": 8,
+      "scene": 8,
+      "text": "Keteguhan sejati bukan tentang tidak pernah jatuh, tapi tentang terus bangkit lagi.",
+      "start_s": 38.041,
+      "end_s": 43.481
+     },
+     {
+      "index": 9,
+      "scene": 9,
+      "text": "Ia memilih untuk berjuang, karena cinta tanpa syarat pada keluarga jauh lebih kuat dari badai apapun.",
+      "start_s": 44.365,
+      "end_s": 51.427
+     },
+     {
+      "index": 10,
+      "scene": 10,
+      "text": "Senja di ujung harapan itu, justru menjadi awal dari kebanggaan yang tak terhingga.",
+      "start_s": 52.012,
+      "end_s": 57.178
+     }
+    ],
+    "engine": "chatterbox-id",
+    "mastering": {
+     "input_lufs": -23.46,
+     "noise_reduction": {
+      "applied": false,
+      "reason": "no measurable noise floor",
+      "snr_db": 49.5
+     },
+     "output_lufs": -14.0,
+     "true_peak_dbtp": -1.0,
+     "target_lufs": -14.0,
+     "ceiling_dbtp": -1.0,
+     "sample_rate": 48000,
+     "duration_s": 57.18
+    },
+    "music": null,
+    "polish": {
+     "chain": [
+      "highpass=f=70",
+      "acompressor=threshold=-20dB:ratio=2.5:attack=8:release=120:makeup=1"
+     ],
+     "sibilance_ratio": 0.091,
+     "deessed": false
+    },
+    "sentences": 11,
+    "elapsed_s": 547.37
+   },
+   "error": null,
+   "attempts": 1,
+   "started_at": "2026-11-27T17:11:57+00:00",
+   "finished_at": "2026-11-27T17:21:04+00:00"
+  },
+  {
+   "production_id": "6cbb111ca5dc4e3bbb7706a3640676f3",
+   "stage": "subtitles",
+   "status": "done",
+   "output": {
+    "cues": [
+     {
+      "index": 1,
+      "start_s": 0.0,
+      "end_s": 4.047,
+      "text": "Setiap tetes peluh adalah janji untuk esok\nyang lebih baik.",
+      "sentence": 0
+     },
+     {
+      "index": 2,
+      "start_s": 4.659,
+      "end_s": 8.098,
+      "text": "Lihatlah dia, di bawah terik matahari yang\nmembakar.",
+      "sentence": 1
+     },
+     {
+      "index": 3,
+      "start_s": 8.69,
+      "end_s": 13.886,
+      "text": "Keadaan sungguh berat, beban keluarga\nterasa begitu nyata.",
+      "sentence": 2
+     },
+     {
+      "index": 4,
+      "start_s": 14.829,
+      "end_s": 19.091,
+      "text": "Ada malam-malam tanpa tidur, ada keraguan\nyang menusuk hati.",
+      "sentence": 3
+     },
+     {
+      "index": 5,
+      "start_s": 19.931,
+      "end_s": 24.121,
+      "text": "Rasa marah dan frustrasi sering datang,\ningin menyerah saja.",
+      "sentence": 4
+     },
+     {
+      "index": 6,
+      "start_s": 24.675,
+      "end_s": 27.79,
+      "text": "Tapi kemudian, dia menarik napas dalam.",
+      "sentence": 5
+     },
+     {
+      "index": 7,
+      "start_s": 28.384,
+      "end_s": 33.598,
+      "text": "Dia ingat wajah mereka, senyum mereka yang\nselalu menjadi bahan bakarnya.",
+      "sentence": 6
+     },
+     {
+      "index": 8,
+      "start_s": 34.471,
+      "end_s": 37.067,
+      "text": "Di situlah kekuatan itu muncul.",
+      "sentence": 7
+     },
+     {
+      "index": 9,
+      "start_s": 38.041,
+      "end_s": 43.149,
+      "text": "Keteguhan sejati bukan tentang tidak\npernah jatuh, tapi tentang terus bangkit",
+      "sentence": 8
+     },
+     {
+      "index": 10,
+      "start_s": 43.149,
+      "end_s": 43.481,
+      "text": "lagi.",
+      "sentence": 8
+     },
+     {
+      "index": 11,
+      "start_s": 44.365,
+      "end_s": 50.156,
+      "text": "Ia memilih untuk berjuang, karena cinta\ntanpa syarat pada keluarga jauh lebih kuat",
+      "sentence": 9
+     },
+     {
+      "index": 12,
+      "start_s": 50.156,
+      "end_s": 51.427,
+      "text": "dari badai apapun.",
+      "sentence": 9
+     },
+     {
+      "index": 13,
+      "start_s": 52.012,
+      "end_s": 57.178,
+      "text": "Senja di ujung harapan itu, justru menjadi\nawal dari kebanggaan yang tak terhingga.",
+      "sentence": 10
+     }
+    ],
+    "files": {
+     "srt": "/tmp/claude-0/v100/data/outputs/productions/6cbb111ca5dc4e3bbb7706a3640676f3/subtitles.srt",
+     "vtt": "/tmp/claude-0/v100/data/outputs/productions/6cbb111ca5dc4e3bbb7706a3640676f3/subtitles.vtt",
+     "json": "/tmp/claude-0/v100/data/outputs/productions/6cbb111ca5dc4e3bbb7706a3640676f3/subtitles.json",
+     "txt": "/tmp/claude-0/v100/data/outputs/productions/6cbb111ca5dc4e3bbb7706a3640676f3/subtitles.txt"
+    },
+    "problems": []
+   },
+   "error": null,
+   "attempts": 1,
+   "started_at": "2026-11-27T17:21:04+00:00",
+   "finished_at": "2026-11-27T17:21:04+00:00"
+  },
+  {
+   "production_id": "6cbb111ca5dc4e3bbb7706a3640676f3",
+   "stage": "qa",
+   "status": "done",
+   "output": {
+    "passed": true,
+    "checks": [
+     {
+      "check": "wav decodes",
+      "ok": true,
+      "detail": "pcm_s16le 48000 Hz 57.178s",
+      "required": true
+     },
+     {
+      "check": "wav duration matches render",
+      "ok": true,
+      "detail": "57.178s vs 57.180s",
+      "required": true
+     },
+     {
+      "check": "mp3 decodes",
+      "ok": true,
+      "detail": "mp3 48000 Hz 57.216s",
+      "required": true
+     },
+     {
+      "check": "mp3 duration matches render",
+      "ok": true,
+      "detail": "57.216s vs 57.180s",
+      "required": true
+     },
+     {
+      "check": "loudness on target",
+      "ok": true,
+      "detail": "-14.00 LUFS (target -14.0)",
+      "required": true
+     },
+     {
+      "check": "true peak under ceiling",
+      "ok": true,
+      "detail": "-1.00 dBTP (ceiling -1.0)",
+      "required": true
+     },
+     {
+      "check": "no dead air over 2.5 s",
+      "ok": true,
+      "detail": "longest silence 1.13s",
+      "required": true
+     },
+     {
+      "check": "not clipped",
+      "ok": true,
+      "detail": "samples at full scale checked",
+      "required": true
+     },
+     {
+      "check": "wav and mp3 agree",
+      "ok": true,
+      "detail": "57.178s / 57.216s",
+      "required": true
+     },
+     {
+      "check": "subtitles cover every sentence",
+      "ok": true,
+      "detail": "11/11 sentences",
+      "required": true
+     },
+     {
+      "check": "subtitles inside the audio",
+      "ok": true,
+      "detail": "last cue ends 57.178s",
+      "required": true
+     },
+     {
+      "check": "speech recognition hears the script",
+      "ok": true,
+      "detail": "88% of content words heard",
+      "required": false
+     }
+    ],
+    "files": {
+     "wav": {
+      "codec": "pcm_s16le",
+      "sample_rate": 48000,
+      "channels": 1,
+      "duration": 57.17775,
+      "format": "wav",
+      "bytes": 5489108,
+      "sha256": "7e5be113bf714b44815026f4a1b8b81cb4f3f747405cdcc508d0baa5388b2a6b"
+     },
+     "mp3": {
+      "codec": "mp3",
+      "sample_rate": 48000,
+      "channels": 1,
+      "duration": 57.216,
+      "format": "mp3",
+      "bytes": 1373805,
+      "sha256": "56fd5da8e036918c1b6bd385d833db57b28e2c7e799e7345cbbade5fefc80ce4"
+     }
+    }
+   },
+   "error": null,
+   "attempts": 1,
+   "started_at": "2026-11-27T17:21:04+00:00",
+   "finished_at": "2026-11-27T17:22:27+00:00"
+  },
+  {
+   "production_id": "6cbb111ca5dc4e3bbb7706a3640676f3",
+   "stage": "deliver",
+   "status": "done",
+   "output": {
+    "delivered": [
+     "wav",
+     "mp3"
+    ],
+    "qa_passed": true,
+    "folder": "/tmp/claude-0/v100/data/outputs/productions/6cbb111ca5dc4e3bbb7706a3640676f3"
+   },
+   "error": null,
+   "attempts": 1,
+   "started_at": "2026-11-27T17:22:27+00:00",
+   "finished_at": "2026-11-27T17:22:27+00:00"
+  }
+ ],
+ "assets": [
+  {
+   "id": "170f3589816b4d529f52ded843626fe4",
+   "production_id": "6cbb111ca5dc4e3bbb7706a3640676f3",
+   "format": "wav",
+   "path": "/tmp/claude-0/v100/data/outputs/productions/6cbb111ca5dc4e3bbb7706a3640676f3/production.wav",
+   "bytes": 5489108,
+   "duration_s": 57.17775,
+   "sample_rate": 48000,
+   "sha256": "7e5be113bf714b44815026f4a1b8b81cb4f3f747405cdcc508d0baa5388b2a6b",
+   "created_at": "2026-11-27T17:22:27+00:00"
+  },
+  {
+   "id": "34028d9c500c4b3c97dcb1e472fcd294",
+   "production_id": "6cbb111ca5dc4e3bbb7706a3640676f3",
+   "format": "mp3",
+   "path": "/tmp/claude-0/v100/data/outputs/productions/6cbb111ca5dc4e3bbb7706a3640676f3/production.mp3",
+   "bytes": 1373805,
+   "duration_s": 57.216,
+   "sample_rate": 48000,
+   "sha256": "56fd5da8e036918c1b6bd385d833db57b28e2c7e799e7345cbbade5fefc80ce4",
+   "created_at": "2026-11-27T17:22:27+00:00"
+  }
+ ],
+ "subtitles": [
+  {
+   "production_id": "6cbb111ca5dc4e3bbb7706a3640676f3",
+   "format": "json",
+   "path": "/tmp/claude-0/v100/data/outputs/productions/6cbb111ca5dc4e3bbb7706a3640676f3/subtitles.json",
+   "cues": 13
+  },
+  {
+   "production_id": "6cbb111ca5dc4e3bbb7706a3640676f3",
+   "format": "srt",
+   "path": "/tmp/claude-0/v100/data/outputs/productions/6cbb111ca5dc4e3bbb7706a3640676f3/subtitles.srt",
+   "cues": 13
+  },
+  {
+   "production_id": "6cbb111ca5dc4e3bbb7706a3640676f3",
+   "format": "txt",
+   "path": "/tmp/claude-0/v100/data/outputs/productions/6cbb111ca5dc4e3bbb7706a3640676f3/subtitles.txt",
+   "cues": 13
+  },
+  {
+   "production_id": "6cbb111ca5dc4e3bbb7706a3640676f3",
+   "format": "vtt",
+   "path": "/tmp/claude-0/v100/data/outputs/productions/6cbb111ca5dc4e3bbb7706a3640676f3/subtitles.vtt",
+   "cues": 13
+  }
+ ],
+ "qa": {
+  "production_id": "6cbb111ca5dc4e3bbb7706a3640676f3",
+  "passed": 1,
+  "report": {
+   "passed": true,
+   "checks": [
+    {
+     "check": "wav decodes",
+     "ok": true,
+     "detail": "pcm_s16le 48000 Hz 57.178s",
+     "required": true
+    },
+    {
+     "check": "wav duration matches render",
+     "ok": true,
+     "detail": "57.178s vs 57.180s",
+     "required": true
+    },
+    {
+     "check": "mp3 decodes",
+     "ok": true,
+     "detail": "mp3 48000 Hz 57.216s",
+     "required": true
+    },
+    {
+     "check": "mp3 duration matches render",
+     "ok": true,
+     "detail": "57.216s vs 57.180s",
+     "required": true
+    },
+    {
+     "check": "loudness on target",
+     "ok": true,
+     "detail": "-14.00 LUFS (target -14.0)",
+     "required": true
+    },
+    {
+     "check": "true peak under ceiling",
+     "ok": true,
+     "detail": "-1.00 dBTP (ceiling -1.0)",
+     "required": true
+    },
+    {
+     "check": "no dead air over 2.5 s",
+     "ok": true,
+     "detail": "longest silence 1.13s",
+     "required": true
+    },
+    {
+     "check": "not clipped",
+     "ok": true,
+     "detail": "samples at full scale checked",
+     "required": true
+    },
+    {
+     "check": "wav and mp3 agree",
+     "ok": true,
+     "detail": "57.178s / 57.216s",
+     "required": true
+    },
+    {
+     "check": "subtitles cover every sentence",
+     "ok": true,
+     "detail": "11/11 sentences",
+     "required": true
+    },
+    {
+     "check": "subtitles inside the audio",
+     "ok": true,
+     "detail": "last cue ends 57.178s",
+     "required": true
+    },
+    {
+     "check": "speech recognition hears the script",
+     "ok": true,
+     "detail": "88% of content words heard",
+     "required": false
+    }
+   ],
+   "files": {
+    "wav": {
+     "codec": "pcm_s16le",
+     "sample_rate": 48000,
+     "channels": 1,
+     "duration": 57.17775,
+     "format": "wav",
+     "bytes": 5489108,
+     "sha256": "7e5be113bf714b44815026f4a1b8b81cb4f3f747405cdcc508d0baa5388b2a6b"
+    },
+    "mp3": {
+     "codec": "mp3",
+     "sample_rate": 48000,
+     "channels": 1,
+     "duration": 57.216,
+     "format": "mp3",
+     "bytes": 1373805,
+     "sha256": "56fd5da8e036918c1b6bd385d833db57b28e2c7e799e7345cbbade5fefc80ce4"
+    }
+   }
+  },
+  "created_at": "2026-11-27T17:22:27+00:00"
+ },
+ "qa_passed": true
+}

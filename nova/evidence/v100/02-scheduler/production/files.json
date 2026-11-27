@@ -1,0 +1,64 @@
+{
+ "wav": {
+  "path": "/tmp/claude-0/v100/data/outputs/productions/c501eb5f5e1e48a0bc453de86279f665/production.wav",
+  "ffprobe": {
+   "programs": [],
+   "streams": [
+    {
+     "codec_name": "pcm_s16le",
+     "sample_rate": "48000",
+     "channels": 1
+    }
+   ],
+   "format": {
+    "format_name": "wav",
+    "duration": "25.012958",
+    "size": "2401288"
+   }
+  },
+  "sha256": "532ee96a31661a8f8156fac276eb899ae38d89e00b3f1b6a7e2e147c959aa9c3",
+  "db_sha256": "532ee96a31661a8f8156fac276eb899ae38d89e00b3f1b6a7e2e147c959aa9c3",
+  "full_decode_errors": "none"
+ },
+ "mp3": {
+  "path": "/tmp/claude-0/v100/data/outputs/productions/c501eb5f5e1e48a0bc453de86279f665/production.mp3",
+  "ffprobe": {
+   "programs": [],
+   "streams": [
+    {
+     "codec_name": "mp3",
+     "sample_rate": "48000",
+     "channels": 1
+    }
+   ],
+   "format": {
+    "format_name": "mp3",
+    "duration": "25.056000",
+    "size": "601965"
+   }
+  },
+  "sha256": "cee6967735463ddd4e320e7f806b28d68a602f87e459f0abe524523454df21cb",
+  "db_sha256": "cee6967735463ddd4e320e7f806b28d68a602f87e459f0abe524523454df21cb",
+  "full_decode_errors": "none"
+ },
+ "subtitles.json": {
+  "path": "/tmp/claude-0/v100/data/outputs/productions/c501eb5f5e1e48a0bc453de86279f665/subtitles.json",
+  "bytes": 871,
+  "head": "[\n {\n  \"index\": 1,\n  \"start_s\": 0.0,\n  \"end_s\": 3.223,\n  \"text\": \"Setiap malam adalah pengorbanan yang tak\\nterucapkan.\",\n  \"sentence\": 0\n },\n {\n  \"index\": 2,\n  \"start_s\": 3.847,\n  \"end_s\": 9.254,\n  \"text\": \"Ayah itu bekerja keras di bawah lampu\\nremang, demi setiap buku dan cita-cita\",\n  \"sentence\": 1\n },\n {\n  \"index\": 3,\n  \"start_s\": 9.254,\n  \"end_s\": 9.823,\n  \"text\": \"anaknya.\",\n  \"sentence\": 1"
+ },
+ "subtitles.srt": {
+  "path": "/tmp/claude-0/v100/data/outputs/productions/c501eb5f5e1e48a0bc453de86279f665/subtitles.srt",
+  "bytes": 529,
+  "head": "1\n00:00:00,000 --> 00:00:03,223\nSetiap malam adalah pengorbanan yang tak\nterucapkan.\n\n2\n00:00:03,847 --> 00:00:09,254\nAyah itu bekerja keras di bawah lampu\nremang, demi setiap buku dan cita-cita\n\n3\n00:00:09,254 --> 00:00:09,823\nanaknya.\n\n4\n00:00:10,345 --> 00:00:15,063\nAda lelah yang tak terperi, tapi senyum\nanaknya selalu jadi kekuatan.\n\n5\n00:00:15,763 --> 00:00:20,047\nPengorbanan seorang ayah ad"
+ },
+ "subtitles.txt": {
+  "path": "/tmp/claude-0/v100/data/outputs/productions/c501eb5f5e1e48a0bc453de86279f665/subtitles.txt",
+  "bytes": 332,
+  "head": "Setiap malam adalah pengorbanan yang tak terucapkan.\nAyah itu bekerja keras di bawah lampu remang, demi setiap buku dan cita-cita\nanaknya.\nAda lelah yang tak terperi, tapi senyum anaknya selalu jadi kekuatan.\nPengorbanan seorang ayah adalah fondasi mimpi anak-anaknya.\nLihatlah, di balik lelah itu, ada cinta yang tak pernah padam.\n"
+ },
+ "subtitles.vtt": {
+  "path": "/tmp/claude-0/v100/data/outputs/productions/c501eb5f5e1e48a0bc453de86279f665/subtitles.vtt",
+  "bytes": 525,
+  "head": "WEBVTT\n\n00:00:00.000 --> 00:00:03.223\nSetiap malam adalah pengorbanan yang tak\nterucapkan.\n\n00:00:03.847 --> 00:00:09.254\nAyah itu bekerja keras di bawah lampu\nremang, demi setiap buku dan cita-cita\n\n00:00:09.254 --> 00:00:09.823\nanaknya.\n\n00:00:10.345 --> 00:00:15.063\nAda lelah yang tak terperi, tapi senyum\nanaknya selalu jadi kekuatan.\n\n00:00:15.763 --> 00:00:20.047\nPengorbanan seorang ayah adal"
+ }
+}

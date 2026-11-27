@@ -1,0 +1,3 @@
+old server pid 4982
+server stopped at 17:23:02
+new server pid 7197 up at 17:23:09

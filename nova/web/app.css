@@ -215,3 +215,42 @@ details.card summary { font-weight: 600; color: var(--text); }
 .tbl td.ok { color: var(--accent); }
 .card > p.hint { max-width: 75ch; }
 .tbl caption { caption-side: bottom; text-align: left; padding-top: var(--s2); }
+/* NOVA Studio: production pipeline, emotion timeline, schedule */
+.row.spread { justify-content: space-between; align-items: center; }
+.stages { list-style: none; padding: 0; margin: var(--s3) 0; display: flex; flex-wrap: wrap; gap: var(--s2); }
+.stage { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 999px; background: var(--bg);
+  border: 1px solid var(--line); font-size: 13px; color: var(--muted); }
+.stage .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--line); }
+.stage.done { color: var(--text); } .stage.done .dot { background: var(--accent); }
+.stage.running { color: var(--text); border-color: var(--accent); } .stage.running .dot { background: var(--warn); animation: pulse 1s infinite alternate; }
+.stage.failed { color: var(--rec); border-color: var(--rec); } .stage.failed .dot { background: var(--rec); }
+@keyframes pulse { to { opacity: .3; } }
+@media (prefers-reduced-motion: reduce) { .stage.running .dot { animation: none; } }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.bad-text { color: var(--rec); }
+.concept { background: var(--bg); border: 1px solid var(--line); border-radius: 12px; padding: var(--s4); min-width: 0; overflow-wrap: anywhere; }
+.concept.chosen { border-color: var(--accent); }
+.concept h3 { color: var(--text); text-transform: none; letter-spacing: 0; font-size: 15px; }
+.timeline { display: grid; gap: var(--s2); }
+.beat { display: grid; grid-template-columns: 120px 36px 1fr; gap: var(--s3); align-items: baseline; padding: var(--s2) var(--s3);
+  border-left: 3px solid var(--accent); background: linear-gradient(90deg, rgba(124,240,178,calc(var(--i) * .0018)), transparent 70%);
+  border-radius: 0 10px 10px 0; }
+.beat b { font-size: 14px; } .beat p { margin: 0; overflow-wrap: anywhere; }
+.beat-edit { border-top: 1px solid var(--line); padding: var(--s3) 0; }
+.beat-edit:first-child { border-top: 0; }
+.beat-edit.edited { box-shadow: inset 3px 0 0 var(--warn); padding-left: var(--s3); }
+.beat-edit > p:first-child { margin-bottom: var(--s1); overflow-wrap: anywhere; }
+.table-scroll { overflow-x: auto; }
+.check { display: inline-flex; align-items: center; gap: 6px; margin-right: var(--s3); color: var(--text); min-height: 44px; }
+#job-days { display: flex; flex-wrap: wrap; }
+ul.plain { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--s2); overflow-wrap: anywhere; }
+@media (max-width: 600px) { .beat { grid-template-columns: 1fr auto; } .beat p { grid-column: 1 / -1; } }
+@media (max-width: 600px) {
+  /* Queue: one card per production on phones instead of a squeezed table. */
+  #queue-table tr:first-child { display: none; }
+  #queue-table tr { display: grid; grid-template-columns: 1fr auto; gap: var(--s1) var(--s3); padding: var(--s3) 0;
+    border-bottom: 1px solid var(--line); align-items: center; }
+  #queue-table td { border: 0; padding: 0; }
+  #queue-table td:first-child { grid-column: 1 / -1; font-size: 15px; color: var(--text); }
+  #queue-table td:nth-child(3) { display: none; }
+}

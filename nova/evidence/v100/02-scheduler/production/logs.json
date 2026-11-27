@@ -1,0 +1,146 @@
+[
+ {
+  "ts": "2026-11-27T17:26:09+00:00",
+  "level": "info",
+  "stage": null,
+  "message": "production created"
+ },
+ {
+  "ts": "2026-11-27T17:26:09+00:00",
+  "level": "info",
+  "stage": "intent",
+  "message": "stage intent started (attempt 1)"
+ },
+ {
+  "ts": "2026-11-27T17:26:21+00:00",
+  "level": "info",
+  "stage": "intent",
+  "message": "stage intent done"
+ },
+ {
+  "ts": "2026-11-27T17:26:21+00:00",
+  "level": "info",
+  "stage": "concepts",
+  "message": "stage concepts started (attempt 1)"
+ },
+ {
+  "ts": "2026-11-27T17:26:39+00:00",
+  "level": "info",
+  "stage": "concepts",
+  "message": "stage concepts done"
+ },
+ {
+  "ts": "2026-11-27T17:26:39+00:00",
+  "level": "info",
+  "stage": "script",
+  "message": "stage script started (attempt 1)"
+ },
+ {
+  "ts": "2026-11-27T17:26:46+00:00",
+  "level": "info",
+  "stage": "script",
+  "message": "stage script done"
+ },
+ {
+  "ts": "2026-11-27T17:26:46+00:00",
+  "level": "info",
+  "stage": "analysis",
+  "message": "stage analysis started (attempt 1)"
+ },
+ {
+  "ts": "2026-11-27T17:26:50+00:00",
+  "level": "info",
+  "stage": "analysis",
+  "message": "stage analysis done"
+ },
+ {
+  "ts": "2026-11-27T17:26:50+00:00",
+  "level": "info",
+  "stage": "enhancement",
+  "message": "stage enhancement started (attempt 1)"
+ },
+ {
+  "ts": "2026-11-27T17:26:51+00:00",
+  "level": "info",
+  "stage": "enhancement",
+  "message": "stage enhancement done"
+ },
+ {
+  "ts": "2026-11-27T17:26:51+00:00",
+  "level": "info",
+  "stage": "emotion",
+  "message": "stage emotion started (attempt 1)"
+ },
+ {
+  "ts": "2026-11-27T17:26:58+00:00",
+  "level": "info",
+  "stage": "emotion",
+  "message": "stage emotion done"
+ },
+ {
+  "ts": "2026-11-27T17:26:58+00:00",
+  "level": "info",
+  "stage": "voice",
+  "message": "stage voice started (attempt 1)"
+ },
+ {
+  "ts": "2026-11-27T17:26:58+00:00",
+  "level": "info",
+  "stage": "voice",
+  "message": "stage voice done"
+ },
+ {
+  "ts": "2026-11-27T17:26:58+00:00",
+  "level": "info",
+  "stage": "audio",
+  "message": "stage audio started (attempt 1)"
+ },
+ {
+  "ts": "2026-11-27T17:29:05+00:00",
+  "level": "info",
+  "stage": "audio",
+  "message": "stage audio done"
+ },
+ {
+  "ts": "2026-11-27T17:29:05+00:00",
+  "level": "info",
+  "stage": "subtitles",
+  "message": "stage subtitles started (attempt 1)"
+ },
+ {
+  "ts": "2026-11-27T17:29:05+00:00",
+  "level": "info",
+  "stage": "subtitles",
+  "message": "stage subtitles done"
+ },
+ {
+  "ts": "2026-11-27T17:29:05+00:00",
+  "level": "info",
+  "stage": "qa",
+  "message": "stage qa started (attempt 1)"
+ },
+ {
+  "ts": "2026-11-27T17:29:23+00:00",
+  "level": "info",
+  "stage": "qa",
+  "message": "stage qa done"
+ },
+ {
+  "ts": "2026-11-27T17:29:23+00:00",
+  "level": "info",
+  "stage": "deliver",
+  "message": "stage deliver started (attempt 1)"
+ },
+ {
+  "ts": "2026-11-27T17:29:23+00:00",
+  "level": "info",
+  "stage": "deliver",
+  "message": "stage deliver done"
+ },
+ {
+  "ts": "2026-11-27T17:29:23+00:00",
+  "level": "info",
+  "stage": null,
+  "message": "production completed"
+ }
+]

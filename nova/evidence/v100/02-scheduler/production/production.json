@@ -1,0 +1,882 @@
+{
+ "id": "c501eb5f5e1e48a0bc453de86279f665",
+ "project_id": null,
+ "idea": "Narasi singkat 30 detik tentang seorang ayah yang bekerja malam demi pendidikan anaknya.",
+ "request": {
+  "idea": "Narasi singkat 30 detik tentang seorang ayah yang bekerja malam demi pendidikan anaknya.",
+  "language": "id",
+  "duration_s": 30.0,
+  "concepts": 2,
+  "concept_index": 0,
+  "mode": "natural",
+  "voice": "preset:soft-young-indonesian-woman",
+  "speed": 1.0,
+  "pause_scale": 1.0,
+  "pitch": 0.0,
+  "soften": 0.0,
+  "target_lufs": -14.0,
+  "music_db": -18,
+  "cta": false
+ },
+ "status": "completed",
+ "current_stage": null,
+ "error": null,
+ "script_version_id": "8fbc697b9ab449549903d375c4eb04c4",
+ "idempotency_key": "job:75103a8b4fc8424ea5125e1478586e51:2026-11-27T17:26:00+00:00:1",
+ "job_run_id": "3757f712dee84a3c8dbc9d8d0d787575",
+ "created_at": "2026-11-27T17:26:09+00:00",
+ "updated_at": "2026-11-27T17:29:23+00:00",
+ "stages": [
+  {
+   "production_id": "c501eb5f5e1e48a0bc453de86279f665",
+   "stage": "intent",
+   "status": "done",
+   "output": {
+    "idea": "Narasi singkat 30 detik tentang seorang ayah yang bekerja malam demi pendidikan anaknya.",
+    "language": "id",
+    "content_type": "personal",
+    "factual": false,
+    "source": "llm",
+    "extra": {},
+    "purpose": "Menginspirasi pengorbanan ayah",
+    "audience": "Orang tua, generasi muda, masyarakat umum",
+    "audience_psychology": "Menghargai pengorbanan, menghargai keluarga, mencari inspirasi positif",
+    "structure": "Pengenalan kesulitan (kerja malam) -> Momen kehangatan (bersama anak) -> Pesan moral/harapan",
+    "perspective": "Ketiga",
+    "direction": "Visual hangat, kontras antara kesibukan kerja dan kehangatan keluarga. Musik emosional yang perlahan membangun harapan.",
+    "emotional_journey": [
+     "Sedih/Khawatir",
+     "Haru/Syukur",
+     "Inspiratif",
+     "Hangat"
+    ],
+    "desired_reaction": "Rasa terharu dan apresiasi terhadap peran ayah"
+   },
+   "error": null,
+   "attempts": 1,
+   "started_at": "2026-11-27T17:26:09+00:00",
+   "finished_at": "2026-11-27T17:26:21+00:00"
+  },
+  {
+   "production_id": "c501eb5f5e1e48a0bc453de86279f665",
+   "stage": "concepts",
+   "status": "done",
+   "output": {
+    "concepts": [
+     {
+      "title": "Jejak Malam Sang Ayah",
+      "angle": "Visualisasi kontras antara kerja keras malam dan momen kebersamaan.",
+      "audience": "Orang tua, generasi muda",
+      "hook": "Setiap malam adalah pengorbanan yang tak terucapkan.",
+      "message": "Pengorbanan seorang ayah adalah fondasi mimpi anak-anaknya.",
+      "emotional_direction": "['Sedih/Khawatir', 'Haru/Syukur', 'Inspiratif', 'Hangat']",
+      "duration_s": 30,
+      "platform": "youtube_shorts"
+     },
+     {
+      "title": "Kopi dan Mimpi",
+      "angle": "Fokus pada detail kecil (kopi dingin, buku pelajaran) yang menunjukkan dedikasi.",
+      "audience": "Generasi muda, profesional",
+      "hook": "Di balik lelahnya, ada harapan yang tak pernah padam.",
+      "message": "Ketekunan ayah menciptakan masa depan yang lebih cerah.",
+      "emotional_direction": "['Sedih/Khawatir', 'Haru/Syukur', 'Inspiratif', 'Hangat']",
+      "duration_s": 30,
+      "platform": "instagram_reels"
+     }
+    ],
+    "chosen": 0,
+    "idea_id": "f48185fd5e1c47e8a696e5cfd8cea763"
+   },
+   "error": null,
+   "attempts": 1,
+   "started_at": "2026-11-27T17:26:21+00:00",
+   "finished_at": "2026-11-27T17:26:39+00:00"
+  },
+  {
+   "production_id": "c501eb5f5e1e48a0bc453de86279f665",
+   "stage": "script",
+   "status": "done",
+   "output": {
+    "text": "Setiap malam adalah pengorbanan yang tak terucapkan. Ayah itu bekerja keras di bawah lampu remang, demi setiap buku dan cita-cita anaknya. Ada lelah yang tak terperi, tapi senyum anaknya selalu jadi kekuatan. Pengorbanan seorang ayah adalah fondasi mimpi anak-anaknya. Lihatlah, di balik lelah itu, ada cinta yang tak pernah padam.",
+    "language": "id",
+    "words": 52,
+    "target_words": 54,
+    "target_s": 30.0,
+    "estimated_s": 27.8,
+    "within_target": true,
+    "attempts": [
+     {
+      "attempt": 0,
+      "words": 52,
+      "target_words": 54
+     }
+    ],
+    "note": "",
+    "script_id": "c78320b5598b4b399e587afcdaaa3f35",
+    "version_id": "8fbc697b9ab449549903d375c4eb04c4",
+    "title": "Jejak Malam Sang Ayah"
+   },
+   "error": null,
+   "attempts": 1,
+   "started_at": "2026-11-27T17:26:39+00:00",
+   "finished_at": "2026-11-27T17:26:46+00:00"
+  },
+  {
+   "production_id": "c501eb5f5e1e48a0bc453de86279f665",
+   "stage": "analysis",
+   "status": "done",
+   "output": {
+    "score": 90,
+    "quality": {
+     "score": 90,
+     "parameters": {
+      "grammar": {
+       "score": 100,
+       "issues": [],
+       "advice": "Good."
+      },
+      "structure": {
+       "score": 100,
+       "issues": [],
+       "advice": "Good."
+      },
+      "repetition": {
+       "score": 90,
+       "issues": [
+        "“anaknya” used 3 times"
+       ],
+       "advice": "Replace repeated words, drop fillers and duplicate sentences."
+      },
+      "clarity": {
+       "score": 100,
+       "issues": [],
+       "advice": "Good."
+      },
+      "flow": {
+       "score": 85,
+       "issues": [
+        "no direct address or questions: may sound like reading"
+       ],
+       "advice": "Write the way you speak: address the listener, keep each sentence to one breath."
+      },
+      "engagement": {
+       "score": 55,
+       "issues": [
+        "opening line has no hook (question, surprise or call to action)",
+        "never speaks to the listener (you / kamu)",
+        "no closing question or call to action"
+       ],
+       "advice": "Open with a hook and close with a question or call to action."
+      },
+      "suitability": {
+       "score": 100,
+       "issues": [],
+       "advice": "Good."
+      }
+     }
+    },
+    "language": {
+     "primary": "id",
+     "is_mixed": false,
+     "share": {
+      "id": 1.0
+     },
+     "sentence_languages": [
+      {
+       "sentence": "Setiap malam adalah pengorbanan yang tak terucapkan.",
+       "language": "id"
+      },
+      {
+       "sentence": "Ayah itu bekerja keras di bawah lampu remang, demi setiap buku dan cita-cita anaknya.",
+       "language": "id"
+      },
+      {
+       "sentence": "Ada lelah yang tak terperi, tapi senyum anaknya selalu jadi kekuatan.",
+       "language": "id"
+      },
+      {
+       "sentence": "Pengorbanan seorang ayah adalah fondasi mimpi anak-anaknya.",
+       "language": "id"
+      },
+      {
+       "sentence": "Lihatlah, di balik lelah itu, ada cinta yang tak pernah padam.",
+       "language": "id"
+      }
+     ],
+     "unnatural_phrases": [],
+     "difficult_words": [],
+     "symbols": []
+    },
+    "emotion": {
+     "dominant": "authority",
+     "intensity": 33,
+     "scores": {
+      "happiness": 0,
+      "sadness": 0,
+      "excitement": 0,
+      "confidence": 0,
+      "authority": 100,
+      "romance": 0,
+      "professional": 0,
+      "documentary": 0,
+      "commercial": 0
+     }
+    },
+    "sentences": 5,
+    "words": 52,
+    "sentence_length": {
+     "avg": 10.4,
+     "max": 15,
+     "long_sentences": []
+    },
+    "repetition": [],
+    "pronunciation_difficulty": {
+     "items": [],
+     "count": 0
+    },
+    "estimated_s": 27.8,
+    "editor": {
+     "consistency": 90,
+     "emotional_effectiveness": 85,
+     "natural_speech": 95,
+     "notes": [
+      "Pilihan kata kuat",
+      "Transisi halus",
+      "Nada reflektif",
+      "Sangat menyentuh"
+     ]
+    }
+   },
+   "error": null,
+   "attempts": 1,
+   "started_at": "2026-11-27T17:26:46+00:00",
+   "finished_at": "2026-11-27T17:26:50+00:00"
+  },
+  {
+   "production_id": "c501eb5f5e1e48a0bc453de86279f665",
+   "stage": "enhancement",
+   "status": "done",
+   "output": {
+    "skipped": "no enhancement requested",
+    "text": "Setiap malam adalah pengorbanan yang tak terucapkan. Ayah itu bekerja keras di bawah lampu remang, demi setiap buku dan cita-cita anaknya. Ada lelah yang tak terperi, tapi senyum anaknya selalu jadi kekuatan. Pengorbanan seorang ayah adalah fondasi mimpi anak-anaknya. Lihatlah, di balik lelah itu, ada cinta yang tak pernah padam.",
+    "version_id": "8fbc697b9ab449549903d375c4eb04c4"
+   },
+   "error": null,
+   "attempts": 1,
+   "started_at": "2026-11-27T17:26:50+00:00",
+   "finished_at": "2026-11-27T17:26:50+00:00"
+  },
+  {
+   "production_id": "c501eb5f5e1e48a0bc453de86279f665",
+   "stage": "emotion",
+   "status": "done",
+   "output": {
+    "arc": {
+     "opening": "serious",
+     "middle": "frustrated",
+     "ending": "romantic",
+     "shape": "level",
+     "sentences": 5
+    },
+    "mode": "natural",
+    "sentences": [
+     {
+      "index": 0,
+      "text": "Setiap malam adalah pengorbanan yang tak terucapkan.",
+      "emotion": "reflective",
+      "intensity": 60,
+      "vocal_energy": "low",
+      "speed": "slow",
+      "pitch_direction": "falling",
+      "delivery": "quiet and thoughtful",
+      "pause_before_ms": 90,
+      "pause_after_ms": 624,
+      "emphasis": [],
+      "breathing": "slow breath",
+      "transition_from_previous": "opening line: start in this mood",
+      "transition_to_next": "lead into reflective to serious",
+      "source": "llm",
+      "rendering": {
+       "rate": "engine speed (time-stretch on Chatterbox)",
+       "pitch": "engine or pitch shift",
+       "pitch_range": "intonation range (Chatterbox: exaggeration)",
+       "volume": "gain",
+       "pauses": "silence between segments"
+      },
+      "prosody": {
+       "rate": 0.959,
+       "pitch_semitones": -0.26,
+       "pitch_range": 0.949,
+       "volume_db": -0.51
+      },
+      "engine_emotion": "documentary"
+     },
+     {
+      "index": 1,
+      "text": "Ayah itu bekerja keras di bawah lampu remang, demi setiap buku dan cita-cita anaknya.",
+      "emotion": "serious",
+      "intensity": 75,
+      "vocal_energy": "high",
+      "speed": "medium",
+      "pitch_direction": "level",
+      "delivery": "measured and plain",
+      "pause_before_ms": 0,
+      "pause_after_ms": 472,
+      "emphasis": [],
+      "breathing": "normal",
+      "transition_from_previous": "shift from reflective to serious: change pace and colour across the pause, not abruptly",
+      "transition_to_next": "lead into serious to compassionate",
+      "source": "llm",
+      "rendering": {
+       "rate": "engine speed (time-stretch on Chatterbox)",
+       "pitch": "engine or pitch shift",
+       "pitch_range": "intonation range (Chatterbox: exaggeration)",
+       "volume": "gain",
+       "pauses": "silence between segments"
+      },
+      "prosody": {
+       "rate": 0.975,
+       "pitch_semitones": 0.0,
+       "pitch_range": 0.968,
+       "volume_db": 0.0
+      },
+      "engine_emotion": "professional"
+     },
+     {
+      "index": 2,
+      "text": "Ada lelah yang tak terperi, tapi senyum anaknya selalu jadi kekuatan.",
+      "emotion": "compassionate",
+      "intensity": 50,
+      "vocal_energy": "low",
+      "speed": "slow",
+      "pitch_direction": "level",
+      "delivery": "gentle and caring",
+      "pause_before_ms": 50,
+      "pause_after_ms": 540,
+      "emphasis": [
+       "selalu"
+      ],
+      "breathing": "soft breath",
+      "transition_from_previous": "shift from serious to compassionate: change pace and colour across the pause, not abruptly",
+      "transition_to_next": "lead into compassionate to inspirational",
+      "source": "llm",
+      "rendering": {
+       "rate": "engine speed (time-stretch on Chatterbox)",
+       "pitch": "engine or pitch shift",
+       "pitch_range": "intonation range (Chatterbox: exaggeration)",
+       "volume": "gain",
+       "pauses": "silence between segments"
+      },
+      "prosody": {
+       "rate": 0.958,
+       "pitch_semitones": -0.21,
+       "pitch_range": 1.0,
+       "volume_db": -0.64
+      },
+      "engine_emotion": "romance"
+     },
+     {
+      "index": 3,
+      "text": "Pengorbanan seorang ayah adalah fondasi mimpi anak-anaknya.",
+      "emotion": "inspirational",
+      "intensity": 80,
+      "vocal_energy": "high",
+      "speed": "medium",
+      "pitch_direction": "rising",
+      "delivery": "warm and uplifting",
+      "pause_before_ms": 160,
+      "pause_after_ms": 756,
+      "emphasis": [],
+      "breathing": "full breath before",
+      "transition_from_previous": "shift from compassionate to inspirational: change pace and colour across the pause, not abruptly",
+      "transition_to_next": "lead into inspirational to romantic",
+      "source": "llm",
+      "rendering": {
+       "rate": "engine speed (time-stretch on Chatterbox)",
+       "pitch": "engine or pitch shift",
+       "pitch_range": "intonation range (Chatterbox: exaggeration)",
+       "volume": "gain",
+       "pauses": "silence between segments"
+      },
+      "prosody": {
+       "rate": 0.98,
+       "pitch_semitones": 0.68,
+       "pitch_range": 1.136,
+       "volume_db": 0.68
+      },
+      "engine_emotion": "confidence"
+     },
+     {
+      "index": 4,
+      "text": "Lihatlah, di balik lelah itu, ada cinta yang tak pernah padam.",
+      "emotion": "romantic",
+      "intensity": 70,
+      "vocal_energy": "low",
+      "speed": "slow",
+      "pitch_direction": "level",
+      "delivery": "warm and intimate",
+      "pause_before_ms": 70,
+      "pause_after_ms": 0,
+      "emphasis": [],
+      "breathing": "soft breath",
+      "transition_from_previous": "shift from inspirational to romantic: change pace and colour across the pause, not abruptly",
+      "transition_to_next": "closing line: let it settle",
+      "source": "llm",
+      "rendering": {
+       "rate": "engine speed (time-stretch on Chatterbox)",
+       "pitch": "engine or pitch shift",
+       "pitch_range": "intonation range (Chatterbox: exaggeration)",
+       "volume": "gain",
+       "pauses": "silence between segments"
+      },
+      "prosody": {
+       "rate": 0.941,
+       "pitch_semitones": -0.3,
+       "pitch_range": 1.06,
+       "volume_db": -0.89
+      },
+      "engine_emotion": "romance"
+     }
+    ],
+    "version_id": "8fbc697b9ab449549903d375c4eb04c4",
+    "directed_script": "[EMOTION: REFLECTIVE]\n[INTENSITY: 60/100]\n[DELIVERY: QUIET AND THOUGHTFUL]\n[SPEED: SLOW]\n[PITCH: FALLING]\n[PAUSE BEFORE: 90ms]\n\"Setiap malam adalah pengorbanan yang tak terucapkan.\"\n[PAUSE: 624ms]\n\n[EMOTION: SERIOUS]\n[INTENSITY: 75/100]\n[DELIVERY: MEASURED AND PLAIN]\n[SPEED: MEDIUM]\n[PITCH: LEVEL]\n\"Ayah itu bekerja keras di bawah lampu remang, demi setiap buku dan cita-cita anaknya.\"\n[PAUSE: 472ms]\n\n[EMOTION: COMPASSIONATE]\n[INTENSITY: 50/100]\n[DELIVERY: GENTLE AND CARING]\n[SPEED: SLOW]\n[PITCH: LEVEL]\n[PAUSE BEFORE: 50ms]\n[EMPHASIS: selalu]\n\"Ada lelah yang tak terperi, tapi senyum anaknya selalu jadi kekuatan.\"\n[PAUSE: 540ms]\n\n[EMOTION: INSPIRATIONAL]\n[INTENSITY: 80/100]\n[DELIVERY: WARM AND UPLIFTING]\n[SPEED: MEDIUM]\n[PITCH: RISING]\n[PAUSE BEFORE: 160ms]\n\"Pengorbanan seorang ayah adalah fondasi mimpi anak-anaknya.\"\n[PAUSE: 756ms]\n\n[EMOTION: ROMANTIC]\n[INTENSITY: 70/100]\n[DELIVERY: WARM AND INTIMATE]\n[SPEED: SLOW]\n[PITCH: LEVEL]\n[PAUSE BEFORE: 70ms]\n\"Lihatlah, di balik lelah itu, ada cinta yang tak pernah padam.\"\n[PAUSE: 0ms]"
+   },
+   "error": null,
+   "attempts": 1,
+   "started_at": "2026-11-27T17:26:51+00:00",
+   "finished_at": "2026-11-27T17:26:58+00:00"
+  },
+  {
+   "production_id": "c501eb5f5e1e48a0bc453de86279f665",
+   "stage": "voice",
+   "status": "done",
+   "output": {
+    "engine": "chatterbox-id",
+    "profile_id": "2296d322a485482cbd41848f3e2ab2f6",
+    "preset": "soft-young-indonesian-woman",
+    "reason": "best available Indonesian engine: chatterbox-id"
+   },
+   "error": null,
+   "attempts": 1,
+   "started_at": "2026-11-27T17:26:58+00:00",
+   "finished_at": "2026-11-27T17:26:58+00:00"
+  },
+  {
+   "production_id": "c501eb5f5e1e48a0bc453de86279f665",
+   "stage": "audio",
+   "status": "done",
+   "output": {
+    "files": {
+     "wav": "/tmp/claude-0/v100/data/outputs/productions/c501eb5f5e1e48a0bc453de86279f665/production.wav",
+     "mp3": "/tmp/claude-0/v100/data/outputs/productions/c501eb5f5e1e48a0bc453de86279f665/production.mp3"
+    },
+    "duration_s": 25.01,
+    "timeline": [
+     {
+      "index": 0,
+      "scene": 0,
+      "text": "Setiap malam adalah pengorbanan yang tak terucapkan.",
+      "start_s": 0.0,
+      "end_s": 3.223
+     },
+     {
+      "index": 1,
+      "scene": 1,
+      "text": "Ayah itu bekerja keras di bawah lampu remang, demi setiap buku dan cita-cita anaknya.",
+      "start_s": 3.847,
+      "end_s": 9.823
+     },
+     {
+      "index": 2,
+      "scene": 2,
+      "text": "Ada lelah yang tak terperi, tapi senyum anaknya selalu jadi kekuatan.",
+      "start_s": 10.345,
+      "end_s": 15.063
+     },
+     {
+      "index": 3,
+      "scene": 3,
+      "text": "Pengorbanan seorang ayah adalah fondasi mimpi anak-anaknya.",
+      "start_s": 15.763,
+      "end_s": 20.047
+     },
+     {
+      "index": 4,
+      "scene": 4,
+      "text": "Lihatlah, di balik lelah itu, ada cinta yang tak pernah padam.",
+      "start_s": 20.873,
+      "end_s": 25.013
+     }
+    ],
+    "engine": "chatterbox-id",
+    "mastering": {
+     "input_lufs": -23.62,
+     "noise_reduction": {
+      "applied": false,
+      "reason": "no measurable noise floor",
+      "snr_db": 49.4
+     },
+     "output_lufs": -14.0,
+     "true_peak_dbtp": -1.0,
+     "target_lufs": -14.0,
+     "ceiling_dbtp": -1.0,
+     "sample_rate": 48000,
+     "duration_s": 25.01
+    },
+    "music": null,
+    "polish": {
+     "chain": [
+      "highpass=f=70",
+      "acompressor=threshold=-20dB:ratio=2.5:attack=8:release=120:makeup=1"
+     ],
+     "sibilance_ratio": 0.07,
+     "deessed": false
+    },
+    "sentences": 5,
+    "elapsed_s": 126.84
+   },
+   "error": null,
+   "attempts": 1,
+   "started_at": "2026-11-27T17:26:58+00:00",
+   "finished_at": "2026-11-27T17:29:05+00:00"
+  },
+  {
+   "production_id": "c501eb5f5e1e48a0bc453de86279f665",
+   "stage": "subtitles",
+   "status": "done",
+   "output": {
+    "cues": [
+     {
+      "index": 1,
+      "start_s": 0.0,
+      "end_s": 3.223,
+      "text": "Setiap malam adalah pengorbanan yang tak\nterucapkan.",
+      "sentence": 0
+     },
+     {
+      "index": 2,
+      "start_s": 3.847,
+      "end_s": 9.254,
+      "text": "Ayah itu bekerja keras di bawah lampu\nremang, demi setiap buku dan cita-cita",
+      "sentence": 1
+     },
+     {
+      "index": 3,
+      "start_s": 9.254,
+      "end_s": 9.823,
+      "text": "anaknya.",
+      "sentence": 1
+     },
+     {
+      "index": 4,
+      "start_s": 10.345,
+      "end_s": 15.063,
+      "text": "Ada lelah yang tak terperi, tapi senyum\nanaknya selalu jadi kekuatan.",
+      "sentence": 2
+     },
+     {
+      "index": 5,
+      "start_s": 15.763,
+      "end_s": 20.047,
+      "text": "Pengorbanan seorang ayah adalah fondasi\nmimpi anak-anaknya.",
+      "sentence": 3
+     },
+     {
+      "index": 6,
+      "start_s": 20.873,
+      "end_s": 25.013,
+      "text": "Lihatlah, di balik lelah itu, ada cinta\nyang tak pernah padam.",
+      "sentence": 4
+     }
+    ],
+    "files": {
+     "srt": "/tmp/claude-0/v100/data/outputs/productions/c501eb5f5e1e48a0bc453de86279f665/subtitles.srt",
+     "vtt": "/tmp/claude-0/v100/data/outputs/productions/c501eb5f5e1e48a0bc453de86279f665/subtitles.vtt",
+     "json": "/tmp/claude-0/v100/data/outputs/productions/c501eb5f5e1e48a0bc453de86279f665/subtitles.json",
+     "txt": "/tmp/claude-0/v100/data/outputs/productions/c501eb5f5e1e48a0bc453de86279f665/subtitles.txt"
+    },
+    "problems": []
+   },
+   "error": null,
+   "attempts": 1,
+   "started_at": "2026-11-27T17:29:05+00:00",
+   "finished_at": "2026-11-27T17:29:05+00:00"
+  },
+  {
+   "production_id": "c501eb5f5e1e48a0bc453de86279f665",
+   "stage": "qa",
+   "status": "done",
+   "output": {
+    "passed": true,
+    "checks": [
+     {
+      "check": "wav decodes",
+      "ok": true,
+      "detail": "pcm_s16le 48000 Hz 25.013s",
+      "required": true
+     },
+     {
+      "check": "wav duration matches render",
+      "ok": true,
+      "detail": "25.013s vs 25.010s",
+      "required": true
+     },
+     {
+      "check": "mp3 decodes",
+      "ok": true,
+      "detail": "mp3 48000 Hz 25.056s",
+      "required": true
+     },
+     {
+      "check": "mp3 duration matches render",
+      "ok": true,
+      "detail": "25.056s vs 25.010s",
+      "required": true
+     },
+     {
+      "check": "loudness on target",
+      "ok": true,
+      "detail": "-14.00 LUFS (target -14.0)",
+      "required": true
+     },
+     {
+      "check": "true peak under ceiling",
+      "ok": true,
+      "detail": "-1.00 dBTP (ceiling -1.0)",
+      "required": true
+     },
+     {
+      "check": "no dead air over 2.5 s",
+      "ok": true,
+      "detail": "longest silence 0.88s",
+      "required": true
+     },
+     {
+      "check": "not clipped",
+      "ok": true,
+      "detail": "samples at full scale checked",
+      "required": true
+     },
+     {
+      "check": "wav and mp3 agree",
+      "ok": true,
+      "detail": "25.013s / 25.056s",
+      "required": true
+     },
+     {
+      "check": "subtitles cover every sentence",
+      "ok": true,
+      "detail": "5/5 sentences",
+      "required": true
+     },
+     {
+      "check": "subtitles inside the audio",
+      "ok": true,
+      "detail": "last cue ends 25.013s",
+      "required": true
+     },
+     {
+      "check": "speech recognition hears the script",
+      "ok": true,
+      "detail": "86% of content words heard",
+      "required": false
+     }
+    ],
+    "files": {
+     "wav": {
+      "codec": "pcm_s16le",
+      "sample_rate": 48000,
+      "channels": 1,
+      "duration": 25.012958,
+      "format": "wav",
+      "bytes": 2401288,
+      "sha256": "532ee96a31661a8f8156fac276eb899ae38d89e00b3f1b6a7e2e147c959aa9c3"
+     },
+     "mp3": {
+      "codec": "mp3",
+      "sample_rate": 48000,
+      "channels": 1,
+      "duration": 25.056,
+      "format": "mp3",
+      "bytes": 601965,
+      "sha256": "cee6967735463ddd4e320e7f806b28d68a602f87e459f0abe524523454df21cb"
+     }
+    }
+   },
+   "error": null,
+   "attempts": 1,
+   "started_at": "2026-11-27T17:29:05+00:00",
+   "finished_at": "2026-11-27T17:29:23+00:00"
+  },
+  {
+   "production_id": "c501eb5f5e1e48a0bc453de86279f665",
+   "stage": "deliver",
+   "status": "done",
+   "output": {
+    "delivered": [
+     "wav",
+     "mp3"
+    ],
+    "qa_passed": true,
+    "folder": "/tmp/claude-0/v100/data/outputs/productions/c501eb5f5e1e48a0bc453de86279f665"
+   },
+   "error": null,
+   "attempts": 1,
+   "started_at": "2026-11-27T17:29:23+00:00",
+   "finished_at": "2026-11-27T17:29:23+00:00"
+  }
+ ],
+ "assets": [
+  {
+   "id": "8279dd6ac8a6440497d93db3cfbafe0d",
+   "production_id": "c501eb5f5e1e48a0bc453de86279f665",
+   "format": "wav",
+   "path": "/tmp/claude-0/v100/data/outputs/productions/c501eb5f5e1e48a0bc453de86279f665/production.wav",
+   "bytes": 2401288,
+   "duration_s": 25.012958,
+   "sample_rate": 48000,
+   "sha256": "532ee96a31661a8f8156fac276eb899ae38d89e00b3f1b6a7e2e147c959aa9c3",
+   "created_at": "2026-11-27T17:29:23+00:00"
+  },
+  {
+   "id": "fab77014cd4147fc8c9246a214c5323f",
+   "production_id": "c501eb5f5e1e48a0bc453de86279f665",
+   "format": "mp3",
+   "path": "/tmp/claude-0/v100/data/outputs/productions/c501eb5f5e1e48a0bc453de86279f665/production.mp3",
+   "bytes": 601965,
+   "duration_s": 25.056,
+   "sample_rate": 48000,
+   "sha256": "cee6967735463ddd4e320e7f806b28d68a602f87e459f0abe524523454df21cb",
+   "created_at": "2026-11-27T17:29:23+00:00"
+  }
+ ],
+ "subtitles": [
+  {
+   "production_id": "c501eb5f5e1e48a0bc453de86279f665",
+   "format": "json",
+   "path": "/tmp/claude-0/v100/data/outputs/productions/c501eb5f5e1e48a0bc453de86279f665/subtitles.json",
+   "cues": 6
+  },
+  {
+   "production_id": "c501eb5f5e1e48a0bc453de86279f665",
+   "format": "srt",
+   "path": "/tmp/claude-0/v100/data/outputs/productions/c501eb5f5e1e48a0bc453de86279f665/subtitles.srt",
+   "cues": 6
+  },
+  {
+   "production_id": "c501eb5f5e1e48a0bc453de86279f665",
+   "format": "txt",
+   "path": "/tmp/claude-0/v100/data/outputs/productions/c501eb5f5e1e48a0bc453de86279f665/subtitles.txt",
+   "cues": 6
+  },
+  {
+   "production_id": "c501eb5f5e1e48a0bc453de86279f665",
+   "format": "vtt",
+   "path": "/tmp/claude-0/v100/data/outputs/productions/c501eb5f5e1e48a0bc453de86279f665/subtitles.vtt",
+   "cues": 6
+  }
+ ],
+ "qa": {
+  "production_id": "c501eb5f5e1e48a0bc453de86279f665",
+  "passed": 1,
+  "report": {
+   "passed": true,
+   "checks": [
+    {
+     "check": "wav decodes",
+     "ok": true,
+     "detail": "pcm_s16le 48000 Hz 25.013s",
+     "required": true
+    },
+    {
+     "check": "wav duration matches render",
+     "ok": true,
+     "detail": "25.013s vs 25.010s",
+     "required": true
+    },
+    {
+     "check": "mp3 decodes",
+     "ok": true,
+     "detail": "mp3 48000 Hz 25.056s",
+     "required": true
+    },
+    {
+     "check": "mp3 duration matches render",
+     "ok": true,
+     "detail": "25.056s vs 25.010s",
+     "required": true
+    },
+    {
+     "check": "loudness on target",
+     "ok": true,
+     "detail": "-14.00 LUFS (target -14.0)",
+     "required": true
+    },
+    {
+     "check": "true peak under ceiling",
+     "ok": true,
+     "detail": "-1.00 dBTP (ceiling -1.0)",
+     "required": true
+    },
+    {
+     "check": "no dead air over 2.5 s",
+     "ok": true,
+     "detail": "longest silence 0.88s",
+     "required": true
+    },
+    {
+     "check": "not clipped",
+     "ok": true,
+     "detail": "samples at full scale checked",
+     "required": true
+    },
+    {
+     "check": "wav and mp3 agree",
+     "ok": true,
+     "detail": "25.013s / 25.056s",
+     "required": true
+    },
+    {
+     "check": "subtitles cover every sentence",
+     "ok": true,
+     "detail": "5/5 sentences",
+     "required": true
+    },
+    {
+     "check": "subtitles inside the audio",
+     "ok": true,
+     "detail": "last cue ends 25.013s",
+     "required": true
+    },
+    {
+     "check": "speech recognition hears the script",
+     "ok": true,
+     "detail": "86% of content words heard",
+     "required": false
+    }
+   ],
+   "files": {
+    "wav": {
+     "codec": "pcm_s16le",
+     "sample_rate": 48000,
+     "channels": 1,
+     "duration": 25.012958,
+     "format": "wav",
+     "bytes": 2401288,
+     "sha256": "532ee96a31661a8f8156fac276eb899ae38d89e00b3f1b6a7e2e147c959aa9c3"
+    },
+    "mp3": {
+     "codec": "mp3",
+     "sample_rate": 48000,
+     "channels": 1,
+     "duration": 25.056,
+     "format": "mp3",
+     "bytes": 601965,
+     "sha256": "cee6967735463ddd4e320e7f806b28d68a602f87e459f0abe524523454df21cb"
+    }
+   }
+  },
+  "created_at": "2026-11-27T17:29:23+00:00"
+ },
+ "qa_passed": true
+}

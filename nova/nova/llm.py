@@ -38,17 +38,41 @@ class LLMClient:
     def from_settings(cls, settings: Settings) -> "LLMClient | None":
         return cls(settings) if settings.llm_base_url else None
 
-    def _chat(self, system: str, user: str, max_tokens: int = 1200) -> str:
-        body = {"model": self.model, "temperature": 0.3, "max_tokens": max_tokens,
+    def chat_json(self, system: str, user: str, max_tokens: int = 1500, temperature: float = 0.4):
+        """Ask for a JSON object; parse it, retry once on malformed output. The result is still
+        untrusted: callers validate every field before using it."""
+        import json as _json
+        last = None
+        for _ in range(2):
+            # Plain mode, not response_format: llama.cpp's JSON grammar lets small models pad the
+            # reply with whitespace until max_tokens (measured: 700 tokens for 727 characters).
+            raw = self._chat(system + "\nKeep each value short. Answer with one JSON object only, no markdown.",
+                             user, max_tokens, temperature=temperature, json_mode=False)
+            m = re.search(r"\{.*\}", raw, flags=re.S)
+            try:
+                return _json.loads(m.group(0) if m else raw)
+            except ValueError as exc:
+                last = exc
+        raise LLMEmpty(f"the model did not return valid JSON: {last}")
+
+    def chat(self, system: str, user: str, max_tokens: int = 1200, temperature: float = 0.5) -> str:
+        return self._chat(system, user, max_tokens, temperature=temperature)
+
+    def _chat(self, system: str, user: str, max_tokens: int = 1200, temperature: float = 0.3,
+              json_mode: bool = False) -> str:
+        body = {"model": self.model, "temperature": temperature, "max_tokens": max_tokens,
                 "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}]}
+        if json_mode:
+            body["response_format"] = {"type": "json_object"}
         if not self.thinking:
             # Thinking models (Gemma 4, Qwen 3) otherwise spend the whole token budget on hidden
             # reasoning and return no answer. llama.cpp, vLLM and LM Studio read this field.
             body["chat_template_kwargs"] = {"enable_thinking": False}
         headers = {"Authorization": f"Bearer {self.key}"}
         resp = httpx.post(f"{self.base}/chat/completions", headers=headers, json=body, timeout=180)
-        if resp.status_code == 400 and "chat_template_kwargs" in body:
-            body.pop("chat_template_kwargs")  # servers that reject unknown fields (e.g. OpenAI)
+        if resp.status_code == 400 and ("chat_template_kwargs" in body or "response_format" in body):
+            body.pop("chat_template_kwargs", None)
+            body.pop("response_format", None)  # servers that reject unknown fields (e.g. OpenAI)
             resp = httpx.post(f"{self.base}/chat/completions", headers=headers, json=body, timeout=180)
         resp.raise_for_status()
         content = (resp.json()["choices"][0]["message"].get("content") or "")

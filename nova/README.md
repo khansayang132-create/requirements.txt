@@ -225,6 +225,22 @@ vocal-tract length and breathiness. It does not copy fine timbre the way a train
 - Don't clone a voice you don't own or have written permission for, including voices from other
   services' libraries. Those are licensed for use inside that service.
 
+## NOVA Studio: one idea to a finished production
+
+`Idea to Production` takes one idea (or your own script) and runs: understanding → concepts →
+script (timed to the length you pick) → analysis → enhancement → per-sentence emotion → voice →
+narration → mastering → subtitles → quality check. Every stage is saved, so a failed or
+interrupted production resumes where it stopped. `Emotion Director` edits one sentence and
+re-renders only the audio. `Schedule` runs productions on a timetable in your time zone, survives
+restarts and never runs the same occurrence twice. `Insights` shows what NOVA learned from your
+ratings and edits, with sample sizes. Concepts and scripts need a local model (Settings);
+everything else runs without one. Architecture, contracts and data model:
+[`nova/studio/ARCHITECTURE.md`](nova/studio/ARCHITECTURE.md). Routes: `/api/v100/...`, documented
+at `/docs`.
+
+Speech recognition in the quality check is on with `NOVA_ASR=1` (needs the neural install; it
+downloads Whisper-small once).
+
 ## API
 
 | Method | Path | Purpose |

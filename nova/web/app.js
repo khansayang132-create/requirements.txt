@@ -65,7 +65,8 @@ async function busy(btn, fn) {
 }
 
 // ---------- routing ----------
-const ROUTES = ["dashboard", "clone", "library", "intel", "enhance", "director", "studio", "projects", "settings"];
+const ROUTES = ["dashboard", "produce", "emotion", "queue", "schedule", "insights", "clone", "library", "intel", "enhance",
+                "director", "studio", "projects", "settings"];
 function route() {
   const name = (location.hash.match(/^#\/(\w+)/) || [])[1];
   const view = ROUTES.includes(name) ? name : "dashboard";
@@ -79,6 +80,7 @@ function route() {
   if (view === "projects") renderProjects();
   if (view === "dashboard") renderDashboard();
   if (view === "settings") renderSettings();
+  if (window.studioRoute) window.studioRoute(view);
   $("#main").focus({ preventScroll: true });
   window.scrollTo(0, 0);
 }

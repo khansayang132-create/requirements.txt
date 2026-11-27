@@ -1,0 +1,207 @@
+{
+ "productions": [
+  {
+   "id": "6cbb111ca5dc4e3bbb7706a3640676f3",
+   "status": "completed",
+   "error": null,
+   "script_version_id": "4389d3e275b342078b5f65ae0a90d103",
+   "idempotency_key": null,
+   "job_run_id": null,
+   "created_at": "2026-11-27T17:07:14+00:00",
+   "updated_at": "2026-11-27T17:22:27+00:00"
+  }
+ ],
+ "production_stages": [
+  {
+   "stage": "analysis",
+   "status": "done",
+   "attempts": 1,
+   "started_at": "2026-11-27T17:11:15+00:00",
+   "finished_at": "2026-11-27T17:11:28+00:00",
+   "error": null
+  },
+  {
+   "stage": "audio",
+   "status": "done",
+   "attempts": 1,
+   "started_at": "2026-11-27T17:11:57+00:00",
+   "finished_at": "2026-11-27T17:21:04+00:00",
+   "error": null
+  },
+  {
+   "stage": "concepts",
+   "status": "done",
+   "attempts": 1,
+   "started_at": "2026-11-27T17:10:35+00:00",
+   "finished_at": "2026-11-27T17:11:04+00:00",
+   "error": null
+  },
+  {
+   "stage": "deliver",
+   "status": "done",
+   "attempts": 1,
+   "started_at": "2026-11-27T17:22:27+00:00",
+   "finished_at": "2026-11-27T17:22:27+00:00",
+   "error": null
+  },
+  {
+   "stage": "emotion",
+   "status": "done",
+   "attempts": 1,
+   "started_at": "2026-11-27T17:11:41+00:00",
+   "finished_at": "2026-11-27T17:11:57+00:00",
+   "error": null
+  },
+  {
+   "stage": "enhancement",
+   "status": "done",
+   "attempts": 1,
+   "started_at": "2026-11-27T17:11:28+00:00",
+   "finished_at": "2026-11-27T17:11:41+00:00",
+   "error": null
+  },
+  {
+   "stage": "intent",
+   "status": "done",
+   "attempts": 3,
+   "started_at": "2026-11-27T17:10:22+00:00",
+   "finished_at": "2026-11-27T17:10:35+00:00",
+   "error": null
+  },
+  {
+   "stage": "qa",
+   "status": "done",
+   "attempts": 1,
+   "started_at": "2026-11-27T17:21:04+00:00",
+   "finished_at": "2026-11-27T17:22:27+00:00",
+   "error": null
+  },
+  {
+   "stage": "script",
+   "status": "done",
+   "attempts": 1,
+   "started_at": "2026-11-27T17:11:04+00:00",
+   "finished_at": "2026-11-27T17:11:15+00:00",
+   "error": null
+  },
+  {
+   "stage": "subtitles",
+   "status": "done",
+   "attempts": 1,
+   "started_at": "2026-11-27T17:21:04+00:00",
+   "finished_at": "2026-11-27T17:21:04+00:00",
+   "error": null
+  },
+  {
+   "stage": "voice",
+   "status": "done",
+   "attempts": 1,
+   "started_at": "2026-11-27T17:11:57+00:00",
+   "finished_at": "2026-11-27T17:11:57+00:00",
+   "error": null
+  }
+ ],
+ "audio_assets": [
+  {
+   "format": "wav",
+   "bytes": 5489108,
+   "duration_s": 57.17775,
+   "sample_rate": 48000,
+   "sha256": "7e5be113bf714b44815026f4a1b8b81cb4f3f747405cdcc508d0baa5388b2a6b"
+  },
+  {
+   "format": "mp3",
+   "bytes": 1373805,
+   "duration_s": 57.216,
+   "sample_rate": 48000,
+   "sha256": "56fd5da8e036918c1b6bd385d833db57b28e2c7e799e7345cbbade5fefc80ce4"
+  }
+ ],
+ "audio_segments": [
+  {
+   "idx": 0,
+   "emotion": "hopeful",
+   "start_s": 0.0,
+   "end_s": 4.047,
+   "text": "Setiap tetes peluh adalah janji untuk esok yang lebih baik."
+  },
+  {
+   "idx": 1,
+   "emotion": "serious",
+   "start_s": 4.659,
+   "end_s": 8.098,
+   "text": "Lihatlah dia, di bawah terik matahari yang membakar."
+  },
+  {
+   "idx": 2,
+   "emotion": "sad",
+   "start_s": 8.69,
+   "end_s": 13.886,
+   "text": "Keadaan sungguh berat, beban keluarga terasa begitu nyata."
+  },
+  {
+   "idx": 3,
+   "emotion": "vulnerable",
+   "start_s": 14.829,
+   "end_s": 19.091,
+   "text": "Ada malam-malam tanpa tidur, ada keraguan yang menusuk hati."
+  },
+  {
+   "idx": 4,
+   "emotion": "frustrated",
+   "start_s": 19.931,
+   "end_s": 24.121,
+   "text": "Rasa marah dan frustrasi sering datang, ingin menyerah saja."
+  },
+  {
+   "idx": 5,
+   "emotion": "determined",
+   "start_s": 24.675,
+   "end_s": 27.79,
+   "text": "Tapi kemudian, dia menarik napas dalam."
+  },
+  {
+   "idx": 6,
+   "emotion": "nostalgic",
+   "start_s": 28.384,
+   "end_s": 33.598,
+   "text": "Dia ingat wajah mereka, senyum mereka yang selalu menjadi bahan bakarnya."
+  },
+  {
+   "idx": 7,
+   "emotion": "powerful",
+   "start_s": 34.471,
+   "end_s": 37.067,
+   "text": "Di situlah kekuatan itu muncul."
+  },
+  {
+   "idx": 8,
+   "emotion": "inspirational",
+   "start_s": 38.041,
+   "end_s": 43.481,
+   "text": "Keteguhan sejati bukan tentang tidak pernah jatuh, tapi tentang terus bangkit lagi."
+  },
+  {
+   "idx": 9,
+   "emotion": "determined",
+   "start_s": 44.365,
+   "end_s": 51.427,
+   "text": "Ia memilih untuk berjuang, karena cinta tanpa syarat pada keluarga jauh lebih kuat dari badai apapun."
+  },
+  {
+   "idx": 10,
+   "emotion": "happy",
+   "start_s": 52.012,
+   "end_s": 57.178,
+   "text": "Senja di ujung harapan itu, justru menjadi awal dari kebanggaan yang tak terhingga."
+  }
+ ],
+ "quality_reports": [
+  {
+   "passed": 1,
+   "created_at": "2026-11-27T17:22:27+00:00"
+  }
+ ],
+ "job_runs": [],
+ "scheduled_jobs": []
+}

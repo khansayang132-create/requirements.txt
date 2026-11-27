@@ -1,0 +1,64 @@
+{
+ "wav": {
+  "path": "/tmp/claude-0/v100/data/outputs/productions/6cbb111ca5dc4e3bbb7706a3640676f3/production.wav",
+  "ffprobe": {
+   "programs": [],
+   "streams": [
+    {
+     "codec_name": "pcm_s16le",
+     "sample_rate": "48000",
+     "channels": 1
+    }
+   ],
+   "format": {
+    "format_name": "wav",
+    "duration": "57.177750",
+    "size": "5489108"
+   }
+  },
+  "sha256": "7e5be113bf714b44815026f4a1b8b81cb4f3f747405cdcc508d0baa5388b2a6b",
+  "db_sha256": "7e5be113bf714b44815026f4a1b8b81cb4f3f747405cdcc508d0baa5388b2a6b",
+  "full_decode_errors": "none"
+ },
+ "mp3": {
+  "path": "/tmp/claude-0/v100/data/outputs/productions/6cbb111ca5dc4e3bbb7706a3640676f3/production.mp3",
+  "ffprobe": {
+   "programs": [],
+   "streams": [
+    {
+     "codec_name": "mp3",
+     "sample_rate": "48000",
+     "channels": 1
+    }
+   ],
+   "format": {
+    "format_name": "mp3",
+    "duration": "57.216000",
+    "size": "1373805"
+   }
+  },
+  "sha256": "56fd5da8e036918c1b6bd385d833db57b28e2c7e799e7345cbbade5fefc80ce4",
+  "db_sha256": "56fd5da8e036918c1b6bd385d833db57b28e2c7e799e7345cbbade5fefc80ce4",
+  "full_decode_errors": "none"
+ },
+ "subtitles.json": {
+  "path": "/tmp/claude-0/v100/data/outputs/productions/6cbb111ca5dc4e3bbb7706a3640676f3/subtitles.json",
+  "bytes": 1887,
+  "head": "[\n {\n  \"index\": 1,\n  \"start_s\": 0.0,\n  \"end_s\": 4.047,\n  \"text\": \"Setiap tetes peluh adalah janji untuk esok\\nyang lebih baik.\",\n  \"sentence\": 0\n },\n {\n  \"index\": 2,\n  \"start_s\": 4.659,\n  \"end_s\": 8.098,\n  \"text\": \"Lihatlah dia, di bawah terik matahari yang\\nmembakar.\",\n  \"sentence\": 1\n },\n {\n  \"index\": 3,\n  \"start_s\": 8.69,\n  \"end_s\": 13.886,\n  \"text\": \"Keadaan sungguh berat, beban keluarga\\ntera"
+ },
+ "subtitles.srt": {
+  "path": "/tmp/claude-0/v100/data/outputs/productions/6cbb111ca5dc4e3bbb7706a3640676f3/subtitles.srt",
+  "bytes": 1142,
+  "head": "1\n00:00:00,000 --> 00:00:04,047\nSetiap tetes peluh adalah janji untuk esok\nyang lebih baik.\n\n2\n00:00:04,659 --> 00:00:08,098\nLihatlah dia, di bawah terik matahari yang\nmembakar.\n\n3\n00:00:08,690 --> 00:00:13,886\nKeadaan sungguh berat, beban keluarga\nterasa begitu nyata.\n\n4\n00:00:14,829 --> 00:00:19,091\nAda malam-malam tanpa tidur, ada keraguan\nyang menusuk hati.\n\n5\n00:00:19,931 --> 00:00:24,121\nRas"
+ },
+ "subtitles.txt": {
+  "path": "/tmp/claude-0/v100/data/outputs/productions/6cbb111ca5dc4e3bbb7706a3640676f3/subtitles.txt",
+  "bytes": 710,
+  "head": "Setiap tetes peluh adalah janji untuk esok yang lebih baik.\nLihatlah dia, di bawah terik matahari yang membakar.\nKeadaan sungguh berat, beban keluarga terasa begitu nyata.\nAda malam-malam tanpa tidur, ada keraguan yang menusuk hati.\nRasa marah dan frustrasi sering datang, ingin menyerah saja.\nTapi kemudian, dia menarik napas dalam.\nDia ingat wajah mereka, senyum mereka yang selalu menjadi bahan ba"
+ },
+ "subtitles.vtt": {
+  "path": "/tmp/claude-0/v100/data/outputs/productions/6cbb111ca5dc4e3bbb7706a3640676f3/subtitles.vtt",
+  "bytes": 1120,
+  "head": "WEBVTT\n\n00:00:00.000 --> 00:00:04.047\nSetiap tetes peluh adalah janji untuk esok\nyang lebih baik.\n\n00:00:04.659 --> 00:00:08.098\nLihatlah dia, di bawah terik matahari yang\nmembakar.\n\n00:00:08.690 --> 00:00:13.886\nKeadaan sungguh berat, beban keluarga\nterasa begitu nyata.\n\n00:00:14.829 --> 00:00:19.091\nAda malam-malam tanpa tidur, ada keraguan\nyang menusuk hati.\n\n00:00:19.931 --> 00:00:24.121\nRasa "
+ }
+}

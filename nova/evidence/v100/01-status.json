@@ -1,0 +1,1 @@
+{"schema_version":2,"llm":true,"scheduler_running":true,"jobs":0,"productions":0,"engines":[{"name":"chatterbox-id","status":"available"},{"name":"espeak-ng","status":"available"},{"name":"piper","status":"available"},{"name":"sherpa-onnx","status":"unavailable"}]}

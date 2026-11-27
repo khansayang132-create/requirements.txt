@@ -159,7 +159,9 @@ def render(directions: list[Direction], engine: TTSEngine, profile: dict | None,
             sr = rate
         elif rate != sr:
             x = A.resample(x, rate, sr)
+        start = sum(pc.size for pc in pieces)
         pieces.append(x)
+        rep["raw_start_s"], rep["raw_end_s"] = round(start / sr, 4), round((start + x.size) / sr, 4)
         nxt = directions[i + 1] if i + 1 < len(directions) else None
         gap = d.pause_after_ms
         if nxt is not None and nxt.scene != d.scene and not getattr(d, "pause_fixed", False):
@@ -264,6 +266,13 @@ def generate(settings: Settings, store: ProfileStore, req: dict, progress=lambda
         seg_emotion = seg.get("emotion") if seg.get("emotion") in VALID_EMOTIONS else emotion
         lang = analysis["language"]["primary"] if analysis["language"]["primary"] in ("en", "id") else "en"
         dirs = direct(final_text, mode, seg_emotion, scene=si, script_language=lang)
+        if seg.get("prosody"):  # an external director (the studio's emotion engine) sets the delivery
+            po = seg["prosody"]
+            for d in dirs:
+                d.prosody = replace(d.prosody, **{k: float(po[k]) for k in ("rate", "pitch_semitones",
+                                                                            "pitch_range", "volume_db") if k in po})
+                if po.get("emphasis") is not None:
+                    d.prosody = replace(d.prosody, emphasis=list(po["emphasis"]))
         start = len(all_dirs)
         for k, d in enumerate(dirs):
             d.index = start + k
@@ -293,10 +302,19 @@ def generate(settings: Settings, store: ProfileStore, req: dict, progress=lambda
     if not neural and controls["soften"]:
         progress(78, "adjusting voice tone")
         raw = A.voice_tone(raw, sr, 0.0, controls["soften"])
+    polish_report = None
+    if req.get("polish"):  # high-pass, gentle compression, de-essing only when sibilant
+        from .studio.mix import polish
+        raw, polish_report = polish(raw, sr)
     progress(80, "mastering")
     mastered, out_sr, master_report = master(raw, sr, target_sr=target_sr,
                                              target_lufs=float(req.get("target_lufs", -16.0)))
 
+    from .mastering import map_time
+    tmap = master_report["time_map"]
+    timeline = [{"index": r["sentence"], "scene": r["scene"], "text": r["spoken_text"],
+                 "start_s": round(map_time(r["raw_start_s"], tmap), 3),
+                 "end_s": round(map_time(r["raw_end_s"], tmap), 3)} for r in sentence_reports]
     job_id = req.get("job_id") or uuid.uuid4().hex
     out_dir = settings.outputs_dir / job_id
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -313,7 +331,7 @@ def generate(settings: Settings, store: ProfileStore, req: dict, progress=lambda
         "controls": {k: v for k, v in controls.items() if k != "pronunciation"} | {
             "pronunciation_entries": len(controls["pronunciation"])},
         "segments": seg_reports, "directions_script": render_script(all_dirs),
-        "sentences": sentence_reports, "mastering": master_report, "files": files,
+        "sentences": sentence_reports, "timeline": timeline, "polish": polish_report, "mastering": master_report, "files": files,
         "elapsed_s": round(time.time() - t0, 2),
     }
     (out_dir / "manifest.json").write_text(json.dumps(manifest, indent=2, ensure_ascii=False))

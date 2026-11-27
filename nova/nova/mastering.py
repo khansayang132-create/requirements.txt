@@ -100,35 +100,52 @@ def reduce_noise(x: np.ndarray, sr: int, max_reduction_db: float = 8.0) -> tuple
 
 
 def manage_silence(x: np.ndarray, sr: int, edge_s: float = 0.15, max_gap_s: float = 1.6,
-                   threshold_db: float = -50.0) -> np.ndarray:
+                   threshold_db: float = -50.0, return_map: bool = False):
+    """Trim edge silence and shorten internal gaps longer than max_gap_s. With return_map, also
+    return the kept spans as (source_start, source_end, output_start) in samples, so timings
+    measured before this step (subtitles) can be moved onto the output."""
     hop = int(0.01 * sr)
+    identity = [(0, x.size, 0)]
     if x.size < hop * 3:
-        return x
+        return (x, identity) if return_map else x
     rms = np.sqrt(np.convolve(x ** 2, np.ones(hop) / hop, mode="same") + 1e-12)
     active = 20 * np.log10(rms) > threshold_db
     idx = np.flatnonzero(active)
     if idx.size == 0:
-        return x
+        return (x, identity) if return_map else x
     start = max(0, idx[0] - int(edge_s * sr))
     end = min(x.size, idx[-1] + int(edge_s * sr))
     x, active = x[start:end], active[start:end]
     # Shorten any internal silence longer than max_gap_s (directed pauses are shorter than this).
-    out, i, max_gap = [], 0, int(max_gap_s * sr)
+    out, spans, i, pos, max_gap = [], [], 0, 0, int(max_gap_s * sr)
     while i < x.size:
-        if not active[i]:
-            j = i
-            while j < x.size and not active[j]:
-                j += 1
-            seg = x[i:j]
-            out.append(seg if seg.size <= max_gap else np.concatenate([seg[: max_gap // 2], seg[-max_gap // 2:]]))
-            i = j
+        j = i
+        while j < x.size and active[j] == active[i]:
+            j += 1
+        seg = x[i:j]
+        if not active[i] and seg.size > max_gap:
+            half = max_gap // 2
+            out += [seg[:half], seg[-half:]]
+            spans += [(start + i, start + i + half, pos), (start + j - half, start + j, pos + half)]
+            pos += 2 * half
         else:
-            j = i
-            while j < x.size and active[j]:
-                j += 1
-            out.append(x[i:j])
-            i = j
-    return np.concatenate(out)
+            out.append(seg)
+            spans.append((start + i, start + j, pos))
+            pos += seg.size
+        i = j
+    y = np.concatenate(out)
+    return (y, spans) if return_map else y
+
+
+def map_time(t_s: float, time_map: list[list[float]]) -> float:
+    """Move a time measured on the unmastered render onto the mastered file (see manage_silence)."""
+    for a, b, d in time_map:
+        if t_s < a:
+            return d  # inside a removed stretch: snap to the next kept audio
+        if t_s <= b:
+            return d + (t_s - a)
+    a, b, d = time_map[-1]
+    return d + (b - a)
 
 
 def fade(x: np.ndarray, sr: int, fade_in_ms: float = 15, fade_out_ms: float = 60) -> np.ndarray:
@@ -147,7 +164,8 @@ def master(x: np.ndarray, sr: int, target_sr: int = 48000, target_lufs: float = 
     x = x - np.mean(x)  # DC offset
     if noise_reduction:
         x, report["noise_reduction"] = reduce_noise(x, sr)
-    x = manage_silence(x, sr)
+    x, spans = manage_silence(x, sr, return_map=True)
+    report["time_map"] = [[round(a / sr, 4), round(b / sr, 4), round(d / sr, 4)] for a, b, d in spans]
     if sr != target_sr:
         x = resample(x, sr, target_sr)
         sr = target_sr

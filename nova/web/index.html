@@ -18,6 +18,11 @@
       <nav>
         <ul class="nav" id="nav">
           <li><a href="#/dashboard" data-route="dashboard">Dashboard</a></li>
+          <li><a href="#/produce" data-route="produce">Idea to Production</a></li>
+          <li><a href="#/emotion" data-route="emotion">Emotion Director</a></li>
+          <li><a href="#/queue" data-route="queue">Queue &amp; History</a></li>
+          <li><a href="#/schedule" data-route="schedule">Schedule</a></li>
+          <li><a href="#/insights" data-route="insights">Insights</a></li>
           <li><a href="#/clone" data-route="clone">Voice Cloning</a></li>
           <li><a href="#/library" data-route="library">Voice Library</a></li>
           <li><a href="#/intel" data-route="intel">Script Intelligence</a></li>
@@ -56,6 +61,127 @@
         </ol>
         <h2>Engines</h2>
         <div class="grid" id="dash-engines"></div>
+      </section>
+
+      <!-- IDEA TO PRODUCTION -->
+      <section data-view="produce" hidden>
+        <header class="view-head">
+          <p class="eyebrow">One idea in</p>
+          <h1>Idea to production</h1>
+          <p class="lede">NOVA develops concepts, writes the script, directs every sentence, narrates, masters, subtitles and checks the result.</p>
+        </header>
+        <form class="card" id="prod-form">
+          <label class="field">Your idea, or paste a finished script below
+            <textarea name="idea" rows="3" maxlength="4000" placeholder="A woman keeps fighting for her family despite hard times"></textarea>
+          </label>
+          <details class="field"><summary>Use my own script instead</summary>
+            <textarea name="script" rows="6" maxlength="60000" placeholder="Paste a script: NOVA skips concepts and writing"></textarea>
+          </details>
+          <div class="row">
+            <label class="field">Language<select name="language">
+              <option value="id">Indonesian</option><option value="en">English</option><option value="ur">Urdu</option>
+              <option value="roman-ur">Roman Urdu</option><option value="ar">Arabic</option></select></label>
+            <label class="field">Duration<select name="duration_s">
+              <option>15</option><option>30</option><option>45</option><option selected>60</option><option>90</option>
+              <option value="120">2 min</option><option value="300">5 min</option><option value="600">10 min</option></select></label>
+            <label class="field">Delivery<select name="mode"><option value="natural">Natural</option>
+              <option value="expressive" selected>Expressive</option><option value="professional">Professional</option></select></label>
+          </div>
+          <div class="row">
+            <label class="field grow">Voice<select name="voice" id="prod-voice"></select></label>
+            <label class="field grow">Enhance the draft<select name="enhance_mode" id="prod-enhance">
+              <option value="">Keep the draft</option></select></label>
+          </div>
+          <button class="btn primary big" type="submit">Produce</button>
+          <p class="hint" id="prod-llm-hint"></p>
+        </form>
+        <div id="prod-live"></div>
+      </section>
+
+      <!-- EMOTION DIRECTOR -->
+      <section data-view="emotion" hidden>
+        <header class="view-head">
+          <p class="eyebrow">Emotion timeline</p>
+          <h1>Emotion director</h1>
+          <p class="lede">Change one sentence's emotion, intensity or pauses, then re-render only the audio. The script and the other sentences stay as they are.</p>
+        </header>
+        <div class="card">
+          <label class="field">Production<select id="emo-prod"></select></label>
+          <div id="emo-timeline"></div>
+          <div class="row"><button class="btn primary" type="button" id="emo-redo" disabled>Re-render audio with these emotions</button></div>
+        </div>
+      </section>
+
+      <!-- QUEUE & HISTORY -->
+      <section data-view="queue" hidden>
+        <header class="view-head">
+          <p class="eyebrow">Production queue</p>
+          <h1>Queue &amp; history</h1>
+          <p class="lede">Every production, its stages and its files. A failed one resumes from its last finished stage.</p>
+        </header>
+        <div class="card"><div class="row"><button class="btn ghost" type="button" id="queue-refresh">Refresh</button></div>
+          <div class="table-scroll"><table class="tbl" id="queue-table"></table></div></div>
+        <div id="queue-detail"></div>
+      </section>
+
+      <!-- SCHEDULE -->
+      <section data-view="schedule" hidden>
+        <header class="view-head">
+          <p class="eyebrow">Autonomous scheduling</p>
+          <h1>Schedule</h1>
+          <p class="lede">Production jobs run on their own, even after a restart, and count as done only when the result passes quality checks.</p>
+        </header>
+        <div class="two">
+          <form class="card" id="job-form">
+            <h2>New production job</h2>
+            <label class="field">Name<input name="name" required maxlength="200" placeholder="Daily motivation"></label>
+            <label class="field">Idea<textarea name="idea" rows="2" required maxlength="4000"></textarea></label>
+            <div class="row">
+              <label class="field">Repeat<select name="type"><option value="daily">Daily</option><option value="weekly">Weekly</option>
+                <option value="once">Once</option><option value="interval">Every N minutes</option></select></label>
+              <label class="field">Time<input name="time" type="time" value="07:00"></label>
+            </div>
+            <div class="row">
+              <label class="field grow">Date (once)<input name="date" type="date"></label>
+              <label class="field">Minutes<input name="minutes" type="number" min="1" value="60"></label>
+            </div>
+            <fieldset class="field" id="job-days"><legend>Days (weekly)</legend></fieldset>
+            <label class="field">Time zone<input name="timezone" required id="job-tz"></label>
+            <button class="btn primary" type="submit">Schedule</button>
+          </form>
+          <form class="card" id="cal-form">
+            <h2>Content calendar</h2>
+            <div class="row">
+              <label class="field grow">Date<input name="date" type="date" required></label>
+              <label class="field">Time<input name="time" type="time"></label>
+            </div>
+            <label class="field">Title<input name="title" required maxlength="200"></label>
+            <div class="row">
+              <label class="field grow">Platform<select name="platform"><option value="tiktok">TikTok</option>
+                <option value="instagram_reels">Instagram Reels</option><option value="youtube_shorts">YouTube Shorts</option>
+                <option value="youtube">YouTube</option><option value="facebook">Facebook</option></select></label>
+              <label class="field grow">Category<input name="category" maxlength="60" placeholder="Budaya"></label>
+            </div>
+            <p class="hint" id="cal-times"></p>
+            <button class="btn primary" type="submit">Add to calendar</button>
+          </form>
+        </div>
+        <div class="card"><h2>Jobs</h2><div class="table-scroll"><table class="tbl" id="job-table"></table></div></div>
+        <div class="card"><h2>Recent runs</h2><div class="table-scroll"><table class="tbl" id="run-table"></table></div></div>
+        <div class="card"><h2>Calendar</h2><div class="table-scroll"><table class="tbl" id="cal-table"></table></div></div>
+      </section>
+
+      <!-- INSIGHTS -->
+      <section data-view="insights" hidden>
+        <header class="view-head">
+          <p class="eyebrow">Learning &amp; optimisation</p>
+          <h1>Insights</h1>
+          <p class="lede">Only what NOVA has stored: your ratings, edits, versions and production times. Each number shows how many samples it is based on.</p>
+        </header>
+        <div class="card"><h2>Suggestions</h2><ul id="ins-sugg"></ul></div>
+        <div class="card"><h2>Observed</h2><pre class="sheet" id="ins-obs"></pre></div>
+        <div class="card"><h2>Notifications</h2><ul id="ins-notes" class="plain"></ul>
+          <div class="row"><button class="btn danger" type="button" id="ins-reset">Reset learned preferences</button></div></div>
       </section>
 
       <!-- CLONING -->
@@ -419,5 +545,6 @@
   </footer>
   <div class="toast" id="toast" role="alert" hidden></div>
   <script src="app.js"></script>
+  <script src="studio.js"></script>
 </body>
 </html>

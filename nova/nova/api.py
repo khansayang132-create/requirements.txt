@@ -517,6 +517,9 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         path.unlink()
         return {"deleted": project_id}
 
+    from .studio.routes import register as register_studio
+    register_studio(app, settings, store, deps)
+
     if WEB_DIR.is_dir():
         app.mount("/", StaticFiles(directory=WEB_DIR, html=True), name="web")
     return app
